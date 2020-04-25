@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# title: Node.js
+# tagline: JavaScript V8 runtime
+# description: |
+#   Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine
+
 set -e
 set -u
 
