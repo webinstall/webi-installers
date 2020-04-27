@@ -103,10 +103,14 @@ echo ""
 rm -rf "${NODEJS_UNTAR}"
 
 chown -R $(whoami) "$node_install_path/lib/node_modules/" 2>/dev/null || $sudo_cmd chown -R $(whoami) "$node_install_path/lib/node_modules/"
-chown $(whoami) ""$node_install_path"/bin/" 2>/dev/null || $sudo_cmd chown $(whoami) ""$node_install_path"/bin/"
+chown $(whoami) "$node_install_path"/bin/ 2>/dev/null || $sudo_cmd chown $(whoami) "$node_install_path"/bin/
 
 mkdir -p $node_install_path/lib/node_modules 2> /dev/null || $sudo_cmd mkdir -p $node_install_path/lib/node_modules
 chown -R $(whoami) $node_install_path/lib/node_modules 2> /dev/null || $sudo_cmd chown -R $(whoami) $node_install_path/lib/node_modules
+
+# By default, npm is stupid and uses any version of node in any path. Stop that.
+# npm config set scripts-prepend-node-path true
+"$node_install_path"/bin/node "$node_install_path"/bin/npm --scripts-prepend-node-path=true config set scripts-prepend-node-path true
 
 #######
 # END #
