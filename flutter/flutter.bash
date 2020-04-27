@@ -21,7 +21,6 @@ if [ "darwin" == "$FLUTTER_OS" ]; then
 fi
 
 my_tmp="$WEBI_TMP"
-sudo_cmd="$WEBI_SUDO"
 
 #########
 # BEGIN #
@@ -61,9 +60,8 @@ mkdir -p "$flutter_install_path"
 # TODO warn if existing flutter in path my take precedence
 if [ -e "$flutter_install_path/bin/flutter" ]; then
   # flutter of some version is already installed
-  echo "${FLUTTER_VER}" == "$($flutter_install_path/bin/flutter --version)"
-  if [ "${FLUTTER_VER}" == "$($flutter_install_path/bin/flutter --version | cut -d ' ' -f 3 2>/dev/null)" ]; then
-    echo ${FLUTTER_VER} already installed at $flutter_install_path
+  if [ "${FLUTTER_VER}" == "$($flutter_install_path/bin/flutter --version | head -n 1 | cut -d ' ' -f2 2>/dev/null)" ]; then
+    echo flutter_${FLUTTER_VER} already installed at $flutter_install_path
     exit 0
   fi
 fi
@@ -94,11 +92,11 @@ else
   tar xf ${FLUTTER_LOCAL} -C ${FLUTTER_UNTAR}/ #--strip-components=1
 fi
 if [ -n "$(command -v rsync 2>/dev/null | grep rsync)" ]; then
-  echo $sudo_cmd rsync -Krl "${FLUTTER_UNTAR}"/flutter/ "$flutter_install_path/"
-  rsync -Krl "${FLUTTER_UNTAR}/" "$flutter_install_path/" 2>/dev/null || $sudo_cmd rsync -Krl "${FLUTTER_UNTAR}/" "$flutter_install_path/"
+  echo rsync -Krl "${FLUTTER_UNTAR}"/flutter/ "$flutter_install_path/"
+  rsync -Krl "${FLUTTER_UNTAR}/flutter/" "$flutter_install_path/"
 else
-  echo $sudo_cmd cp -Hr "${FLUTTER_UNTAR}/"flutter/* "${FLUTTER_UNTAR}/"flutter/.* "$flutter_install_path/"
-  cp -Hr "${FLUTTER_UNTAR}"/* "$flutter_install_path/" 2>/dev/null || $sudo_cmd cp -Hr "${FLUTTER_UNTAR}"/* "$flutter_install_path/"
+  echo cp -Hr "${FLUTTER_UNTAR}/"flutter/* "${FLUTTER_UNTAR}/"flutter/.* "$flutter_install_path/"
+  cp -Hr "${FLUTTER_UNTAR}/"flutter/* "${FLUTTER_UNTAR}/"flutter/.* "$flutter_install_path/"
 fi
 rm -rf "${FLUTTER_UNTAR}"
 
