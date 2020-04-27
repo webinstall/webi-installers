@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # title: Pathman
+# homepage: https://git.rootprojects.org/root/pathman
 # tagline: cross-platform PATH management for bash, zsh, fish, cmd.exe, and PowerShell
 # description: |
 #   Works with

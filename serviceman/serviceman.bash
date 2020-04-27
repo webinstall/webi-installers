@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # title: Serviceman
+# homepage: https://git.rootprojects.org/root/serviceman
 # tagline: cross-platform service management for Linux, Mac, and Windows
 # description: |
 #   Works with
