@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-var request = require("@root/request");
+var request = require('@root/request');
 
 // TODO
 // get list of supported platforms and archetectures
@@ -10,17 +10,17 @@ var request = require("@root/request");
 
 module.platforms = async function () {
   return [
-    ["macos", "amd64"],
-    ["linux", "amd64"],
-    ["windows", "amd64"],
+    ['macos', 'amd64'],
+    ['linux', 'amd64'],
+    ['windows', 'amd64']
   ];
 };
 
 module.versions = async function (os, _arch) {
   return request({
     url:
-      "https://storage.googleapis.com/flutter_infra/releases/releases_" +
+      'https://storage.googleapis.com/flutter_infra/releases/releases_' +
       os +
-      ".json",
+      '.json'
   });
 };
