@@ -6,6 +6,8 @@
 # description: |
 #   for the people like us that are too lazy even to run `curl https://webinstall.dev/PACKAGE_NAME` - just `webi PACKAGE_NAME` instead
 
+# TODO webi package@semver#channel
+
 cat << EOF > ~/.local/bin/webi
 set -e
 set -u
