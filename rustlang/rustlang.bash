@@ -5,11 +5,19 @@
 # tagline: The Rust Toolchain
 # description: |
 #   A language empowering everyone to build reliable and efficient software.
+#
+#   Rust is the modern language used to build all of your favorite CLI tools, such as
+#     - rg (ripgrep, modern grep)
+#     - fd (modern find)
+#     - sd (modern sed)
+#     - lsd (modern ls)
+#     - bat (modern cat)
 # examples: |
 #   ```bash
 #   cargo install ripgrep
 #   ```
 #   <br/>
+#
 #   ```bash
 #   cargo new hello --bin
 #   cargo build --release

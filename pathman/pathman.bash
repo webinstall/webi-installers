@@ -4,19 +4,21 @@
 # homepage: https://git.rootprojects.org/root/pathman
 # tagline: cross-platform PATH management for bash, zsh, fish, cmd.exe, and PowerShell
 # description: |
-#   Works with
-#   - Mac, Windows, Linux
-#   - Bash, Zsh, Fish
-#   - Command, Powershell
+#   Manages PATH on various OSes and shells
+#     - Mac, Windows, Linux
+#     - Bash, Zsh, Fish
+#     - Command, Powershell
 # examples: |
 #   ```bash
 #   pathman add ~/.local/bin
 #   ```
 #   <br/>
+#
 #   ```bash
 #   pathman remove ~/.local/bin
 #   ```
 #   <br/>
+#
 #   ```bash
 #   pathman list
 #   ```
