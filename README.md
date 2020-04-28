@@ -1,6 +1,6 @@
 # packages
 
-Primary and community-submitted packages for [https://webinstall.dev](webinstall.dev)
+Primary and community-submitted packages for [webinstall.dev](https://webinstall.dev)
 
 # Guidelines
 
