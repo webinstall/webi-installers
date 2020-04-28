@@ -4,7 +4,7 @@
 # homepage: https://webinstall.dev
 # tagline: webinstall.dev for the CLI
 # description: |
-#   for the people like us that are too lazy even to run `curl https://webinstall.dev/PACKAGE_NAME` - just `webi PACKAGE_NAME` instead
+#   for the people like us that are too lazy even to run <kbd>curl&nbsp;https://webinstall.dev/PACKAGE_NAME&nbsp;|&nbsp;bash</kbd>
 # examples: |
 #   ```bash
 #   webi node
