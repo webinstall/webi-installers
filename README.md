@@ -17,7 +17,7 @@ Primary and community-submitted packages for [https://webinstall.dev](webinstall
   - [ ] Flutter <https://storage.googleapis.com/flutter_infra/releases/releases_linux.json>
         - Started at <https://github.com/webinstall/packages/blob/master/flutter/versions.js>
   - [ ] git
-        - Note: do all platforms expose tar/zip releases with the same URLs?
+    - Note: do all platforms expose tar/zip releases with the same URLs?
   - [ ] npm
   - [ ] github (NOT until `git` is supported)
 - [ ] Support git urls (i.e. `@github.com/node/node`)
