@@ -5,6 +5,48 @@
 # tagline: JavaScript V8 runtime
 # description: |
 #   Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine
+# examples: |
+#   ```bash
+#   node -e 'console.log("Hello, World!")'
+#   > Hello, World!
+#   ```
+#   <br/>
+#   <br/>
+#   
+#   <table>
+#   <tr>
+#   <td>Run a webserver</td>
+#   <td><pre><code class="language-bash">
+#   mkdir my-server
+#   pushd my-server
+#   npm init
+#   npm install --save express</code></pre>
+#   <br/>
+#   <code>app.js:</code>
+#   <br/>
+#   <pre><code class="language-javascript">'use strict'
+#   var express = require('express');
+#   var app = express();
+#   
+#   app.use('/', function (req, res, next) {
+#     res.end("Hello, World!");
+#   });
+#   
+#   module.exports = app;</code></pre>
+#   <br/>
+#   <code>server.js:</code>
+#   <br/>
+#   <pre><code class="language-javascript">'use strict'
+#   var http = require('http');
+#   var app = require('./app.js');
+#   http.createServer(app).listen(8080, function () {
+#     console.log('Listening on', this.address());
+#   });</code></pre>
+#   <br/>
+#   <pre><code class="language-bash">npm start</code></pre>
+#   </td>
+#   </tr>
+#   </table>
 
 set -e
 set -u

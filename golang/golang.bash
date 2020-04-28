@@ -5,6 +5,34 @@
 # tagline: The Go Programming Language tools
 # description: |
 #   Go is an open source programming language that makes it easy to build simple, reliable, and efficient software.
+# examples: |
+#   ```bash
+#   mkdir -p hello/
+#   pushd hello/
+#   ```
+#   <br/>   
+#
+#   ```bash
+#   cat << EOF >> main.go
+#   package main
+#   
+#   import (
+#     "fmt"
+#   )
+#   
+#   func main () {
+#     fmt.Println("Hello, World!")
+#   }
+#   EOF
+#   ```
+#   <br/>   
+#
+#   ```bash
+#   go fmt ./...
+#   go build .
+#   ./hello
+#   > Hello, World!
+#   ```
 
 set -e
 set -u

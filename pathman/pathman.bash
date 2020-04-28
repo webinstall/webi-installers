@@ -8,6 +8,19 @@
 #   - Mac, Windows, Linux
 #   - Bash, Zsh, Fish
 #   - Command, Powershell
+# examples: |
+#   ```bash
+#   pathman add ~/.local/bin
+#   ```
+#   <br/>
+#   ```bash
+#   pathman remove ~/.local/bin
+#   ```
+#   <br/>
+#   ```bash
+#   pathman list
+#   ```
+
 
 set -e
 set -u

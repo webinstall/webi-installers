@@ -5,6 +5,18 @@
 # tagline: webinstall.dev for the CLI
 # description: |
 #   for the people like us that are too lazy even to run `curl https://webinstall.dev/PACKAGE_NAME` - just `webi PACKAGE_NAME` instead
+# examples: |
+#   ```bash
+#   webi node
+#   ```
+#   <br/>
+#   ```bash
+#   webi golang
+#   ```
+#   <br/>
+#   ```bash
+#   webi rustlang
+#   ```
 
 # TODO webi package@semver#channel
 

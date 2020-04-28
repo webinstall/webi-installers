@@ -8,6 +8,10 @@
 #   - Launchd (macOS)
 #   - Systemd (Linux)
 #   - Windows Registry
+# examples: |
+#   ```bash
+#   serviceman add --name my-service ./serve.js --port 3000
+#   ```
 
 set -e
 set -u
