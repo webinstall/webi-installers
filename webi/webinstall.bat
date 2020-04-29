@@ -17,9 +17,9 @@ pushd "%userprofile%" || goto :error
       call .\pathman-setup.bat || goto :error
       del pathman-setup.bat  || goto :error
       rem TODO there's rumor of a windows tool called 'pathman' that does the same thing?
-      pathman add "%userprofile%\.local\bin" || goto :error
     )
   popd || goto :error
+  .\.local\bin\pathman add ".local\bin" || goto :error
 
   echo downloading and installing %1
   powershell $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest https://webinstall.dev/packages/%1/%1.bat -OutFile %1-webinstall.bat || goto :error
