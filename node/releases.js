@@ -71,7 +71,8 @@ function getAllReleases(request) {
 
         var even = 0 === rel.version.slice(1).split('.')[0] % 2;
         var r = {
-          version: rel.version,
+          // nix leading 'v'
+          version: rel.version.slice(1),
           date: rel.date,
           lts: !!rel.lts,
           // historically odd releases have been beta and even have been stable
@@ -123,11 +124,11 @@ function getAllReleases(request) {
         r.download += '.' + ext;
 
         if ('tar.gz' === ext) {
-          r.download += '.xz';
-          r.ext = '.tar.xz';
+          r.download = r.download.replace(/\.tar\.gz$/, '.tar.xz');
+          r.ext = 'tar.xz';
           all.releases.push(JSON.parse(JSON.stringify(r)));
-          r.download = r.download.replace(/\.xz$/, '.gz');
-          r.ext = '.tar.gz';
+          r.download = r.download.replace(/\.tar\.xz$/, '.tar.gz');
+          r.ext = 'tar.gz';
         }
       });
     });
