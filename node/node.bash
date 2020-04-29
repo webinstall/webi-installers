@@ -78,6 +78,10 @@ NODE_OS="$(echo $WEBI_TAB | cut -d ',' -f 5)"
 #########
 
 # WEBI_ARCH uses only slightly different names from NODE_ARCH
+NODE_OS="$(echo $WEBI_TAB | cut -d ',' -f 5)"
+if [ "macos" == "$NODE_OS" ]; then
+  NODE_OS="darwin"
+fi
 NODE_ARCH="$(echo $WEBI_TAB | cut -d ',' -f 6)"
 if [ "amd64" == "$NODE_ARCH" ]; then
   NODE_ARCH="x64"
