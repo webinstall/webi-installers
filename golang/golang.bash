@@ -38,7 +38,7 @@ set -e
 set -u
 
 # TODO handle v1.4 / go1.4 / lack of go1.4.0
-GOLANG_VER=${WEBI_VERSION:-}
+GOLANG_VER=${X_WEBI_VERSION:-}
 GOLANG_VER="${GOLANG_VER:-go}" # Search for 'go' at the least
 
 # WEBI_ARCH uses only slightly different names from GOLANG_ARCH
@@ -81,7 +81,9 @@ get_golang_version() {
   fi
 }
 
+echo -n "Checking for latest golang version... "
 get_golang_version
+echo $GOLANG_VER
 
 #
 # golang
@@ -104,6 +106,7 @@ GOLANG_REMOTE="https://dl.google.com/go/${GOLANG_PRE}.tar.gz"
 GOLANG_LOCAL="$my_tmp/${GOLANG_PRE}.tar.gz"
 GOLANG_UNTAR="$my_tmp/${GOLANG_PRE}"
 
+echo Downloading $GOLANG_REMOTE
 if [ -n "$(command -v curl 2>/dev/null | grep curl)" ]; then
   curl -fSL ${GOLANG_REMOTE} -o ${GOLANG_LOCAL} || echo 'error downloading golang'
 elif [ -n "$(command -v wget 2>/dev/null | grep wget)" ]; then
@@ -114,6 +117,7 @@ else
   exit 1
 fi
 
+echo Installing $GOLANG_LOCAL
 mkdir -p ${GOLANG_UNTAR}/
 # --strip-components isn't portable, switch to portable version by performing move step after untar
 tar xf ${GOLANG_LOCAL} -C ${GOLANG_UNTAR}/ #--strip-components=1
