@@ -4,7 +4,7 @@
 const osMap = {
   macos: /\b(apple|mac|darwin|iPhone|iOS|iPad)/i,
   linux: /\b(linux)/i,
-  win: /\b(win|microsoft|msft)/i,
+  windows: /\b(win|microsoft|msft)/i,
   sunos: /\b(sun)/i,
   aix: /\b(aix)/i
 };
