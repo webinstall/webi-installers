@@ -2,33 +2,44 @@
 
 // this may need customizations between packages
 const osMap = {
-  macos: /\b(mac|darwin|iPhone|iOS|iPad)/i,
+  macos: /\b(apple|mac|darwin|iPhone|iOS|iPad)/i,
   linux: /\b(linux)/i,
   win: /\b(win|microsoft|msft)/i,
   sunos: /\b(sun)/i,
   aix: /\b(aix)/i
 };
 
-const archMap = {
-  amd64: /(amd64|x64|[_\-]64)/i,
-  x86: /\b(x86)(?![_\-]64)/i,
+// evaluation order matters
+// (i.e. otherwise x86 and x64 can cross match)
+var archArr = [
+  'amd64', // first and most likely match
+  'arm64',
+  'x86',
+  'ppc64le',
+  'ppc64',
+  'armv7l',
+  'armv6l',
+  's390x'
+];
+var archMap = {
+  amd64: /(amd.?64|x64|[_\-]64)/i,
+  x86: /(86)\b/i,
   ppc64le: /\b(ppc64le)/i,
   ppc64: /\b(ppc64)\b/i,
-  i686: /\b(i686)\b/i,
   arm64: /\b(arm64|arm)/i,
   armv7l: /\b(armv?7l)/i,
   armv6l: /\b(armv?6l)/i,
   s390x: /\b(s390x)/i
 };
 
-const fileExtMap = {
+var fileExtMap = {
   deb: /\.deb$/i,
   pkg: /\.pkg$/i,
   exe: /\.exe$/i,
   msi: /\.msi$/i,
   zip: /\.zip$/i,
-  tar: /\.(tar(\.?(gz)?)|tgz)/i,
-  '7z': /\.7;$/i
+  tar: /\.tar\..*$/i,
+  '7z': /\.7z$/i
 };
 
 /**
@@ -66,12 +77,18 @@ function getAllReleases(request, owner = 'BurntSushi', repo = 'ripgrep') {
 
         const name = asset['name'];
         const os =
-          Object.keys(osMap).find((regKey) => {
-            name.match(osMap[regKey]);
-          }) || 'linux';
-        const arch = Object.keys(archMap).find((regKey) =>
-          name.match(archMap[regKey])
-        );
+          Object.keys(osMap).find(function (regKey) {
+            //console.log('github release os:', name, regKey, osMap[regKey]);
+            return osMap[regKey].test(name);
+          }) || 'unknown';
+        var arch;
+        archArr.some(function (regKey) {
+          //console.log('github release arch:', name, regKey, archMap[regKey]);
+          arch = name.match(archMap[regKey]) && regKey;
+          if (arch) {
+            return true;
+          }
+        })[0];
 
         let fileExt = '';
         Object.keys(fileExtMap).find((regKey) => {
@@ -85,10 +102,11 @@ function getAllReleases(request, owner = 'BurntSushi', repo = 'ripgrep') {
 
         all.releases.push({
           download: asset['browser_download_url'],
-          date: release['published_at'],
-          version: release['tag_name'],
-          lts: !release['prerelease'],
-          ext: fileExt,
+          date: (release['published_at'] || '').replace(/T.*/, ''),
+          version: release['tag_name'], // TODO tags aren't always semver / sensical
+          lts: /\b(lts)\b/.test(release['tag_name']),
+          channel: !release['prerelease'] ? 'stable' : 'beta',
+          ext: fileExt.slice(1),
           arch,
           os
         });
