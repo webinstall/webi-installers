@@ -20,7 +20,6 @@
 
 set -e
 set -u
-set -o pipefail
 
 # Use the script's first argument or the supplied WEBI_VERSION or ''
 WEBI_VERSION=${1:-${WEBI_VERSION:-}}
