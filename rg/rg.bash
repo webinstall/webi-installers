@@ -3,7 +3,7 @@
 # tagline: a modern drop-in grep replacement
 # alias: rg
 # description: |
-#   'rg' is a drop-in replacement for 'grep', that respects '.gitignore' and '.ignore', has all of the sensible default options you want (colors, numbers, etc) turned on by default, is written in Rust, and simply outperforms grep in every imaginable way. R.I.P. grep.
+#   `rg` is a drop-in replacement for `grep`, that respects `.gitignore` and `.ignore`, has all of the sensible default options you want (colors, numbers, etc) turned on by default, is written in Rust, and simply outperforms grep in every imaginable way. R.I.P. grep.
 # examples: |
 #
 #   ```bash
