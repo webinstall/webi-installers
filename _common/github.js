@@ -65,14 +65,16 @@ function getAllReleases(request, owner = 'BurntSushi', repo = 'ripgrep') {
         }
 
         const name = asset['name'];
-        const os = Object.keys(osMap).find(regKey => {
-          name.match(osMap[regKey]);
-        }) || 'linux';
-        const arch = Object.keys(archMap)
-          .find(regKey => name.match(archMap[regKey]));
+        const os =
+          Object.keys(osMap).find((regKey) => {
+            name.match(osMap[regKey]);
+          }) || 'linux';
+        const arch = Object.keys(archMap).find((regKey) =>
+          name.match(archMap[regKey])
+        );
 
         let fileExt = '';
-        Object.keys(fileExtMap).find(regKey => {
+        Object.keys(fileExtMap).find((regKey) => {
           const match = name.match(fileExtMap[regKey]);
           if (match) {
             fileExt = match[0];
@@ -100,7 +102,9 @@ function getAllReleases(request, owner = 'BurntSushi', repo = 'ripgrep') {
 module.exports = getAllReleases;
 
 if (module === require.main) {
-  getAllReleases(require('@root/request'), 'BurntSushi', 'ripgrep').then(function(all) {
-    console.log(JSON.stringify(all, null, 2));
-  });
+  getAllReleases(require('@root/request'), 'BurntSushi', 'ripgrep').then(
+    function (all) {
+      console.log(JSON.stringify(all, null, 2));
+    }
+  );
 }
