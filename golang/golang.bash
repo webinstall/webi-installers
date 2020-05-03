@@ -37,108 +37,87 @@
 set -e
 set -u
 
-# TODO handle v1.4 / go1.4 / lack of go1.4.0
-GOLANG_VER=${X_WEBI_VERSION:-}
-GOLANG_VER="${GOLANG_VER:-go}" # Search for 'go' at the least
+# Use the script's first argument or the supplied WEBI_VERSION or ''
+WEBI_VERSION=${1:-${WEBI_VERSION:-}}
 
-# WEBI_ARCH uses only slightly different names from GOLANG_ARCH
-GOLANG_OS="${WEBI_OS}" # linux or darwin
-GOLANG_ARCH="${WEBI_ARCH}"
-if [ "x86" == "$GOLANG_ARCH" ]; then
-  GOLANG_ARCH="386"
+# Set a temporary directory, if not already set
+WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-go.XXXXXXXX)"}
+
+###################
+#  Get WEBI vars  #
+###################
+
+# The WEBI bootstrap will define these
+# but each script should be testable in its own right
+
+if [ -z "${WEBI_PKG_URL}" ]; then
+  release_tab="${WEBI_HOST}/api/releases/go@${WEBI_VERSION:-}.csv?os=$(uname -s)&arch=$(uname -m)&ext=tar&limit=1"
+  WEBI_CSV=$(curl -fsSL "$release_tab" -H "User-Agent: $(uname -a)")
+  WEBI_CHANNEL=$(echo $WEBI_TAB | cut -d ',' -f 3)
+  if [ "error" == "$WEBI_CHANNEL" ]; then
+     echo "could not find release for go v${WEBI_VERSION}"
+     exit 1
+  fi
+  WEBI_VERSION=$(echo $WEBI_TAB | cut -d ',' -f 1)
+  WEBI_PKG_URL=$(echo $WEBI_TAB | cut -d ',' -f 9)
+  WEBI_PKG_FILE="$WEBI_TMP/$(echo $WEBI_PKG_URL | sed s:.*/::)"
 fi
 
-my_tmp="$WEBI_TMP"
-sudo_cmd="$WEBI_SUDO"
+###################
+# Install go #
+###################
 
-#########
-# BEGIN #
-#########
+new_go_home="${HOME}/.local/opt/go-v${WEBI_VERSION}"
+new_go="${HOME}/.local/opt/go-v${WEBI_VERSION}/bin/go"
 
-get_golang_version() {
-  # sort -rV    # will sort by version number, but it appears these are already sorted
-  # cut -f 1    # gets only the first column
-  # head -n 1   # gets only the most recent version
-  #  <td class="filename"><a class="download" href="https://dl.google.com/go/go1.13.4.darwin-amd64.tar.gz">go1.13.4.darwin-amd64.tar.gz</a></td>
-  my_char="."
-  my_count=$(awk -F"${my_char}" '{print NF-1}' <<< "${GOLANG_VER}")
-  # get the latest version if partial
-  if [ $my_count -ne 2 ]; then
-    if [ "$GOLANG_VER" != "go" ]; then
-      GOLANG_VER="$GOLANG_VER\\."
-    fi
-    get_http=""
-    if [ -n "$(type -p curl)" ]; then
-      get_http="curl -fsL"
-    elif [ -n "$(type -p wget)" ]; then
-      get_http="wget --quiet -O -"
-    else
-      echo "Found neither 'curl' nor 'wget'. Can't Continue."
-      exit 1
-    fi
-    GOLANG_VER=$($get_http "https://golang.org/dl/" | grep filename.*download | grep ${GOLANG_VER} | grep ${GOLANG_ARCH} | grep ${GOLANG_OS} | cut -d '"' -f 6 | cut -d '/' -f5 | cut -d '.' -f 1-3 | sed 's/\.\(freebsd\|darwin\|linux\|windows\|src\).*//' | head -n 1) \
-        || echo 'error automatically determining current Golang version'
-  fi
-}
-
-echo -n "Checking for latest golang version... "
-get_golang_version
-echo $GOLANG_VER
-
-#
-# golang
-#
-golang_install_path=$HOME/.local/opt/${GOLANG_VER}
-mkdir -p $golang_install_path
-
-# TODO warn if existing golang in path my take precedence
-if [ -e "$golang_install_path/bin/go" ]; then
-  # golang of some version is already installed
-  #echo "${GOLANG_VER}" == "$($golang_install_path/bin/go version | cut -d ' ' -f 3 2>/dev/null)"
-  if [ "${GOLANG_VER}" == "$($golang_install_path/bin/go version | cut -d ' ' -f 3 2>/dev/null)" ]; then
-    echo ${GOLANG_VER} already installed at $golang_install_path
+# Test for existing version 
+set +e
+cur_go="$(command -v go)"
+set -e
+if [ -n "$cur_go" ]; then
+  # TODO this is still sometimes wrong (i.e. 1.14 = 1.14.0)
+  cur_ver=$(go version | cut -d' ' -f3 | sed 's:go::')
+  if [ "$cur_ver" == "$(echo $WEBI_VERSION | sed 's:\.0::g')" ]; then
+    echo "go v$WEBI_VERSION already installed at $cur_go"
     exit 0
+  elif [ "$cur_go" != "$new_go" ]; then
+    echo "WARN: possible conflict with go v$WEBI_VERSION at $cur_go"
   fi
 fi
 
-GOLANG_PRE="${GOLANG_VER}.${GOLANG_OS}-${GOLANG_ARCH}"
-GOLANG_REMOTE="https://dl.google.com/go/${GOLANG_PRE}.tar.gz"
-GOLANG_LOCAL="$my_tmp/${GOLANG_PRE}.tar.gz"
-GOLANG_UNTAR="$my_tmp/${GOLANG_PRE}"
+# TODO move download to the webi bootstrap
+echo Downloading go v"${WEBI_VERSION}" from "${WEBI_PKG_URL}"
+curl -fsSL "${WEBI_PKG_URL}" -o "${WEBI_PKG_FILE}"
+pushd "${WEBI_TMP}" 2>&1 >/dev/null
+        echo Installing go v${WEBI_VERSION} as "$new_go" 
+	tar xf "${WEBI_PKG_FILE}"
+        rm "${WEBI_PKG_FILE}"
 
-echo Downloading $GOLANG_REMOTE
-if [ -n "$(command -v curl 2>/dev/null | grep curl)" ]; then
-  curl -fSL ${GOLANG_REMOTE} -o ${GOLANG_LOCAL} || echo 'error downloading golang'
-elif [ -n "$(command -v wget 2>/dev/null | grep wget)" ]; then
-  wget ${GOLANG_REMOTE} -O ${GOLANG_LOCAL} || echo 'error downloading golang'
-else
-  echo "'wget' and 'curl' are missing. Please run the following command and try again"
-  echo "    sudo apt-get install --yes curl wget"
-  exit 1
-fi
+        # simpler for single-binary commands
+        #mv ./example*/bin/example "$HOME/.local/bin"
 
-echo Installing $GOLANG_LOCAL
-mkdir -p ${GOLANG_UNTAR}/
-# --strip-components isn't portable, switch to portable version by performing move step after untar
-tar xf ${GOLANG_LOCAL} -C ${GOLANG_UNTAR}/ #--strip-components=1
-mv ${GOLANG_UNTAR}/go/* ${GOLANG_UNTAR}/
-rm -rf ${GOLANG_UNTAR}/go # clean up the temporary unzip folder
-if [ -n "$(command -v rsync 2>/dev/null | grep rsync)" ]; then
-  echo $sudo_cmd rsync -Krl "${GOLANG_UNTAR}/" "$golang_install_path/"
-  rsync -Krl "${GOLANG_UNTAR}/" "$golang_install_path/" 2>/dev/null || $sudo_cmd rsync -Krl "${GOLANG_UNTAR}/" "$golang_install_path/"
-else
-  echo $sudo_cmd cp -Hr "${GOLANG_UNTAR}/*" "$golang_install_path/"
-  cp -Hr "${GOLANG_UNTAR}"/* "$golang_install_path/" 2>/dev/null || $sudo_cmd cp -Hr "${GOLANG_UNTAR}"/* "$golang_install_path/"
-fi
-rm -rf "${GOLANG_UNTAR}"
+        # best for packages and toolchains
+        rm -rf "$new_go_home"
+        if [ -n "$(command -v rsync 2>/dev/null | grep rsync)" ]; then
+          rsync -Krl ./go*/ "$new_go_home/" 2>/dev/null
+        else
+          cp -Hr ./go*/* "$new_go_home/" 2>/dev/null
+          cp -Hr ./go*/.* "$new_go_home/" 2>/dev/null
+        fi
 
-#######
-# END #
-#######
+        # Install x go
+        $new_go_home/bin/go get golang.org/x/tools/cmd/goimports > /dev/null 2>/dev/null
+        $new_go_home/bin/go get golang.org/x/tools/cmd/gorename > /dev/null 2>/dev/null
+        $new_go_home/bin/go get golang.org/x/tools/cmd/gotype > /dev/null 2>/dev/null
+        $new_go_home/bin/go get golang.org/x/tools/cmd/stringer > /dev/null 2>/dev/null
+popd 2>&1 >/dev/null
 
-# TODO add more than one at a time
-pathman add $golang_install_path/bin
-mkdir -p $HOME/go/bin
-pathman add $HOME/go/bin
-echo "go get golang.org/x/tools/cmd/goimports"
-$golang_install_path/bin/go get golang.org/x/tools/cmd/goimports > /dev/null 2>/dev/null
+###################
+#   Update PATH   #
+###################
+
+# TODO get better output from pathman / output the path to add as return to webi bootstrap
+pathman add "$new_go_home"
+pathman add "$HOME/go/bin/"
+echo "Installed 'go' (and go tools)"
+echo ""

@@ -1,13 +1,8 @@
-# title: Rust (Disambiguation)
-# homepage: https://webinstall.dev
-# tagline: Rust is ambigious. Did you mean Rustlang?
-# ambiguous: rustlang
+# title: Rust (rustlang alias)
+# homepage: https://webinstall.dev/rustlang
+# tagline: Alias for https://webinstall.dev/rustlang
+# alias: rustlang
 # description: |
-#   Did you mean https://webinstall.dev/rustlang
+#   See https://webinstall.dev/rustlang
 
-echo ""
-echo "'rust' is ambiguous. Did you mean 'rustlang'?"
-echo ""
-echo "    curl https://webinstall.dev/rustlang | bash"
-sleep 2
-echo ""
+curl -fsSL https://webinstall.dev/rustlang | bash

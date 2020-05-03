@@ -1,13 +1,8 @@
-# title: Go (Disambiguation)
-# homepage: https://webinstall.dev
-# tagline: Go is ambigious. Did you mean Golang?
-# ambiguous: golang
+# title: Go (golang alias)
+# homepage: https://webinstall.dev/golang
+# tagline: Alias for https://webinstall.dev/golang
+# alias: golang
 # description: |
-#   Did you mean https://webinstall.dev/golang
+#   See https://webinstall.dev/golang
 
-echo ""
-echo "'go' is ambiguous. Did you mean 'golang'?"
-echo ""
-echo "    curl https://webinstall.dev/golang | bash"
-sleep 2
-echo ""
+curl -fsSL https://webinstall.dev/golang | bash
