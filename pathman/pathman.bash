@@ -29,7 +29,7 @@ set -u
 
 # Get arch envs, etc
 my_url="https://rootprojects.org/pathman/dist/$(uname -s)/$(uname -m)/pathman"
-curl -fL "$my_url" -o pathman
+curl -fsSL "$my_url" -o pathman
 echo ""
 # Make executable
 chmod +x ./pathman

@@ -4,13 +4,29 @@
 # homepage: https://git.rootprojects.org/root/serviceman
 # tagline: cross-platform service management for Linux, Mac, and Windows
 # description: |
-#   Works with
-#   - Launchd (macOS)
-#   - Systemd (Linux)
-#   - Windows Registry
+#   A system laucher that wraps `launchctl` (macOS), `systemctl` (Linux),
+#   and the Windows Registry to work cross-platform.
 # examples: |
+#
+#   Works with anything, including
+#
+#   ### Node.js
+#
 #   ```bash
-#   serviceman add --name my-service ./serve.js --port 3000
+#   serviceman add --name my-service node ./serve.js --port 3000
+#   ```
+#
+#   ### Golang
+#
+#   ```bash
+#   go build -mod vendor cmd/my-service
+#   serviceman add ./my-service --port 3000
+#   ```
+#
+#   ### And even bash!
+#
+#   ```bash
+#   serviceman add --name backuper bash ./backup.sh /mnt/data
 #   ```
 
 set -e
@@ -18,7 +34,7 @@ set -u
 
 # Get arch envs, etc
 my_url="https://rootprojects.org/serviceman/dist/$(uname -s)/$(uname -m)/serviceman"
-curl -fL "$my_url" -o serviceman
+curl -fsSL "$my_url" -o serviceman
 echo ""
 # Make executable
 chmod +x ./serviceman
