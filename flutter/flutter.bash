@@ -6,6 +6,7 @@
 # description: |
 #   Flutter is Google’s UI toolkit for building beautiful, natively compiled applications for mobile, web, and desktop from a single codebase.
 # examples: |
+#
 #   ```bash
 #   flutter create my_app
 #   ```
@@ -13,100 +14,95 @@
 set -e
 set -u
 
-FLUTTER_VER=${WEBI_VERSION:-}
-FLUTTER_VER="${FLUTTER_VER:-v}"
-EXT="tar.xz"
-FLUTTER_PATH=""
+# Use the script's first argument or the supplied WEBI_VERSION or ''
+WEBI_VERSION=${1:-${WEBI_VERSION:-}}
 
-FLUTTER_OS="${WEBI_OS}" # linux or darwin
-if [ "darwin" == "$FLUTTER_OS" ]; then
-  FLUTTER_OS="macos"
-  EXT="zip"
+# Set a temporary directory, if not already set
+WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-flutter.XXXXXXXX)"}
+
+###################
+#  Get WEBI vars  #
+###################
+
+# The WEBI bootstrap will define these
+# but each script should be testable in its own right
+
+if [ -z "${WEBI_PKG_URL:-}" ]; then
+  release_tab="${WEBI_HOST}/api/releases/flutter@${WEBI_VERSION:-}.csv?os=$(uname -s)&arch=$(uname -m)&limit=1"
+  WEBI_CSV=$(curl -fsSL "$release_tab" -H "User-Agent: $(uname -a)")
+  WEBI_CHANNEL=$(echo $WEBI_CSV | cut -d ',' -f 3)
+  if [ "error" == "$WEBI_CHANNEL" ]; then
+     echo "could not find release for flutter v${WEBI_VERSION}"
+     exit 1
+  fi
+  # TODO allow EXT ZIP or TAR in bootstrap script
+  WEBI_EXT=$(echo $WEBI_CSV | cut -d ',' -f 8)
+  WEBI_VERSION=$(echo $WEBI_CSV | cut -d ',' -f 1)
+  WEBI_PKG_URL=$(echo $WEBI_CSV | cut -d ',' -f 9)
+  WEBI_PKG_FILE="$WEBI_TMP/$(echo $WEBI_PKG_URL | sed s:.*/::)"
 fi
 
-my_tmp="$WEBI_TMP"
+###################
+# Install flutter #
+###################
 
-#########
-# BEGIN #
-#########
+new_flutter_home="${HOME}/.local/opt/flutter-v${WEBI_VERSION}"
+new_flutter="${HOME}/.local/opt/flutter-v${WEBI_VERSION}/bin/flutter"
 
-get_flutter_version() {
-  my_char="."
-  my_count=$(awk -F"${my_char}" '{print NF-1}' <<< "${FLUTTER_VER}")
-  # get the latest version if partial
-  if [ $my_count -ne 2 ]; then
-    if [ "$FLUTTER_VER" != "v" ]; then
-      FLUTTER_VER="$FLUTTER_VER\\."
-    fi
-    get_http=""
-    if [ -n "$(type -p curl)" ]; then
-      get_http="curl -fsL"
-    elif [ -n "$(type -p wget)" ]; then
-      get_http="wget --quiet -O -"
-    else
-      echo "Found neither 'curl' nor 'wget'. Can't Continue."
-      exit 1
-    fi
-  fi
-  FLUTTER_PATH=$($get_http "https://storage.googleapis.com/flutter_infra/releases/releases_${FLUTTER_OS}.json" | grep ${FLUTTER_OS} | grep ${FLUTTER_VER} | grep stable | head -n 1 | cut -d '"' -f 4) \
-        || echo 'error automatically determining current Flutter version'
-  FLUTTER_VER=$(echo $FLUTTER_PATH | sed 's/.*flutter_.*_v//' | sed 's/-stable.*//')
-}
-
-get_flutter_version
-
-#
-# flutter
-#
-flutter_install_path=$HOME/.local/opt/flutter_${FLUTTER_VER}
-mkdir -p "$flutter_install_path"
-
-# TODO warn if existing flutter in path my take precedence
-if [ -e "$flutter_install_path/bin/flutter" ]; then
-  # flutter of some version is already installed
-  if [ "${FLUTTER_VER}" == "$($flutter_install_path/bin/flutter --version | head -n 1 | cut -d ' ' -f2 2>/dev/null)" ]; then
-    echo flutter_${FLUTTER_VER} already installed at $flutter_install_path
+# Test for existing version 
+set +e
+cur_flutter="$(command -v flutter)"
+set -e
+if [ -n "$cur_flutter" ]; then
+  # TODO this is still sometimes wrong (i.e. 1.14 = 1.14.0)
+  cur_ver=$(flutter --version | head -n 1 | cut -d' ' -f2)
+  if [ "$cur_ver" == "$(echo $WEBI_VERSION)" ]; then
+    echo "flutter v$WEBI_VERSION already installed at $cur_flutter"
     exit 0
+  elif [ "$cur_flutter" != "$new_flutter" ]; then
+    echo "WARN: possible conflict with flutter v$WEBI_VERSION at $cur_flutter"
   fi
 fi
 
-# flutter_linux_v0.9.0-dev # flutter_linux_v0.9.0-dev.tar.xz
-FLUTTER_PRE="flutter_${FLUTTER_OS}_${FLUTTER_VER}-stable"
-FLUTTER_REMOTE="https://storage.googleapis.com/flutter_infra/releases/${FLUTTER_PATH}"
-FLUTTER_LOCAL="$my_tmp/${FLUTTER_PRE}.${EXT}"
-FLUTTER_UNTAR="$my_tmp/${FLUTTER_PRE}"
-
-if [ -n "$(command -v curl 2>/dev/null | grep curl)" ]; then
-  curl -fSL ${FLUTTER_REMOTE} -o ${FLUTTER_LOCAL} || echo 'error downloading flutter'
-elif [ -n "$(command -v wget 2>/dev/null | grep wget)" ]; then
-  wget ${FLUTTER_REMOTE} -O ${FLUTTER_LOCAL} || echo 'error downloading flutter'
+# TODO move download to the webi bootstrap
+echo Downloading flutter v"${WEBI_VERSION}" from "${WEBI_PKG_URL}"
+# TODO use downloads directory because this is big
+set +e
+if [ -n "$(command -v wget)" ]; then
+  # better progress bar
+  wget -c "${WEBI_PKG_URL}" -O "${WEBI_PKG_FILE}"
 else
-  echo "'wget' and 'curl' are missing. Please run the following command and try again"
-  echo "    sudo apt-get install --yes curl wget"
-  exit 1
+  curl -fL "${WEBI_PKG_URL}" -o "${WEBI_PKG_FILE}"
 fi
+set -e
 
-mkdir -p ${FLUTTER_UNTAR}/
-# --strip-components isn't portable, switch to portable version by performing move step after untar
-if [ "zip" == "$EXT" ]; then
-  pushd ${FLUTTER_UNTAR}/
-    unzip ${FLUTTER_LOCAL}
-  popd
-else
-  tar xf ${FLUTTER_LOCAL} -C ${FLUTTER_UNTAR}/ #--strip-components=1
-fi
-if [ -n "$(command -v rsync 2>/dev/null | grep rsync)" ]; then
-  echo rsync -Krl "${FLUTTER_UNTAR}"/flutter/ "$flutter_install_path/"
-  rsync -Krl "${FLUTTER_UNTAR}/flutter/" "$flutter_install_path/"
-else
-  echo cp -Hr "${FLUTTER_UNTAR}/"flutter/* "${FLUTTER_UNTAR}/"flutter/.* "$flutter_install_path/"
-  cp -Hr "${FLUTTER_UNTAR}/"flutter/* "${FLUTTER_UNTAR}/"flutter/.* "$flutter_install_path/"
-fi
-rm -rf "${FLUTTER_UNTAR}"
+pushd "${WEBI_TMP}" 2>&1 >/dev/null
+        echo Installing flutter v${WEBI_VERSION} as "$new_flutter" 
+        if [ "zip" == "$WEBI_EXT" ]; then
+	  unzip "${WEBI_PKG_FILE}"
+        else
+	  tar xf "${WEBI_PKG_FILE}"
+        fi
+        rm "${WEBI_PKG_FILE}"
 
-#######
-# END #
-#######
+        # simpler for single-binary commands
+        #mv ./example*/bin/example "$HOME/.local/bin"
 
-# TODO add more than one at a time
-pathman add $flutter_install_path/bin
+        # best for packages and toolchains
+        rm -rf "$new_flutter_home"
+        if [ -n "$(command -v rsync 2>/dev/null | grep rsync)" ]; then
+          rsync -Krl ./flutter*/ "$new_flutter_home/" 2>/dev/null
+        else
+          cp -Hr ./flutter*/* "$new_flutter_home/" 2>/dev/null
+          cp -Hr ./flutter*/.* "$new_flutter_home/" 2>/dev/null
+        fi
+popd 2>&1 >/dev/null
+
+###################
+#   Update PATH   #
+###################
+
+# TODO get better output from pathman / output the path to add as return to webi bootstrap
+pathman add "$new_flutter_home/bin"
+echo "Installed 'flutter'"
+echo ""
