@@ -8,7 +8,7 @@
 #   Use with Balena Etcher to burn ISO to USB, or boot with VirtualBox.
 #
 #   ```txt
-#   el-capitan.iso
+#   Created ~/Downloads/el-capitan.iso
 #   ```
 
 set -e
