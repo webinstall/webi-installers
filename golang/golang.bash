@@ -117,7 +117,7 @@ popd 2>&1 >/dev/null
 ###################
 
 # TODO get better output from pathman / output the path to add as return to webi bootstrap
-pathman add "$new_go_home"
-pathman add "$HOME/go/bin/"
+pathman add "$new_go_home/bin"
+pathman add "$HOME/go/bin"
 echo "Installed 'go' (and go tools)"
 echo ""

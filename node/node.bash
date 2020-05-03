@@ -55,9 +55,9 @@ my_tmp=${WEBI_TMP:-$(mktemp -d node-install.XXXXXX)}
 sudo_cmd=${WEBI_SUDO:-}
 
 http_get() {
-  if [ -n "$(command -v curl 2>/dev/null | grep curl)" ]; then
+  if [ -n "$(command -v curl)" ]; then
     curl -fsSL $1 -o $2 || echo 'error downloading node'
-  elif [ -n "$(command -v wget 2>/dev/null | grep wget)" ]; then
+  elif [ -n "$(command -v wget)" ]; then
     wget --quiet $1 -O $2 || echo 'error downloading node'
   else
     echo "'wget' and 'curl' are missing. Please run the following command and try again"
