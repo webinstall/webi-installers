@@ -31,6 +31,7 @@ function getAllReleases(request, owner, repo, baseurl = 'https://api.github.com'
       release['assets'].forEach((asset) => {
         const name = asset['name'];
         all.releases.push({
+          name: name,
           version: release['tag_name'], // TODO tags aren't always semver / sensical
           lts: /\b(lts)\b/.test(release['tag_name']),
           channel: !release['prerelease'] ? 'stable' : 'beta',
