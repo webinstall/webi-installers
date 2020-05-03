@@ -69,7 +69,7 @@ function normalize(all) {
     }
 
     if (all.download) {
-       rel.download = all.download.replace(/{{ download }}/, rel.download);
+      rel.download = all.download.replace(/{{ download }}/, rel.download);
     }
   });
   return all;
