@@ -67,22 +67,22 @@ http_get() {
   fi
 }
 
-WEBI_TAB=$(curl -fsSL "https://webinstall.dev/api/releases/node@${WEBI_VERSION:-}.csv?os=$(uname -s)&arch=$(uname -m)&ext=tar&limit=1" -H "User-Agent: $(uname -a)")
-NODEJS_VER=$(echo $WEBI_TAB | cut -d ',' -f 1)
-NODEJS_REMOTE=$(echo $WEBI_TAB | cut -d ',' -f 9)
+WEBI_CSV=$(curl -fsSL "https://webinstall.dev/api/releases/node@${WEBI_VERSION:-}.csv?os=$(uname -s)&arch=$(uname -m)&ext=tar&limit=1" -H "User-Agent: $(uname -a)")
+NODEJS_VER=$(echo $WEBI_CSV | cut -d ',' -f 1)
+NODEJS_REMOTE=$(echo $WEBI_CSV | cut -d ',' -f 9)
 NODEJS_LOCAL="$my_tmp/$(echo $NODEJS_REMOTE | sed s:.*/::)"
-NODE_OS="$(echo $WEBI_TAB | cut -d ',' -f 5)"
+NODE_OS="$(echo $WEBI_CSV | cut -d ',' -f 5)"
 
 #########
 # BEGIN #
 #########
 
 # WEBI_ARCH uses only slightly different names from NODE_ARCH
-NODE_OS="$(echo $WEBI_TAB | cut -d ',' -f 5)"
+NODE_OS="$(echo $WEBI_CSV | cut -d ',' -f 5)"
 if [ "macos" == "$NODE_OS" ]; then
   NODE_OS="darwin"
 fi
-NODE_ARCH="$(echo $WEBI_TAB | cut -d ',' -f 6)"
+NODE_ARCH="$(echo $WEBI_CSV | cut -d ',' -f 6)"
 if [ "amd64" == "$NODE_ARCH" ]; then
   NODE_ARCH="x64"
 fi

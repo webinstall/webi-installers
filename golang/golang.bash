@@ -51,15 +51,15 @@ WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-go.XXXXXXXX)"}
 # but each script should be testable in its own right
 
 if [ -z "${WEBI_PKG_URL:-}" ]; then
-  release_tab="${WEBI_HOST}/api/releases/go@${WEBI_VERSION:-}.csv?os=$(uname -s)&arch=$(uname -m)&ext=tar&limit=1"
+  release_tab="${WEBI_HOST}/api/releases/golang@${WEBI_VERSION:-}.csv?os=$(uname -s)&arch=$(uname -m)&ext=tar&limit=1"
   WEBI_CSV=$(curl -fsSL "$release_tab" -H "User-Agent: $(uname -a)")
-  WEBI_CHANNEL=$(echo $WEBI_TAB | cut -d ',' -f 3)
+  WEBI_CHANNEL=$(echo $WEBI_CSV | cut -d ',' -f 3)
   if [ "error" == "$WEBI_CHANNEL" ]; then
      echo "could not find release for go v${WEBI_VERSION}"
      exit 1
   fi
-  WEBI_VERSION=$(echo $WEBI_TAB | cut -d ',' -f 1)
-  WEBI_PKG_URL=$(echo $WEBI_TAB | cut -d ',' -f 9)
+  WEBI_VERSION=$(echo $WEBI_CSV | cut -d ',' -f 1)
+  WEBI_PKG_URL=$(echo $WEBI_CSV | cut -d ',' -f 9)
   WEBI_PKG_FILE="$WEBI_TMP/$(echo $WEBI_PKG_URL | sed s:.*/::)"
 fi
 
