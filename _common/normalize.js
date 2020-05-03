@@ -38,14 +38,14 @@ function normalize(all) {
       rel.os =
         Object.keys(osMap).find(function (regKey) {
           //console.log('release os:', rel.download, regKey, osMap[regKey]);
-          return osMap[regKey].test(rel.download);
+          return osMap[regKey].test(rel.name || rel.download);
         }) || 'unknown';
     }
 
     if (!rel.arch) {
       archArr.some(function (regKey) {
         //console.log('release arch:', rel.download, regKey, archMap[regKey]);
-        var arch = rel.download.match(archMap[regKey]) && regKey;
+        var arch = (rel.name || rel.download).match(archMap[regKey]) && regKey;
         if (arch) {
           rel.arch = arch;
           return true;
@@ -57,7 +57,7 @@ function normalize(all) {
       // pkg-v1.0.tar.gz => ['gz', 'tar', '0', 'pkg-v1']
       // pkg-v1.0.tar => ['tar', '0' ,'pkg-v1']
       // pkg-v1.0.zip => ['zip', '0', 'pkg-v1']
-      var exts = rel.download.split('.').reverse().slice(0, 2);
+      var exts = (rel.name || rel.download).split('.').reverse().slice(0, 2);
       var ext;
       if ('tar' === exts[1]) {
         rel.ext = exts.reverse().join('.');
