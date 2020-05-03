@@ -9,7 +9,7 @@
  * @param {string} repo
  * @returns {PromiseLike<any> | Promise<any>}
  */
-function getAllReleases(request, owner = 'BurntSushi', repo = 'ripgrep') {
+function getAllReleases(request, owner, repo, baseurl = 'https://api.github.com') {
   if (!owner) {
     return Promise.reject('missing owner for repo');
   }
@@ -17,7 +17,7 @@ function getAllReleases(request, owner = 'BurntSushi', repo = 'ripgrep') {
     return Promise.reject('missing repo name');
   }
   return request({
-    url: `https://api.github.com/repos/${owner}/${repo}/releases`,
+    url: `${baseurl}/repos/${owner}/${repo}/releases`,
     json: true
   }).then((resp) => {
     const gHubResp = resp.body;
