@@ -15,7 +15,9 @@ function getAllReleases(request, owner, repo, baseurl) {
   if (!baseurl) {
     return Promise.reject('missing baseurl');
   }
-  return ghRelease(request, owner, repo, baseurl + '/api/v1').then(function (all) {
+  return ghRelease(request, owner, repo, baseurl + '/api/v1').then(function (
+    all
+  ) {
     return all;
   });
 }
@@ -23,8 +25,13 @@ function getAllReleases(request, owner, repo, baseurl) {
 module.exports = getAllReleases;
 
 if (module === require.main) {
-  getAllReleases(require('@root/request'), 'coolaj86', 'go-pathman', 'https://git.coolaj86.com').then(
-  //getAllReleases(require('@root/request'), 'root', 'serviceman', 'https://git.rootprojects.org').then(
+  getAllReleases(
+    require('@root/request'),
+    'coolaj86',
+    'go-pathman',
+    'https://git.coolaj86.com'
+  ).then(
+    //getAllReleases(require('@root/request'), 'root', 'serviceman', 'https://git.rootprojects.org').then(
     function (all) {
       console.log(JSON.stringify(all, null, 2));
     }

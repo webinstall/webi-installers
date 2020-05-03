@@ -17,7 +17,7 @@ module.exports = function (request) {
         json: true
       }).then(function (resp) {
         var body = resp.body;
-        all.download = body.base_url + '/{{ download }}'
+        all.download = body.base_url + '/{{ download }}';
         body.releases.forEach(function (asset) {
           if (!map[asset.channel]) {
             map[asset.channel] = true;

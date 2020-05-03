@@ -9,7 +9,12 @@
  * @param {string} repo
  * @returns {PromiseLike<any> | Promise<any>}
  */
-function getAllReleases(request, owner, repo, baseurl = 'https://api.github.com') {
+function getAllReleases(
+  request,
+  owner,
+  repo,
+  baseurl = 'https://api.github.com'
+) {
   if (!owner) {
     return Promise.reject('missing owner for repo');
   }
