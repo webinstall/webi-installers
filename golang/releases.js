@@ -51,8 +51,8 @@ function getAllReleases(request) {
         all.releases.push({
           version: version,
           // all go versions >= 1.0.0 are effectively LTS
-          lts: (parts[0] > 0 && asset.stable) || false,
-          channel: asset.stable || 'beta',
+          lts: (parts[0] > 0 && release.stable) || false,
+          channel: release.stable || 'beta',
           date: '1970-01-01', // the world may never know
           os: os,
           arch: arch,
