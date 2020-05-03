@@ -34,7 +34,7 @@ WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-ripgrep.XXXXXXXX)"}
 # The WEBI bootstrap will define these
 # but each script should be testable in its own right
 
-if [ -z "${WEBI_PKG_URL}" ]; then
+if [ -z "${WEBI_PKG_URL:-}" ]; then
   release_tab="${WEBI_HOST}/api/releases/ripgrep@${WEBI_VERSION:-}.csv?os=$(uname -s)&arch=$(uname -m)&ext=tar&limit=1"
   WEBI_CSV=$(curl -fsSL "$release_tab" -H "User-Agent: $(uname -a)")
   WEBI_CHANNEL=$(echo $WEBI_TAB | cut -d ',' -f 3)

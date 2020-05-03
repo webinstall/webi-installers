@@ -67,6 +67,10 @@ function normalize(all) {
         rel.ext = exts[0];
       }
     }
+
+    if (all.download) {
+       rel.download = all.download.replace(/{{ download }}/, rel.download);
+    }
   });
   return all;
 }
