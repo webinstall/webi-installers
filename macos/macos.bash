@@ -48,4 +48,8 @@ else
   bash linux-create-bootable-macos-recovery-image.sh
 fi
 
+echo ""
+echo "Created $HOME/Downloads/el-capitan.iso"
+echo ""
+
 popd 2>&1 >/dev/null
