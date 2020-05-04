@@ -43,7 +43,7 @@ webi_extract
 
 pushd "$WEBI_TMP" 2>&1 >/dev/null
         echo Installing caddy v${WEBI_VERSION} as "$new_caddy"
-        mv ./caddy-*/caddy "$HOME/.local/bin/"
+        mv ./caddy "$HOME/.local/bin/"
 popd 2>&1 >/dev/null
 
 ###################
