@@ -14,23 +14,131 @@ Primary and community-submitted packages for
 
 ## Creating an Installer
 
-An install consists of 4 parts:
+An install consists of 5 parts in two files:
 
-1. Generate a list of releases by OS and ARCH
-   - For a Github releases example, see `ripgrep/releases.js` and
-     `_common/github.js`
-2. A bash version check (to skip downloading if already installed)
-   - typically just 1 unique line of bash
-3. A bash install (move files from the archive (zip, tar) to \$HOME/.local)
-   - also typically just 1 unique line of bash
+```
+my-new-package/
+  - releases.js
+  - my-new-package.bash
+```
+
+1. Create Description
+2. Fetch Releases
+3. Version Check (semi-optional)
 4. Update PATH
-   - the `webi_path_add` bash function will work for bash, zsh, and fish
+
+See these **examples**:
+
+- https://github.com/webinstall/packages/blob/master/rg/
+- https://github.com/webinstall/packages/blob/master/golang/
 
 The `webinstall.dev` server uses the list of releases returned by
 `<your-package>/releases.js` to generate a bash script with most necessary
 variables and functions pre-defined.
 
 You just fill in the blanks.
+
+### 1. Create Description
+
+Just copy the format from any of the existing packages. It's like this:
+
+`my-new-package.bash`:
+
+```
+# title: Node.js
+# homepage: https://nodejs.org
+# tagline: JavaScript V8 runtime
+# description: |
+#   Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine
+# examples: |
+#   ```bash
+#   node -e 'console.log("Hello, World!")'
+#   > Hello, World!
+#   ```
+```
+
+### 1. Fetch Releases
+
+All you're doing in this step is just translating from one form of JSON or CSV or TAB or whatever, to a format understood by `webi`.
+
+- Using Github releases? See `ripgrep/releases.js` (which uses `_common/github.js`)
+- Have a special format? See `golang/releases.js` or `node/releases.js`.
+
+It looks like this:
+
+`releases.js`:
+
+```js
+module.exports = function (request) {
+  return github(request, owner, repo).then(function (all) {
+    // if you need to do something special, you can do it here
+    // ...
+    return all;
+  });
+};
+```
+
+### 2. Version Check (semi-optional)
+
+If the thing is already installed, we don't need to download and install it again.
+
+You create a version check that looks like this:
+
+```
+    # if the output is "foobar 1.3.4", we just need the "1.3.4"
+    cur_ver=$(foobar --version | cut -d ' ' -f 2)
+```
+
+And then you wrap it in some **boilerplate** (copy/paste/replace) that looks like this:
+
+```
+new_foobar="${HOME}/.local/bin/foobar"
+
+# Test for existing version
+set +e
+current_foobar="$(command -v foobar)"
+set -e
+if [ -n "$current_foobar" ]; then
+  # if the output is "foobar 1.3.4", we just need the "1.3.4"
+  cur_ver=$(foobar --version | cut -d ' ' -f 2)
+  if [ "$cur_ver" == "$WEBI_VERSION" ]; then
+    echo "foobar v$WEBI_VERSION already installed at $current_foobar"
+    exit 0
+  elif [ "$current_foobar" != "$new_foobar" ]; then
+    echo "WARN: possible conflict with foobar v$WEBI_VERSION at $current_foobar"
+  fi
+fi
+```
+
+### 3. Move files to $HOME/.local
+
+The `webi_download` and `webi_extract` functions will handle download and unpacking.
+All you have to do is move your files into the right place.
+
+If you have a single binary that'll look like this:
+
+```
+    mv ./foobar-*/bin/foobar "$HOME/.local/bin/"
+```
+
+If you have something with more parts it'll look like this:
+
+```
+    if [ -n "$(command -v rsync 2>/dev/null | grep rsync)" ]; then
+      rsync -Krl ./foobar*/ "$new_foobar_home/" 2>/dev/null
+    else
+      cp -Hr ./foobar*/* "$new_foobar_home/" 2>/dev/null
+      cp -Hr ./foobar*/.* "$new_foobar_home/" 2>/dev/null
+    fi
+```
+
+### 4. Update PATH
+
+Typically speaking, `$HOME/.local/bin` will be added to the PATH for you.
+
+However, you should call `webi_path_add` to add any special paths.
+
+Again, just look at the examples.
 
 ## Script API
 
