@@ -38,10 +38,11 @@ fi
 if [ -n "\$(command -v pkgutil)" ]; then
 	my_ext="pkg,\$my_ext"
 fi
-if [ -n "\$(command -v diskutil)" ]; then
+# disable this check for the sake of building the macOS installer on Linux
+#if [ -n "\$(command -v diskutil)" ]; then
 	# note: could also detect via hdiutil
 	my_ext="dmg,\$my_ext"
-fi
+#fi
 my_ext="\$(echo "\$my_ext" | sed 's/,$//')" # nix trailing comma
 set -e
 

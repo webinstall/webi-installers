@@ -14,34 +14,6 @@
 set -e
 set -u
 
-# Use the script's first argument or the supplied WEBI_VERSION or ''
-WEBI_VERSION=${1:-${WEBI_VERSION:-}}
-
-# Set a temporary directory, if not already set
-WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-flutter.XXXXXXXX)"}
-
-###################
-#  Get WEBI vars  #
-###################
-
-# The WEBI bootstrap will define these
-# but each script should be testable in its own right
-
-if [ -z "${WEBI_PKG_URL:-}" ]; then
-  release_tab="${WEBI_HOST}/api/releases/flutter@${WEBI_VERSION:-}.csv?os=$(uname -s)&arch=$(uname -m)&limit=1"
-  WEBI_CSV=$(curl -fsSL "$release_tab" -H "User-Agent: $(uname -a)")
-  WEBI_CHANNEL=$(echo $WEBI_CSV | cut -d ',' -f 3)
-  if [ "error" == "$WEBI_CHANNEL" ]; then
-     echo "could not find release for flutter v${WEBI_VERSION}"
-     exit 1
-  fi
-  # TODO allow EXT ZIP or TAR in bootstrap script
-  WEBI_EXT=$(echo $WEBI_CSV | cut -d ',' -f 8)
-  WEBI_VERSION=$(echo $WEBI_CSV | cut -d ',' -f 1)
-  WEBI_PKG_URL=$(echo $WEBI_CSV | cut -d ',' -f 9)
-  WEBI_PKG_FILE="$WEBI_TMP/$(echo $WEBI_PKG_URL | sed s:.*/::)"
-fi
-
 ###################
 # Install flutter #
 ###################
@@ -54,7 +26,6 @@ set +e
 cur_flutter="$(command -v flutter)"
 set -e
 if [ -n "$cur_flutter" ]; then
-  # TODO this is still sometimes wrong (i.e. 1.14 = 1.14.0)
   cur_ver=$(flutter --version | head -n 1 | cut -d' ' -f2)
   if [ "$cur_ver" == "$(echo $WEBI_VERSION)" ]; then
     echo "flutter v$WEBI_VERSION already installed at $cur_flutter"
@@ -64,26 +35,12 @@ if [ -n "$cur_flutter" ]; then
   fi
 fi
 
-# TODO move download to the webi bootstrap
-echo Downloading flutter v"${WEBI_VERSION}" from "${WEBI_PKG_URL}"
-# TODO use downloads directory because this is big
-set +e
-if [ -n "$(command -v wget)" ]; then
-  # better progress bar
-  wget -c "${WEBI_PKG_URL}" -O "${WEBI_PKG_FILE}"
-else
-  curl -fL "${WEBI_PKG_URL}" -o "${WEBI_PKG_FILE}"
-fi
-set -e
+webi_download
+
+webi_extract
 
 pushd "${WEBI_TMP}" 2>&1 >/dev/null
         echo Installing flutter v${WEBI_VERSION} as "$new_flutter" 
-        if [ "zip" == "$WEBI_EXT" ]; then
-	  unzip "${WEBI_PKG_FILE}"
-        else
-	  tar xf "${WEBI_PKG_FILE}"
-        fi
-        rm "${WEBI_PKG_FILE}"
 
         # simpler for single-binary commands
         #mv ./example*/bin/example "$HOME/.local/bin"
@@ -103,6 +60,6 @@ popd 2>&1 >/dev/null
 ###################
 
 # TODO get better output from pathman / output the path to add as return to webi bootstrap
-pathman add "$new_flutter_home/bin"
+webi_path_add "$new_flutter_home/bin"
 echo "Installed 'flutter'"
 echo ""
