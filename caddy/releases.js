@@ -6,6 +6,10 @@ var repo = 'caddy';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
+    // remove checksums and .deb
+    all.releases = all.releases.filter(function (rel) {
+      return !/(\.txt)|(\.deb)$/i.test(rel.name);
+    });
     return all;
   });
 };

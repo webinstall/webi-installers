@@ -2,11 +2,12 @@
 
 // this may need customizations between packages
 const osMap = {
-  macos: /\b(apple|mac|darwin|iPhone|iOS|iPad)/i,
-  linux: /\b(linux)/i,
-  windows: /\b(win|microsoft|msft)/i,
-  sunos: /\b(sun)/i,
-  aix: /\b(aix)/i
+  macos: /(\b|_)(apple|mac|darwin|iPhone|iOS|iPad)/i,
+  linux: /(\b|_)(linux)/i,
+  freebsd: /(\b|_)(freebsd)/i,
+  windows: /(\b|_)(win|microsoft|msft)/i,
+  sunos: /(\b|_)(sun)/i,
+  aix: /(\b|_)(aix)/i
 };
 
 // evaluation order matters
@@ -23,13 +24,13 @@ var archArr = [
 ];
 var archMap = {
   amd64: /(amd.?64|x64|[_\-]64)/i,
-  x86: /(86)\b/i,
-  ppc64le: /\b(ppc64le)/i,
-  ppc64: /\b(ppc64)\b/i,
-  arm64: /\b(arm64|arm)/i,
-  armv7l: /\b(armv?7l)/i,
-  armv6l: /\b(armv?6l)/i,
-  s390x: /\b(s390x)/i
+  x86: /(86)(\b|_)/i,
+  ppc64le: /(\b|_)(ppc64le)/i,
+  ppc64: /(\b|_)(ppc64)(\b|_)/i,
+  arm64: /(\b|_)(arm64|arm)/i,
+  armv7l: /(\b|_)(armv?7l)/i,
+  armv6l: /(\b|_)(armv?6l)/i,
+  s390x: /(\b|_)(s390x)/i
 };
 
 function normalize(all) {
@@ -38,9 +39,10 @@ function normalize(all) {
       rel.name = rel.download.replace(/.*\//, '');
     }
     if (!rel.os) {
+      console.log('name:', rel.name);
       rel.os =
         Object.keys(osMap).find(function (regKey) {
-          //console.log('release os:', rel.download, regKey, osMap[regKey]);
+          console.log('release os:', regKey, osMap[regKey], osMap[regKey].test(rel.name || rel.download), rel.name, rel.download);
           return osMap[regKey].test(rel.name || rel.download);
         }) || 'unknown';
     }

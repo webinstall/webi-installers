@@ -38,7 +38,7 @@ function getAllReleases(
         all.releases.push({
           name: name,
           version: release['tag_name'], // TODO tags aren't always semver / sensical
-          lts: /\b(lts)\b/.test(release['tag_name']),
+          lts: /(\b|_)(lts)(\b|_)/.test(release['tag_name']),
           channel: !release['prerelease'] ? 'stable' : 'beta',
           date: (release['published_at'] || '').replace(/T.*/, ''),
           os: '', // will be guessed by download filename
