@@ -51,14 +51,16 @@ webi_download() {
     if [ -n "${2:-}" ]; then
         my_dl="$2"
     else
-        my_dl="$WEBI_PKG_FILE"
+        my_dl="$HOME/Downloads/$WEBI_PKG_FILE"
     fi
 
     if [ -n "$WEBI_WGET" ]; then
         # wget has resumable downloads
-        wget -c "$my_url" --user-agent="wget $WEBI_UA" -O "$my_dl"
+        # TODO wget -c --content-disposition "$my_url"
+        wget -q --show-progress -c "$my_url" --user-agent="wget $WEBI_UA" -O "$my_dl"
     else
         # BSD curl is non-resumable, hence we don't bother
+        # TODO curl -fsSL --remote-name --remote-header-name --write-out "$my_url"
         curl -fSL "$my_url" -H "User-Agent: curl $WEBI_UA" -o "$my_dl"
     fi
 }
@@ -95,7 +97,8 @@ webi_path_add() {
         export PATH="$HOME/.local/bin:$PATH"
     fi
 
-    pathman add "$1"
+    # in case pathman was recently installed and the PATH not updated
+    "$HOME/.local/bin/pathman" add "$1"
 }
 
 ##
