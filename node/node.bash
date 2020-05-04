@@ -69,7 +69,7 @@ if [ -e "$new_node_home/bin/node" ]; then
         exit 0
     fi
 fi
-if [ "$cur_node" != "$new_node" ]; then
+if [ -n "$cur_node" ] && [ "$cur_node" != "$new_node" ]; then
     echo "WARN: possible conflict with node v$WEBI_VERSION at $cur_node"
 fi
 

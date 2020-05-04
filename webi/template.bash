@@ -45,6 +45,10 @@ webi_download() {
     if [ -n "${1:-}" ]; then
         my_url="$1"
     else
+        if [ "error" == "$WEBI_CHANNEL" ]; then
+            echo "Could not find $WEBI_NAME v$WEBI_VERSION"
+            exit 1
+        fi
         my_url="$WEBI_PKG_URL"
         echo "Downloading $WEBI_NAME v$WEBI_VERSION"
     fi
