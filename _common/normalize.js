@@ -40,10 +40,18 @@ function normalize(all) {
       rel.name = rel.download.replace(/.*\//, '');
     }
     if (!rel.os) {
-      console.log('name:', rel.name);
       rel.os =
         Object.keys(osMap).find(function (regKey) {
-          console.log('release os:', regKey, osMap[regKey], osMap[regKey].test(rel.name || rel.download), rel.name, rel.download);
+          /*
+          console.log(
+            'release os:',
+            regKey,
+            osMap[regKey],
+            osMap[regKey].test(rel.name || rel.download),
+            rel.name,
+            rel.download
+          );
+          // */
           return osMap[regKey].test(rel.name || rel.download);
         }) || 'unknown';
     }
