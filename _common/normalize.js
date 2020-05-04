@@ -34,6 +34,9 @@ var archMap = {
 
 function normalize(all) {
   all.releases.forEach(function (rel) {
+    if (!rel.name) {
+      rel.name = rel.download.replace(/.*\//, '');
+    }
     if (!rel.os) {
       rel.os =
         Object.keys(osMap).find(function (regKey) {
