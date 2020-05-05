@@ -91,8 +91,22 @@ set -u
 #  Install node  #
 ##################
 
+common_node_home="${HOME}/.local/opt/node"
 new_node_home="${HOME}/.local/opt/node-v${WEBI_VERSION}"
 new_node="${HOME}/.local/opt/node-v${WEBI_VERSION}/bin/node"
+
+update_node_home() {
+    rm -rf "$common_node_home"
+    ln -s "$new_node_home" "$common_node_home"
+
+    # TODO get better output from pathman / output the path to add as return to webi bootstrap
+    webi_path_add "$common_node_home/bin"
+}
+
+if [ -x "$new_go_home/bin/go" ]; then
+  update_node_home
+  exit 0
+fi
 
 # Test for existing version
 set +e
@@ -140,8 +154,7 @@ popd 2>&1 >/dev/null
 #   Update PATH   #
 ###################
 
-# TODO get better output from pathman / output the path to add as return to webi bootstrap
-webi_path_add "$new_node_home/bin"
+update_node_home
 
 echo "Installed 'node' and 'npm'"
 echo ""
