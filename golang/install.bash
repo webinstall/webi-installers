@@ -41,8 +41,23 @@ set -u
 # Install go #
 ###################
 
+common_go_home="${HOME}/.local/opt/go-v${WEBI_VERSION}"
 new_go_home="${HOME}/.local/opt/go-v${WEBI_VERSION}"
 new_go="${HOME}/.local/opt/go-v${WEBI_VERSION}/bin/go"
+
+update_go_home() {
+    rm -rf "$common_go_home"
+    ln -s "$new_go_home" "$common_go_home"
+
+    # TODO get better output from pathman / output the path to add as return to webi bootstrap
+    webi_path_add "$common_go_home/bin"
+    webi_path_add "$HOME/go/bin"
+}
+
+if [ -x "$new_go_home/bin/go" ]; then
+  update_go_home
+  exit 0
+fi
 
 # Test for existing version
 set +e
@@ -96,9 +111,7 @@ popd 2>&1 >/dev/null
 #   Update PATH   #
 ###################
 
-# TODO get better output from pathman / output the path to add as return to webi bootstrap
-webi_path_add "$new_go_home/bin"
-webi_path_add "$HOME/go/bin"
+update_go_home
 
 echo "Installed 'go' (and go tools)"
 echo ""
