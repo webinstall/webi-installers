@@ -42,8 +42,7 @@ function normalize(all) {
     if (!rel.os) {
       rel.os =
         Object.keys(osMap).find(function (regKey) {
-          /*
-          console.log(
+          /* console.log(
             'release os:',
             regKey,
             osMap[regKey],

@@ -33,7 +33,7 @@ if (module === require.main) {
   ).then(
     //getAllReleases(require('@root/request'), 'root', 'serviceman', 'https://git.rootprojects.org').then(
     function (all) {
-      console.log(JSON.stringify(all, null, 2));
+      console.info(JSON.stringify(all, null, 2));
     }
   );
 }

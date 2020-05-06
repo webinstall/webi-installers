@@ -58,7 +58,7 @@ module.exports = getAllReleases;
 if (module === require.main) {
   getAllReleases(require('@root/request'), 'BurntSushi', 'ripgrep').then(
     function (all) {
-      console.log(JSON.stringify(all, null, 2));
+      console.info(JSON.stringify(all, null, 2));
     }
   );
 }

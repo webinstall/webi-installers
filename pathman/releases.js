@@ -19,6 +19,6 @@ module.exports = function (request) {
 
 if (module === require.main) {
   module.exports(require('@root/request')).then(function (all) {
-    console.log(JSON.stringify(all, null, 2));
+    console.info(JSON.stringify(all, null, 2));
   });
 }

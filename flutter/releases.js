@@ -21,7 +21,6 @@ module.exports = function (request) {
         body.releases.forEach(function (asset) {
           if (!map[asset.channel]) {
             map[asset.channel] = true;
-            console.log('a', asset.channel);
           }
           all.releases.push({
             // nix leading 'v'
@@ -60,6 +59,6 @@ module.exports = function (request) {
 if (module === require.main) {
   module.exports(require('@root/request')).then(function (all) {
     all.releases = all.releases.slice(25);
-    console.log(JSON.stringify(all, null, 2));
+    console.info(JSON.stringify(all, null, 2));
   });
 }

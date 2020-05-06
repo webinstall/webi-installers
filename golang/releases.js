@@ -73,6 +73,6 @@ if (module === require.main) {
   getAllReleases(require('@root/request')).then(function (all) {
     all = require('../_common/normalize.js')(all);
     all.releases = all.releases.slice(0, 10);
-    console.log(JSON.stringify(all, null, 2));
+    console.info(JSON.stringify(all, null, 2));
   });
 }
