@@ -6,25 +6,52 @@
 # description: |
 #   Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine
 # examples: |
+#
+#   ### Hello World
+#
 #   ```bash
 #   node -e 'console.log("Hello, World!")'
 #   > Hello, World!
 #   ```
-#   <br/>
+#
 #   <br/>
 #
-#   <table>
-#   <tr>
-#   <td>Run a webserver</td>
-#   <td><pre><code class="language-bash">
+#   ### A Simple Web Server
+#
+#   `server.js`:
+#
+#   ```bash
+#   var http = require('http');
+#   var app = function (req, res) {
+#     res.end('Hello, World!');
+#   };
+#   http.createServer(app).listen(8080, function () {
+#     console.info('Listening on', this.address());
+#   });
+#   ```
+#
+#   <br/>
+#
+#   ```bash
+#   node server.js
+#   ```
+#
+#   ### An Express App
+#
+#   ```bash
 #   mkdir my-server
 #   pushd my-server
 #   npm init
-#   npm install --save express</code></pre>
+#   npm install --save express
+#   ```
+#
 #   <br/>
-#   <code>app.js:</code>
-#   <br/>
-#   <pre><code class="language-javascript">'use strict'
+#
+#   `app.js`:
+#
+#   ```js
+#   'use strict';
+#
 #   var express = require('express');
 #   var app = express();
 #
@@ -33,20 +60,29 @@
 #   });
 #
 #   module.exports = app;</code></pre>
+#   ```
+#
 #   <br/>
-#   <code>server.js:</code>
-#   <br/>
-#   <pre><code class="language-javascript">'use strict'
+#
+#   `server.js`:
+#
+#   ```js
+#   'use strict';
+#
 #   var http = require('http');
 #   var app = require('./app.js');
+#
 #   http.createServer(app).listen(8080, function () {
-#     console.log('Listening on', this.address());
-#   });</code></pre>
+#     console.info('Listening on', this.address());
+#   });
+#   ```
+#
 #   <br/>
-#   <pre><code class="language-bash">npm start</code></pre>
-#   </td>
-#   </tr>
-#   </table>
+#
+#   ```bash
+#   npm start
+#   ```
+#
 
 set -e
 set -u
