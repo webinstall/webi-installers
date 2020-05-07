@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO: migrate from shmatter to frontmarker
+
 set -e
 set -u
 
