@@ -22,6 +22,7 @@ set -u
 #WEBI_EXT=
 #WEBI_PKG_URL=
 #WEBI_PKG_FILE=
+export WEBI_HOST
 
 ##
 ## Set up tmp, download, and install directories
@@ -61,7 +62,13 @@ webi_download() {
     if [ -n "$WEBI_WGET" ]; then
         # wget has resumable downloads
         # TODO wget -c --content-disposition "$my_url"
+        set +e
         wget -q --show-progress -c "$my_url" --user-agent="wget $WEBI_UA" -O "$my_dl"
+        if ! [ $? -eq 0 ]; then
+          echo "failed to download from $WEBI_PKG_URL"
+          exit 1
+        fi
+        set -e
     else
         # BSD curl is non-resumable, hence we don't bother
         # TODO curl -fsSL --remote-name --remote-header-name --write-out "$my_url"

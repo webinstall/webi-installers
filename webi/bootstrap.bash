@@ -4,6 +4,7 @@
 
 #WEBI_PKG=
 #WEBI_HOST=https://webinstall.dev
+export WEBI_HOST
 
 mkdir -p "$HOME/.local/bin"
 
@@ -59,6 +60,7 @@ export WEBI_HOST="\${WEBI_HOST:-https://webinstall.dev}"
 export WEBI_UA="\$(uname -a)"
 
 my_installer_url="\$WEBI_HOST/api/installers/\$my_package.bash?formats=\$my_ext"
+set +e
 if [ -n "\$WEBI_CURL" ]; then
 	curl -fsSL "\$my_installer_url" -H "User-Agent: curl \$WEBI_UA" \\
 		-o "\$WEBI_BOOT/\$my_package-bootstrap.sh"
@@ -66,6 +68,11 @@ else
 	wget -q "\$my_installer_url" --user-agent="wget \$WEBI_UA" \\
 		-O "\$WEBI_BOOT/\$my_package-bootstrap.sh"
 fi
+if ! [ \$? -eq 0 ]; then
+  echo "error fetching '\$my_installer_url'"
+  exit 1
+fi
+set -e
 
 pushd "\$WEBI_BOOT" 2>&1 > /dev/null
 	bash "\$my_package-bootstrap.sh"
