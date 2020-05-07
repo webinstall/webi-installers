@@ -18,6 +18,7 @@ set -u
 # Install flutter #
 ###################
 
+common_flutter_home="${HOME}/.local/opt/flutter"
 new_flutter_home="${HOME}/.local/opt/flutter-v${WEBI_VERSION}"
 new_flutter="${HOME}/.local/opt/flutter-v${WEBI_VERSION}/bin/flutter"
 
@@ -53,6 +54,7 @@ pushd "${WEBI_TMP}" 2>&1 >/dev/null
           cp -Hr ./flutter*/* "$new_flutter_home/" 2>/dev/null
           cp -Hr ./flutter*/.* "$new_flutter_home/" 2>/dev/null
         fi
+        rm -rf ./flutter*
 popd 2>&1 >/dev/null
 
 ###################

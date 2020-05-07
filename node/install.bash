@@ -133,6 +133,7 @@ pushd "$WEBI_TMP" 2>&1 >/dev/null
       cp -Hr ./node*/* "$new_node_home/" 2>/dev/null
       cp -Hr ./node*/.* "$new_node_home/" 2>/dev/null
     fi
+    rm -rf ./node*
 popd 2>&1 >/dev/null
 
 ###################

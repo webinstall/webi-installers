@@ -83,6 +83,7 @@ pushd "$WEBI_TMP" 2>&1 >/dev/null
       cp -Hr ./go*/* "$new_go_home/" 2>/dev/null
       cp -Hr ./go*/.* "$new_go_home/" 2>/dev/null
     fi
+    rm -rf ./go*
 
     # Install x go
     $new_go_home/bin/go get golang.org/x/tools/cmd/goimports > /dev/null 2>/dev/null
