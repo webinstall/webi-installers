@@ -27,7 +27,7 @@ set -u
 ## Set up tmp, download, and install directories
 ##
 
-WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-go.XXXXXXXX)"}
+WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-${WEBI_PKG:-}.XXXXXXXX)"}
 
 mkdir -p "$HOME/Downloads"
 mkdir -p "$HOME/.local/bin"
