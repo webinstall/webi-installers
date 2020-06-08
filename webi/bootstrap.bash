@@ -27,15 +27,7 @@ fi
 
 my_ext=""
 set +e
-if [ -n "\$(command -v git)" ]; then
-	my_ext="git,\$my_ext"
-fi
-if [ -n "\$(command -v tar)" ]; then
-	my_ext="tar,\$my_ext"
-fi
-if [ -n "\$(command -v unzip)" ]; then
-	my_ext="zip,\$my_ext"
-fi
+# NOTE: the order here is least favorable to most favorable
 if [ -n "\$(command -v pkgutil)" ]; then
 	my_ext="pkg,\$my_ext"
 fi
@@ -44,6 +36,18 @@ fi
 	# note: could also detect via hdiutil
 	my_ext="dmg,\$my_ext"
 #fi
+if [ -n "\$(command -v git)" ]; then
+	my_ext="git,\$my_ext"
+fi
+if [ -n "\$(command -v unzip)" ]; then
+	my_ext="xz,\$my_ext"
+fi
+if [ -n "\$(command -v unzip)" ]; then
+	my_ext="zip,\$my_ext"
+fi
+if [ -n "\$(command -v tar)" ]; then
+	my_ext="tar,\$my_ext"
+fi
 my_ext="\$(echo "\$my_ext" | sed 's/,$//')" # nix trailing comma
 set -e
 

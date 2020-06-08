@@ -84,6 +84,12 @@ webi_extract() {
         elif [ "zip" == "$WEBI_EXT" ]; then
             echo "Extracting $HOME/Downloads/$WEBI_PKG_FILE"
             unzip "$HOME/Downloads/$WEBI_PKG_FILE"
+        elif [ "exe" == "$WEBI_EXT" ]; then
+            # do nothing (but don't leave an empty if block either)
+            echo -n ""
+        elif [ "xz" == "$WEBI_EXT" ]; then
+            echo "Inflating $HOME/Downloads/$WEBI_PKG_FILE"
+            unxz -c "$HOME/Downloads/$WEBI_PKG_FILE" > $(basename "$WEBI_PKG_FILE")
         else
             # do nothing
             echo "Failed to extract $HOME/Downloads/$WEBI_PKG_FILE"
