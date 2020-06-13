@@ -40,7 +40,7 @@ set -u
 ###################
 
 new_go="${HOME}/.local/opt/go-v${WEBI_VERSION}/bin/go"
-common_go_home="${HOME}/.local/opt/go-v${WEBI_VERSION}"
+common_go_home="${HOME}/.local/opt/go"
 new_go_home="${HOME}/.local/opt/go-v${WEBI_VERSION}"
 common_go_bin="${HOME}/go"
 new_go_bin="${HOME}/.local/opt/go-bin-v${WEBI_VERSION}"
