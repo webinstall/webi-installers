@@ -121,11 +121,11 @@ if [ -n "$cur_node" ]; then
     exit 0
   else
     if [ "$cur_node" != "$common_node_home/bin/node" ]; then
-      echo "WARN: possible conflict between node v${WEBI_VERSION} and v${cur_node_version} at ${cur_node}"
+      echo "WARN: possible conflict between node v${WEBI_VERSION} and ${cur_node_version} at ${cur_node}"
     fi
-    if [ -x "$new_node_home/bin/node" ]; then
+    if [ -x "$new_node" ]; then
       update_node_home
-      echo "switched to node${WEBI_VERSION} at $new_node_home"
+      echo "switched to node v${WEBI_VERSION} at $new_node_home"
       exit 0
     fi
   fi
