@@ -103,12 +103,6 @@ update_node_home() {
     webi_path_add "$common_node_home/bin"
 }
 
-if [ -x "$new_node" ]; then
-  update_node_home
-  echo "switched to node v${WEBI_VERSION} at $new_node_home"
-  exit 0
-fi
-
 # Test for existing version
 set +e
 cur_node="$(command -v node)"
