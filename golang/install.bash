@@ -10,7 +10,6 @@
 #   mkdir -p hello/
 #   pushd hello/
 #   ```
-#   <br/>
 #
 #   ```bash
 #   cat << EOF >> main.go
@@ -25,7 +24,6 @@
 #   }
 #   EOF
 #   ```
-#   <br/>
 #
 #   ```bash
 #   go fmt ./...
@@ -41,17 +39,21 @@ set -u
 # Install go #
 ###################
 
+new_go="${HOME}/.local/opt/go-v${WEBI_VERSION}/bin/go"
 common_go_home="${HOME}/.local/opt/go-v${WEBI_VERSION}"
 new_go_home="${HOME}/.local/opt/go-v${WEBI_VERSION}"
-new_go="${HOME}/.local/opt/go-v${WEBI_VERSION}/bin/go"
+common_go_bin="${HOME}/go"
+new_go_bin="${HOME}/.local/opt/go-bin-v${WEBI_VERSION}"
 
 update_go_home() {
     rm -rf "$common_go_home"
     ln -s "$new_go_home" "$common_go_home"
-
     # TODO get better output from pathman / output the path to add as return to webi bootstrap
     webi_path_add "$common_go_home/bin"
-    webi_path_add "$HOME/go/bin"
+
+    rm -rf "$common_go_bin"
+    ln -s "$new_go_bin" "$common_go_bin"
+    webi_path_add "$common_go_bin/bin"
 }
 
 if [ -x "$new_go_home/bin/go" ]; then
