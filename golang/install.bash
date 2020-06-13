@@ -46,12 +46,13 @@ common_go_bin="${HOME}/go"
 new_go_bin="${HOME}/.local/opt/go-bin-v${WEBI_VERSION}"
 
 update_go_home() {
-    rm -rf "$common_go_home"
+    rm -rf "$common_go_home" # should be a symlink
     ln -s "$new_go_home" "$common_go_home"
     # TODO get better output from pathman / output the path to add as return to webi bootstrap
     webi_path_add "$common_go_home/bin"
 
     rm -rf "$common_go_bin"
+    mkdir -p "$new_go_bin/bin"
     ln -s "$new_go_bin" "$common_go_bin"
     webi_path_add "$common_go_bin/bin"
 }
