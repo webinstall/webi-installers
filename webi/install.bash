@@ -25,7 +25,7 @@ if [ -f "$HOME/.local/bin/webi" ]; then
   cur_webi="$(command -v webi)"
   set -e
   if [ -z "$cur_webi" ]; then
-    web_add_path "$HOME/.local/bin"
+    webi_path_add "$HOME/.local/bin"
   fi
   echo "Installed 'webi'"
 else
