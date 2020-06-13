@@ -5,4 +5,5 @@
 # description: |
 #   See https://webinstall.dev/golang
 
-curl -fsSL https://webinstall.dev/golang | bash
+echo "'go' is an alias for 'golang'"
+curl -fsSL https://webinstall.dev/golang@${WEBI_VERSION:-} | bash

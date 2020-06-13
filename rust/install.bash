@@ -5,4 +5,5 @@
 # description: |
 #   See https://webinstall.dev/rustlang
 
-curl -fsSL https://webinstall.dev/rustlang | bash
+echo "'rust' is an alias for 'rustlang'"
+curl -fsSL https://webinstall.dev/rustlang@${WEBI_VERSION:-} | bash
