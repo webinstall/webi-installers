@@ -5,5 +5,5 @@
 # description: |
 #   See https://webinstall.dev/rg
 
-echo "'ripgrep' (project) is an alias for 'rg' (command)"
+echo "'ripgrep@${WEBI_VERSION:-}' (project) is an alias for 'rg@${WEBI_VERSION:-}' (command)"
 curl -fsSL https://webinstall.dev/rg@${WEBI_VERSION:-} | bash

@@ -5,5 +5,5 @@
 # description: |
 #   See https://webinstall.dev/golang
 
-echo "'go' is an alias for 'golang'"
+echo "'go@${WEBI_VERSION:-}' is an alias for 'golang@${WEBI_VERSION:-}'"
 curl -fsSL https://webinstall.dev/golang@${WEBI_VERSION:-} | bash
