@@ -64,16 +64,15 @@ set -e
 cur_go_version=""
 if [ -n "$cur_go" ]; then
   cur_go_version=$(go version | cut -d' ' -f3 | sed 's:go::')
-fi
-if [ -n "$cur_go" ]; then
-  if [ "$cur_go_version" == "$(echo $WEBI_VERSION | sed 's:\.0::g')" ]; then
-    echo "go v$WEBI_VERSION already installed at $cur_go"
+
+  if [ "$cur_go_version" == "$WEBI_VERSION" ]; then
+    echo "go$WEBI_VERSION already installed at $cur_go"
     exit 0
   else
-    if [ "$cur_go" != "$common_go_home/bin/go" ] && [ "$cur_go" != "$new_go" ]; then
+    if [ "$cur_go" != "$common_go_home/bin/go" ]; then
       echo "WARN: possible conflict between go${WEBI_VERSION} and go${cur_go_version} at ${cur_go}"
     fi
-    if [ -x "$new_go_home/bin/go" ]; then
+    if [ -x "$new_go" ]; then
       update_go_home
       echo "switched to go${WEBI_VERSION} at $new_go_home"
       exit 0
