@@ -14,8 +14,6 @@
 #   > Hello, World!
 #   ```
 #
-#   <br/>
-#
 #   ### A Simple Web Server
 #
 #   `server.js`:
@@ -30,8 +28,6 @@
 #   });
 #   ```
 #
-#   <br/>
-#
 #   ```bash
 #   node server.js
 #   ```
@@ -44,8 +40,6 @@
 #   npm init
 #   npm install --save express
 #   ```
-#
-#   <br/>
 #
 #   `app.js`:
 #
@@ -62,8 +56,6 @@
 #   module.exports = app;</code></pre>
 #   ```
 #
-#   <br/>
-#
 #   `server.js`:
 #
 #   ```js
@@ -76,8 +68,6 @@
 #     console.info('Listening on', this.address());
 #   });
 #   ```
-#
-#   <br/>
 #
 #   ```bash
 #   npm start
