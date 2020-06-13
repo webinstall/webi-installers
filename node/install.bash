@@ -103,8 +103,9 @@ update_node_home() {
     webi_path_add "$common_node_home/bin"
 }
 
-if [ -x "$new_node_home/bin/node" ]; then
+if [ -x "$new_node" ]; then
   update_node_home
+  echo "switched to node v${WEBI_VERSION} at $new_node_home"
   exit 0
 fi
 
@@ -112,16 +113,24 @@ fi
 set +e
 cur_node="$(command -v node)"
 set -e
-if [ -e "$new_node_home/bin/node" ]; then
-    # node of some version is already installed
-    if [ "v${WEBI_VERSION}" == "$("$new_node_home/bin/node" -v 2>/dev/null)" ]; then
-        echo node v${WEBI_VERSION} already installed at $new_node_home
-        exit 0
+cur_node_version=""
+if [ -n "$cur_node" ]; then
+  cur_node_version="$("$cur_node" -v 2>/dev/null)"
+  if [ "$cur_node_version" == "v${WEBI_VERSION}" ]; then
+    echo "node v${WEBI_VERSION} already installed at $cur_node"
+    exit 0
+  else
+    if [ "$cur_node" != "$common_node_home/bin/node" ]; then
+      echo "WARN: possible conflict between node v${WEBI_VERSION} and v${cur_node_version} at ${cur_node}"
     fi
+    if [ -x "$new_node_home/bin/node" ]; then
+      update_node_home
+      echo "switched to node${WEBI_VERSION} at $new_node_home"
+      exit 0
+    fi
+  fi
 fi
-if [ -n "$cur_node" ] && [ "$cur_node" != "$new_node" ]; then
-    echo "WARN: possible conflict with node v$WEBI_VERSION at $cur_node"
-fi
+
 
 # Note: this file is `source`d by the true installer and hence will have the webi functions
 
