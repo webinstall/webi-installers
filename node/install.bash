@@ -14,6 +14,8 @@
 #   > Hello, World!
 #   ```
 #
+#   <br/>
+#
 #   ### A Simple Web Server
 #
 #   `server.js`:
@@ -28,6 +30,8 @@
 #   });
 #   ```
 #
+#   <br/>
+#
 #   ```bash
 #   node server.js
 #   ```
@@ -40,6 +44,8 @@
 #   npm init
 #   npm install --save express
 #   ```
+#
+#   <br/>
 #
 #   `app.js`:
 #
@@ -56,6 +62,8 @@
 #   module.exports = app;</code></pre>
 #   ```
 #
+#   <br/>
+#
 #   `server.js`:
 #
 #   ```js
@@ -68,6 +76,8 @@
 #     console.info('Listening on', this.address());
 #   });
 #   ```
+#
+#   <br/>
 #
 #   ```bash
 #   npm start
@@ -93,7 +103,7 @@ update_node_home() {
     webi_path_add "$common_node_home/bin"
 }
 
-if [ -x "$new_go_home/bin/go" ]; then
+if [ -x "$new_node_home/bin/node" ]; then
   update_node_home
   exit 0
 fi
