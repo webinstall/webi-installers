@@ -14,8 +14,6 @@
 #   > Hello, World!
 #   ```
 #
-#   <br/>
-#
 #   ### A Simple Web Server
 #
 #   `server.js`:
@@ -30,8 +28,6 @@
 #   });
 #   ```
 #
-#   <br/>
-#
 #   ```bash
 #   node server.js
 #   ```
@@ -44,8 +40,6 @@
 #   npm init
 #   npm install --save express
 #   ```
-#
-#   <br/>
 #
 #   `app.js`:
 #
@@ -62,8 +56,6 @@
 #   module.exports = app;</code></pre>
 #   ```
 #
-#   <br/>
-#
 #   `server.js`:
 #
 #   ```js
@@ -77,8 +69,6 @@
 #   });
 #   ```
 #
-#   <br/>
-#
 #   ```bash
 #   npm start
 #   ```
@@ -87,77 +77,61 @@
 set -e
 set -u
 
-##################
-#  Install node  #
-##################
-
-common_node_home="${HOME}/.local/opt/node"
-new_node_home="${HOME}/.local/opt/node-v${WEBI_VERSION}"
-new_node="${HOME}/.local/opt/node-v${WEBI_VERSION}/bin/node"
-
-update_node_home() {
-    rm -rf "$common_node_home"
-    ln -s "$new_node_home" "$common_node_home"
-
-    # TODO get better output from pathman / output the path to add as return to webi bootstrap
-    webi_path_add "$common_node_home/bin"
+pkg_get_current_version() {
+    # 'node --version' has output in this format:
+    #       v12.8.0
+    # This trims it down to just the version number:
+    #       12.8.0
+    echo "$(node --version 2>/dev/null | sed 's:^v::')"
 }
 
-# Test for existing version
-set +e
-cur_node="$(command -v node)"
-set -e
-cur_node_version=""
-if [ -n "$cur_node" ]; then
-  cur_node_version="$("$cur_node" -v 2>/dev/null)"
-  if [ "$cur_node_version" == "v${WEBI_VERSION}" ]; then
-    echo "node v${WEBI_VERSION} already installed at $cur_node"
-    exit 0
-  else
-    if [ "$cur_node" != "$common_node_home/bin/node" ]; then
-      echo "WARN: possible conflict between node v${WEBI_VERSION} and ${cur_node_version} at ${cur_node}"
-    fi
-    if [ -x "$new_node" ]; then
-      update_node_home
-      echo "switched to node v${WEBI_VERSION} at $new_node_home"
-      exit 0
-    fi
-  fi
-fi
+pkg_format_cmd_version() {
+    # 'node v12.8.0' is the canonical version format for node
+    my_version="$1"
+    echo "$pkg_cmd_name v$my_version"
+}
 
+pkg_link_new_version() {
+    # 'pkg_common_opt' will default to $HOME/.local/opt/node
+    # 'pkg_new_opt' will be the installed version, such as to $HOME/.local/opt/node-v12.8.0
+    rm -rf "$pkg_common_opt"
+    ln -s "$pkg_new_opt" "$pkg_common_opt"
+}
 
-# Note: this file is `source`d by the true installer and hence will have the webi functions
+pkg_pre_install() {
+    # web_* are defined in webi/template.bash at https://github.com/webinstall/packages
 
-# because we created releases.js we can use webi_download()
-# downloads node to ~/Downloads
-webi_download
+    # if selected version is installed, re-link it and quit
+    webi_check
 
-# because this is tar or zip, we can webi_extract()
-# extracts to the WEBI_TMP directory, raw (no --strip-prefix)
-webi_extract
+    # will save to ~/Downloads/$WEBI_PKG_FILE by default
+    webi_download
 
-pushd "$WEBI_TMP" 2>&1 >/dev/null
-    echo Installing node v${WEBI_VERSION} as "$new_node"
+    # supported formats (.xz, .tar.*, .zip) will be extracted to $WEBI_TMP
+    webi_extract
+}
 
-    # simpler for single-binary commands
-    #mv ./example*/bin/example "$HOME/.local/bin"
+pkg_install() {
+    pushd "$WEBI_TMP" 2>&1 >/dev/null
 
-    # best for packages and toolchains
-    rm -rf "$new_node_home"
-    if [ -n "$(command -v rsync 2>/dev/null | grep rsync)" ]; then
-      rsync -Krl ./node*/ "$new_node_home/" 2>/dev/null
-    else
-      cp -Hr ./node*/* "$new_node_home/" 2>/dev/null
-      cp -Hr ./node*/.* "$new_node_home/" 2>/dev/null
-    fi
-    rm -rf ./node*
-popd 2>&1 >/dev/null
+        # remove the versioned folder, just in case it's there with junk
+        rm -rf "$pkg_new_opt"
 
-###################
-#   Update PATH   #
-###################
+        # rename the entire extracted folder to the new location
+        # (this will be "$HOME/.local/opt/node-v$WEBI_VERSION" by default)
+        mv ./"$pkg_cmd_name"* "$pkg_new_opt"
 
-update_node_home
+    popd 2>&1 >/dev/null
+}
 
-echo "Installed 'node' and 'npm'"
-echo ""
+pkg_post_install() {
+    pkg_link_new_version
+
+    # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
+    # Adds "$HOME/.local/opt/node" to PATH
+    webi_path_add "$pkg_common_bin"
+}
+
+pkg_post_install_message() {
+    echo "Installed 'node' and 'npm'"
+}
