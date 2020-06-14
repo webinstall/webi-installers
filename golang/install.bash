@@ -107,7 +107,7 @@ pkg_post_install() {
     # Updates PATH with
     #       "$HOME/.local/opt/go"
     webi_path_add "$pkg_common_bin"
-    webi_path_add "$GOBIN"
+    webi_path_add "$GOBIN/bin"
 
     # Install x go
     "$pkg_common_cmd" get golang.org/x/tools/cmd/goimports > /dev/null 2>/dev/null
