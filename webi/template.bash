@@ -169,7 +169,7 @@ if [ -n "$(command -v pkg_install)" ]; then
     pkg_cmd_name="${pkg_cmd_name:-$WEBI_NAME}"
 
     pkg_dst="${pkg_dst:-$HOME/.local/opt/$pkg_cmd_name}"
-    pkg_dst_bin="${pkg_dst_bin:-$pkg_common/bin}"
+    pkg_dst_bin="${pkg_dst_bin:-$pkg_dst/bin}"
     pkg_dst_cmd="${pkg_dst_cmd:-$pkg_dst_bin/$pkg_cmd_name}"
 
     pkg_src="${pkg_src:-$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION}"
