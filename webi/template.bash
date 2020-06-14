@@ -56,7 +56,7 @@ webi_check() {
         if [ -n "$(command -v pkg_format_cmd_version)" ]; then
             my_canonical_name="$(pkg_format_cmd_version "$WEBI_VERSION")"
         else
-            #my_canonical_name="$WEBI_PKG_NAME $WEBI_VERSION"
+            #my_canonical_name="$WEBI_NAME $WEBI_VERSION"
             my_canonical_name="$pkg_cmd_name v$WEBI_VERSION"
         fi
         if [ "$my_new_version" == "$my_current_version" ]; then
@@ -166,7 +166,7 @@ webi_path_add() {
 ##
 
 if [ -n $(command -v pkg_install) ]; then
-    pkg_cmd_name="${pkg_cmd_name:-$WEBI_PKG_NAME}"
+    pkg_cmd_name="${pkg_cmd_name:-$WEBI_NAME}"
 
     pkg_common_opt="${pkg_common_opt:-$HOME/.local/opt/$pkg_cmd_name}"
     pkg_common_bin="${pkg_common_bin:-$pkg_common_opt/bin}"
