@@ -128,7 +128,7 @@ pkg_post_install() {
     pkg_link_new_version
 
     # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
-    # Adds "$HOME/.local/opt/node" to PATH
+    # Adds "$HOME/.local/opt/node/bin" to PATH
     webi_path_add "$pkg_common_bin"
 }
 

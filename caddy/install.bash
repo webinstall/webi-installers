@@ -26,7 +26,7 @@ pkg_get_current_version() {
 }
 
 pkg_format_cmd_version() {
-    # 'node v12.8.0' is the canonical version format for node
+    # 'caddy v2.1.0' is the canonical version format for caddy
     my_version="$1"
     echo "$pkg_cmd_name v$my_version"
 }
@@ -49,7 +49,7 @@ pkg_install() {
     pushd "$WEBI_TMP" 2>&1 >/dev/null
 
         # rename the entire extracted folder to the new location
-        # (this will be "$HOME/.local/opt/node-v$WEBI_VERSION" by default)
+        # (this will be "$HOME/.local/bin/caddy-v$WEBI_VERSION" by default)
         mkdir -p "$pkg_common_bin"
         mv ./"$pkg_cmd_name"* "$pkg_common_cmd"
 
@@ -61,6 +61,6 @@ pkg_post_install() {
     pkg_link_new_version
 
     # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
-    # Adds "$HOME/.local/opt/node" to PATH
+    # Adds "$HOME/.local/bin" to PATH
     webi_path_add "$pkg_common_bin"
 }
