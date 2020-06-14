@@ -33,6 +33,7 @@ pkg_format_cmd_version() {
 
 pkg_link_new_version() {
     # caddy is just a single file, no directory linking to do
+    true
 }
 
 pkg_pre_install() {
