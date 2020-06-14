@@ -46,24 +46,28 @@ set -e
 webi_check() {
     # Test for existing version
     set +e
-    pkg_current_cmd="$(command -v "$pkg_cmd_name")"
+    my_current_cmd="$(command -v "$pkg_cmd_name")"
     set -e
-    my_current_version=""
-    if [ -n "$pkg_current_cmd" ]; then
+    if [ -n "$my_current_cmd" ]; then
         pkg_current_version="$(pkg_get_current_version)"
         # remove trailing '.0's for golang's sake
         my_current_version="$(echo $pkg_current_version | sed 's:\.0::g')"
         my_new_version="$(echo $WEBI_VERSION | sed 's:\.0::g')"
-        my_canonical_name="$(pkg_format_cmd_version "$WEBI_VERSION")"
+        if [ -n "$(command -v pkg_format_cmd_version)" ]; then
+            my_canonical_name="$(pkg_format_cmd_version "$WEBI_VERSION")"
+        else
+            #my_canonical_name="$WEBI_PKG_NAME $WEBI_VERSION"
+            my_canonical_name="$pkg_cmd_name v$WEBI_VERSION"
+        fi
         if [ "$my_new_version" == "$my_current_version" ]; then
-            echo "$my_canonical_name already installed at $pkg_current_cmd"
+            echo "$my_canonical_name already installed at $my_current_cmd"
             exit 0
         else
-            if [ "$pkg_current_cmd" != "$pkg_common_cmd" ]; then
-                echo "WARN: possible conflict between $my_canonical_name and $pkg_current_version at $pkg_current_cmd"
+            if [ "$my_current_cmd" != "$pkg_common_cmd" ]; then
+                echo "WARN: possible conflict between $my_canonical_name and $pkg_current_version at $my_current_cmd"
             fi
             if [ -x "$pkg_new_cmd" ]; then
-                pkg_switch_version
+                pkg_link_new_version
                 echo "switched to $my_canonical_name at $pkg_new_opt"
                 exit 0
             fi
@@ -160,5 +164,30 @@ webi_path_add() {
 ## END user-submitted script
 ##
 ##
+
+if [ -n $(command -v pkg_install) ]; then
+    pkg_cmd_name="${pkg_cmd_name:-$WEBI_PKG_NAME}"
+
+    pkg_common_opt="${pkg_common_opt:-$HOME/.local/opt/$pkg_cmd_name}"
+    pkg_common_bin="${pkg_common_bin:-$pkg_common_opt/bin}"
+    pkg_common_cmd="${pkg_common_cmd:-$pkg_common_bin/$pkg_cmd_name}"
+
+    pkg_new_opt="${pkg_new_opt:-$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION}"
+    pkg_new_bin="${pkg_new_bin:-$pkg_new_opt/bin}"
+    pkg_new_cmd="${pkg_new_cmd:-$pkg_new_bin/$pkg_cmd_name}"
+
+    [ -n $(command -v pkg_pre_install) ] && pkg_pre_install
+
+    echo "Installing '$pkg_cmd_name' v$WEBI_VERSION as $pkg_new_cmd"
+    pkg_install
+
+    [ -n $(command -v pkg_post_install) ] && pkg_post_install
+    [ -n $(command -v pkg_link_new_version) ] && pkg_link_new_version
+
+    echo "Installed '$pkg_cmd_name' v$WEBI_VERSION as $pkg_new_cmd"
+    echo ""
+fi
+
+rm -rf "$WEBI_TMP"
 
 }

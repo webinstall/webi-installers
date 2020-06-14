@@ -14,90 +14,63 @@
 set -e
 set -u
 
-###################
-# Install flutter #
-###################
+# NOTE: pkg_* variables can be defined here
+#       pkg_cmd_name
+#       pkg_new_opt, pkg_new_bin, pkg_new_cmd
+#       pkg_common_opt, pkg_common_bin, pkg_common_cmd
+#
+# Their defaults are defined in webi/template.bash at https://github.com/webinstall/packages
 
-# The command name may be different from the package name
-# (i.e. golang => go, rustlang => cargo, ripgrep => rg)
-# Note: $HOME may contain special characters and should alway be quoted
-pkg_cmd_name="flutter"
-#pkg_cmd_name_formatted="flutter $WEBI_VERSION"
-
-# Some of these directories may be the same
-pkg_common_opt="$HOME/.local/opt/flutter"
-pkg_common_bin="$HOME/.local/opt/flutter/bin"
-pkg_common_cmd="$HOME/.local/opt/flutter/bin/flutter"
-pkg_new_opt="$HOME/.local/opt/flutter-v$WEBI_VERSION"
-pkg_new_bin="$HOME/.local/opt/flutter-v$WEBI_VERSION/bin"
-pkg_new_cmd="$HOME/.local/opt/flutter-v$WEBI_VERSION/bin/flutter"
-pkg_current_cmd=""
-
-# The version info should be reduced to a sortable version, without any leading characters
-# (i.e. v12.8.0 => 12.8.0, go1.14 => 1.14, 1.12.13+hotfix => 1.12.13+hotfix)
 pkg_get_current_version() {
+    # 'flutter --version' outputs a lot of information:
+    #       Flutter 1.19.0-4.1.pre • channel beta • https://github.com/flutter/flutter.git
+    #       Framework • revision f994b76974 (4 days ago) • 2020-06-09 15:53:13 -0700
+    #       Engine • revision 9a28c3bcf4
+    #       Tools • Dart 2.9.0 (build 2.9.0-14.1.beta)
+    # This trims it down to just the version number:
+    #       1.19.0-4.1.pre
     echo "$(flutter --version 2>/dev/null | head -n 1 | cut -d' ' -f2)"
 }
 
-# Any version-related directories should be unlinked and relinked to the correct version
-# (for example: 'go' is special and needs both $HOME/go and $HOME/.local/opt/go)
-# (others like 'rg', 'hugo', and 'caddy' are single files that just get replaced)
-pkg_switch_version() {
+pkg_link_new_version() {
+    # 'pkg_common_opt' will default to $HOME/.local/opt/flutter
+    # 'pkg_new_opt' will be the installed version, such as to $HOME/.local/opt/flutter-v1.17.3
     rm -rf "$pkg_common_opt"
     ln -s "$pkg_new_opt" "$pkg_common_opt"
 }
 
-# Different packages represent the version in different ways
-# ex: node v12.8.0 (leading 'v')
-# ex: go1.14 (no space, nor trailing '.0's)
-# ex: flutter 1.17.2 (plain)
-pkg_format_cmd_version() {
-    my_version=$1
-    echo "$pkg_cmd_name $my_version"
+pkg_pre_install() {
+    # web_* are defined in webi/template.bash at https://github.com/webinstall/packages
+
+    # multiple versions may be installed
+    # if one already matches, it will simply be re-linked
+    webi_check
+
+    # the download is quite large - hopefully you have wget installed
+    # will go to ~/Downloads by default
+    webi_download
+
+    # Multiple formats are supported: .xz, .tar.*, and .zip
+    # will be extracted to $WEBI_TMP
+    webi_extract
 }
 
 pkg_install() {
     pushd "$WEBI_TMP" 2>&1 >/dev/null
 
-        # simpler for single-binary commands
-        #mv ./example*/bin/example "$HOME/.local/bin"
+        # remove the versioned folder, just in case it's there with junk
+        rm -rf "$pkg_new_opt"
 
-        # best for packages and toolchains
-        if [ -n "$(command -v rsync 2>/dev/null | grep rsync)" ]; then
-            rsync -Krl ./flutter*/ "$pkg_new_opt/" 2>/dev/null
-        else
-            cp -Hr ./flutter*/* "$pkg_new_opt/" 2>/dev/null
-            cp -Hr ./flutter*/.* "$pkg_new_opt/" 2>/dev/null
-        fi
-        rm -rf ./flutter*
+        # rename the entire extracted folder to the new location
+        # (this will be "$HOME/.local/opt/flutter-v$WEBI_VERSION" by default)
+        mv ./flutter* "$pkg_new_opt"
+
     popd 2>&1 >/dev/null
 }
 
 pkg_post_install() {
+    # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
+
+    # Adds "$HOME/.local/opt/flutter-v$WEBI_VERSION" to PATH
     webi_path_add "$pkg_common_bin"
 }
-
-#
-# The webi_* functions are defined in webi/template.bash at https://github.com/webinstall/packages
-#
-
-# for packages that can have multiple versions
-webi_check
-# for packages that can be downloaded via links in ./releases.js
-webi_download
-# for single files or packaged directories (compressed or uncompressed)
-# supported formats: .xz, .tar.*, and .zip
-webi_extract
-
-echo "Installing '$pkg_cmd_name' v$WEBI_VERSION as $pkg_new_cmd"
-
-# for installing the tool
-pkg_install
-# for updating paths and installing companion tools
-pkg_post_install
-# for re-linking to a previously installed version
-pkg_switch_version
-
-echo "Installed '$pkg_cmd_name' v$WEBI_VERSION as $pkg_new_cmd"
-
-echo ""
