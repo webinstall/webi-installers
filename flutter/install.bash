@@ -69,8 +69,9 @@ pkg_install() {
 }
 
 pkg_post_install() {
-    # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
+    pkg_link_new_version
 
-    # Adds "$HOME/.local/opt/flutter-v$WEBI_VERSION" to PATH
+    # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
+    # Adds "$HOME/.local/opt/flutter" to PATH
     webi_path_add "$pkg_common_bin"
 }

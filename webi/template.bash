@@ -182,9 +182,12 @@ if [ -n $(command -v pkg_install) ]; then
     pkg_install
 
     [ -n $(command -v pkg_post_install) ] && pkg_post_install
-    [ -n $(command -v pkg_link_new_version) ] && pkg_link_new_version
 
-    echo "Installed '$pkg_cmd_name' v$WEBI_VERSION as $pkg_new_cmd"
+    if [ -n $(command -v pkg_post_install_message) ]; then
+        pkg_post_install_message
+    else
+        echo "Installed '$pkg_cmd_name' v$WEBI_VERSION as $pkg_new_cmd"
+    fi
     echo ""
 fi
 
