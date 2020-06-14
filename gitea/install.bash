@@ -63,3 +63,7 @@ pkg_post_install() {
     # Adds "$HOME/.local/bin" to PATH
     webi_path_add "$pkg_common_bin"
 }
+
+pkg_post_install_message() {
+    echo "Installed 'gitea' as $pkg_common_cmd"
+}
