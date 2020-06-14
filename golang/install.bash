@@ -35,90 +35,87 @@
 set -e
 set -u
 
-###################
-# Install go #
-###################
+GOBIN="${HOME}/go"
+GOBIN_REAL="${HOME}/.local/opt/go-bin-v${WEBI_VERSION}"
 
-new_go="${HOME}/.local/opt/go-v${WEBI_VERSION}/bin/go"
-common_go_home="${HOME}/.local/opt/go"
-new_go_home="${HOME}/.local/opt/go-v${WEBI_VERSION}"
-common_go_bin="${HOME}/go"
-new_go_bin="${HOME}/.local/opt/go-bin-v${WEBI_VERSION}"
+# The package is 'golang', but the command is 'go'
+pkg_cmd_name="go"
 
-update_go_home() {
-    rm -rf "$common_go_home" # should be a symlink
-    ln -s "$new_go_home" "$common_go_home"
-    # TODO get better output from pathman / output the path to add as return to webi bootstrap
-    webi_path_add "$common_go_home/bin"
+# NOTE: pkg_* variables can be defined here
+#       pkg_cmd_name
+#       pkg_new_opt, pkg_new_bin, pkg_new_cmd
+#       pkg_common_opt, pkg_common_bin, pkg_common_cmd
+#
+# Their defaults are defined in webi/template.bash at https://github.com/webinstall/packages
 
-    rm -rf "$common_go_bin"
-    mkdir -p "$new_go_bin/bin"
-    ln -s "$new_go_bin" "$common_go_bin"
-    webi_path_add "$common_go_bin/bin"
+pkg_get_current_version() {
+    # 'go version' has output in this format:
+    #       go version go1.14.2 darwin/amd64
+    # This trims it down to just the version number:
+    #       1.14.2
+    echo "$(go version | cut -d' ' -f3 | sed 's:go::')"
 }
 
-# Test for existing version
-set +e
-cur_go="$(command -v go)"
-set -e
-cur_go_version=""
-if [ -n "$cur_go" ]; then
-  cur_go_version=$(go version | cut -d' ' -f3 | sed 's:go::')
+pkg_link_new_version() {
+    # 'pkg_common_opt' will default to $HOME/.local/opt/go
+    # 'pkg_new_opt' will be the installed version, such as to $HOME/.local/opt/go-v1.14.2
+    rm -rf "$pkg_common_opt"
+    ln -s "$pkg_new_opt" "$pkg_common_opt"
 
-  if [ "$cur_go_version" == "$(echo $WEBI_VERSION | sed 's:\.0::g')" ]; then
-    echo "go$WEBI_VERSION already installed at $cur_go"
-    exit 0
-  else
-    if [ "$cur_go" != "$common_go_home/bin/go" ]; then
-      echo "WARN: possible conflict between go${WEBI_VERSION} and go${cur_go_version} at ${cur_go}"
-    fi
-    if [ -x "$new_go" ]; then
-      update_go_home
-      echo "switched to go${WEBI_VERSION} at $new_go_home"
-      exit 0
-    fi
-  fi
-fi
+    # Go has a special $GOBIN
 
+    # 'GOBIN' is set above to "${HOME}/go"
+    # 'GOBIN_REAL' will be "${HOME}/.local/opt/go-bin-v${WEBI_VERSION}"
+    rm -rf "$GOBIN"
+    mkdir -p "$GOBIN_REAL"
+    ln -s "$GOBIN_REAL" "$GOBIN"
+}
 
-# Note: this file is `source`d by the true installer and hence will have the webi functions
+pkg_pre_install() {
+    # web_* are defined in webi/template.bash at https://github.com/webinstall/packages
 
-# because we created releases.js we can use webi_download()
-# downloads go to ~/Downloads
-webi_download
+    # multiple versions may be installed
+    # if one already matches, it will simply be re-linked
+    webi_check
 
-# because this is tar or zip, we can webi_extract()
-# extracts to the WEBI_TMP directory, raw (no --strip-prefix)
-webi_extract
+    # the download is quite large - hopefully you have wget installed
+    # will go to ~/Downloads by default
+    webi_download
 
-pushd "$WEBI_TMP" 2>&1 >/dev/null
-    echo Installing go v${WEBI_VERSION} as "$new_go"
+    # Multiple formats are supported: .xz, .tar.*, and .zip
+    # will be extracted to $WEBI_TMP
+    webi_extract
+}
 
-    # simpler for single-binary commands
-    #mv ./example*/bin/example "$HOME/.local/bin"
+pkg_install() {
+    pushd "$WEBI_TMP" 2>&1 >/dev/null
 
-    # best for packages and toolchains
-    rm -rf "$new_go_home"
-    if [ -n "$(command -v rsync 2>/dev/null | grep rsync)" ]; then
-      rsync -Krl ./go*/ "$new_go_home/" 2>/dev/null
-    else
-      cp -Hr ./go*/* "$new_go_home/" 2>/dev/null
-      cp -Hr ./go*/.* "$new_go_home/" 2>/dev/null
-    fi
-    rm -rf ./go*
+        # remove the versioned folder, just in case it's there with junk
+        rm -rf "$pkg_new_opt"
+
+        # rename the entire extracted folder to the new location
+        # (this will be "$HOME/.local/opt/go-v$WEBI_VERSION" by default)
+        mv ./go* "$pkg_new_opt"
+
+    popd 2>&1 >/dev/null
+}
+
+pkg_post_install() {
+    pkg_link_new_version
+
+    # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
+    # Updates PATH with
+    #       "$HOME/.local/opt/go"
+    webi_path_add "$pkg_common_bin"
+    webi_path_add "$GOBIN"
 
     # Install x go
-    $new_go_home/bin/go get golang.org/x/tools/cmd/goimports > /dev/null 2>/dev/null
-    $new_go_home/bin/go get golang.org/x/tools/cmd/gorename > /dev/null 2>/dev/null
-    $new_go_home/bin/go get golang.org/x/tools/cmd/gotype > /dev/null 2>/dev/null
-    $new_go_home/bin/go get golang.org/x/tools/cmd/stringer > /dev/null 2>/dev/null
-popd 2>&1 >/dev/null
+    "$pkg_common_cmd" get golang.org/x/tools/cmd/goimports > /dev/null 2>/dev/null
+    "$pkg_common_cmd" get golang.org/x/tools/cmd/gorename > /dev/null 2>/dev/null
+    "$pkg_common_cmd" get golang.org/x/tools/cmd/gotype > /dev/null 2>/dev/null
+    "$pkg_common_cmd" get golang.org/x/tools/cmd/stringer > /dev/null 2>/dev/null
+}
 
-###################
-#   Update PATH   #
-###################
-
-update_go_home
-
-echo "Installed 'go' (and go tools)"
-echo ""
+pkg_post_install_message() {
+    echo "Installed 'go' (and go tools)"
+}
