@@ -1,16 +1,17 @@
 # title: Gitea
 # homepage: https://github.com/go-gitea/gitea
-# tagline: Fast, multi-platform web server with automatic HTTPS
+# tagline: Git with a cup of tea, painless self-hosted git service 
 # description: |
-# Caddy is an extensible server platform that uses TLS by default.
+#   `gitea` is a clean, lightweight self-hosted Github alternative, forked from Gogs. Lighter and more user-friendly than Gitlab.
 # examples: |
 #   ```bash
-#   gitea start
+#   gitea --version
 #   ```
 
 set -e
 set -u
 
+pkg_cmd_name="gitea"
 pkg_common_opt="$HOME/.local"
 
 # just a junk file so that the version check always fails for non-current versions

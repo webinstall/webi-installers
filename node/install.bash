@@ -77,12 +77,14 @@
 set -e
 set -u
 
+pkg_cmd_name="node"
+
 pkg_get_current_version() {
     # 'node --version' has output in this format:
     #       v12.8.0
     # This trims it down to just the version number:
     #       12.8.0
-    echo "$(node --version 2>/dev/null | sed 's:^v::')"
+    echo "$(node --version 2>/dev/null | head -n 1 | cut -d' ' -f1 | sed 's:^v::')"
 }
 
 pkg_format_cmd_version() {
@@ -119,7 +121,15 @@ pkg_install() {
 
         # rename the entire extracted folder to the new location
         # (this will be "$HOME/.local/opt/node-v$WEBI_VERSION" by default)
+
+        # ex (full directory): ./node-v13-linux-amd64/bin/node.exe
         mv ./"$pkg_cmd_name"* "$pkg_new_opt"
+
+        # ex (single file): ./caddy-v13-linux-amd64.exe
+        #mv ./"$pkg_cmd_name"* "$pkg_common_cmd"
+
+        # ex (single file, nested in directory): ./rg/rg-v13-linux-amd64
+        #mv ./"$pkg_cmd_name"*/"$pkg_cmd_name"* "$pkg_commend_cmd"
 
     popd 2>&1 >/dev/null
 }

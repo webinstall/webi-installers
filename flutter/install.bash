@@ -21,6 +21,8 @@ set -u
 #
 # Their defaults are defined in webi/template.bash at https://github.com/webinstall/packages
 
+pkg_cmd_name="flutter"
+
 pkg_get_current_version() {
     # 'flutter --version' outputs a lot of information:
     #       Flutter 1.19.0-4.1.pre • channel beta • https://github.com/flutter/flutter.git

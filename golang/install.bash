@@ -53,7 +53,7 @@ pkg_get_current_version() {
     #       go version go1.14.2 darwin/amd64
     # This trims it down to just the version number:
     #       1.14.2
-    echo "$(go version | cut -d' ' -f3 | sed 's:go::')"
+    echo "$(go version >2/dev/null | head -n 1 | cut -d' ' -f3 | sed 's:go::')"
 }
 
 pkg_format_cmd_version() {
@@ -101,7 +101,7 @@ pkg_install() {
 
         # rename the entire extracted folder to the new location
         # (this will be "$HOME/.local/opt/go-v$WEBI_VERSION" by default)
-        mv ./go* "$pkg_new_opt"
+        mv ./"$pkg_cmd_name"* "$pkg_new_opt"
 
     popd 2>&1 >/dev/null
 }
@@ -116,6 +116,7 @@ pkg_post_install() {
     webi_path_add "$GOBIN/bin"
 
     # Install x go
+    echo "Installing go extended tools (goimports, gorename, etc)"
     "$pkg_common_cmd" get golang.org/x/tools/cmd/goimports > /dev/null 2>/dev/null
     "$pkg_common_cmd" get golang.org/x/tools/cmd/gorename > /dev/null 2>/dev/null
     "$pkg_common_cmd" get golang.org/x/tools/cmd/gotype > /dev/null 2>/dev/null

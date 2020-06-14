@@ -2,7 +2,7 @@
 # homepage: https://github.com/caddyserver/caddy
 # tagline: Fast, multi-platform web server with automatic HTTPS
 # description: |
-# Caddy is an extensible server platform that uses TLS by default.
+#   Caddy is an extensible server platform that uses TLS by default.
 # examples: |
 #   ```bash
 #   caddy start
@@ -48,10 +48,20 @@ pkg_pre_install() {
 pkg_install() {
     pushd "$WEBI_TMP" 2>&1 >/dev/null
 
-        # rename the entire extracted folder to the new location
-        # (this will be "$HOME/.local/bin/caddy-v$WEBI_VERSION" by default)
+        # ensure the bin dir exists
         mkdir -p "$pkg_common_bin"
+
+        # rename the entire extracted folder to the new location
+        # (this will be "$HOME/.local/bin/caddy", as set above)
+
+        # ex (full directory): ./node-v13-linux-amd64/bin/node.exe
+        #mv ./"$pkg_cmd_name"* "$pkg_new_opt"
+
+        # ex (single file): ./caddy-v2.0.0-linux-amd64.exe
         mv ./"$pkg_cmd_name"* "$pkg_common_cmd"
+
+        # ex (single file, nested in directory): ./rg/rg-v13-linux-amd64
+        #mv ./"$pkg_cmd_name"*/"$pkg_cmd_name"* "$pkg_commend_cmd"
 
     popd 2>&1 >/dev/null
 }
