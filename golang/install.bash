@@ -56,6 +56,12 @@ pkg_get_current_version() {
     echo "$(go version | cut -d' ' -f3 | sed 's:go::')"
 }
 
+pkg_format_cmd_version() {
+    # 'go v1.14.0' will be 'go1.14'
+    my_version=$(echo "$1" | sed 's:\.0::g')
+    echo "${pkg_cmd_name}${my_version}"
+}
+
 pkg_link_new_version() {
     # 'pkg_common_opt' will default to $HOME/.local/opt/go
     # 'pkg_new_opt' will be the installed version, such as to $HOME/.local/opt/go-v1.14.2
