@@ -43,6 +43,34 @@ export WEBI_CURL="$(command -v curl)"
 export WEBI_WGET="$(command -v wget)"
 set -e
 
+webi_check() {
+    # Test for existing version
+    set +e
+    pkg_current_cmd="$(command -v "$pkg_cmd_name")"
+    set -e
+    my_current_version=""
+    if [ -n "$pkg_current_cmd" ]; then
+        pkg_current_version="$(pkg_get_current_version)"
+        # remove trailing '.0's for golang's sake
+        my_current_version="$(echo $pkg_current_version | sed 's:\.0::g')"
+        my_new_version="$(echo $WEBI_VERSION | sed 's:\.0::g')"
+        my_canonical_name="$(pkg_format_cmd_version "$WEBI_VERSION")"
+        if [ "$my_new_version" == "$my_current_version" ]; then
+            echo "$my_canonical_name already installed at $pkg_current_cmd"
+            exit 0
+        else
+            if [ "$pkg_current_cmd" != "$pkg_common_cmd" ]; then
+                echo "WARN: possible conflict between $my_canonical_name and $pkg_current_version at $pkg_current_cmd"
+            fi
+            if [ -x "$pkg_new_cmd" ]; then
+                pkg_switch_version
+                echo "switched to $my_canonical_name at $pkg_new_opt"
+                exit 0
+            fi
+          fi
+    fi
+}
+
 webi_download() {
     if [ -n "${1:-}" ]; then
         my_url="$1"
