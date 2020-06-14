@@ -5,76 +5,81 @@
 set -e
 set -u
 
-###################
-# Install foobar #
-###################
+## The defaults can be assumed if these are not set
 
-common_opt="${HOME}/.local/opt/foobar-v${WEBI_VERSION}"
-new_opt="${HOME}/.local/opt/foobar-v${WEBI_VERSION}"
-new_bin="${HOME}/.local/opt/foobar-v${WEBI_VERSION}/bin/foobar"
+## The command name may be different from the package name
+## (i.e. golang => go, rustlang => cargo, ripgrep => rg)
+## Note: $HOME may contain special characters and should alway be quoted
 
-update_installed() {
-    rm -rf "$common_opt"
-    ln -s "$new_opt" "$common_opt"
+pkg_cmd_name="xmpl"
 
-    # TODO get better output from pathman / output the path to add as return to webi bootstrap
-    webi_path_add "$common_opt/bin"
-    webi_path_add "$HOME/foobar/bin"
+## Some of these directories may be the same, in some cases
+#pkg_common_opt="$HOME/.local/opt/xmpl"
+#pkg_common_bin="$HOME/.local/opt/xmpl/bin"
+#pkg_common_cmd="$HOME/.local/opt/xmpl/bin/xmpl"
+
+#pkg_new_opt="$HOME/.local/opt/xmpl-v$WEBI_VERSION"
+#pkg_new_bin="$HOME/.local/opt/xmpl-v$WEBI_VERSION/bin"
+#pkg_new_cmd="$HOME/.local/opt/xmpl-v$WEBI_VERSION/bin/xmpl"
+
+# Different packages represent the version in different ways
+# ex: node v12.8.0 (leading 'v')
+# ex: go1.14 (no space, nor trailing '.0's)
+# ex: flutter 1.17.2 (plain)
+pkg_format_cmd_version() {
+    my_version=$1
+    echo "$pkg_cmd_name v$my_version"
 }
 
-if [ -x "$new_opt/bin/foobar" ]; then
-  update_installed
-  exit 0
-fi
+# The version info should be reduced to a sortable version, without any leading characters
+# (i.e. v12.8.0 => 12.8.0, go1.14 => 1.14, 1.12.13+hotfix => 1.12.13+hotfix)
+pkg_get_current_version() {
+    echo "$(xmpl --version 2>/dev/null | head -n 1 | cut -d' ' -f2)"
+}
 
-# Test for existing version
-set +e
-cur_go="$(command -v foobar)"
-set -e
-if [ -n "$cur_go" ]; then
-  cur_ver=$(foobar version | cut -d' ' -f3 | sed 's:foobar::')
-  if [ "$cur_ver" == "$(echo $WEBI_VERSION | sed 's:\.0::g')" ]; then
-    echo "foobar v$WEBI_VERSION already installed at $cur_go"
-    exit 0
-  elif [ "$cur_go" != "$new_bin" ]; then
-    echo "WARN: possible conflict with foobar v$WEBI_VERSION at $cur_go"
-  fi
-fi
+# For (re-)linking to the desired installed version
+# (for example: 'go' is special and needs both $HOME/go and $HOME/.local/opt/go)
+# (others like 'rg', 'hugo', and 'caddy' are single files that just get replaced)
+pkg_link_new_version() {
+    rm -rf "$pkg_common_opt"
+    ln -s "$pkg_new_opt" "$pkg_common_opt"
+}
 
+pkg_pre_install() {
+    # web_* are defined in webi/template.bash at https://github.com/webinstall/packages
 
-# Note: this file is `source`d by the true installer and hence will have the webi functions
+    # if selected version is installed, re-link it and quit
+    webi_check
 
-# because we created releases.js we can use webi_download()
-# downloads foobar to ~/Downloads
-webi_download
+    # will save to ~/Downloads/$WEBI_PKG_FILE by default
+    webi_download
 
-# because this is tar or zip, we can webi_extract()
-# extracts to the WEBI_TMP directory, raw (no --strip-prefix)
-webi_extract
+    # supported formats (.xz, .tar.*, .zip) will be extracted to $WEBI_TMP
+    webi_extract
+}
 
-pushd "$WEBI_TMP" 2>&1 >/dev/null
-    echo Installing foobar v${WEBI_VERSION} as "$new_bin"
+# For installing from the extracted package tmp directory
+pkg_install() {
+    pushd "$WEBI_TMP" 2>&1 >/dev/null
 
-    # simpler for single-binary commands
-    #mv ./example*/bin/example "$HOME/.local/bin"
+        # remove the versioned folder, just in case it's there with junk
+        rm -rf "$pkg_new_opt"
 
-    # best for packages and toolchains
-    rm -rf "$new_opt"
-    if [ -n "$(command -v rsync 2>/dev/null | grep rsync)" ]; then
-      rsync -Krl ./foobar*/ "$new_opt/" 2>/dev/null
-    else
-      cp -Hr ./foobar*/* "$new_opt/" 2>/dev/null
-      cp -Hr ./foobar*/.* "$new_opt/" 2>/dev/null
-    fi
-    rm -rf ./foobar*
+        # rename the entire extracted folder to the new location
+        # (this will be "$HOME/.local/opt/xmpl-v$WEBI_VERSION" by default)
+        mv ./"$pkg_cmd_name"* "$pkg_new_opt"
 
-popd 2>&1 >/dev/null
+    popd 2>&1 >/dev/null
+}
 
-###################
-#   Update PATH   #
-###################
+# For updating PATHs and installing companion tools
+pkg_post_install() {
+    pkg_link_new_version
 
-update_installed
+    # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
+    webi_path_add "$pkg_common_bin"
+}
 
-echo "Installed 'foobar'"
-echo ""
+pkg_post_install_message() {
+    echo "Installed 'example' as 'xmpl'"
+}

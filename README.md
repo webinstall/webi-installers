@@ -44,7 +44,7 @@ Just copy the format from any of the existing packages. It's like this:
 
 `my-new-package.bash`:
 
-```
+````
 # title: Node.js
 # homepage: https://nodejs.org
 # tagline: JavaScript V8 runtime
@@ -55,13 +55,15 @@ Just copy the format from any of the existing packages. It's like this:
 #   node -e 'console.log("Hello, World!")'
 #   > Hello, World!
 #   ```
-```
+````
 
 ### 1. Fetch Releases
 
-All you're doing in this step is just translating from one form of JSON or CSV or TAB or whatever, to a format understood by `webi`.
+All you're doing in this step is just translating from one form of JSON or CSV
+or TAB or whatever, to a format understood by `webi`.
 
-- Using Github releases? See `ripgrep/releases.js` (which uses `_common/github.js`)
+- Using Github releases? See `ripgrep/releases.js` (which uses
+  `_common/github.js`)
 - Have a special format? See `golang/releases.js` or `node/releases.js`.
 
 It looks like this:
@@ -78,67 +80,61 @@ module.exports = function (request) {
 };
 ```
 
-### 2. Version Check (semi-optional)
+### 2. Bash Installer
 
-If the thing is already installed, we don't need to download and install it again.
+1. Variables _you_ can set
+2. Functions _you_ must define
+3. Convenience / Helper Functions
 
-You create a version check that looks like this:
+(optional, if needed) Bash variables that you _may_ define:
 
-```
-    # if the output is "foobar 1.3.4", we just need the "1.3.4"
-    cur_ver=$(foobar --version | cut -d ' ' -f 2)
-```
+```bash
+# Define this if the package name is different from the command name (i.e. golang => go)
+pkg_cmd_name="foobar"
 
-And then you wrap it in some **boilerplate** (copy/paste/replace) that looks like this:
+# These are used for symlinks, PATH, and test commands
+pkg_common_opt="$HOME/.local/opt/foobar"
+pkg_common_bin="$HOME/.local/opt/foobar/bin"
+pkg_common_cmd="$HOME/.local/opt/foobar/bin/foobar"
 
-```
-new_foobar="${HOME}/.local/bin/foobar"
-
-# Test for existing version
-set +e
-current_foobar="$(command -v foobar)"
-set -e
-if [ -n "$current_foobar" ]; then
-  # if the output is "foobar 1.3.4", we just need the "1.3.4"
-  cur_ver=$(foobar --version | cut -d ' ' -f 2)
-  if [ "$cur_ver" == "$WEBI_VERSION" ]; then
-    echo "foobar v$WEBI_VERSION already installed at $current_foobar"
-    exit 0
-  elif [ "$current_foobar" != "$new_foobar" ]; then
-    echo "WARN: possible conflict with foobar v$WEBI_VERSION at $current_foobar"
-  fi
-fi
+# These are the _real_ locations for the above
+pkg_new_opt="$HOME/.local/opt/foobar-v$WEBI_VERSION"
+pkg_new_bin="$HOME/.local/opt/foobar-v$WEBI_VERSION/bin"
+pkg_new_cmd="$HOME/.local/opt/foobar-v$WEBI_VERSION/bin/foobar"
 ```
 
-### 3. Move files to $HOME/.local
+(required) A version check function that strips all non-version junk
 
-The `webi_download` and `webi_extract` functions will handle download and unpacking.
-All you have to do is move your files into the right place.
-
-If you have a single binary that'll look like this:
-
-```
-    mv ./foobar-*/bin/foobar "$HOME/.local/bin/"
+```bash
+pkg_get_current_version() {
+    # foobar-v1.1.7 => 1.1.7
+    echo "$(foobar --version | head -n 1 | sed 's:foobar-v::')"
+}
 ```
 
-If you have something with more parts it'll look like this:
+For the rest of the functions you can like copy/paste from the examples:
 
+```bash
+pkg_format_cmd_version() {}     # Optional, pretty prints version
+
+pkg_link_new_version() {}       # Required, may be empty for $HOME/.local/bin commands
+
+pkg_pre_install() {             # Required, runs any webi_* commands
+    webi_check                      # for $HOME/.local/opt tools
+    webi_download                   # for things that have a releases.js
+    webi_extract                    # for .xz, .tar.*, and .zip files
+}
+
+pkg_install() {}                # Required, usually just needs to rename extracted folder to
+                                # "$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION"
+
+pkg_post_install() {            # Required
+    pkg_link_new_version            # should probably call pkg_link_new_version()
+    webi_path_add "$pkg_common_bin" # should probably update PATH
+}
+
+pkg_post_install_message() {}   # Optional, pretty print a success message
 ```
-    if [ -n "$(command -v rsync 2>/dev/null | grep rsync)" ]; then
-      rsync -Krl ./foobar*/ "$new_foobar_home/" 2>/dev/null
-    else
-      cp -Hr ./foobar*/* "$new_foobar_home/" 2>/dev/null
-      cp -Hr ./foobar*/.* "$new_foobar_home/" 2>/dev/null
-    fi
-```
-
-### 4. Update PATH
-
-Typically speaking, `$HOME/.local/bin` will be added to the PATH for you.
-
-However, you should call `webi_path_add` to add any special paths.
-
-Again, just look at the examples.
 
 ## Script API
 
@@ -149,6 +145,7 @@ These variables will be set by the server:
 ```
 WEBI_PKG=example@v1
 WEBI_NAME=example
+WEBI_TAG=v1
 WEBI_HOST=https://webinstall.dev
 WEBI_RELEASES=https://webinstall.dev/api/releases/example@v1?os=macos&arch=amd64&pretty=true
 WEBI_CSV=v1.0.2,
@@ -168,6 +165,7 @@ WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-foobar.XXXXXXXX)"}
 ```
 
 ```bash
+webi_check              # Checks to see if the selected version is already installed (and re-links if so)
 webi_download           # Downloads the selected release to $HOME/Downloads/<package-name>.tar.gz
 webi_extract            # Extracts the download to /tmp/<package-name>-<random>/
 webi_path_add /new/path # Adds /new/path to PATH for bash, zsh, and fish
