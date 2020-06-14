@@ -127,9 +127,11 @@ pkg_install() {
 
         # ex (single file): ./caddy-v13-linux-amd64.exe
         #mv ./"$pkg_cmd_name"* "$pkg_common_cmd"
+        #chmod a+x "$pkg_common_cmd"
 
         # ex (single file, nested in directory): ./rg/rg-v13-linux-amd64
         #mv ./"$pkg_cmd_name"*/"$pkg_cmd_name"* "$pkg_commend_cmd"
+        #chmod a+x "$pkg_common_cmd"
 
     popd 2>&1 >/dev/null
 }

@@ -56,6 +56,7 @@ pkg_install() {
         # (this will be "$HOME/.local/opt/node-v$WEBI_VERSION" by default)
         mkdir -p "$pkg_common_bin"
         mv ./"$pkg_cmd_name"* "$pkg_common_cmd"
+        chmod a+x "$pkg_common_cmd"
 
     popd 2>&1 >/dev/null
 }

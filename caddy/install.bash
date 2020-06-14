@@ -59,9 +59,11 @@ pkg_install() {
 
         # ex (single file): ./caddy-v2.0.0-linux-amd64.exe
         mv ./"$pkg_cmd_name"* "$pkg_common_cmd"
+        chmod a+x "$pkg_common_cmd"
 
         # ex (single file, nested in directory): ./rg/rg-v13-linux-amd64
         #mv ./"$pkg_cmd_name"*/"$pkg_cmd_name"* "$pkg_commend_cmd"
+        #chmod a+x "$pkg_common_cmd"
 
     popd 2>&1 >/dev/null
 }
@@ -73,4 +75,8 @@ pkg_post_install() {
     # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
     # Adds "$HOME/.local/bin" to PATH
     webi_path_add "$pkg_common_bin"
+}
+
+pkg_post_install_message() {
+    echo "Installed 'caddy' v$WEBI_VERSION as $pkg_common_cmd"
 }
