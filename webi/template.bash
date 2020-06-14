@@ -165,7 +165,7 @@ webi_path_add() {
 ##
 ##
 
-if [ -n $(command -v pkg_install) ]; then
+if [ -n "$(command -v pkg_install)" ]; then
     pkg_cmd_name="${pkg_cmd_name:-$WEBI_NAME}"
 
     pkg_common_opt="${pkg_common_opt:-$HOME/.local/opt/$pkg_cmd_name}"
@@ -176,14 +176,14 @@ if [ -n $(command -v pkg_install) ]; then
     pkg_new_bin="${pkg_new_bin:-$pkg_new_opt/bin}"
     pkg_new_cmd="${pkg_new_cmd:-$pkg_new_bin/$pkg_cmd_name}"
 
-    [ -n $(command -v pkg_pre_install) ] && pkg_pre_install
+    [ -n "$(command -v pkg_pre_install)" ] && pkg_pre_install
 
     echo "Installing '$pkg_cmd_name' v$WEBI_VERSION as $pkg_new_cmd"
     pkg_install
 
-    [ -n $(command -v pkg_post_install) ] && pkg_post_install
+    [ -n "$(command -v pkg_post_install)" ] && pkg_post_install
 
-    if [ -n $(command -v pkg_post_install_message) ]; then
+    if [ -n "$(command -v pkg_post_install_message)" ]; then
         pkg_post_install_message
     else
         echo "Installed '$pkg_cmd_name' v$WEBI_VERSION as $pkg_new_cmd"
