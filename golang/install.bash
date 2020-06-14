@@ -73,7 +73,7 @@ pkg_link_new_version() {
     # 'GOBIN' is set above to "${HOME}/go"
     # 'GOBIN_REAL' will be "${HOME}/.local/opt/go-bin-v${WEBI_VERSION}"
     rm -rf "$GOBIN"
-    mkdir -p "$GOBIN_REAL"
+    mkdir -p "$GOBIN_REAL/bin"
     ln -s "$GOBIN_REAL" "$GOBIN"
 }
 
