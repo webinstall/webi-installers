@@ -65,7 +65,7 @@ cur_go_version=""
 if [ -n "$cur_go" ]; then
   cur_go_version=$(go version | cut -d' ' -f3 | sed 's:go::')
 
-  if [ "$cur_go_version" == "$WEBI_VERSION" ]; then
+  if [ "$cur_go_version" == "$(echo $WEBI_VERSION | sed 's:\.0::g')" ]; then
     echo "go$WEBI_VERSION already installed at $cur_go"
     exit 0
   else
