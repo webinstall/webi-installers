@@ -52,23 +52,23 @@ webi_check() {
         pkg_current_version="$(pkg_get_current_version)"
         # remove trailing '.0's for golang's sake
         my_current_version="$(echo $pkg_current_version | sed 's:\.0::g')"
-        my_new_version="$(echo $WEBI_VERSION | sed 's:\.0::g')"
+        my_src_version="$(echo $WEBI_VERSION | sed 's:\.0::g')"
         if [ -n "$(command -v pkg_format_cmd_version)" ]; then
             my_canonical_name="$(pkg_format_cmd_version "$WEBI_VERSION")"
         else
             #my_canonical_name="$WEBI_NAME $WEBI_VERSION"
             my_canonical_name="$pkg_cmd_name v$WEBI_VERSION"
         fi
-        if [ "$my_new_version" == "$my_current_version" ]; then
+        if [ "$my_src_version" == "$my_current_version" ]; then
             echo "$my_canonical_name already installed at $my_current_cmd"
             exit 0
         else
-            if [ "$my_current_cmd" != "$pkg_common_cmd" ]; then
+            if [ "$my_current_cmd" != "$pkg_dst_cmd" ]; then
                 echo "WARN: possible conflict between $my_canonical_name and $pkg_current_version at $my_current_cmd"
             fi
-            if [ -x "$pkg_new_cmd" ]; then
-                pkg_link_new_version
-                echo "switched to $my_canonical_name at $pkg_new_opt"
+            if [ -x "$pkg_src_cmd" ]; then
+                pkg_link_src_dst
+                echo "switched to $my_canonical_name at $pkg_src"
                 exit 0
             fi
           fi
@@ -168,17 +168,17 @@ webi_path_add() {
 if [ -n "$(command -v pkg_install)" ]; then
     pkg_cmd_name="${pkg_cmd_name:-$WEBI_NAME}"
 
-    pkg_common_opt="${pkg_common_opt:-$HOME/.local/opt/$pkg_cmd_name}"
-    pkg_common_bin="${pkg_common_bin:-$pkg_common_opt/bin}"
-    pkg_common_cmd="${pkg_common_cmd:-$pkg_common_bin/$pkg_cmd_name}"
+    pkg_dst="${pkg_dst:-$HOME/.local/opt/$pkg_cmd_name}"
+    pkg_dst_bin="${pkg_dst_bin:-$pkg_common/bin}"
+    pkg_dst_cmd="${pkg_dst_cmd:-$pkg_dst_bin/$pkg_cmd_name}"
 
-    pkg_new_opt="${pkg_new_opt:-$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION}"
-    pkg_new_bin="${pkg_new_bin:-$pkg_new_opt/bin}"
-    pkg_new_cmd="${pkg_new_cmd:-$pkg_new_bin/$pkg_cmd_name}"
+    pkg_src="${pkg_src:-$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION}"
+    pkg_src_bin="${pkg_src_bin:-$pkg_src/bin}"
+    pkg_src_cmd="${pkg_src_cmd:-$pkg_src_bin/$pkg_cmd_name}"
 
     [ -n "$(command -v pkg_pre_install)" ] && pkg_pre_install
 
-    echo "Installing '$pkg_cmd_name' v$WEBI_VERSION as $pkg_new_cmd"
+    echo "Installing '$pkg_cmd_name' v$WEBI_VERSION as $pkg_src_cmd"
     pkg_install
 
     [ -n "$(command -v pkg_post_install)" ] && pkg_post_install
@@ -186,7 +186,7 @@ if [ -n "$(command -v pkg_install)" ]; then
     if [ -n "$(command -v pkg_post_install_message)" ]; then
         pkg_post_install_message
     else
-        echo "Installed '$pkg_cmd_name' v$WEBI_VERSION as $pkg_new_cmd"
+        echo "Installed '$pkg_cmd_name' v$WEBI_VERSION as $pkg_src_cmd"
     fi
     echo ""
 fi

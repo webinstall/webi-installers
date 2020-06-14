@@ -93,11 +93,11 @@ pkg_format_cmd_version() {
     echo "$pkg_cmd_name v$my_version"
 }
 
-pkg_link_new_version() {
-    # 'pkg_common_opt' will default to $HOME/.local/opt/node
-    # 'pkg_new_opt' will be the installed version, such as to $HOME/.local/opt/node-v12.8.0
-    rm -rf "$pkg_common_opt"
-    ln -s "$pkg_new_opt" "$pkg_common_opt"
+pkg_link_src_dst() {
+    # 'pkg_dst' will default to $HOME/.local/opt/node
+    # 'pkg_src' will be the installed version, such as to $HOME/.local/opt/node-v12.8.0
+    rm -rf "$pkg_dst"
+    ln -s "$pkg_src" "$pkg_dst"
 }
 
 pkg_pre_install() {
@@ -117,31 +117,31 @@ pkg_install() {
     pushd "$WEBI_TMP" 2>&1 >/dev/null
 
         # remove the versioned folder, just in case it's there with junk
-        rm -rf "$pkg_new_opt"
+        rm -rf "$pkg_src"
 
         # rename the entire extracted folder to the new location
         # (this will be "$HOME/.local/opt/node-v$WEBI_VERSION" by default)
 
         # ex (full directory): ./node-v13-linux-amd64/bin/node.exe
-        mv ./"$pkg_cmd_name"* "$pkg_new_opt"
+        mv ./"$pkg_cmd_name"* "$pkg_src"
 
         # ex (single file): ./caddy-v13-linux-amd64.exe
-        #mv ./"$pkg_cmd_name"* "$pkg_common_cmd"
-        #chmod a+x "$pkg_common_cmd"
+        #mv ./"$pkg_cmd_name"* "$pkg_dst_cmd"
+        #chmod a+x "$pkg_dst_cmd"
 
         # ex (single file, nested in directory): ./rg/rg-v13-linux-amd64
         #mv ./"$pkg_cmd_name"*/"$pkg_cmd_name"* "$pkg_commend_cmd"
-        #chmod a+x "$pkg_common_cmd"
+        #chmod a+x "$pkg_dst_cmd"
 
     popd 2>&1 >/dev/null
 }
 
 pkg_post_install() {
-    pkg_link_new_version
+    pkg_link_src_dst
 
     # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
     # Adds "$HOME/.local/opt/node/bin" to PATH
-    webi_path_add "$pkg_common_bin"
+    webi_path_add "$pkg_dst_bin"
 }
 
 pkg_post_install_message() {

@@ -12,10 +12,11 @@ set -e
 set -u
 
 pkg_cmd_name="caddy"
-pkg_common_opt="$HOME/.local"
+pkg_dst="$HOME/.local"
 
-# just a junk file so that the version check always fails for non-current versions
-pkg_new_opt="$HOME/.local/opt/caddy-doesntexist111"
+# the "source" here isn't used, nor very meaningful,
+# but we'll use the download location as a junk value
+pkg_src="$HOME/Downloads/$WEBI_PKG_FILE"
 
 pkg_get_current_version() {
     # 'caddy version' has output in this format:
@@ -31,7 +32,7 @@ pkg_format_cmd_version() {
     echo "$pkg_cmd_name v$my_version"
 }
 
-pkg_link_new_version() {
+pkg_link_src_dst() {
     # caddy is just a single file, no directory linking to do
     true
 }
@@ -49,34 +50,34 @@ pkg_install() {
     pushd "$WEBI_TMP" 2>&1 >/dev/null
 
         # ensure the bin dir exists
-        mkdir -p "$pkg_common_bin"
+        mkdir -p "$pkg_dst_bin"
 
         # rename the entire extracted folder to the new location
         # (this will be "$HOME/.local/bin/caddy", as set above)
 
         # ex (full directory): ./node-v13-linux-amd64/bin/node.exe
-        #mv ./"$pkg_cmd_name"* "$pkg_new_opt"
+        #mv ./"$pkg_cmd_name"* "$pkg_src"
 
         # ex (single file): ./caddy-v2.0.0-linux-amd64.exe
-        mv ./"$pkg_cmd_name"* "$pkg_common_cmd"
-        chmod a+x "$pkg_common_cmd"
+        mv ./"$pkg_cmd_name"* "$pkg_dst_cmd"
+        chmod a+x "$pkg_dst_cmd"
 
         # ex (single file, nested in directory): ./rg/rg-v13-linux-amd64
         #mv ./"$pkg_cmd_name"*/"$pkg_cmd_name"* "$pkg_commend_cmd"
-        #chmod a+x "$pkg_common_cmd"
+        #chmod a+x "$pkg_dst_cmd"
 
     popd 2>&1 >/dev/null
 }
 
 pkg_post_install() {
     # just in case we add something in the future
-    pkg_link_new_version
+    pkg_link_src_dst
 
     # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
     # Adds "$HOME/.local/bin" to PATH
-    webi_path_add "$pkg_common_bin"
+    webi_path_add "$pkg_dst_bin"
 }
 
 pkg_post_install_message() {
-    echo "Installed 'caddy' v$WEBI_VERSION as $pkg_common_cmd"
+    echo "Installed 'caddy' v$WEBI_VERSION as $pkg_dst_cmd"
 }

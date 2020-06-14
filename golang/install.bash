@@ -43,8 +43,8 @@ pkg_cmd_name="go"
 
 # NOTE: pkg_* variables can be defined here
 #       pkg_cmd_name
-#       pkg_new_opt, pkg_new_bin, pkg_new_cmd
-#       pkg_common_opt, pkg_common_bin, pkg_common_cmd
+#       pkg_src, pkg_src_bin, pkg_src_cmd
+#       pkg_dst, pkg_dst_bin, pkg_dst_cmd
 #
 # Their defaults are defined in webi/template.bash at https://github.com/webinstall/packages
 
@@ -62,11 +62,11 @@ pkg_format_cmd_version() {
     echo "${pkg_cmd_name}${my_version}"
 }
 
-pkg_link_new_version() {
-    # 'pkg_common_opt' will default to $HOME/.local/opt/go
-    # 'pkg_new_opt' will be the installed version, such as to $HOME/.local/opt/go-v1.14.2
-    rm -rf "$pkg_common_opt"
-    ln -s "$pkg_new_opt" "$pkg_common_opt"
+pkg_link_src_dst() {
+    # 'pkg_dst' will default to $HOME/.local/opt/go
+    # 'pkg_src' will be the installed version, such as to $HOME/.local/opt/go-v1.14.2
+    rm -rf "$pkg_dst"
+    ln -s "$pkg_src" "$pkg_dst"
 
     # Go has a special $GOBIN
 
@@ -97,30 +97,30 @@ pkg_install() {
     pushd "$WEBI_TMP" 2>&1 >/dev/null
 
         # remove the versioned folder, just in case it's there with junk
-        rm -rf "$pkg_new_opt"
+        rm -rf "$pkg_src"
 
         # rename the entire extracted folder to the new location
         # (this will be "$HOME/.local/opt/go-v$WEBI_VERSION" by default)
-        mv ./"$pkg_cmd_name"* "$pkg_new_opt"
+        mv ./"$pkg_cmd_name"* "$pkg_src"
 
     popd 2>&1 >/dev/null
 }
 
 pkg_post_install() {
-    pkg_link_new_version
+    pkg_link_src_dst
 
     # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
     # Updates PATH with
     #       "$HOME/.local/opt/go"
-    webi_path_add "$pkg_common_bin"
+    webi_path_add "$pkg_dst_bin"
     webi_path_add "$GOBIN/bin"
 
     # Install x go
     echo "Installing go extended tools (goimports, gorename, etc)"
-    "$pkg_common_cmd" get golang.org/x/tools/cmd/goimports > /dev/null 2>/dev/null
-    "$pkg_common_cmd" get golang.org/x/tools/cmd/gorename > /dev/null 2>/dev/null
-    "$pkg_common_cmd" get golang.org/x/tools/cmd/gotype > /dev/null 2>/dev/null
-    "$pkg_common_cmd" get golang.org/x/tools/cmd/stringer > /dev/null 2>/dev/null
+    "$pkg_dst_cmd" get golang.org/x/tools/cmd/goimports > /dev/null 2>/dev/null
+    "$pkg_dst_cmd" get golang.org/x/tools/cmd/gorename > /dev/null 2>/dev/null
+    "$pkg_dst_cmd" get golang.org/x/tools/cmd/gotype > /dev/null 2>/dev/null
+    "$pkg_dst_cmd" get golang.org/x/tools/cmd/stringer > /dev/null 2>/dev/null
 }
 
 pkg_post_install_message() {

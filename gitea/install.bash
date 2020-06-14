@@ -12,10 +12,11 @@ set -e
 set -u
 
 pkg_cmd_name="gitea"
-pkg_common_opt="$HOME/.local"
+pkg_dst="$HOME/.local"
 
-# just a junk file so that the version check always fails for non-current versions
-pkg_new_opt="$HOME/.local/opt/gitea-doesntexist111"
+# pkg_src isn't used in this script,
+# just setting a junk value for completeness (and possibly debug output)
+pkg_src="$HOME/Downloads/$WEBI_PKG_FILE"
 
 pkg_get_current_version() {
     # 'gitea version' has output in this format:
@@ -31,7 +32,7 @@ pkg_format_cmd_version() {
     echo "$pkg_cmd_name v$my_version"
 }
 
-pkg_link_new_version() {
+pkg_link_src_dst() {
     # gitea is just a single file, no directory linking to do
     true
 }
@@ -50,22 +51,22 @@ pkg_install() {
 
         # rename the entire extracted folder to the new location
         # (this will be "$HOME/.local/bin/gitea" by default)
-        mkdir -p "$pkg_common_bin"
-        mv ./"$pkg_cmd_name"* "$pkg_common_cmd"
-        chmod a+x "$pkg_common_cmd"
+        mkdir -p "$pkg_dst_bin"
+        mv ./"$pkg_cmd_name"* "$pkg_dst_cmd"
+        chmod a+x "$pkg_dst_cmd"
 
     popd 2>&1 >/dev/null
 }
 
 pkg_post_install() {
     # just in case we add something in the future
-    pkg_link_new_version
+    pkg_link_src_dst
 
     # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
     # Adds "$HOME/.local/bin" to PATH
-    webi_path_add "$pkg_common_bin"
+    webi_path_add "$pkg_dst_bin"
 }
 
 pkg_post_install_message() {
-    echo "Installed 'gitea' as $pkg_common_cmd"
+    echo "Installed 'gitea' v$WEBI_VERSION as $pkg_dst_cmd"
 }

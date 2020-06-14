@@ -93,14 +93,14 @@ module.exports = function (request) {
 pkg_cmd_name="foobar"
 
 # These are used for symlinks, PATH, and test commands
-pkg_common_opt="$HOME/.local/opt/foobar"
-pkg_common_bin="$HOME/.local/opt/foobar/bin"
-pkg_common_cmd="$HOME/.local/opt/foobar/bin/foobar"
+pkg_dst="$HOME/.local/opt/foobar"
+pkg_dst_bin="$HOME/.local/opt/foobar/bin"
+pkg_dst_cmd="$HOME/.local/opt/foobar/bin/foobar"
 
 # These are the _real_ locations for the above
-pkg_new_opt="$HOME/.local/opt/foobar-v$WEBI_VERSION"
-pkg_new_bin="$HOME/.local/opt/foobar-v$WEBI_VERSION/bin"
-pkg_new_cmd="$HOME/.local/opt/foobar-v$WEBI_VERSION/bin/foobar"
+pkg_src="$HOME/.local/opt/foobar-v$WEBI_VERSION"
+pkg_src_bin="$HOME/.local/opt/foobar-v$WEBI_VERSION/bin"
+pkg_src_cmd="$HOME/.local/opt/foobar-v$WEBI_VERSION/bin/foobar"
 ```
 
 (required) A version check function that strips all non-version junk
@@ -115,25 +115,25 @@ pkg_get_current_version() {
 For the rest of the functions you can like copy/paste from the examples:
 
 ```bash
-pkg_format_cmd_version() {}     # Optional, pretty prints version
+pkg_format_cmd_version() {}       # Optional, pretty prints version
 
-pkg_link_new_version() {}       # Required, may be empty for $HOME/.local/bin commands
+pkg_link_src_dst() {}             # Required, may be empty for $HOME/.local/bin commands
 
-pkg_pre_install() {             # Required, runs any webi_* commands
-    webi_check                      # for $HOME/.local/opt tools
-    webi_download                   # for things that have a releases.js
-    webi_extract                    # for .xz, .tar.*, and .zip files
+pkg_pre_install() {               # Required, runs any webi_* commands
+    webi_check                        # for $HOME/.local/opt tools
+    webi_download                     # for things that have a releases.js
+    webi_extract                      # for .xz, .tar.*, and .zip files
 }
 
-pkg_install() {}                # Required, usually just needs to rename extracted folder to
-                                # "$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION"
+pkg_install() {}                  # Required, usually just needs to rename extracted folder to
+                                  # "$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION"
 
-pkg_post_install() {            # Required
-    pkg_link_new_version            # should probably call pkg_link_new_version()
-    webi_path_add "$pkg_common_bin" # should probably update PATH
+pkg_post_install() {              # Required
+    pkg_link_src_dst                  # should probably call pkg_link_src_dst()
+    webi_path_add "$pkg_dst_bin"      # should probably update PATH
 }
 
-pkg_post_install_message() {}   # Optional, pretty print a success message
+pkg_post_install_message() {}     # Optional, pretty print a success message
 ```
 
 ## Script API

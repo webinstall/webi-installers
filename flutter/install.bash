@@ -16,8 +16,8 @@ set -u
 
 # NOTE: pkg_* variables can be defined here
 #       pkg_cmd_name
-#       pkg_new_opt, pkg_new_bin, pkg_new_cmd
-#       pkg_common_opt, pkg_common_bin, pkg_common_cmd
+#       pkg_src, pkg_src_bin, pkg_src_cmd
+#       pkg_dst, pkg_dst_bin, pkg_dst_cmd
 #
 # Their defaults are defined in webi/template.bash at https://github.com/webinstall/packages
 
@@ -34,11 +34,11 @@ pkg_get_current_version() {
     echo "$(flutter --version 2>/dev/null | head -n 1 | cut -d' ' -f2)"
 }
 
-pkg_link_new_version() {
-    # 'pkg_common_opt' will default to $HOME/.local/opt/flutter
-    # 'pkg_new_opt' will be the installed version, such as to $HOME/.local/opt/flutter-v1.17.3
-    rm -rf "$pkg_common_opt"
-    ln -s "$pkg_new_opt" "$pkg_common_opt"
+pkg_link_src_dst() {
+    # 'pkg_dst' will default to $HOME/.local/opt/flutter
+    # 'pkg_src' will be the installed version, such as to $HOME/.local/opt/flutter-v1.17.3
+    rm -rf "$pkg_dst"
+    ln -s "$pkg_src" "$pkg_dst"
 }
 
 pkg_pre_install() {
@@ -61,19 +61,19 @@ pkg_install() {
     pushd "$WEBI_TMP" 2>&1 >/dev/null
 
         # remove the versioned folder, just in case it's there with junk
-        rm -rf "$pkg_new_opt"
+        rm -rf "$pkg_src"
 
         # rename the entire extracted folder to the new location
         # (this will be "$HOME/.local/opt/flutter-v$WEBI_VERSION" by default)
-        mv ./flutter* "$pkg_new_opt"
+        mv ./flutter* "$pkg_src"
 
     popd 2>&1 >/dev/null
 }
 
 pkg_post_install() {
-    pkg_link_new_version
+    pkg_link_src_dst
 
     # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
     # Adds "$HOME/.local/opt/flutter" to PATH
-    webi_path_add "$pkg_common_bin"
+    webi_path_add "$pkg_dst_bin"
 }
