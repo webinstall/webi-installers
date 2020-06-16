@@ -20,6 +20,8 @@
 #   webi rustlang
 #   ```
 
+{
+
 if [ -f "$HOME/.local/bin/webi" ]; then
   set +e
   cur_webi="$(command -v webi)"
@@ -32,3 +34,5 @@ else
   # for when this file is run on its own, not from webinstall.dev
   echo "Install any other package via https://webinstall.dev and webi will be installed as part of the bootstrap process"
 fi
+
+}

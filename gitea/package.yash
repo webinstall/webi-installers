@@ -1,0 +1,11 @@
+# title: Gitea
+# homepage: https://github.com/go-gitea/gitea
+# tagline: Git with a cup of tea, painless self-hosted git service
+# description: |
+#   `gitea` is a clean, lightweight self-hosted Github alternative, forked from Gogs. Lighter and more user-friendly than Gitlab.
+# examples: |
+#   ```bash
+#   gitea --version
+#   ```
+
+END

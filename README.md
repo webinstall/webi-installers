@@ -14,12 +14,14 @@ Primary and community-submitted packages for
 
 ## Creating an Installer
 
-An install consists of 5 parts in two files:
+An install consists of 5 parts in 4 files:
 
 ```
 my-new-package/
+  - package.yash
   - releases.js
-  - my-new-package.bash
+  - install.sh
+  - install.bat
 ```
 
 1. Create Description
@@ -38,11 +40,20 @@ variables and functions pre-defined.
 
 You just fill in the blanks.
 
+### TL;DR
+
+Just create an empty directory and run the tests until you get a good result.
+
+```bash
+mkdir -p new-package
+node _webi/test.js ./new-package/
+```
+
 ### 1. Create Description
 
 Just copy the format from any of the existing packages. It's like this:
 
-`my-new-package.bash`:
+`package.yash`:
 
 ````
 # title: Node.js
@@ -55,7 +66,14 @@ Just copy the format from any of the existing packages. It's like this:
 #   node -e 'console.log("Hello, World!")'
 #   > Hello, World!
 #   ```
+
+END
 ````
+
+This is a dumb format. We know. Historical accident (originally these were in
+bash comments).
+
+It's in the TODOs to replace this with either YAML or Markdown.
 
 ### 1. Fetch Releases
 
@@ -115,25 +133,24 @@ pkg_get_current_version() {
 For the rest of the functions you can like copy/paste from the examples:
 
 ```bash
-pkg_format_cmd_version() {}       # Optional, pretty prints version
+pkg_format_cmd_version() {}         # Override, pretty prints version
 
-pkg_link_src_dst() {}             # Required, may be empty for $HOME/.local/bin commands
+pkg_link                            # Override, replaces webi_link()
 
-pkg_pre_install() {               # Required, runs any webi_* commands
-    webi_check                        # for $HOME/.local/opt tools
-    webi_download                     # for things that have a releases.js
-    webi_extract                      # for .xz, .tar.*, and .zip files
+pkg_pre_install() {                 # Override, runs any webi_* commands
+    webi_check                          # for $HOME/.local/opt tools
+    webi_download                       # for things that have a releases.js
+    webi_extract                        # for .xz, .tar.*, and .zip files
 }
 
-pkg_install() {}                  # Required, usually just needs to rename extracted folder to
-                                  # "$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION"
+pkg_install() {}                    # Override, usually just needs to rename extracted folder to
+                                    # "$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION"
 
-pkg_post_install() {              # Required
-    pkg_link_src_dst                  # should probably call pkg_link_src_dst()
-    webi_path_add "$pkg_dst_bin"      # should probably update PATH
+pkg_post_install() {                # Override
+    webi_path_add "$pkg_dst_bin"        # should probably update PATH
 }
 
-pkg_post_install_message() {}     # Optional, pretty print a success message
+pkg_done_message() {}               # Override, pretty print a success message
 ```
 
 ## Script API
@@ -162,6 +179,7 @@ WEBI_PKG_FILE=example-macos-amd64.tar.gz
 
 ```bash
 WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-foobar.XXXXXXXX)"}
+WEBI_SINGLE=""
 ```
 
 ```bash
@@ -169,6 +187,10 @@ webi_check              # Checks to see if the selected version is already insta
 webi_download           # Downloads the selected release to $HOME/Downloads/<package-name>.tar.gz
 webi_extract            # Extracts the download to /tmp/<package-name>-<random>/
 webi_path_add /new/path # Adds /new/path to PATH for bash, zsh, and fish
+webi_pre_install        # Runs webi_check, webi_download, and webi_extract
+webi_install            # Moves extracted files from $WEBI_TMP to $pkg_src
+webi_link               # replaces any existing symlink with the currently selected version
+webi_post_install       # Runs `webi_add_path $pkg_dst_bin`
 ```
 
 # Roadmap

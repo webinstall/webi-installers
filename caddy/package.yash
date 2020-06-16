@@ -1,0 +1,13 @@
+# title: Caddy
+# homepage: https://github.com/caddyserver/caddy
+# tagline: Fast, multi-platform web server with automatic HTTPS
+# description: |
+#   Caddy is an extensible server platform that uses TLS by default.
+# examples: |
+#   ```bash
+#   caddy start
+#   ```
+
+This is a comment... because... poor choices I made.
+
+Don't worry, this will be yaml or markdown in the... sometime... future

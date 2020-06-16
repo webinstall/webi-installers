@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# TODO: migrate from shmatter to frontmarker
-
 set -e
 set -u
 
@@ -40,7 +38,7 @@ pkg_get_current_version() {
 # For (re-)linking to the desired installed version
 # (for example: 'go' is special and needs both $HOME/go and $HOME/.local/opt/go)
 # (others like 'rg', 'hugo', and 'caddy' are single files that just get replaced)
-pkg_link_src_dst() {
+pkg_link() {
     rm -rf "$pkg_dst"
     ln -s "$pkg_src" "$pkg_dst"
 }
@@ -60,26 +58,22 @@ pkg_pre_install() {
 
 # For installing from the extracted package tmp directory
 pkg_install() {
-    pushd "$WEBI_TMP" 2>&1 >/dev/null
+    # remove the versioned folder, just in case it's there with junk
+    rm -rf "$pkg_src"
 
-        # remove the versioned folder, just in case it's there with junk
-        rm -rf "$pkg_src"
-
-        # rename the entire extracted folder to the new location
-        # (this will be "$HOME/.local/opt/xmpl-v$WEBI_VERSION" by default)
-        mv ./"$pkg_cmd_name"* "$pkg_src"
-
-    popd 2>&1 >/dev/null
+    # rename the entire extracted folder to the new location
+    # (this will be "$HOME/.local/opt/xmpl-v$WEBI_VERSION" by default)
+    mv ./"$pkg_cmd_name"* "$pkg_src"
 }
 
 # For updating PATHs and installing companion tools
 pkg_post_install() {
-    pkg_link_src_dst
+    pkg_link
 
     # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
     webi_path_add "$pkg_dst_bin"
 }
 
-pkg_post_install_message() {
-    echo "Installed 'example' as 'xmpl'"
+pkg_done_message() {
+    echo "Installed 'example' as 'xmpl' at $pkg_dst_cmd"
 }

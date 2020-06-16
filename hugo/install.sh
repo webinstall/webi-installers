@@ -1,17 +1,3 @@
-# title: Hugo
-# homepage: https://github.com/gohugoio/hugo
-# tagline: The world’s fastest framework for building websites
-# description: |
-#   Hugo is one of the most popular open-source static site generators. With its amazing speed and flexibility, Hugo makes building websites fun again.
-# examples: |
-#   ```bash
-#   hugo
-#   ```
-#
-#   ```bash
-#   hugo server -D
-#   ```
-
 set -e
 set -u
 
@@ -36,7 +22,7 @@ pkg_format_cmd_version() {
     echo "$pkg_cmd_name v$my_version"
 }
 
-pkg_link_src_dst() {
+pkg_link() {
     # hugo is just a single file, no directory linking to do
     true
 }
@@ -64,7 +50,7 @@ pkg_install() {
 
 pkg_post_install() {
     # just in case we add something in the future
-    pkg_link_src_dst
+    pkg_link
 
     # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
     # Adds "$HOME/.local/opt/node" to PATH

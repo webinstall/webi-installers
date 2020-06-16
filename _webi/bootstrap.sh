@@ -14,6 +14,8 @@ cat << EOF > "$HOME/.local/bin/webi"
 set -e
 set -u
 
+{
+
 my_package="\${1:-}"
 if [ -z "\$my_package" ]; then
 	echo "Usage: webi <package>@<version>"
@@ -83,6 +85,8 @@ pushd "\$WEBI_BOOT" 2>&1 > /dev/null
 popd 2>&1 > /dev/null
 
 rm -rf "\$WEBI_BOOT"
+
+}
 EOF
 
 chmod a+x "$HOME/.local/bin/webi"

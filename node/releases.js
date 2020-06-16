@@ -140,7 +140,7 @@ module.exports = getAllReleases;
 
 if (module === require.main) {
   getAllReleases(require('@root/request')).then(function (all) {
-    all = require('../_common/normalize.js')(all);
+    all = require('../_webi/normalize.js')(all);
     console.info(JSON.stringify(all));
     //console.info(JSON.stringify(all, null, 2));
   });

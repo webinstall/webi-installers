@@ -16,7 +16,7 @@ module.exports = function (request) {
 
 if (module === require.main) {
   module.exports(require('@root/request')).then(function (all) {
-    all = require('../_common/normalize.js')(all);
+    all = require('../_webi/normalize.js')(all);
     console.info(JSON.stringify(all));
   });
 }

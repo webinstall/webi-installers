@@ -36,7 +36,7 @@ if (module === require.main) {
   module.exports(require('@root/request')).then(function (all) {
     // limit the example output
     all.releases = all.releases.slice(0, 5);
-    all = require('../_common/normalize.js')(all);
+    all = require('../_webi/normalize.js')(all);
     console.info(JSON.stringify(all, null, 2));
   });
 }
