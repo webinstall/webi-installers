@@ -4,9 +4,17 @@
 // Print help if there's no pkgdir argument
 //
 var usage = [
-  'Usage: node _webi/test.js <path-to-package>',
-  'Example: node _webi/test.js ./node/'
+  'Usage: node _webi/test.js --debug <path-to-package>',
+  'Example: node _webi/test.js --debug ./node/'
 ].join('\n');
+
+var count = 3;
+var debug = false;
+
+if (/\b-?-debug?\b/.test(process.argv.join(' '))) {
+  count += 1;
+  debug = true;
+}
 
 if (3 !== process.argv.length) {
   console.error(usage);
@@ -97,7 +105,9 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
     var bashFile = 'install-' + pkgname + '.sh';
     var batFile = 'install-' + pkgname + '.bat';
 
-    bashTxt = bashTxt.replace(/#set -x/g, 'set -x');
+    if (debug) {
+      bashTxt = bashTxt.replace(/#set -x/g, 'set -x');
+    }
     fs.writeFileSync(bashFile, bashTxt, 'utf-8');
     console.info('Has the necessary files?');
     console.info('\tNEEDS MANUAL TEST: %s', bashFile);
