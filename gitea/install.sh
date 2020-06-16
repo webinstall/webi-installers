@@ -2,6 +2,7 @@ set -e
 set -u
 
 pkg_cmd_name="gitea"
+WEBI_SINGLE=true
 
 pkg_get_current_version() {
     # 'gitea version' has output in this format:
