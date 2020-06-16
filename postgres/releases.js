@@ -31,8 +31,41 @@ module.exports = async function () {
         download: ''
       },
       {
+        name: 'postgresql-10.12-1-osx-binaries.zip',
+        version: '10.12',
+        lts: false,
+        channel: 'stable',
+        date: '',
+        os: 'macos',
+        arch: 'amd64',
+        ext: 'zip',
+        download: ''
+      },
+      {
         name: 'postgresql-10.13-1-osx-binaries.zip',
         version: '10.13',
+        lts: false,
+        channel: 'stable',
+        date: '',
+        os: 'macos',
+        arch: 'amd64',
+        ext: 'zip',
+        download: ''
+      },
+      {
+        name: 'postgresql-11.8-1-osx-binaries.zip',
+        version: '11.8',
+        lts: false,
+        channel: 'stable',
+        date: '',
+        os: 'macos',
+        arch: 'amd64',
+        ext: 'zip',
+        download: ''
+      },
+      {
+        name: 'postgresql-12.3-1-osx-binaries.zip',
+        version: '12.3',
         lts: false,
         channel: 'stable',
         date: '',
