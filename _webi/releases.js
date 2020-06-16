@@ -140,7 +140,10 @@ Releases.renderBatch = function (
         .readFile(path.join(__dirname, 'template.bat'), 'utf8')
         .then(function (tplTxt) {
           return tplTxt
-            .replace(/^(REM )?WEBI_PKG=.*/im, "WEBI_PKG='" + pkg + '@' + ver + "'")
+            .replace(
+              /^(REM )?WEBI_PKG=.*/im,
+              "WEBI_PKG='" + pkg + '@' + ver + "'"
+            )
             .replace(/{{ installer }}/, installTxt);
         });
     });
