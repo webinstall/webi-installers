@@ -9,13 +9,24 @@ module.exports = async function () {
   return {
     releases: [
       {
-        name: 'postgresql-10.12-1-linux-binaries.tar.gz',
+        name: 'postgresql-10.12-1-linux-x64-binaries.tar.gz',
         version: '10.12',
         lts: false,
         channel: 'stable',
         date: '',
         os: 'linux',
         arch: 'amd64',
+        ext: 'tar',
+        download: ''
+      },
+      {
+        name: 'postgresql-10.12-1-linux-binaries.tar.gz',
+        version: '10.12',
+        lts: false,
+        channel: 'stable',
+        date: '',
+        os: 'linux',
+        arch: 'x86',
         ext: 'tar',
         download: ''
       },
