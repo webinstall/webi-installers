@@ -71,19 +71,19 @@ webi_link() {
     fi
 
     if [ -n "$WEBI_SINGLE" ] || [ "single" == "${1:-}" ]; then
-        if [ -d "$pkg_dst_cmd" ]; then
-            rm -rf -i "$pkg_dst_cmd"
-        else
+        if [ -L "$pkg_dst_cmd" ]; then
             rm -f "$pkg_dst_cmd"
+        else
+            rm -rf -i "$pkg_dst_cmd"
         fi
         ln -s "$pkg_src_cmd" "$pkg_dst_cmd"
     else
         # 'pkg_dst' will default to $HOME/.local/opt/node
         # 'pkg_src' will be the installed version, such as to $HOME/.local/opt/node-v12.8.0
-        if [ -d "$pkg_dst" ]; then
-            rm -rf -i "$pkg_dst"
-        else
+        if [ -L "$pkg_dst" ]; then
             rm -f "$pkg_dst"
+        else
+            rm -rf -i "$pkg_dst"
         fi
         ln -s "$pkg_src" "$pkg_dst"
     fi
@@ -222,10 +222,10 @@ webi_install() {
         chmod a+x "$pkg_src_cmd"
     else
         mkdir -p "$(dirname $pkg_src)"
-        if [ -d "$pkg_src" ]; then
-            rm -rf -i "$pkg_src"
-        else
+        if [ -L "$pkg_src" ]; then
             rm -f "$pkg_src"
+        else
+            rm -rf -i "$pkg_src"
         fi
         mv ./"$pkg_cmd_name"* "$pkg_src"
     fi
