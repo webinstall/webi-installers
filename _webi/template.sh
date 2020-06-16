@@ -73,7 +73,8 @@ webi_link() {
     if [ -n "$WEBI_SINGLE" ] || [ "single" == "${1:-}" ]; then
         if [ -L "$pkg_dst_cmd" ]; then
             rm -f "$pkg_dst_cmd"
-        else
+        elif [ -e "$pkg_dst_cmd" ]; then
+            echo "remove $pkg_dst_cmd?"
             rm -rf -i "$pkg_dst_cmd"
         fi
         ln -s "$pkg_src_cmd" "$pkg_dst_cmd"
@@ -82,7 +83,8 @@ webi_link() {
         # 'pkg_src' will be the installed version, such as to $HOME/.local/opt/node-v12.8.0
         if [ -L "$pkg_dst" ]; then
             rm -f "$pkg_dst"
-        else
+        elif [ -e "$pkg_dst" ]; then
+            echo "remove $pkg_dst?"
             rm -rf -i "$pkg_dst"
         fi
         ln -s "$pkg_src" "$pkg_dst"
@@ -224,7 +226,8 @@ webi_install() {
         mkdir -p "$(dirname $pkg_src)"
         if [ -L "$pkg_src" ]; then
             rm -f "$pkg_src"
-        else
+        elif [ -e "$pkg_src" ]; then
+            echo "remove $pkg_src?"
             rm -rf -i "$pkg_src"
         fi
         mv ./"$pkg_cmd_name"* "$pkg_src"
