@@ -18,6 +18,12 @@ Releases.renderBash = function (
   rel,
   { baseurl, pkg, tag, ver, os, arch, formats }
 ) {
+  if (!Array.isArray(formats)) {
+    formats = [];
+  }
+  if (!tag) {
+    tag = '';
+  }
   return fs.promises
     .readFile(path.join(pkgdir, 'install.sh'), 'utf8')
     .then(function (installTxt) {
@@ -40,7 +46,7 @@ Releases.renderBash = function (
             .replace(/^#?WEBI_HOST=.*/m, "WEBI_HOST='" + baseurl + "'")
             .replace(/^#?WEBI_OS=.*/m, "WEBI_OS='" + (os || '') + "'")
             .replace(/^#?WEBI_ARCH=.*/m, "WEBI_ARCH='" + (arch || '') + "'")
-            .replace(/^#?WEBI_TAG=.*/m, "WEBI_TAG='" + (tag || '') + "'")
+            .replace(/^#?WEBI_TAG=.*/m, "WEBI_TAG='" + tag + "'")
             .replace(
               /^#?WEBI_RELEASES=.*/m,
               "WEBI_RELEASES='" +
@@ -53,6 +59,8 @@ Releases.renderBash = function (
                 rel.os +
                 '&arch=' +
                 rel.arch +
+                '&formats=' +
+                formats.join(',') +
                 '&pretty=true' +
                 "'"
             )
@@ -89,6 +97,10 @@ Releases.renderBash = function (
             .replace(
               /^#?WEBI_EXT=.*/m,
               'WEBI_EXT=' + rel.ext.replace(/tar.*/, 'tar')
+            )
+            .replace(
+              /^#?WEBI_FORMATS=.*/m,
+              "WEBI_FORMATS='" + formats.join(',') + "'"
             )
             .replace(
               /^#?WEBI_PKG_URL=.*/m,

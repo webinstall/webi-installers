@@ -22,6 +22,7 @@ set -u
 #WEBI_LTS=
 #WEBI_CHANNEL=
 #WEBI_EXT=
+#WEBI_FORMATS=
 #WEBI_PKG_URL=
 #WEBI_PKG_FILE=
 WEBI_UA="$(uname -a)"
@@ -128,6 +129,12 @@ webi_download() {
             # TODO pass back requested OS / Arch / Version
             echo "Error: no '$WEBI_NAME' release found for the given OS and architecture by that tag or version"
             echo "       (check that the package name and version are correct)"
+            echo "See $WEBI_RELEASES"
+            echo "        WEBI_PKG=$WEBI_PKG"
+            echo "        WEBI_NAME=$WEBI_NAME"
+            echo "        WEBI_VERSION=$WEBI_VERSION"
+            echo "        WEBI_EXT=$WEBI_EXT"
+            echo "        WEBI_FORMATS=$WEBI_FORMATS"
             exit 1
         fi
         my_url="$WEBI_PKG_URL"

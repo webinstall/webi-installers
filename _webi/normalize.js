@@ -1,7 +1,7 @@
 'use strict';
 
 // this may need customizations between packages
-const osMap = {
+var osMap = {
   macos: /(\b|_)(apple|mac|darwin|iPhone|iOS|iPad)/i,
   linux: /(\b|_)(linux)/i,
   freebsd: /(\b|_)(freebsd)/i,
@@ -9,6 +9,12 @@ const osMap = {
   sunos: /(\b|_)(sun)/i,
   aix: /(\b|_)(aix)/i
 };
+
+var formats = ['zip', 'xz', 'tar', 'pkg', 'msi', 'git', 'exe', 'dmg'];
+var formatsMap = {};
+formats.forEach(function (ext) {
+  formatsMap[ext] = true;
+});
 
 // evaluation order matters
 // (i.e. otherwise x86 and x64 can cross match)
@@ -34,7 +40,10 @@ var archMap = {
 };
 
 function normalize(all) {
+  var supportedFormats = {};
+
   all.releases.forEach(function (rel) {
+    supportedFormats[rel.ext] = true;
     rel.version = rel.version.replace(/^v/i, '');
     if (!rel.name) {
       rel.name = rel.download.replace(/.*\//, '');
@@ -85,7 +94,16 @@ function normalize(all) {
       rel.download = all.download.replace(/{{ download }}/, rel.download);
     }
   });
+
+  all.formats = Object.keys(supportedFormats).filter(function (ext) {
+    return formatsMap[ext];
+  });
+
   return all;
 }
 
 module.exports = normalize;
+// NOT in order of priority (which would be tar, xz, zip, ...)
+module.exports.formats = formats;
+module.exports.arches = archArr;
+module.exports.formatsMap = formatsMap;

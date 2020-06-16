@@ -46,6 +46,8 @@ if [ -n "\$(command -v unxz)" ]; then
 fi
 if [ -n "\$(command -v unzip)" ]; then
 	my_ext="zip,\$my_ext"
+else
+    echo "WARN: 'unzip' not found"
 fi
 if [ -n "\$(command -v tar)" ]; then
 	my_ext="tar,\$my_ext"
