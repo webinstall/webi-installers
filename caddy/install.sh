@@ -1,14 +1,17 @@
 #!/bin/bash
 
-# This file only defines custom functions which may be unique to installing Caddy.
-# For the generic functions (version comparison, downloading, symlinking) which
-# are used by almost all installers, see `template.bash`:
+# "This is too simple" you say! "Where is the magic!?" you ask.
+# There is no magic!
+# The custom functions for Caddy are here.
+# The generic functions - version checks, download, extract, etc - are here:
 #   - https://github.com/webinstall/packages/branches/master/webi/template.bash
 
 set -e
 set -u
 
 pkg_cmd_name="caddy"
+
+# IMPORTANT: this let's other functions know to expect this to be a single file
 WEBI_SINGLE=true
 
 pkg_get_current_version() {
