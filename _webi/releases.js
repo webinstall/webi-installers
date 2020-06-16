@@ -111,3 +111,37 @@ Releases.renderBash = function (
         });
     });
 };
+
+Releases.renderBatch = function (
+  pkgdir,
+  rel,
+  { baseurl, pkg, tag, ver, os, arch, formats }
+) {
+  if (!Array.isArray(formats)) {
+    formats = [];
+  }
+  if (!tag) {
+    tag = '';
+  }
+  return fs.promises
+    .readFile(path.join(pkgdir, 'install.bat'), 'utf8')
+    .then(function (installTxt) {
+      var vers = rel.version.split('.');
+      var v = {
+        major: vers.shift() || '',
+        minor: vers.shift() || '',
+        patch: vers.join('.').replace(/[+\-].*/, ''),
+        build: vers
+          .join('.')
+          .replace(/[^+\-]*/, '')
+          .replace(/^-/, '')
+      };
+      return fs.promises
+        .readFile(path.join(__dirname, 'template.bat'), 'utf8')
+        .then(function (tplTxt) {
+          return tplTxt
+            .replace(/^(REM )?WEBI_PKG=.*/im, "WEBI_PKG='" + pkg + '@' + ver + "'")
+            .replace(/{{ installer }}/, installTxt);
+        });
+    });
+};

@@ -93,25 +93,43 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
   console.info(rel);
   console.info('');
 
-  return Releases.renderBash(pkgdir, rel, {
-    baseurl: 'https://webinstall.dev',
-    pkg: pkgname,
-    tag: pkgtag || '',
-    ver: '',
-    os: osrel,
-    arch,
-    formats: formats
-  }).then(function (bashTxt) {
+  return Promise.all([
+    Releases.renderBash(pkgdir, rel, {
+      baseurl: 'https://webinstall.dev',
+      pkg: pkgname,
+      tag: pkgtag || '',
+      ver: '',
+      os: osrel,
+      arch,
+      formats: formats
+    }).catch(function () {}),
+    Releases.renderBatch(pkgdir, rel, {
+      baseurl: 'https://webinstall.dev',
+      pkg: pkgname,
+      tag: pkgtag || '',
+      ver: '',
+      os: osrel,
+      arch,
+      formats: formats
+    }).catch(function () {})
+  ]).then(function (scripts) {
+    var bashTxt = scripts[0];
+    var batTxt = scripts[1];
     var bashFile = 'install-' + pkgname + '.sh';
     var batFile = 'install-' + pkgname + '.bat';
 
     if (debug) {
-      bashTxt = bashTxt.replace(/#set -x/g, 'set -x');
+      bashTxt = (bashTxt || 'echo ERROR').replace(/#set -x/g, 'set -x');
+      batTxt = (batTxt || 'echo ERROR').replace(
+        /REM REM todo debug/g,
+        'REM todo debug'
+      );
     }
-    fs.writeFileSync(bashFile, bashTxt, 'utf-8');
     console.info('Has the necessary files?');
-    console.info('\tNEEDS MANUAL TEST: %s', bashFile);
-    console.info('\t(todo: ' + batFile + ')');
+    fs.writeFileSync(bashFile, bashTxt, 'utf-8');
+    console.info('\tNEEDS MANUAL TEST: bash %s', bashFile);
+    fs.writeFileSync(batFile, batTxt, 'utf-8');
+    console.info('\tNEEDS MANUAL TEST: cmd.exe %s', batFile);
     console.info('');
   });
 });
