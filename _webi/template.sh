@@ -45,6 +45,8 @@ export WEBI_CURL="$(command -v curl)"
 export WEBI_WGET="$(command -v wget)"
 set -e
 
+
+# get the special formatted version (i.e. "go is go1.14" while node is "node v12.10.8")
 my_versioned_name=""
 _webi_canonical_name() {
     if [ -n "$my_versioned_name" ]; then
@@ -61,6 +63,7 @@ _webi_canonical_name() {
     echo "$my_versioned_name"
 }
 
+# update symlinks according to $HOME/.local/opt and $HOME/.local/bin install paths.
 webi_link() {
     if [ -n "$(command -v pkg_link)" ]; then
         pkg_link
@@ -86,6 +89,7 @@ webi_link() {
     fi
 }
 
+# detect if this program is already installed or if an installed version may cause conflict
 webi_check() {
     # Test for existing version
     set +e
@@ -113,6 +117,7 @@ webi_check() {
     fi
 }
 
+# detect if file is downloaded, and how to download it
 webi_download() {
     if [ -n "${1:-}" ]; then
         my_url="$1"
@@ -159,6 +164,7 @@ webi_download() {
     mv "$my_dl.part" "$my_dl"
 }
 
+# detect which archives can be used
 webi_extract() {
     pushd "$WEBI_TMP" 2>&1 >/dev/null
         if [ "tar" == "$WEBI_EXT" ]; then
@@ -181,6 +187,7 @@ webi_extract() {
     popd 2>&1 >/dev/null
 }
 
+# use 'pathman' to update $HOME/.config/envman/PATH.env
 webi_path_add() {
     # make sure that we don't recursively install pathman with webi
     my_path="$PATH"
@@ -200,12 +207,14 @@ webi_path_add() {
     "$HOME/.local/bin/pathman" add "$1"
 }
 
+# group common pre-install tasks as default
 webi_pre_install() {
     webi_check
     webi_download
     webi_extract
 }
 
+# move commands from the extracted archive directory to $HOME/.local/opt or $HOME/.local/bin
 webi_install() {
     if [ -n "$WEBI_SINGLE" ] || [ "single" == "${1:-}" ]; then
         mkdir -p "$(dirname $pkg_src_cmd)"
@@ -222,17 +231,19 @@ webi_install() {
     fi
 }
 
+# run post-install functions - just updating PATH by default
 webi_post_install() {
     webi_path_add "$pkg_dst_bin"
 }
 
+# a friendly message when all is well, showing the final install path in $HOME/.local
 _webi_done_message() {
     echo "Installed $(_webi_canonical_name) as $pkg_dst_cmd"
 }
 
 ##
 ##
-## BEGIN user-submited script
+## BEGIN custom override functions from <package>/install.sh
 ##
 ##
 
@@ -246,10 +257,11 @@ WEBI_SINGLE=
 
 ##
 ##
-## END user-submitted script
+## END custom override functions
 ##
 ##
 
+# run everything with defaults or overrides as needed
 if [ -n "$(command -v pkg_get_current_version)" ]; then
     pkg_cmd_name="${pkg_cmd_name:-$WEBI_NAME}"
 
@@ -291,6 +303,9 @@ if [ -n "$(command -v pkg_get_current_version)" ]; then
     echo ""
 fi
 
+# cleanup the temp directory
 rm -rf "$WEBI_TMP"
+
+# See? No magic. Just downloading and moving files.
 
 }
