@@ -14,18 +14,19 @@ This repository contains the primary and community-submitted packages for
 - Should install to `$HOME/.local/opt/<package>-<version>` or `$HOME/.local/bin`
 - Should not need `sudo` (except perhaps for a one-time `setcap`, etc)
 - Examples:
-    - Full Packages:
-        - Node.js: <https://github.com/webinstall/packages/tree/master/node>
-        - Golang: <https://github.com/webinstall/packages/tree/master/golang>
-        - PostgreSQL: <https://github.com/webinstall/packages/tree/master/postgres>
-    - Single-Binary Installers:
-        - Caddy: <https://github.com/webinstall/packages/tree/master/caddy>
-        - Ripgrep: <https://github.com/webinstall/packages/tree/master/ripgrep>
-        - Gitea: <https://github.com/webinstall/packages/tree/master/gitea>
-    - Convenience Scripts:
-        - Prettier: <https://github.com/webinstall/packages/tree/master/prettier>
-        - Rust-lang: <https://github.com/webinstall/packages/tree/master/rustlang>
-        - Rust-lang: <https://github.com/webinstall/packages/tree/master/vim-sensible>
+  - Full Packages:
+    - Node.js: <https://github.com/webinstall/packages/tree/master/node>
+    - Golang: <https://github.com/webinstall/packages/tree/master/golang>
+    - PostgreSQL: <https://github.com/webinstall/packages/tree/master/postgres>
+  - Single-Binary Installers:
+    - Caddy: <https://github.com/webinstall/packages/tree/master/caddy>
+    - Ripgrep: <https://github.com/webinstall/packages/tree/master/ripgrep>
+    - Gitea: <https://github.com/webinstall/packages/tree/master/gitea>
+  - Convenience Scripts:
+    - Prettier: <https://github.com/webinstall/packages/tree/master/prettier>
+    - Rust-lang: <https://github.com/webinstall/packages/tree/master/rustlang>
+    - Rust-lang:
+      <https://github.com/webinstall/packages/tree/master/vim-sensible>
 
 # How it works
 
@@ -37,21 +38,25 @@ This repository contains the primary and community-submitted packages for
 
 More technically:
 
-1. `<package>/releases.js` transforms the package's release API into a common formatt
-    - (i.e. HTML, CSV, TAB, or JSON into a specific JSON format)
-    - common release APIs are in `_common/` (i.e. `_common/github.js`)
-2. `_webi/bootstrap.sh` is a template that exchanges system information for a correct installer
-    - contructs a user agent with os, cpu, and utility info (i.e. `macos`, `amd64`, can unpack `tar,zip,xz`)
+1. `<package>/releases.js` transforms the package's release API into a common
+   formatt
+   - (i.e. HTML, CSV, TAB, or JSON into a specific JSON format)
+   - common release APIs are in `_common/` (i.e. `_common/github.js`)
+2. `_webi/bootstrap.sh` is a template that exchanges system information for a
+   correct installer
+   - contructs a user agent with os, cpu, and utility info (i.e. `macos`,
+     `amd64`, can unpack `tar,zip,xz`)
 3. `_webi/template.sh` is the base installer template with common functions for
-    - checking versions
-    - downloading & unpacking
-    - updating PATH
-    - (re-)linking directories
+   - checking versions
+   - downloading & unpacking
+   - updating PATH
+   - (re-)linking directories
 4. `<package>/install.sh` may provide functions to override `_webi/template.sh`
 5. Recap:
-    - `curl https://webinstall.dev/<pkg>` => `bootstrap-<pkg>.sh`
-    - `bash bootstrap-<pkg>.sh` => `https://webinstall.dev/api/installers/<pkg>@<ver>.sh?formats=zip,tar`
-    - `bash install-<pkg>.sh` => download, unpack, move, link, update PATH
+   - `curl https://webinstall.dev/<pkg>` => `bootstrap-<pkg>.sh`
+   - `bash bootstrap-<pkg>.sh` =>
+     `https://webinstall.dev/api/installers/<pkg>@<ver>.sh?formats=zip,tar`
+   - `bash install-<pkg>.sh` => download, unpack, move, link, update PATH
 
 ## Creating an Installer
 
