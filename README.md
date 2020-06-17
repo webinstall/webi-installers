@@ -1,6 +1,10 @@
-# webinstall/packages
+# @webinstall/packages
 
 > WebInstall is how developers install their tools
+
+```bash
+curl https://webinstall.dev/webi | bash
+```
 
 This repository contains the primary and community-submitted packages for
 [webinstall.dev](https://webinstall.dev).
