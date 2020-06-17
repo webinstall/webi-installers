@@ -45,7 +45,13 @@ You just fill in the blanks.
 Just create an empty directory and run the tests until you get a good result.
 
 ```bash
+git clone git@github.com:webinstall/packages.git
+pushd packages
+```
+
+```bash
 mkdir -p new-package
+npm install
 node _webi/test.js ./new-package/
 ```
 
