@@ -88,11 +88,11 @@ Just create an empty directory and run the tests until you get a good result.
 ```bash
 git clone git@github.com:webinstall/packages.git
 pushd packages
+npm install
 ```
 
 ```bash
-mkdir -p new-package
-npm install
+mkdir -p ./new-package/
 node _webi/test.js ./new-package/
 ```
 
