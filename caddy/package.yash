@@ -1,8 +1,9 @@
 # title: Caddy
 # homepage: https://github.com/caddyserver/caddy
-# tagline: Fast, multi-platform web server with automatic HTTPS
+# tagline: |
+#   Caddy is a fast, multi-platform web server with automatic HTTPS.
 # description: |
-#   Caddy is an extensible server platform that uses TLS by default.
+#   Caddy makes it easy to use Let's Encrypt to handle HTTPS (TLS/SSL) and to reverse proxy APIs and WebSockets to other apps - such as those written node, Go, python, ruby, and PHP.
 # examples: |
 #   ```bash
 #   caddy start

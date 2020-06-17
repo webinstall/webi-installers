@@ -2,7 +2,8 @@
 
 # title: Homebrew
 # homepage: https://brew.sh
-# tagline: The Missing Package Manager for macOS (or Linux)
+# tagline: |
+#   Brew: The Missing Package Manager for macOS (and Linux).
 # description: |
 #   Homebrew installs the stuff you need that Apple (or your Linux system) didn’t.
 # examples: |

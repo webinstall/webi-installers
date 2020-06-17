@@ -1,8 +1,9 @@
 # title: Go
 # homepage: https://golang.org
-# tagline: The Go Programming Language tools
+# tagline: |
+#   Go makes it easy to build simple, reliable, and efficient software.
 # description: |
-#   Go is an open source programming language that makes it easy to build simple, reliable, and efficient software.
+#   Go is designed, through and through, to make Software Engineering easy. It's fast, efficient, reliably, and something you can learn in a weekend. If you subscribe to [_The Zen of Python_](https://www.python.org/dev/peps/pep-0020/), you'll [love](https://go-proverbs.github.io/) [Go](https://www.youtube.com/watch?v=PAAkCSZUG1c).
 # examples: |
 #   ```bash
 #   mkdir -p hello/

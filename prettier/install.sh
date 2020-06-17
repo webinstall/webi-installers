@@ -1,6 +1,7 @@
 # title: Prettier
 # homepage: https://prettier.io/
-# tagline: Prettier is an opinionated code formatter.
+# tagline: |
+#   Prettier is an opinionated code formatter.
 # description: |
 #   The core value of Prettier is not in what it gives, but in what it takes away: countless hours of bikeshedding over code style choices. Also, it makes git merges much nicer.
 # examples: |

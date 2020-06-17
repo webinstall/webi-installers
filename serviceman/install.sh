@@ -2,10 +2,10 @@
 
 # title: Serviceman
 # homepage: https://git.rootprojects.org/root/serviceman
-# tagline: cross-platform service management for Linux, Mac, and Windows
+# tagline: |
+#   Serviceman: cross-platform service management for Linux, Mac, and Windows.
 # description: |
-#   A system laucher that wraps `launchctl` (macOS), `systemctl` (Linux),
-#   and the Windows Registry to work cross-platform.
+#   Serviceman is a hassle-free wrapper around your system launcher. It works with `launchctl` (macOS), `systemctl` (Linux), and the Windows Registry to make it easy to start _user_ and _system_ level services, such as webservers, backup scripts, network and system tools, etc.
 # examples: |
 #
 #   Works with anything, including

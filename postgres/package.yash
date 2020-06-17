@@ -1,6 +1,7 @@
 # title: Postgres
 # homepage: https://www.postgresql.org/
-# tagline: PostgreSQL: The World's Most Advanced Open Source Relational Database
+# tagline: |
+#   PostgreSQL: The World's Most Advanced Open Source Relational Database.
 # description: |
 #   Postgres is the all-in-one database for beginners and experts alike. It handles SQL, 'NoSQL', JSON, HSTORE, Full-Text Search, Messages Queues and more. Best bang for buck.
 # examples: |

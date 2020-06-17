@@ -1,6 +1,7 @@
 # title: macOS
 # homepage: https://bootableinstaller.com/macos/
-# tagline: Bootable macOS Installer
+# tagline: |
+#   Creates a bootable macOS installer ISO in ~/Downloads.
 # description: |
 #   Downloads the official OS X / macOS dmg from Apple to create bootable installers - works from macOS, Linux, or even Windows (through VirtualBox).
 # examples: |

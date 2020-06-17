@@ -1,6 +1,7 @@
 # title: Flutter
 # homepage: https://flutter.dev
-# tagline: UI Toolkit for mobile, web, and desktop
+# tagline: |
+#   Flutter is a UI Toolkit for mobile, web, and desktop.
 # description: |
 #   Flutter is Google’s UI toolkit for building beautiful, natively compiled applications for mobile, web, and desktop from a single codebase.
 # examples: |

@@ -1,11 +1,12 @@
 # title: Gitea
 # homepage: https://github.com/go-gitea/gitea
-# tagline: Git with a cup of tea, painless self-hosted git service
+# tagline: |
+#   Gitea: Git with a cup of tea, painless self-hosted git service.
 # description: |
-#   `gitea` is a clean, lightweight self-hosted Github alternative, forked from Gogs. Lighter and more user-friendly than Gitlab.
+#   Gitea is a clean, lightweight self-hosted Github clone. It only uses a few megabytes of RAM so it's perfect for hosting git on small VPSes and Raspberry Pis. It's forked from Gogs, and very familiar user-friendly for Github users in comparison to Gitlab or Bitbucket.
 # examples: |
 #   ```bash
-#   gitea --version
+#   gitea web --config $HOME/srv/git.example.com/custom/conf/app.ini
 #   ```
 
 END

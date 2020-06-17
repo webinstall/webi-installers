@@ -1,9 +1,10 @@
 #
 # title: Node.js
 # homepage: https://nodejs.org
-# tagline: JavaScript V8 runtime
+# tagline: |
+#   Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
 # description: |
-#   Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine
+#   Node is great for simple, snappy HTTP(S) servers, and for stitching APIs together with minimal fuss or muss.
 # examples: |
 #
 #   ### Hello World
