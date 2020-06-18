@@ -205,7 +205,7 @@ webi_path_add() {
 
     # in case pathman was recently installed and the PATH not updated
     mkdir -p "$_webi_tmp"
-    "$HOME/.local/bin/pathman" add "$1" | grep "export" >> "$_webi_tmp/.PATH.env"
+    "$HOME/.local/bin/pathman" add "$1" | grep "export" >> "$_webi_tmp/.PATH.env" || true
 }
 
 # group common pre-install tasks as default
