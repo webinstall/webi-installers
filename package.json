@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/webinstall/packages#readme",
   "dependencies": {
-    "@root/request": "^1.6.1"
+    "@root/request": "^1.6.1",
+    "shmatter": "^1.0.1"
   }
 }

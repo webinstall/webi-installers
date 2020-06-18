@@ -1,5 +1,6 @@
 'use strict';
 
+var frontmarker = require('./frontmarker.js');
 var shmatter = require('shmatter');
 var fs = require('fs');
 var path = require('path');
@@ -43,7 +44,7 @@ pkgs.create = function (Pkgs, basepath) {
         .readFile(readme, 'utf-8')
         .then(function (txt) {
           // TODO
-          //return frontmarker.parse(txt);
+          return frontmarker.parse(txt);
         })
         .catch(function (e) {
           if ('ENOENT' !== e.code && 'ENOTDIR' !== e.code) {
@@ -84,7 +85,7 @@ pkgs.create = function (Pkgs, basepath) {
         }
       })
     ]).then(function (items) {
-      var meta = items[1];
+      var meta = items[0] || items[1];
       if (!meta) {
         // doesn't exist
         return;

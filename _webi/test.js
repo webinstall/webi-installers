@@ -46,7 +46,7 @@ nodes.forEach(function (node) {
 var maxLen = 0;
 console.info('');
 console.info('Has the necessary files?');
-['package.yash', 'releases.js', 'install.sh', 'install.bat']
+['README.md', 'releases.js', 'install.sh', 'install.bat']
   .map(function (node) {
     maxLen = Math.max(maxLen, node.length);
     return node;

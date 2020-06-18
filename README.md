@@ -64,7 +64,7 @@ An install consists of 5 parts in 4 files:
 
 ```
 my-new-package/
-  - package.yash
+  - README.md (package info in frontmatter)
   - releases.js
   - install.sh
   - install.bat
@@ -105,27 +105,22 @@ node _webi/test.js ./new-package/
 
 Just copy the format from any of the existing packages. It's like this:
 
-`package.yash`:
+`README.md`:
 
+````md
+---
+title: Node.js
+homepage: https://nodejs.org
+tagline: JavaScript V8 runtime
+description: |
+  Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine
+---
+
+```bash
+node -e 'console.log("Hello, World!")'
+> Hello, World!
+```
 ````
-# title: Node.js
-# homepage: https://nodejs.org
-# tagline: JavaScript V8 runtime
-# description: |
-#   Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine
-# examples: |
-#   ```bash
-#   node -e 'console.log("Hello, World!")'
-#   > Hello, World!
-#   ```
-
-END
-````
-
-This is a dumb format. We know. Historical accident (originally these were in
-bash comments).
-
-It's in the TODOs to replace this with either YAML or Markdown.
 
 ### 1. Fetch Releases
 
