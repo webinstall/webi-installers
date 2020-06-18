@@ -67,7 +67,7 @@ export WEBI_BOOT="\$(mktemp -d -t "\$my_package-bootstrap.XXXXXXXX")"
 export WEBI_HOST="\${WEBI_HOST:-https://webinstall.dev}"
 export WEBI_UA="\$(uname -a)"
 
-my_installer_url="\$WEBI_HOST/api/installers/\$my_package.bash?formats=\$my_ext"
+my_installer_url="\$WEBI_HOST/api/installers/\$my_package.sh?formats=\$my_ext"
 set +e
 if [ -n "\$WEBI_CURL" ]; then
 	curl -fsSL "\$my_installer_url" -H "User-Agent: curl \$WEBI_UA" \\
