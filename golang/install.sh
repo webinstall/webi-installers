@@ -44,7 +44,7 @@ pkg_link() {
 }
 
 pkg_post_install() {
-    webi_link
+    pkg_link
 
     # web_path_add is defined in _webi/template.sh at https://github.com/webinstall/packages
     # Updates PATH with

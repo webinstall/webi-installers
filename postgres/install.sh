@@ -25,7 +25,7 @@ pkg_install() {
 pkg_link() {
     # rm -f "$HOME/.local/opt/postgres"
     rm -f "$pkg_dst"
-    rm -f "$HOME/Applications/pgAdmin*.app" || true
+    rm -f "$HOME/Applications/pgAdmin"*.app || true
 
     # ln -s "$HOME/.local/opt/postgres-v10.13" "$HOME/.local/opt/postgres"
     ln -s "$pkg_src" "$pkg_dst"
