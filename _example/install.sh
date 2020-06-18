@@ -44,7 +44,7 @@ pkg_link() {
 }
 
 pkg_pre_install() {
-    # web_* are defined in webi/template.bash at https://github.com/webinstall/packages
+    # web_* are defined in _webi/template.sh at https://github.com/webinstall/packages
 
     # if selected version is installed, re-link it and quit
     webi_check
@@ -70,7 +70,7 @@ pkg_install() {
 pkg_post_install() {
     pkg_link
 
-    # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
+    # web_path_add is defined in _webi/template.sh at https://github.com/webinstall/packages
     webi_path_add "$pkg_dst_bin"
 }
 

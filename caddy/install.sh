@@ -4,7 +4,7 @@
 # There is no magic!
 # The custom functions for Caddy are here.
 # The generic functions - version checks, download, extract, etc - are here:
-#   - https://github.com/webinstall/packages/branches/master/webi/template.bash
+#   - https://github.com/webinstall/packages/branches/master/_webi/template.sh
 
 set -e
 set -u

@@ -12,7 +12,7 @@ pkg_cmd_name="go"
 #       pkg_src, pkg_src_bin, pkg_src_cmd
 #       pkg_dst, pkg_dst_bin, pkg_dst_cmd
 #
-# Their defaults are defined in webi/template.bash at https://github.com/webinstall/packages
+# Their defaults are defined in _webi/template.sh at https://github.com/webinstall/packages
 
 pkg_get_current_version() {
     # 'go version' has output in this format:
@@ -46,7 +46,7 @@ pkg_link() {
 pkg_post_install() {
     webi_link
 
-    # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
+    # web_path_add is defined in _webi/template.sh at https://github.com/webinstall/packages
     # Updates PATH with
     #       "$HOME/.local/opt/go"
     webi_path_add "$pkg_dst_bin"

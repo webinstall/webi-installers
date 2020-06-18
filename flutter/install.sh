@@ -8,7 +8,7 @@ set -u
 #       pkg_src, pkg_src_bin, pkg_src_cmd
 #       pkg_dst, pkg_dst_bin, pkg_dst_cmd
 #
-# Their defaults are defined in webi/template.bash at https://github.com/webinstall/packages
+# Their defaults are defined in _webi/template.sh at https://github.com/webinstall/packages
 
 pkg_cmd_name="flutter"
 

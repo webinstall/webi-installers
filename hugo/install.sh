@@ -52,7 +52,7 @@ pkg_post_install() {
     # just in case we add something in the future
     pkg_link
 
-    # web_path_add is defined in webi/template.bash at https://github.com/webinstall/packages
+    # web_path_add is defined in _webi/template.sh at https://github.com/webinstall/packages
     # Adds "$HOME/.local/opt/node" to PATH
     webi_path_add "$pkg_dst_bin"
 }

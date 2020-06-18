@@ -2,7 +2,7 @@
 
 # The custom functions for Deno are here.
 # For the generic functions - version checks, download, extract, etc:
-# See https://github.com/webinstall/packages/branches/master/webi/template.bash
+# See https://github.com/webinstall/packages/branches/master/_webi/template.sh
 
 set -e
 set -u
