@@ -33,6 +33,7 @@ export WEBI_HOST
 ##
 
 WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-${WEBI_PKG:-}.XXXXXXXX)"}
+export _webi_tmp="${_webi_tmp:-"$HOME/.local/opt/webi-tmp.d"}"
 
 mkdir -p "$HOME/Downloads"
 mkdir -p "$HOME/.local/bin"
@@ -72,22 +73,12 @@ webi_link() {
     fi
 
     if [ -n "$WEBI_SINGLE" ] || [ "single" == "${1:-}" ]; then
-        if [ -L "$pkg_dst_cmd" ]; then
-            rm -f "$pkg_dst_cmd"
-        elif [ -e "$pkg_dst_cmd" ]; then
-            echo "remove $pkg_dst_cmd?"
-            rm -rf -i "$pkg_dst_cmd"
-        fi
+        rm -rf "$pkg_dst_cmd"
         ln -s "$pkg_src_cmd" "$pkg_dst_cmd"
     else
-        # 'pkg_dst' will default to $HOME/.local/opt/node
-        # 'pkg_src' will be the installed version, such as to $HOME/.local/opt/node-v12.8.0
-        if [ -L "$pkg_dst" ]; then
-            rm -f "$pkg_dst"
-        elif [ -e "$pkg_dst" ]; then
-            echo "remove $pkg_dst?"
-            rm -rf -i "$pkg_dst"
-        fi
+        # 'pkg_dst' will default to $HOME/.local/opt/<pkg>
+        # 'pkg_src' will be the installed version, such as to $HOME/.local/opt/<pkg>-<version>
+        rm -rf "$pkg_dst"
         ln -s "$pkg_src" "$pkg_dst"
     fi
 }
@@ -96,6 +87,8 @@ webi_link() {
 webi_check() {
     # Test for existing version
     set +e
+    my_path="$PATH"
+    export PATH="$(dirname "$pkg_dst_cmd"):$PATH"
     my_current_cmd="$(command -v "$pkg_cmd_name")"
     set -e
     if [ -n "$my_current_cmd" ]; then
@@ -118,6 +111,7 @@ webi_check() {
             fi
           fi
     fi
+    export PATH="$my_path"
 }
 
 # detect if file is downloaded, and how to download it
@@ -181,10 +175,10 @@ webi_extract() {
             tar xf "$HOME/Downloads/$WEBI_PKG_FILE"
         elif [ "zip" == "$WEBI_EXT" ]; then
             echo "Extracting $HOME/Downloads/$WEBI_PKG_FILE"
-            unzip "$HOME/Downloads/$WEBI_PKG_FILE"
+            unzip "$HOME/Downloads/$WEBI_PKG_FILE" > __unzip__.log
         elif [ "exe" == "$WEBI_EXT" ]; then
             # do nothing (but don't leave an empty if block either)
-            echo -n ""
+            true
         elif [ "xz" == "$WEBI_EXT" ]; then
             echo "Inflating $HOME/Downloads/$WEBI_PKG_FILE"
             unxz -c "$HOME/Downloads/$WEBI_PKG_FILE" > $(basename "$WEBI_PKG_FILE")
@@ -201,19 +195,17 @@ webi_path_add() {
     # make sure that we don't recursively install pathman with webi
     my_path="$PATH"
     export PATH="$HOME/.local/bin:$PATH"
-    set +e
-    my_pathman=$(command -v pathman)
-    set -e
-    export PATH="$my_path"
 
     # install pathman if not already installed
-    if [ -z "$my_pathman" ]; then
-        "$HOME/.local/bin/webi" pathman
-        export PATH="$HOME/.local/bin:$PATH"
+    if [ -z "$(command -v pathman)" ]; then
+        "$HOME/.local/bin/webi" pathman > /dev/null
     fi
 
+    export PATH="$my_path"
+
     # in case pathman was recently installed and the PATH not updated
-    "$HOME/.local/bin/pathman" add "$1"
+    mkdir -p "$_webi_tmp"
+    "$HOME/.local/bin/pathman" add "$1" | grep "export" >> "$_webi_tmp/.PATH.env"
 }
 
 # group common pre-install tasks as default
@@ -230,20 +222,14 @@ webi_install() {
         mv ./"$pkg_cmd_name"* "$pkg_src_cmd"
         chmod a+x "$pkg_src_cmd"
     else
-        mkdir -p "$(dirname $pkg_src)"
-        if [ -L "$pkg_src" ]; then
-            rm -f "$pkg_src"
-        elif [ -e "$pkg_src" ]; then
-            echo "remove $pkg_src?"
-            rm -rf -i "$pkg_src"
-        fi
+        rm -rf "$pkg_src"
         mv ./"$pkg_cmd_name"* "$pkg_src"
     fi
 }
 
 # run post-install functions - just updating PATH by default
 webi_post_install() {
-    webi_path_add "$pkg_dst_bin"
+    webi_path_add "$(dirname "$pkg_dst_cmd")"
 }
 
 # a friendly message when all is well, showing the final install path in $HOME/.local
@@ -277,21 +263,19 @@ if [ -n "$(command -v pkg_get_current_version)" ]; then
 
     if [ -n "$WEBI_SINGLE" ]; then
         pkg_dst_cmd="${pkg_dst_cmd:-$HOME/.local/bin/$pkg_cmd_name}"
-        pkg_dst_bin="$(dirname $pkg_dst_cmd)"
-        pkg_dst="$(dirname $pkg_dst_bin)"
+        pkg_dst="$pkg_dst_cmd" # "$(dirname "$(dirname $pkg_dst_cmd)")"
 
         pkg_src_cmd="${pkg_src_cmd:-$HOME/.local/xbin/$pkg_cmd_name-$WEBI_VERSION}"
-        pkg_src_bin="$(dirname $pkg_src_cmd)"
-        pkg_src="$(dirname $pkg_src_bin)"
+        pkg_src="$pkg_src_cmd" # "$(dirname "$(dirname $pkg_src_cmd)")"
     else
         pkg_dst="${pkg_dst:-$HOME/.local/opt/$pkg_cmd_name}"
-        pkg_dst_bin="${pkg_dst_bin:-$pkg_dst/bin}"
-        pkg_dst_cmd="${pkg_dst_cmd:-$pkg_dst_bin/$pkg_cmd_name}"
+        pkg_dst_cmd="${pkg_dst_cmd:-$pkg_dst/bin/$pkg_cmd_name}"
 
         pkg_src="${pkg_src:-$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION}"
-        pkg_src_bin="${pkg_src_bin:-$pkg_src/bin}"
-        pkg_src_cmd="${pkg_src_cmd:-$pkg_src_bin/$pkg_cmd_name}"
+        pkg_src_cmd="${pkg_src_cmd:-$pkg_src/bin/$pkg_cmd_name}"
     fi
+    pkg_src_bin="$(dirname "$pkg_src_cmd")"
+    pkg_dst_bin="$(dirname "$pkg_dst_cmd")"
 
     [ -n "$(command -v pkg_pre_install)" ] && pkg_pre_install || webi_pre_install
 
@@ -311,6 +295,14 @@ if [ -n "$(command -v pkg_get_current_version)" ]; then
     popd 2>&1 >/dev/null
 
     echo ""
+fi
+
+webi_path_add "$HOME/.local/bin"
+if [ -z "${_WEBI_CHILD:-}" ] && [ -f "\$_webi_tmp/.PATH.env" ]; then
+    echo "You need to update your PATH to use $WEBI_NAME:"
+    echo ""
+    cat "$_webi_tmp/.PATH.env" | sort -u
+    rm -f "$_webi_tmp/.PATH.env"
 fi
 
 # cleanup the temp directory

@@ -164,13 +164,13 @@ pkg_cmd_name="foobar"
 
 # These are used for symlinks, PATH, and test commands
 pkg_dst="$HOME/.local/opt/foobar"
-pkg_dst_bin="$HOME/.local/opt/foobar/bin"
 pkg_dst_cmd="$HOME/.local/opt/foobar/bin/foobar"
+#pkg_dst_bin="$(dirname "$pkg_dst_cmd")"
 
 # These are the _real_ locations for the above
 pkg_src="$HOME/.local/opt/foobar-v$WEBI_VERSION"
-pkg_src_bin="$HOME/.local/opt/foobar-v$WEBI_VERSION/bin"
 pkg_src_cmd="$HOME/.local/opt/foobar-v$WEBI_VERSION/bin/foobar"
+#pkg_src_bin="$(dirname "$pkg_src_cmd")"
 ```
 
 (required) A version check function that strips all non-version junk
