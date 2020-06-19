@@ -40,74 +40,92 @@ Releases.renderBash = function (
       return fs.promises
         .readFile(path.join(__dirname, 'template.sh'), 'utf8')
         .then(function (tplTxt) {
-          return tplTxt
-            .replace(/^#?WEBI_PKG=.*/m, "WEBI_PKG='" + pkg + '@' + ver + "'")
-            .replace(/^#?WEBI_NAME=.*/m, "WEBI_NAME='" + pkg + "'")
-            .replace(/^#?WEBI_HOST=.*/m, "WEBI_HOST='" + baseurl + "'")
-            .replace(/^#?WEBI_OS=.*/m, "WEBI_OS='" + (os || '') + "'")
-            .replace(/^#?WEBI_ARCH=.*/m, "WEBI_ARCH='" + (arch || '') + "'")
-            .replace(/^#?WEBI_TAG=.*/m, "WEBI_TAG='" + tag + "'")
-            .replace(
-              /^#?WEBI_RELEASES=.*/m,
-              "WEBI_RELEASES='" +
-                baseurl +
-                '/api/releases/' +
-                pkg +
-                '@' +
-                tag +
-                '.tab?os=' +
-                rel.os +
-                '&arch=' +
-                rel.arch +
-                '&formats=' +
-                formats.join(',') +
-                '&pretty=true' +
-                "'"
-            )
-            .replace(
-              /^#?WEBI_CSV=.*/m,
-              "WEBI_CSV='" +
-                [
-                  rel.version,
-                  rel.lts,
-                  rel.channel,
-                  rel.date,
-                  rel.os,
-                  rel.arch,
-                  rel.ext,
-                  '-',
-                  rel.download,
-                  rel.name,
-                  rel.comment || ''
-                ]
-                  .join(',')
-                  .replace(/'/g, '') +
-                "'"
-            )
-            .replace(
-              /^#?WEBI_VERSION=.*/m,
-              'WEBI_VERSION=' + JSON.stringify(rel.version)
-            )
-            .replace(/^#?WEBI_MAJOR=.*/m, 'WEBI_MAJOR=' + v.major)
-            .replace(/^#?WEBI_MINOR=.*/m, 'WEBI_MINOR=' + v.minor)
-            .replace(/^#?WEBI_PATCH=.*/m, 'WEBI_PATCH=' + v.patch)
-            .replace(/^#?WEBI_BUILD=.*/m, 'WEBI_BUILD=' + v.build)
-            .replace(/^#?WEBI_LTS=.*/m, 'WEBI_LTS=' + rel.lts)
-            .replace(/^#?WEBI_CHANNEL=.*/m, 'WEBI_CHANNEL=' + rel.channel)
-            .replace(
-              /^#?WEBI_EXT=.*/m,
-              'WEBI_EXT=' + rel.ext.replace(/tar.*/, 'tar')
-            )
-            .replace(
-              /^#?WEBI_FORMATS=.*/m,
-              "WEBI_FORMATS='" + formats.join(',') + "'"
-            )
-            .replace(
-              /^#?WEBI_PKG_URL=.*/m,
-              "WEBI_PKG_URL='" + rel.download + "'"
-            )
-            .replace(/^#?WEBI_PKG_FILE=.*/m, "WEBI_PKG_FILE='" + rel.name + "'")
-            .replace(/{{ installer }}/, installTxt);
+          return (
+            tplTxt
+              .replace(/^#?WEBI_PKG=.*/m, "WEBI_PKG='" + pkg + '@' + ver + "'")
+              .replace(/^#?WEBI_HOST=.*/m, "WEBI_HOST='" + baseurl + "'")
+              .replace(/^#?WEBI_OS=.*/m, "WEBI_OS='" + (os || '') + "'")
+              .replace(/^#?WEBI_ARCH=.*/m, "WEBI_ARCH='" + (arch || '') + "'")
+              .replace(/^#?WEBI_TAG=.*/m, "WEBI_TAG='" + tag + "'")
+              .replace(
+                /^#?WEBI_RELEASES=.*/m,
+                "WEBI_RELEASES='" +
+                  baseurl +
+                  '/api/releases/' +
+                  pkg +
+                  '@' +
+                  tag +
+                  '.tab?os=' +
+                  rel.os +
+                  '&arch=' +
+                  rel.arch +
+                  '&formats=' +
+                  formats.join(',') +
+                  '&pretty=true' +
+                  "'"
+              )
+              .replace(
+                /^#?WEBI_CSV=.*/m,
+                "WEBI_CSV='" +
+                  [
+                    rel.version,
+                    rel.lts,
+                    rel.channel,
+                    rel.date,
+                    rel.os,
+                    rel.arch,
+                    rel.ext,
+                    '-',
+                    rel.download,
+                    rel.name,
+                    rel.comment || ''
+                  ]
+                    .join(',')
+                    .replace(/'/g, '') +
+                  "'"
+              )
+              .replace(
+                /^#?WEBI_VERSION=.*/m,
+                'WEBI_VERSION=' + JSON.stringify(rel.version)
+              )
+              .replace(/^#?WEBI_MAJOR=.*/m, 'WEBI_MAJOR=' + v.major)
+              .replace(/^#?WEBI_MINOR=.*/m, 'WEBI_MINOR=' + v.minor)
+              .replace(/^#?WEBI_PATCH=.*/m, 'WEBI_PATCH=' + v.patch)
+              .replace(/^#?WEBI_BUILD=.*/m, 'WEBI_BUILD=' + v.build)
+              .replace(/^#?WEBI_LTS=.*/m, 'WEBI_LTS=' + rel.lts)
+              .replace(/^#?WEBI_CHANNEL=.*/m, 'WEBI_CHANNEL=' + rel.channel)
+              .replace(
+                /^#?WEBI_EXT=.*/m,
+                'WEBI_EXT=' + rel.ext.replace(/tar.*/, 'tar')
+              )
+              .replace(
+                /^#?WEBI_FORMATS=.*/m,
+                "WEBI_FORMATS='" + formats.join(',') + "'"
+              )
+              .replace(
+                /^#?WEBI_PKG_URL=.*/m,
+                "WEBI_PKG_URL='" + rel.download + "'"
+              )
+              .replace(
+                /^#?WEBI_PKG_FILE=.*/m,
+                "WEBI_PKG_FILE='" + rel.name + "'"
+              )
+              // PKG details
+              .replace(/^#?PKG_NAME=.*/m, "PKG_NAME='" + pkg + "'")
+              .replace(
+                /^#?PKG_OSES=.*/m,
+                "PKG_OSES='" + ((rel && rel.oses) || []).join(',') + "'"
+              )
+              .replace(
+                /^#?PKG_ARCHES=.*/m,
+                "PKG_ARCHES='" + ((rel && rel.arches) || []).join(',') + "'"
+              )
+              .replace(
+                /^#?PKG_FORMATS=.*/m,
+                "PKG_FORMATS='" + ((rel && rel.formats) || []).join(',') + "'"
+              )
+              .replace(/{{ installer }}/, installTxt)
+          );
         });
     });
 };

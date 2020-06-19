@@ -7,8 +7,10 @@ set -u
 #set -x
 
 #WEBI_PKG=
-#WEBI_NAME=
+#PKG_NAME=
 # TODO should this be BASEURL instead?
+#WEBI_OS=
+#WEBI_ARCH=
 #WEBI_HOST=
 #WEBI_RELEASES=
 #WEBI_CSV=
@@ -25,6 +27,9 @@ set -u
 #WEBI_FORMATS=
 #WEBI_PKG_URL=
 #WEBI_PKG_FILE=
+#PKG_OSES=
+#PKG_ARCHES=
+#PKG_FORMATS=
 WEBI_UA="$(uname -a)"
 export WEBI_HOST
 
@@ -102,7 +107,7 @@ webi_check() {
             exit 0
         else
             if [ "$my_current_cmd" != "$pkg_dst_cmd" ]; then
-                echo "WARN: possible conflict between $my_canonical_name and $pkg_current_version at $my_current_cmd"
+                >&2 echo "WARN: possible conflict between $my_canonical_name and $pkg_current_version at $my_current_cmd"
             fi
             if [ -x "$pkg_src_cmd" ]; then
                 webi_link
@@ -121,14 +126,12 @@ webi_download() {
     else
         if [ "error" == "$WEBI_CHANNEL" ]; then
             # TODO pass back requested OS / Arch / Version
-            echo "Error: no '$WEBI_NAME' release found for the given OS and architecture by that tag or version"
-            echo "       (check that the package name and version are correct)"
-            echo "See $WEBI_RELEASES"
-            echo "        WEBI_PKG=$WEBI_PKG"
-            echo "        WEBI_NAME=$WEBI_NAME"
-            echo "        WEBI_VERSION=$WEBI_VERSION"
-            echo "        WEBI_EXT=$WEBI_EXT"
-            echo "        WEBI_FORMATS=$WEBI_FORMATS"
+            >&2 echo "Error: no '$PKG_NAME' release for '$WEBI_OS' on '$WEBI_ARCH' as one of '$WEBI_FORMATS' by the tag '$WEBI_TAG'"
+            >&2 echo "       '$PKG_NAME' is available for '$PKG_OSES' on '$PKG_ARCHES' as one of '$PKG_FORMATS'"
+            >&2 echo "       (check that the package name and version are correct)"
+            >&2 echo ""
+            >&2 echo "       Double check at $(echo "$WEBI_RELEASES" | sed 's:\?.*::')"
+            >&2 echo ""
             exit 1
         fi
         my_url="$WEBI_PKG_URL"
@@ -144,7 +147,7 @@ webi_download() {
         return 0
     fi
 
-    echo "Downloading $WEBI_NAME to $my_dl"
+    echo "Downloading $PKG_NAME to $my_dl"
 
     # It's only 2020, we can't expect to have reliable CLI tools
     # to tell us the size of a file as part of a base system...
@@ -154,7 +157,7 @@ webi_download() {
         set +e
         wget -q --show-progress --user-agent="wget $WEBI_UA" -c "$my_url" -O "$my_dl.part"
         if ! [ $? -eq 0 ]; then
-          echo "failed to download from $WEBI_PKG_URL"
+          >&2 echo "failed to download from $WEBI_PKG_URL"
           exit 1
         fi
         set -e
@@ -259,7 +262,7 @@ WEBI_SINGLE=
 
 # run everything with defaults or overrides as needed
 if [ -n "$(command -v pkg_get_current_version)" ]; then
-    pkg_cmd_name="${pkg_cmd_name:-$WEBI_NAME}"
+    pkg_cmd_name="${pkg_cmd_name:-$PKG_NAME}"
 
     if [ -n "$WEBI_SINGLE" ]; then
         pkg_dst_cmd="${pkg_dst_cmd:-$HOME/.local/bin/$pkg_cmd_name}"
@@ -299,7 +302,7 @@ fi
 
 webi_path_add "$HOME/.local/bin"
 if [ -z "${_WEBI_CHILD:-}" ] && [ -f "\$_webi_tmp/.PATH.env" ]; then
-    echo "You need to update your PATH to use $WEBI_NAME:"
+    echo "You need to update your PATH to use $PKG_NAME:"
     echo ""
     cat "$_webi_tmp/.PATH.env" | sort -u
     rm -f "$_webi_tmp/.PATH.env"

@@ -206,9 +206,8 @@ See `webi/template.sh`
 
 These variables will be set by the server:
 
-```
+```bash
 WEBI_PKG=example@v1
-WEBI_NAME=example
 WEBI_TAG=v1
 WEBI_HOST=https://webinstall.dev
 WEBI_RELEASES=https://webinstall.dev/api/releases/example@v1?os=macos&arch=amd64&pretty=true
@@ -222,6 +221,13 @@ WEBI_CHANNEL=stable
 WEBI_EXT=tar
 WEBI_PKG_URL=https://cdn.example.com/example-macos-amd64.tar.gz
 WEBI_PKG_FILE=example-macos-amd64.tar.gz
+```
+
+```bash
+PKG_NAME=example
+PKG_OSES=macos,linux,windows
+PKG_ARCHES=amd64,arm64,x86
+PKG_FORMATS=zip,xz
 ```
 
 ```bash

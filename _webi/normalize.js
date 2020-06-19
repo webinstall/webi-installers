@@ -10,15 +10,24 @@ var osMap = {
   aix: /(\b|_)(aix)/i
 };
 
+var maps = {
+  oses: {},
+  arches: {},
+  formats: {}
+};
+
+Object.keys(osMap).forEach(function (name) {
+  maps.oses[name] = true;
+});
+
 var formats = ['zip', 'xz', 'tar', 'pkg', 'msi', 'git', 'exe', 'dmg'];
-var formatsMap = {};
-formats.forEach(function (ext) {
-  formatsMap[ext] = true;
+formats.forEach(function (name) {
+  maps.formats[name] = true;
 });
 
 // evaluation order matters
 // (i.e. otherwise x86 and x64 can cross match)
-var archArr = [
+var arches = [
   'amd64', // first and most likely match
   'arm64',
   'x86',
@@ -38,12 +47,18 @@ var archMap = {
   armv6l: /(\b|_)(armv?6l)/i,
   s390x: /(\b|_)(s390x)/i
 };
+arches.forEach(function (name) {
+  maps.arches[name] = true;
+});
 
 function normalize(all) {
-  var supportedFormats = {};
+  var supported = {
+    oses: {},
+    arches: {},
+    formats: {}
+  };
 
   all.releases.forEach(function (rel) {
-    supportedFormats[rel.ext] = true;
     rel.version = rel.version.replace(/^v/i, '');
     if (!rel.name) {
       rel.name = rel.download.replace(/.*\//, '');
@@ -51,22 +66,13 @@ function normalize(all) {
     if (!rel.os) {
       rel.os =
         Object.keys(osMap).find(function (regKey) {
-          /* console.log(
-            'release os:',
-            regKey,
-            osMap[regKey],
-            osMap[regKey].test(rel.name || rel.download),
-            rel.name,
-            rel.download
-          );
-          // */
           return osMap[regKey].test(rel.name || rel.download);
         }) || 'unknown';
     }
+    supported.oses[rel.os] = true;
 
     if (!rel.arch) {
-      archArr.some(function (regKey) {
-        //console.log('release arch:', rel.download, regKey, archMap[regKey]);
+      arches.some(function (regKey) {
         var arch = (rel.name || rel.download).match(archMap[regKey]) && regKey;
         if (arch) {
           rel.arch = arch;
@@ -74,6 +80,7 @@ function normalize(all) {
         }
       })[0];
     }
+    supported.arches[rel.arch] = true;
 
     if (!rel.ext) {
       // pkg-v1.0.tar.gz => ['gz', 'tar', '0', 'pkg-v1']
@@ -89,14 +96,21 @@ function normalize(all) {
         rel.ext = exts[0];
       }
     }
+    supported.formats[rel.ext] = true;
 
     if (all.download) {
       rel.download = all.download.replace(/{{ download }}/, rel.download);
     }
   });
 
-  all.formats = Object.keys(supportedFormats).filter(function (ext) {
-    return formatsMap[ext];
+  all.oses = Object.keys(supported.oses).filter(function (name) {
+    return maps.oses[name];
+  });
+  all.arches = Object.keys(supported.arches).filter(function (name) {
+    return maps.arches[name];
+  });
+  all.formats = Object.keys(supported.formats).filter(function (name) {
+    return maps.formats[name];
   });
 
   return all;
@@ -105,5 +119,5 @@ function normalize(all) {
 module.exports = normalize;
 // NOT in order of priority (which would be tar, xz, zip, ...)
 module.exports.formats = formats;
-module.exports.arches = archArr;
-module.exports.formatsMap = formatsMap;
+module.exports.arches = arches;
+module.exports.formatsMap = maps.formats;

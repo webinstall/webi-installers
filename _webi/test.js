@@ -81,6 +81,9 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
         new RegExp('^' + pkgtag).test(rel.version))
     );
   })[0];
+  rel.oses = all.oses;
+  rel.arches = all.arches;
+  rel.formats = all.formats;
 
   if (!rel) {
     console.error('Error: ❌ no release found for current os, arch, and tag');

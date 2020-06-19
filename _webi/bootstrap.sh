@@ -53,7 +53,7 @@ fi
 if [ -n "\$(command -v unzip)" ]; then
     my_ext="zip,\$my_ext"
 else
-    echo "WARN: 'unzip' not found"
+    >&2 echo "WARN: 'unzip' not found"
 fi
 if [ -n "\$(command -v tar)" ]; then
     my_ext="tar,\$my_ext"
@@ -79,8 +79,8 @@ webinstall() {
 
     my_package="\${1:-}"
     if [ -z "\$my_package" ]; then
-        echo "Usage: webi <package>@<version> ..."
-        echo "Example: webi node@lts rg"
+        >&2 echo "Usage: webi <package>@<version> ..."
+        >&2 echo "Example: webi node@lts rg"
         exit 1
     fi
 
@@ -96,7 +96,7 @@ webinstall() {
             -O "\$WEBI_BOOT/\$my_package-bootstrap.sh"
     fi
     if ! [ \$? -eq 0 ]; then
-      echo "error fetching '\$my_installer_url'"
+      >&2 echo "error fetching '\$my_installer_url'"
       exit 1
     fi
     set -e
