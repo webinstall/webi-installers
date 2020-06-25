@@ -26,7 +26,7 @@
     sudo -i -u me bash -c 'ssh-keygen -b 2048 -t rsa -f /home/me/.ssh/id_rsa -q -N ""'
     mkdir -p /home/me/.ssh/
     cp -r $HOME/.ssh/authorized_keys /home/me/.ssh/
-    chmod 0600 me:me /home/me/.ssh/authorized_keys
+    chmod 0600 /home/me/.ssh/authorized_keys
     chown -R me:me /home/me/.ssh/
 
     # Install webi for the new user
