@@ -53,7 +53,12 @@ fi
 if [ -n "\$(command -v unzip)" ]; then
     my_ext="zip,\$my_ext"
 else
-    >&2 echo "WARN: 'unzip' not found"
+    if [ -n "\$(command -v apt-get)" ]; then
+        >&2 echo "WARN: please install 'unzip':"
+        >&2 echo "        sudo apt-get install -y unzip"
+    else
+        >&2 echo "WARN: 'unzip' not found"
+    fi
 fi
 if [ -n "\$(command -v tar)" ]; then
     my_ext="tar,\$my_ext"
