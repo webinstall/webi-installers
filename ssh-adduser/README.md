@@ -10,26 +10,27 @@ description: |
   `ssh-adduser` will
 
     1. add the user `me`
-    2. sets a random, 32-character password (as a failsafe)
+    2. set a random, 32-character password (as a failsafe)
     3. copy the `root` user's **`~/.ssh/authorized_keys`** (so the same users can still login)
-    4. gives the `me` user `sudo` (admin) privileges
-    5. allows `me` to `sudo` without a password
+    4. give the `me` user `sudo` (admin) privileges
+    5. allow `me` to `sudo` without a password
 ---
 
 How to create a new user named 'me':
 
 ```bash
-# Note: --disable-password means that the user cannot yet login
+# --disable-password prevents a password prompt
+# --gecos "" skips the useless questions
 adduser --disabled-password --gecos "" me
 ```
 
 How to create a and set a random password:
 
 ```bash
-# store a random 16-byte password into 'my_password'
+# sets 'my_password' to 32 random hex characters (16 bytes)
 my_password=$(openssl rand -hex 16)
 
-# use 'my_password' to set the user 'me's password
+# uses 'my_password' for to reset and confirm 'me's password
 printf "$my_password"'\n'"$my_password" | passwd me
 ```
 
