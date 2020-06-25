@@ -25,7 +25,8 @@
     echo "me ALL=(ALL:ALL) NOPASSWD: ALL" | tee /etc/sudoers.d/me
     sudo -i -u me bash -c 'ssh-keygen -b 2048 -t rsa -f /home/me/.ssh/id_rsa -q -N ""'
     mkdir -p /home/me/.ssh/
-    cp -r $HOME/.ssh/authorized_keys /home/me/.ssh/
+    chmod 0700 /home/me/.ssh/
+    cp -r "$HOME/.ssh/authorized_keys" /home/me/.ssh/
     chmod 0600 /home/me/.ssh/authorized_keys
     chown -R me:me /home/me/.ssh/
 
