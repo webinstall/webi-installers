@@ -4,7 +4,10 @@
     set -e
     set -u
 
-    mkdir -p "$HOME/.ssh/"
+    if [ ! -d "$HOME/.ssh" ]; then
+        mkdir -p "$HOME/.ssh/"
+        chmod 0700 "$HOME/.ssh/"
+    fi
 
     if [ ! -f "$HOME/.ssh/id_rsa" ]; then
         ssh-keygen -b 2048 -t rsa -f "$HOME/.ssh/id_rsa" -q -N ""
