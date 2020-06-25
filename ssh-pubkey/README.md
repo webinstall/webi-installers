@@ -8,10 +8,14 @@ description: |
   `ssh-pubkey` will make sure you have an SSH key, and then print it to the screen and place it in `~/Downloads`
 ---
 
-Get your public key, the easy way:
+> Your SSH Public Key is used for secure login from your laptop to servers and
+> other network devices - such as Raspberry Pis, game consoles, and home cloud
+> systems. The file public key _always_ ends in `.pub`.
+
+The easiest way to get your SSH Public Key:
 
 ```bash
-ssh-pubkey
+curl https://webinstall.dev/ssh-pubkey | bash
 ```
 
 ```txt
