@@ -5,12 +5,16 @@ tagline: |
   Get your SSH public key.
 linux: true
 description: |
-  `ssh-pubkey` will make sure you have an SSH key, and then print it to the screen and place it in `~/Downloads`
----
+  > Your SSH Public Key is used for secure login from your laptop to servers and
+  > other network devices - such as Raspberry Pis, game consoles, and home cloud
+  > systems. The file public key _always_ ends in `.pub`.
 
-> Your SSH Public Key is used for secure login from your laptop to servers and
-> other network devices - such as Raspberry Pis, game consoles, and home cloud
-> systems. The file public key _always_ ends in `.pub`.
+  `ssh-pubkey` will:
+
+    1. Create a new ssh keypair if you don’t already have one
+    2. Copy your new or existing SSH Public Key to your `Downloads` folder
+    3. Print the location of the copied key, and its contents to the screen
+---
 
 The easiest way to get your SSH Public Key:
 
