@@ -5,6 +5,16 @@ tagline: |
   Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
 description: |
   Node is great for simple, snappy HTTP(S) servers, and for stitching APIs together with minimal fuss or muss.
+
+  Installing node via webi will:
+
+    - pick a compatible version from the [Node Releases API](https://nodejs.org/dist/index.tab)
+    - download and unpack to `$HOME/.local/opt/node/`
+    - update your `PATH` in `$HOME/.config/envman/PATH.env`
+    - run `npm config set scripts-prepend-node-path=true`
+      - (prevents conflicts with other installed node versions)
+    - absolutely leave system file permisions alone
+      - (no dreaded `sudo npm` permission errors)
 ---
 
 Hello World
