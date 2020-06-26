@@ -23,31 +23,37 @@ add the `--dryrun` option.
 
 ```bash
 pushd ./my-node-app/
+
 sudo env PATH="$PATH" \
-    serviceman add --cap-net-bind --system npx nodemon
+    serviceman add --system --cap-net-bind npx nodemon
 ```
 
 **Production Server**
 
 ```bash
 pushd ./my-node-app/
+
 sudo env PATH="$PATH" \
-    serviceman add --cap-net-bind --system npm start
+    serviceman add --system --cap-net-bind npm start
 ```
 
 ### Golang
 
 ```bash
 pushd ./my-go-package/
+
 sudo env PATH="$PATH" \
-    serviceman add --system go run -mod=vendor cmd/my-service/*.go --port 3000
+    serviceman add --system \
+    go run -mod=vendor cmd/my-service/*.go --port 3000
 ```
 
 ```bash
 pushd ./my-go-package/
 go build -mod=vendor cmd/my-service
+
 sudo env PATH="$PATH" \
-    serviceman add --cap-net-bind --system ./my-service --port 80
+    serviceman add --cap-net-bind --system \
+    ./my-service --port 80
 ```
 
 ### And even bash!
@@ -60,7 +66,8 @@ sudo env PATH="$PATH" serviceman add bash ./backup.sh /mnt/data
 
 ```bash
 sudo env PATH="$PATH" \
-    serviceman add --dryrun bash ./backup.sh /mnt/data
+    serviceman add --system --dryrun \
+    bash ./backup.sh /mnt/data
 ```
 
 ### See the (sub)command help
