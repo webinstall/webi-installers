@@ -64,6 +64,29 @@ sudo env PATH="$PATH" \
 sudo env PATH="$PATH" serviceman add bash ./backup.sh /mnt/data
 ```
 
+### How to see all services
+
+```bash
+serviceman list --system
+serviceman list --user
+```
+
+```txt
+serviceman-managed services:
+
+        example-service
+```
+
+### How to restart a service
+
+You can either `add` the service again (which will update any changed options),
+or you can `stop` and then `start` any service by its name:
+
+```bash
+sudo env PATH="$PATH" serviceman stop example-service
+sudo env PATH="$PATH" serviceman start example-service
+```
+
 ## What a typical systemd .service file looks like
 
 ```txt
