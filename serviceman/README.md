@@ -62,6 +62,67 @@ sudo env PATH="$PATH" \
 sudo env PATH="$PATH" serviceman add bash ./backup.sh /mnt/data
 ```
 
+## What a typical systemd .service file looks like
+
+```txt
+[Unit]
+Description=example-service
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+Restart=always
+StartLimitInterval=10
+StartLimitBurst=3
+
+User=root
+Group=root
+
+WorkingDirectory=/srv/example-service
+ExecStart=/srv/example-service/bin/example-command start
+ExecReload=/bin/kill -USR1 $MAINPID
+
+# Allow the program to bind on privileged ports, such as 80 and 443
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
+```
+
+## What a typical launchd .plist file looks like
+
+```txt
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated for serviceman. Edit as you wish, but leave this line. -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>example-service</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/me/example-service/bin/example-command</string>
+    <string>start</string>
+  </array>
+
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/me/example-service</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/me/.local/share/example-service/var/log/example-service.log</string>
+  <key>StandardOutPath</key>
+  <string>/Users/me/.local/share/example-service/var/log/example-service.log</string>
+</dict>
+</plist>
+```
+
 ### Use `--dryrun` to see the generated launcher config:
 
 ```bash
