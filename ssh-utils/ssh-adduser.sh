@@ -31,6 +31,8 @@
     chmod 0700 /home/me/.ssh/
     cp -r "$HOME/.ssh/authorized_keys" /home/me/.ssh/
     chmod 0600 /home/me/.ssh/authorized_keys
+    touch /home/me/.ssh/config
+    chmod 0644 /home/me/.ssh/config
     chown -R me:me /home/me/.ssh/
 
     # ensure that 'me' has an SSH Keypair
