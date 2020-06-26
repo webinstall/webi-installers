@@ -15,7 +15,7 @@ description: |
 Serviceman can run an app in just about any programming language very simply.
 
 If you'd like to learn what `serviceman` does without actually making changes,
-add the `--dry-run` option.
+add the `--dryrun` option.
 
 ### Node.js
 
@@ -56,7 +56,7 @@ sudo env PATH="$PATH" \
 sudo env PATH="$PATH" serviceman add bash ./backup.sh /mnt/data
 ```
 
-### Use `--dry-run` to see the generated launcher config:
+### Use `--dryrun` to see the generated launcher config:
 
 ```bash
 sudo env PATH="$PATH" \
