@@ -25,7 +25,8 @@ add the `--dryrun` option.
 pushd ./my-node-app/
 
 sudo env PATH="$PATH" \
-    serviceman add --system --cap-net-bind npx nodemon
+    serviceman add --system --cap-net-bind \
+    npx nodemon ./server.js
 ```
 
 **Production Server**
@@ -34,7 +35,8 @@ sudo env PATH="$PATH" \
 pushd ./my-node-app/
 
 sudo env PATH="$PATH" \
-    serviceman add --system --cap-net-bind npm start
+    serviceman add --system --cap-net-bind \
+    npm start
 ```
 
 ### Golang
