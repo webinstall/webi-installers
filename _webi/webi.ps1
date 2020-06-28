@@ -26,6 +26,13 @@ if (!(Test-Path -Path .local\tmp))
     New-Item -Path .local\tmp -ItemType Directory
 }
 
+# TODO SetStrictMode
+# TODO Test-Path variable:global:Env:WEBI_HOST ???
+IF(!$Env:WEBI_HOST)
+{
+    $Env:WEBI_HOST = "https://webinstall.dev"
+}
+
 if (!(Test-Path -Path .local\bin\pathman.exe))
 {
     & curl.exe -fsSL -A "$Env:WEBI_UA" "$Env:WEBI_HOST/packages/pathman/install.ps1" -o .\.local\tmp\pathman-setup.ps1

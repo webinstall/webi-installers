@@ -31,6 +31,9 @@ if (!(Test-Path -Path .local\opt))
 # {{ baseurl }}
 # {{ version }}
 
+# Run pathman to set up the folder
+& "$Env:USERPROFILE\.local\bin\pathman.exe" add "$Env:USERPROFILE\.local\.bin"
+
 {{ installer }}
 
 # Done
