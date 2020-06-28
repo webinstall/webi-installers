@@ -13,7 +13,7 @@ pushd "%userprofile%" || goto :error
   pushd .local\bin || goto :error
     if NOT EXIST pathman.exe (
       echo updating PATH management
-      powershell $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest https://webinstall.dev/packages/pathman/pathman.bat -OutFile pathman-setup.bat || goto :error
+      powershell $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest https://webinstall.dev/packages/pathman/install.bat -OutFile pathman-setup.bat || goto :error
       call .\pathman-setup.bat || goto :error
       del pathman-setup.bat  || goto :error
       rem TODO there's rumor of a windows tool called 'pathman' that does the same thing?
