@@ -252,3 +252,32 @@ webi_post_install       # Runs `webi_add_path $pkg_dst_bin`
 - [ ] Support arbitrary git urls (i.e. `@github.com/node/node`)
   - (maybe `ghi node/node` for github specifically)
 - [ ] Support git as an archive format
+
+# Windows Notes
+
+```bat
+set WEBI_HOST=https://webinstall.dev
+```
+
+Windows 10 has curl too!?
+
+```bat
+curl.exe -sL -A "MS" https://webinstall.dev/node | powershell
+```
+
+And it's easy enough to ignore the execution policy
+
+```bat
+powershell -ExecutionPolicy Bypass install.ps1
+```
+
+And if we want something that looks as complicated as we expect Windows to be,
+historically, we have options:
+
+```bat
+powershell "Invoke-Expression ( Invoke-WebRequest -UseBasicParsing https://webinstall.dev/node ).Contents"
+```
+
+```bat
+powershell ( Invoke-WebRequest -UseBasicParsing https://webinstall.dev/node ).Contents | powershell
+```

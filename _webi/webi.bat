@@ -22,7 +22,7 @@ pushd "%userprofile%" || goto :error
   .\.local\bin\pathman add ".local\bin" || goto :error
 
   echo downloading and installing %1
-  powershell $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest https://webinstall.dev/packages/%1/install.bat -OutFile %1-webinstall.bat || goto :error
+  powershell $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest https://webinstall.dev/packages/%1/install.ps1 -OutFile %1-webinstall.bat || goto :error
 
   rem TODO only add if it's not in there already
   PATH .local\bin;%PATH%

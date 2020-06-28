@@ -5,7 +5,7 @@ var map = {
   // OSes
   osx: 'macos',
   linux: 'linux',
-  win: 'windows',
+  win: 'windows', // windows
   sunos: 'sunos',
   aix: 'aix',
   // CPU architectures
@@ -104,7 +104,7 @@ function getAllReleases(request) {
 
         if ('macos' === os) {
           r.download += '-darwin';
-        } else if ('win' === os) {
+        } else if ('windows' === os) {
           r.download += '-win';
         } else {
           r.download += '-' + os;

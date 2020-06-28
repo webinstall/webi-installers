@@ -10,7 +10,7 @@ function getOs(ua) {
     return 'android';
   } else if (/iOS|iPhone|Macintosh|Darwin|OS\s*X|macOS|mac/i.test(ua)) {
     return 'macos';
-  } else if (/Microsoft|Windows|win32|win|PowerShell/.test(ua)) {
+  } else if (/^ms$|Microsoft|Windows|win32|win|PowerShell/i.test(ua)) {
     // 'win' must be tested after 'darwin'
     return 'windows';
   } else if (/Linux|curl|wget/i.test(ua)) {

@@ -166,3 +166,61 @@ Releases.renderBatch = function (
         });
     });
 };
+
+Releases.renderPowerShell = function (
+  pkgdir,
+  rel,
+  { baseurl, pkg, tag, ver, os, arch, formats }
+) {
+  if (!Array.isArray(formats)) {
+    formats = [];
+  }
+  if (!tag) {
+    tag = '';
+  }
+  return fs.promises
+    .readFile(path.join(pkgdir, 'install.ps1'), 'utf8')
+    .then(function (installTxt) {
+      var vers = rel.version.split('.');
+      var v = {
+        major: vers.shift() || '',
+        minor: vers.shift() || '',
+        patch: vers.join('.').replace(/[+\-].*/, ''),
+        build: vers
+          .join('.')
+          .replace(/[^+\-]*/, '')
+          .replace(/^-/, '')
+      };
+      return fs.promises
+        .readFile(path.join(__dirname, 'template.ps1'), 'utf8')
+        .then(function (tplTxt) {
+          var pkgver = pkg + '@' + ver;
+          return tplTxt
+            .replace(
+              /^(#)?\$Env:WEBI_HOST\s*=.*/im,
+              "$Env:WEBI_HOST = '" + baseurl + "'"
+            )
+            .replace(
+              /^(#)?\$Env:WEBI_PKG\s*=.*/im,
+              "$Env:WEBI_PKG = '" + pkgver + "'"
+            )
+            .replace(
+              /^(#)?\$Env:PKG_NAME\s*=.*/im,
+              "$Env:PKG_NAME = '" + pkg + "'"
+            )
+            .replace(
+              /^(#)?\$Env:WEBI_VERSION\s*=.*/im,
+              "$Env:WEBI_VERSION = '" + rel.version + "'"
+            )
+            .replace(
+              /^(#)?\$Env:WEBI_PKG_URL\s*=.*/im,
+              "$Env:WEBI_PKG_URL = '" + rel.download + "'"
+            )
+            .replace(
+              /^(#)?\$Env:WEBI_PKG_FILE\s*=.*/im,
+              "$Env:WEBI_PKG_FILE = '" + rel.name + "'"
+            )
+            .replace(/{{ installer }}/, installTxt);
+        });
+    });
+};

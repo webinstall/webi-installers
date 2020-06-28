@@ -38,7 +38,7 @@ pkgs.create = function (Pkgs, basepath) {
     var yash = path.join(basepath, node, 'package.yash');
     var curlbash = path.join(basepath, node, 'install.sh');
     var readme = path.join(basepath, node, 'README.md');
-    var winstall = path.join(basepath, node, 'install.bat');
+    var winstall = path.join(basepath, node, 'install.ps1');
     return Promise.all([
       fs.promises
         .readFile(readme, 'utf-8')
@@ -80,7 +80,7 @@ pkgs.create = function (Pkgs, basepath) {
         // no winstaller
         winstall = '';
         if ('ENOENT' !== e.code && 'ENOTDIR' !== e.code) {
-          console.error("failed to read '" + node + "/install.bat'");
+          console.error("failed to read '" + node + "/install.ps1'");
           console.error(e);
         }
       })

@@ -46,7 +46,7 @@ nodes.forEach(function (node) {
 var maxLen = 0;
 console.info('');
 console.info('Has the necessary files?');
-['README.md', 'releases.js', 'install.sh', 'install.bat']
+['README.md', 'releases.js', 'install.sh', 'install.ps1']
   .map(function (node) {
     maxLen = Math.max(maxLen, node.length);
     return node;
@@ -106,7 +106,7 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
       arch,
       formats: formats
     }).catch(function () {}),
-    Releases.renderBatch(pkgdir, rel, {
+    Releases.renderPowerShell(pkgdir, rel, {
       baseurl: 'https://webinstall.dev',
       pkg: pkgname,
       tag: pkgtag || '',
@@ -117,13 +117,13 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
     }).catch(function () {})
   ]).then(function (scripts) {
     var bashTxt = scripts[0];
-    var batTxt = scripts[1];
+    var ps1Txt = scripts[1];
     var bashFile = 'install-' + pkgname + '.sh';
-    var batFile = 'install-' + pkgname + '.bat';
+    var ps1File = 'install-' + pkgname + '.ps1';
 
     if (debug) {
       bashTxt = (bashTxt || 'echo ERROR').replace(/#set -x/g, 'set -x');
-      batTxt = (batTxt || 'echo ERROR').replace(
+      ps1Txt = (ps1Txt || 'echo ERROR').replace(
         /REM REM todo debug/g,
         'REM todo debug'
       );
@@ -131,8 +131,8 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
     console.info('Has the necessary files?');
     fs.writeFileSync(bashFile, bashTxt, 'utf-8');
     console.info('\tNEEDS MANUAL TEST: bash %s', bashFile);
-    fs.writeFileSync(batFile, batTxt, 'utf-8');
-    console.info('\tNEEDS MANUAL TEST: cmd.exe %s', batFile);
+    fs.writeFileSync(ps1File, ps1Txt, 'utf-8');
+    console.info('\tNEEDS MANUAL TEST: powershell.exe %s', ps1File);
     console.info('');
   });
 });
