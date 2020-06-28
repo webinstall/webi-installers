@@ -36,7 +36,8 @@ popd
 & .\.local\bin\webi.bat {{ exename }}
 
 # Run pathman to set up the folder
-& "$Env:USERPROFILE\.local\bin\pathman.exe" add "$Env:USERPROFILE\.local\.bin"
+#& "$Env:USERPROFILE\.local\bin\pathman.exe" add "$Env:USERPROFILE\.local\.bin"
+& "$Env:USERPROFILE\.local\bin\pathman.exe" add .local\.bin
 
 # Done
 popd
