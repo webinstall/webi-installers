@@ -25,9 +25,9 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDTOhRnzDJNBNBXVCgkxkEaDM4IAp81MtE8fuqeQuFv
 **ssh-adduser**:
 
 Many modern web programs (`npm` and `postgres`, for example) will not function
-correctly if run as root. `ssh-adduser` adds user `me` with the same
+correctly if run as root. `ssh-adduser` adds user `app` with the same
 **`~/.ssh/authorized_keys`** as the `root` user, with a long random password,
-and gives `me` `sudo` privileges.
+and gives `app` `sudo` privileges.
 
 **ssh-setpass**:
 

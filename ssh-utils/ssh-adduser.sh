@@ -15,34 +15,34 @@
     #apt-get -y update
     #apt-get -y install curl wget rsync git
 
-    # Add User
-    # TODO: might there be a better name?
-    # me, this, user, self, person, i, who, do, tron
-    adduser --disabled-password --gecos "" me
+    # Add User app
+    # Picking 'app' because that seems to be what the # Docker/Vagrant
+    # crowd is doing. TODO: Other ideas? me, user, tron
+    adduser --disabled-password --gecos "" app
     my_password=$(openssl rand -hex 16)
-    printf "$my_password"'\n'"$my_password" | passwd me
+    printf "$my_password"'\n'"$my_password" | passwd app
 
-    # make 'me' a sudo-er (admin)
-    adduser me sudo
-    echo "me ALL=(ALL:ALL) NOPASSWD: ALL" | tee /etc/sudoers.d/me
+    # make 'app' a sudo-er (admin)
+    adduser app sudo
+    echo "app ALL=(ALL:ALL) NOPASSWD: ALL" | tee /etc/sudoers.d/app
 
-    # allow users who can already login as 'root' to login as 'me'
-    mkdir -p /home/me/.ssh/
-    chmod 0700 /home/me/.ssh/
-    cp -r "$HOME/.ssh/authorized_keys" /home/me/.ssh/
-    chmod 0600 /home/me/.ssh/authorized_keys
-    touch /home/me/.ssh/config
-    chmod 0644 /home/me/.ssh/config
-    chown -R me:me /home/me/.ssh/
+    # allow users who can already login as 'root' to login as 'app'
+    mkdir -p /home/app/.ssh/
+    chmod 0700 /home/app/.ssh/
+    cp -r "$HOME/.ssh/authorized_keys" /home/app/.ssh/
+    chmod 0600 /home/app/.ssh/authorized_keys
+    touch /home/app/.ssh/config
+    chmod 0644 /home/app/.ssh/config
+    chown -R app:app /home/app/.ssh/
 
-    # ensure that 'me' has an SSH Keypair
-    sudo -i -u me bash -c 'ssh-keygen -b 2048 -t rsa -f /home/me/.ssh/id_rsa -q -N ""'
+    # ensure that 'app' has an SSH Keypair
+    sudo -i -u app bash -c 'ssh-keygen -b 2048 -t rsa -f /home/app/.ssh/id_rsa -q -N ""'
 
-    # Install webi for the new 'me' user
-    sudo -i -u me bash -c 'curl -fsSL https://webinstall.dev/webi | bash' \
-        || sudo -i -u me bash -c 'wget -q -O - https://webinstall.dev/webi | bash'
+    # Install webi for the new 'app' user
+    sudo -i -u app bash -c 'curl -fsSL https://webinstall.dev/webi | bash' \
+        || sudo -i -u app bash -c 'wget -q -O - https://webinstall.dev/webi | bash'
 
     # TODO ensure that ssh-password login is off
 
-    echo "Created user 'me' with password '$my_password'"
+    echo "Created user 'app' with password '$my_password'"
 }
