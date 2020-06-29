@@ -53,11 +53,19 @@ pkg_post_install() {
     webi_path_add "$GOBIN/bin"
 
     # Install x go
-    echo "Building go extended tools (goimports, gorename, gotype, and stringer)"
-    "$pkg_dst_cmd" get golang.org/x/tools/cmd/goimports > /dev/null 2>/dev/null
-    "$pkg_dst_cmd" get golang.org/x/tools/cmd/gorename > /dev/null 2>/dev/null
-    "$pkg_dst_cmd" get golang.org/x/tools/cmd/gotype > /dev/null 2>/dev/null
-    "$pkg_dst_cmd" get golang.org/x/tools/cmd/stringer > /dev/null 2>/dev/null
+    echo "Building go language tools..."
+    echo gopls
+    "$pkg_dst_cmd" get golang.org/x/tools/gopls@latest > /dev/null #2>/dev/null
+    echo gotags
+    "$pkg_dst_cmd" get github.com/jstemmer/gotags > /dev/null #2>/dev/null
+    echo goimports
+    "$pkg_dst_cmd" get golang.org/x/tools/cmd/goimports > /dev/null #2>/dev/null
+    echo gorename
+    "$pkg_dst_cmd" get golang.org/x/tools/cmd/gorename > /dev/null #2>/dev/null
+    echo gotype
+    "$pkg_dst_cmd" get golang.org/x/tools/cmd/gotype > /dev/null #2>/dev/null
+    echo stringer
+    "$pkg_dst_cmd" get golang.org/x/tools/cmd/stringer > /dev/null #2>/dev/null
 }
 
 pkg_done_message() {
