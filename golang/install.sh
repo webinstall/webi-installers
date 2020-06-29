@@ -55,7 +55,7 @@ pkg_post_install() {
     # Install x go
     echo "Building go language tools..."
     echo gopls
-    "$pkg_dst_cmd" get golang.org/x/tools/gopls@latest > /dev/null #2>/dev/null
+    "$pkg_dst_cmd" get golang.org/x/tools/gopls > /dev/null #2>/dev/null
     echo gotags
     "$pkg_dst_cmd" get github.com/jstemmer/gotags > /dev/null #2>/dev/null
     echo goimports
