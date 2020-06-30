@@ -1,4 +1,6 @@
-﻿# If a command returns an error, halt the script.
+﻿#!/usr/bin/env pwsh
+
+# If a command returns an error, halt the script.
 $ErrorActionPreference = 'Stop'
 
 # Ignore progress events from cmdlets so Invoke-WebRequest is not painfully slow

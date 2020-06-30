@@ -1,5 +1,6 @@
-# Fetch archive
+#!/usr/bin/env pwsh
 
+# Fetch archive
 IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"))
 {
     # TODO: arch detection

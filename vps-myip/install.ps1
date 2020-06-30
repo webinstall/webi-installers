@@ -1,3 +1,5 @@
+#!/usr/bin/env pwsh
+
 $ipv4 = curl.exe -sf https://api.ipify.org
 
 IF(!($ipv4 -eq $null -or $ipv4 -eq "")) {
