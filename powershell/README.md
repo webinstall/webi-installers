@@ -4,7 +4,9 @@ homepage: https://docs.microsoft.com/en-us/powershell/
 tagline: |
   PowerShell Core is a cross-platform (Windows, Linux, and macOS) automation and configuration tool/framework.
 description: |
-  PowerShell is the default shell on Windows 10. Since `curl.exe | powershell` is effectively as convenient as `curl | bash` for users, and since Windows 10 also includes tar, curl.exe, and ssh, among others, you can use fairly simple PowerShell to make a variety of tasks simple for Windows developers.
+  The core benefit of running `pwsh` on Mac or Linux is that you get a way to debug Windows 10 scripts without having to boot up Windows 10.
+
+  For example, if you want to create a `curl.exe -A "windows" | powershell` script for Windows 10 (as we do), it's helpful to be able to do some level of debugging on other platforms.
 ---
 
 <!--
