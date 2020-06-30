@@ -32,8 +32,9 @@ Invoke-WebRequest "$Env:WEBI_HOST/packages/_webi/webi.ps1" -OutFile webi.ps1
 
 popd
 
-# Run webi.bat
-& .\.local\bin\webi.bat {{ exename }}
+# Run webi.ps1
+#TODO Set-ExecutionPolicy -ExecutionPolicy Bypass
+& Invoke-Expression "powershell -ExecutionPolicy Bypass .\.local\bin\webi.ps1 {{ exename }}"
 
 # Run pathman to set up the folder
 #& "$Env:USERPROFILE\.local\bin\pathman.exe" add "$Env:USERPROFILE\.local\.bin"
