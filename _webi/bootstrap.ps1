@@ -36,7 +36,7 @@ popd
 
 # Run webi.ps1
 #TODO Set-ExecutionPolicy -ExecutionPolicy Bypass
-& Invoke-Expression "powershell -ExecutionPolicy Bypass .\.local\bin\webi.ps1 {{ exename }}"
+Invoke-Expression "powershell -ExecutionPolicy Bypass .\.local\bin\webi.ps1 {{ exename }}"
 
 # Run pathman to set up the folder
 #& "$Env:USERPROFILE\.local\bin\pathman.exe" add "$Env:USERPROFILE\.local\.bin"
