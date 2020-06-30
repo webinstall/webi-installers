@@ -66,8 +66,8 @@ An install consists of 5 parts in 4 files:
 my-new-package/
   - README.md (package info in frontmatter)
   - releases.js
-  - install.sh
-  - install.bat
+  - install.sh (bash)
+  - install.ps1 (PowerShell)
 ```
 
 1. Create Description
@@ -249,9 +249,12 @@ webi_post_install       # Runs `webi_add_path $pkg_dst_bin`
 # Roadmap
 
 - Wrap release APIs to unify and expose
+- [ ] Support more Windows packages
 - [ ] Support arbitrary git urls (i.e. `@github.com/node/node`)
   - (maybe `ghi node/node` for github specifically)
 - [ ] Support git as an archive format
+
+<!-- 
 
 # Windows Notes
 
@@ -281,3 +284,5 @@ powershell "Invoke-Expression ( Invoke-WebRequest -UseBasicParsing https://webin
 ```bat
 powershell ( Invoke-WebRequest -UseBasicParsing https://webinstall.dev/node ).Contents | powershell
 ```
+
+-->
