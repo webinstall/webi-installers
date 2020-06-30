@@ -6,4 +6,5 @@
 #   See https://webinstall.dev/postgres
 
 echo "'postgresql' is an alias for 'postgres'"
-curl -fsSL https://webinstall.dev/postgres@${WEBI_VERSION:-} | bash
+WEBI_HOST=${WEBI_HOST:-"https://webinstall.dev"}
+curl -fsSL "$WEBI_HOST/postgres@${WEBI_VERSION:-}" | bash

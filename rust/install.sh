@@ -6,4 +6,5 @@
 #   See https://webinstall.dev/rustlang
 
 echo "'rust' is an alias for 'rustlang'"
-curl -fsSL https://webinstall.dev/rustlang@${WEBI_VERSION:-} | bash
+WEBI_HOST=${WEBI_HOST:-"https://webinstall.dev"}
+curl -fsSL "$WEBI_HOST/rustlang@${WEBI_VERSION:-}" | bash

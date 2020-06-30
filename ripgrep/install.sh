@@ -6,4 +6,5 @@
 #   See https://webinstall.dev/rg
 
 echo "'ripgrep@${WEBI_TAG:-}' (project) is an alias for 'rg@${WEBI_VERSION:-}' (command)"
-curl -fsSL https://webinstall.dev/rg@${WEBI_VERSION:-} | bash
+WEBI_HOST=${WEBI_HOST:-"https://webinstall.dev"}
+curl -fsSL "$WEBI_HOST/rg@${WEBI_VERSION:-}" | bash

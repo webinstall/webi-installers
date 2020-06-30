@@ -39,8 +39,9 @@
     sudo -i -u app bash -c 'ssh-keygen -b 2048 -t rsa -f /home/app/.ssh/id_rsa -q -N ""'
 
     # Install webi for the new 'app' user
-    sudo -i -u app bash -c 'curl -fsSL https://webinstall.dev/webi | bash' \
-        || sudo -i -u app bash -c 'wget -q -O - https://webinstall.dev/webi | bash'
+    WEBI_HOST=${WEBI_HOST:-"https://webinstall.dev"}
+    sudo -i -u app bash -c "curl -fsSL '$WEBI_HOST/webi' | bash" \
+        || sudo -i -u app bash -c "wget -q -O - '$WEBI_HOST/webi' | bash"
 
     # TODO ensure that ssh-password login is off
 
