@@ -18,6 +18,7 @@ if (!(Test-Path -Path .local\bin))
 {
     New-Item -Path .local\bin -ItemType Directory
 }
+Set-Content -Path .local\bin\webi.bat -Value "echo off`r`npushd %USERPROFILE%`r`npowershell -ExecutionPolicy Bypass .local\bin\webi.ps1 %1`r`npopd"
 if (!(Test-Path -Path .local\opt))
 {
     New-Item -Path .local\opt -ItemType Directory
@@ -42,15 +43,17 @@ if (!(Test-Path -Path .local\bin\pathman.exe))
     # TODO del .\.local\tmp\pathman-setup.bat
 }
 
+# Run pathman to set up the folder
+#& "$Env:USERPROFILE\.local\bin\pathman.exe" add "$Env:USERPROFILE\.local\.bin"
+& "$Env:USERPROFILE\.local\bin\pathman.exe" add .local\.bin
+
 # {{ baseurl }}
 # {{ version }}
 
 # Fetch <whatever>.ps1
-echo "$Env:WEBI_HOST/packages/$exename/install.ps1"
-echo "$exename.install.ps1"
-
 # TODO detect formats
 # Invoke-WebRequest -UserAgent "Windows amd64" "$Env:WEBI_HOST/api/installers/$exename.ps1?formats=zip,tar" -OutFile ".\.local\tmp\$exename.install.ps1"
+echo "Downloading $Env:WEBI_HOST/api/installers/$exename.ps1?formats=zip,tar"
 & curl.exe -fsSL -A "$Env:WEBI_UA" "$Env:WEBI_HOST/api/installers/$exename.ps1?formats=zip,tar" -o .\.local\tmp\$exename.install.ps1
 
 # Run <whatever>.ps1

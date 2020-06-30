@@ -26,7 +26,7 @@ if (!(Test-Path -Path "$Env:USERPROFILE/.ssh/config"))
 
 if (!(Test-Path -Path "$Env:USERPROFILE/.ssh/id_rsa"))
 {
-    & ssh-keygen -b 2048 -t rsa -f "$Env:USERPROFILE/.ssh/id_rsa" -q -N ""
+    & ssh-keygen -b 2048 -t rsa -f "$Env:USERPROFILE/.ssh/id_rsa" -q -N """"
     echo ""
 }
 
