@@ -2,7 +2,7 @@
 
 // this may need customizations between packages
 var osMap = {
-  macos: /(\b|_)(apple|os\s?x\b|mac|darwin|iPhone|iOS|iPad)/i,
+  macos: /(\b|_)(apple|os(\s_-)?x\b|mac|darwin|iPhone|iOS|iPad)/i,
   linux: /(\b|_)(linux)/i,
   freebsd: /(\b|_)(freebsd)/i,
   windows: /(\b|_)(win|microsoft|msft)/i,
