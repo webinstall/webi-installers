@@ -18,7 +18,7 @@ if (!(Test-Path -Path .local\bin))
 {
     New-Item -Path .local\bin -ItemType Directory
 }
-Set-Content -Path .local\bin\webi.bat -Value "echo off`r`npushd %USERPROFILE%`r`npowershell -ExecutionPolicy Bypass .local\bin\webi.ps1 %1`r`npopd"
+Set-Content -Path .local\bin\webi.bat -Value "@echo off`r`npushd %USERPROFILE%`r`npowershell -ExecutionPolicy Bypass .local\bin\webi.ps1 %1`r`npopd"
 if (!(Test-Path -Path .local\opt))
 {
     New-Item -Path .local\opt -ItemType Directory
