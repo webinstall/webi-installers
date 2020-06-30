@@ -6,23 +6,23 @@
 if (!(Test-Path -Path "$Env:USERPROFILE/.ssh"))
 {
     New-Item -Path "$Env:USERPROFILE/.ssh" -ItemType Directory
-    & icacls "$Env:USERPROFILE/.ssh" /inheritance:r
-    & icacls "$Env:USERPROFILE/.ssh" /grant:r "%username%":"(F)"
+    #& icacls "$Env:USERPROFILE/.ssh" /inheritance:r
+    #& icacls "$Env:USERPROFILE/.ssh" /grant:r "$Env:USERNAME":"(F)"
 }
 
 if (!(Test-Path -Path "$Env:USERPROFILE/.ssh/config"))
 {
     New-Item -Path "$Env:USERPROFILE/.ssh/config" -ItemType "file" -Value ""
-    & icacls "$Env:USERPROFILE/.ssh/config" /inheritance:r
-    & icacls "$Env:USERPROFILE/.ssh/config" /grant:r "%username%":"(F)"
+    #& icacls "$Env:USERPROFILE/.ssh/config" /inheritance:r
+    #& icacls "$Env:USERPROFILE/.ssh/config" /grant:r "$Env:USERNAME":"(F)"
 }
 
-if (!(Test-Path -Path "$Env:USERPROFILE/.ssh/authorized_keys"))
-{
-    New-Item -Path "$Env:USERPROFILE/.ssh/authorized_keys" -ItemType "file" -Value ""
-    & icacls "$Env:USERPROFILE/.ssh/authorized_keys" /inheritance:r
-    & icacls "$Env:USERPROFILE/.ssh/authorized_keys" /grant:r "%username%":"(F)"
-}
+#if (!(Test-Path -Path "$Env:USERPROFILE/.ssh/authorized_keys"))
+#{
+#    New-Item -Path "$Env:USERPROFILE/.ssh/authorized_keys" -ItemType "file" -Value ""
+#    #& icacls "$Env:USERPROFILE/.ssh/authorized_keys" /inheritance:r
+#    #& icacls "$Env:USERPROFILE/.ssh/authorized_keys" /grant:r "$Env:USERNAME":"(F)"
+#}
 
 if (!(Test-Path -Path "$Env:USERPROFILE/.ssh/id_rsa"))
 {

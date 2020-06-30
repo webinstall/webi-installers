@@ -30,7 +30,7 @@ if (!(Test-Path -Path .local\tmp))
 
 # TODO SetStrictMode
 # TODO Test-Path variable:global:Env:WEBI_HOST ???
-IF(!$Env:WEBI_HOST)
+IF($Env:WEBI_HOST -eq $null -or $Env:WEBI_HOST -eq "")
 {
     $Env:WEBI_HOST = "https://webinstall.dev"
 }

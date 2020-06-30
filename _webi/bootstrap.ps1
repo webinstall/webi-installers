@@ -23,14 +23,15 @@ pushd .local\bin
 
 # TODO SetStrictMode
 # TODO Test-Path variable:global:Env:WEBI_HOST ???
-IF(!($Env:WEBI_HOST -eq $null -or $Env:WEBI_HOST -eq "")) {
+IF($Env:WEBI_HOST -eq $null -or $Env:WEBI_HOST -eq "")
 {
     $Env:WEBI_HOST = "https://webinstall.dev"
 }
 
 # Fetch webi.bat
-Invoke-WebRequest "$Env:WEBI_HOST/packages/_webi/webi.ps1.bat" -OutFile webi.bat
-Invoke-WebRequest "$Env:WEBI_HOST/packages/_webi/webi.ps1" -OutFile webi.ps1
+echo "$Env:WEBI_HOST/packages/_webi/webi.ps1"
+curl.exe -s -A "windows" "$Env:WEBI_HOST/packages/_webi/webi.ps1.bat" -o webi.bat
+curl.exe -s -A "windows" "$Env:WEBI_HOST/packages/_webi/webi.ps1" -o webi.ps1
 
 popd
 
