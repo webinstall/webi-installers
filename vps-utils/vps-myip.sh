@@ -1,0 +1,1 @@
+../vps-myip/install.sh
