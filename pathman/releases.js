@@ -1,9 +1,9 @@
 'use strict';
 
 var github = require('../_common/gitea.js');
-var owner = 'coolaj86';
-var repo = 'go-pathman';
-var baseurl = 'https://git.coolaj86.com';
+var owner = 'root';
+var repo = 'pathman';
+var baseurl = 'https://git.rootprojects.org';
 
 module.exports = function (request) {
   return github(request, owner, repo, baseurl).then(function (all) {
