@@ -53,6 +53,8 @@ fi
 if [ -n "\$(command -v unzip)" ]; then
     my_ext="zip,\$my_ext"
 fi
+# for mac/linux 'exe' refers to the uncompressed binary without extension
+my_ext="exe,\$my_ext"
 if [ -n "\$(command -v tar)" ]; then
     my_ext="tar,\$my_ext"
 fi

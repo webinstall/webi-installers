@@ -38,8 +38,10 @@ var arches = [
   's390x'
 ];
 var archMap = {
-  amd64: /(amd.?64|x64|[_\-]64)/i,
-  x86: /(86)(\b|_)/i,
+  //amd64: /(amd.?64|x64|[_\-]64)/i,
+  amd64: /(\b|_|amd|(dar)?win(dows)?|mac(os)?|linux|osx|x)64(\b|_)/i,
+  //x86: /(86)(\b|_)/i,
+  x86: /(\b|_|amd|(dar)?win(dows)?|mac(os)?|linux|osx|x)(86|32)(\b|_)/i,
   ppc64le: /(\b|_)(ppc64le)/i,
   ppc64: /(\b|_)(ppc64)(\b|_)/i,
   arm64: /(\b|_)(arm64|arm)/i,
@@ -86,14 +88,22 @@ function normalize(all) {
       // pkg-v1.0.tar.gz => ['gz', 'tar', '0', 'pkg-v1']
       // pkg-v1.0.tar => ['tar', '0' ,'pkg-v1']
       // pkg-v1.0.zip => ['zip', '0', 'pkg-v1']
-      var exts = (rel.name || rel.download).split('.').reverse().slice(0, 2);
-      var ext;
+      var exts = (rel.name || rel.download).split('.');
+      if (1 === exts.length) {
+        // for bare releases in the format of foo-linux-amd64
+        rel.ext = 'exe';
+      }
+      exts = exts.reverse().slice(0, 2);
       if ('tar' === exts[1]) {
         rel.ext = exts.reverse().join('.');
       } else if ('tgz' == exts[0]) {
         rel.ext = 'tar.gz';
       } else {
         rel.ext = exts[0];
+      }
+      if (/\-|linux|mac|os[_\-]?x|arm|amd|86|64|mip/i.test(rel.ext)) {
+        // for bare releases in the format of foo.linux-amd64
+        rel.ext = 'exe';
       }
     }
     supported.formats[rel.ext] = true;

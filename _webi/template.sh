@@ -180,8 +180,8 @@ webi_extract() {
             echo "Extracting $HOME/Downloads/$WEBI_PKG_FILE"
             unzip "$HOME/Downloads/$WEBI_PKG_FILE" > __unzip__.log
         elif [ "exe" == "$WEBI_EXT" ]; then
-            # do nothing (but don't leave an empty if block either)
-            true
+            echo "Moving $HOME/Downloads/$WEBI_PKG_FILE"
+            mv "$HOME/Downloads/$WEBI_PKG_FILE" .
         elif [ "xz" == "$WEBI_EXT" ]; then
             echo "Inflating $HOME/Downloads/$WEBI_PKG_FILE"
             unxz -c "$HOME/Downloads/$WEBI_PKG_FILE" > $(basename "$WEBI_PKG_FILE")
@@ -268,7 +268,7 @@ if [ -n "$(command -v pkg_get_current_version)" ]; then
         pkg_dst_cmd="${pkg_dst_cmd:-$HOME/.local/bin/$pkg_cmd_name}"
         pkg_dst="$pkg_dst_cmd" # "$(dirname "$(dirname $pkg_dst_cmd)")"
 
-        pkg_src_cmd="${pkg_src_cmd:-$HOME/.local/xbin/$pkg_cmd_name-$WEBI_VERSION}"
+        pkg_src_cmd="${pkg_src_cmd:-$HOME/.local/xbin/$pkg_cmd_name-v$WEBI_VERSION}"
         pkg_src="$pkg_src_cmd" # "$(dirname "$(dirname $pkg_src_cmd)")"
     else
         pkg_dst="${pkg_dst:-$HOME/.local/opt/$pkg_cmd_name}"
