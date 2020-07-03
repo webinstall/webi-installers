@@ -18,14 +18,13 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERS
     # Enter opt
     pushd .local\tmp
 
-        echo "Remove leftover node-v* stuffs"
+        # Remove any leftover tmp cruft
         Remove-Item -Path "node-v*" -Recurse -ErrorAction Ignore
 
         # Unpack archive
         # Windows BSD-tar handles zip. Imagine that.
         echo "Unpacking $Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"
         & tar xf "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"
-        Get-ChildItem "node-v*"
 
         # Settle unpacked archive into place
         echo "New Name: $Env:PKG_NAME-v$Env:WEBI_VERSION"
@@ -37,8 +36,8 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERS
     popd
 }
 
-echo "Versioning $Env:PKG_NAME"
-Remove-Item -Path "$Env:USERPROFILE\.local\opt\node" -Recurse -ErrorAction Ignore
+echo "Copying into '$Env:USERPROFILE\.local\opt\$Env:PKG_NAME' from '$Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERSION'"
+Remove-Item -Path "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME" -Recurse -ErrorAction Ignore
 Copy-Item -Path "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERSION" -Destination "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME" -Recurse
 
 # make npm not act stupid about which node to use... ugh (this should be the default)
