@@ -7,7 +7,6 @@ var repo = 'jq';
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
     all.releases.forEach(function (rel) {
-      console.log(rel.version);
       rel.version = String(rel.version).replace(/^jq\-/, '');
     });
     return all;
