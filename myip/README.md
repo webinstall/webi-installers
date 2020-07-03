@@ -1,10 +1,10 @@
 ---
-title: VPS My IP
-homepage: https://webinstall.dev/vps-myip
+title: My IP
+homepage: https://webinstall.dev/myip
 tagline: |
-  VPS My IP answers the question "what's my IP address?"
+  My IP answers the question "what's my IP address?"
 description: |
-  `vps-myip` will contact ipify.org to tell you your IP addresses:
+  `myip` will contact ipify.org to tell you your IP addresses:
 
     1. `api.ipify.org` for your IPv4 or A address
     2. `api6.ipify.org` for your IPv6 or AAAA address
