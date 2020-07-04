@@ -6,8 +6,14 @@ $ErrorActionPreference = 'Stop'
 # Ignore progress events from cmdlets so Invoke-WebRequest is not painfully slow
 $ProgressPreference = 'SilentlyContinue'
 
-# TODO get arch
-$Env:WEBI_UA = 'Windows/10 amd64'
+# This is the canonical CPU arch when the process is emulated
+$my_arch = "$Env:PROCESSOR_ARCHITEW6432"
+IF ($my_arch -eq $null -or $my_arch -eq "") {
+  # This is the canonical CPU arch when the process is native
+  $my_arch = "$Env:PROCESSOR_ARCHITECTURE"
+}
+# TODO API should know to prefer x86 for windows when arm binary is not available
+$Env:WEBI_UA = "Windows/10 $my_arch"
 $exename = $args[0]
 
 # Switch to userprofile
@@ -48,9 +54,8 @@ if (!(Test-Path -Path .local\bin\pathman.exe))
 }
 
 # Run pathman to set up the folder
+# (using unix style path because... cmd vs powershell vs whatever)
 & "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/bin
-#& "$Env:USERPROFILE\.local\bin\pathman.exe" add "$Env:USERPROFILE\.local\bin"
-#& "$Env:USERPROFILE\.local\bin\pathman.exe" add %USERPROFILE%\.local\bin
 
 # {{ baseurl }}
 # {{ version }}
