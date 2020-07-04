@@ -42,6 +42,9 @@ git checkout -b my-branch-name
 
 ### How to rebase
 
+> To "rebase" simply means to undo any of your changes, apply updates from
+> another branch first, and then replay your changes.
+
 Rebase when fetching new updates
 
 ```bash
