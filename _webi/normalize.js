@@ -39,9 +39,9 @@ var arches = [
 ];
 var archMap = {
   //amd64: /(amd.?64|x64|[_\-]64)/i,
-  amd64: /(\b|_|amd|(dar)?win(dows)?|mac(os)?|linux|osx|x)64(\b|_)/i,
+  amd64: /(\b|_|amd|(dar)?win(dows)?|mac(os)?|linux|osx|arch|x)64(\b|_)/i,
   //x86: /(86)(\b|_)/i,
-  x86: /(\b|_|amd|(dar)?win(dows)?|mac(os)?|linux|osx|x)(86|32)(\b|_)/i,
+  x86: /(\b|_|amd|(dar)?win(dows)?|mac(os)?|linux|osx|arch|x)(86|32)(\b|_)/i,
   ppc64le: /(\b|_)(ppc64le)/i,
   ppc64: /(\b|_)(ppc64)(\b|_)/i,
   arm64: /(\b|_)(arm64|arm)/i,
