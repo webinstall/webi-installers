@@ -40,6 +40,12 @@ This will branch from the branch you're currently on.
 git checkout -b my-branch-name
 ```
 
+### How to rebase by default
+
+```bash
+git config --global pull.rebase true
+```
+
 ### How to rebase
 
 > To "rebase" simply means to undo any of your changes, apply updates from
