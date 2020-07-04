@@ -44,4 +44,4 @@ Copy-Item -Path "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERSION" -
 & .\.local\opt\node\npm.cmd --scripts-prepend-node-path=true config set scripts-prepend-node-path true
 
 # Add to path
-& "$Env:USERPROFILE\.local\bin\pathman.exe" add '%USERPROFILE\.local\opt\node'
+& "$Env:USERPROFILE\.local\bin\pathman.exe" add "$Env:USERPROFILE\.local\opt\node"
