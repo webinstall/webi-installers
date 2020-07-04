@@ -33,10 +33,17 @@ if (!(Test-Path -Path .local\opt))
 # {{ baseurl }}
 # {{ version }}
 
+function webi_add_path
+{
+    & "$Env:USERPROFILE\.local\bin\pathman.exe" add "$args[0]"
+    # Note: not all of these work as expected, so we use the unix-style, which is most consistent
+    #& "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/bin
+    #& "$Env:USERPROFILE\.local\bin\pathman.exe" add "$Env:USERPROFILE\.local\bin"
+    #& "$Env:USERPROFILE\.local\bin\pathman.exe" add %USERPROFILE%\.local\bin
+}
+
 # Run pathman to set up the folder
 & "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/bin
-#& "$Env:USERPROFILE\.local\bin\pathman.exe" add "$Env:USERPROFILE\.local\bin"
-#& "$Env:USERPROFILE\.local\bin\pathman.exe" add %USERPROFILE%\.local\bin
 
 {{ installer }}
 
