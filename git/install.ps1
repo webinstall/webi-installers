@@ -53,4 +53,5 @@ Remove-Item -Path "$pkg_dst" -Recurse -ErrorAction Ignore
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse
 
 # Add to path
-& "$Env:USERPROFILE\.local\bin\pathman.exe" add %USERPROFILE%\.local\opt\git\cmd
+& "$Env:USERPROFILE\.local\bin\pathman.exe" add "$Env:USERPROFILE\.local\opt\git\cmd"
+#& "$Env:USERPROFILE\.local\bin\pathman.exe" add %USERPROFILE%\.local\opt\git\cmd
