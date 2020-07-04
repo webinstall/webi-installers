@@ -3,7 +3,6 @@ title: SSH Pub Key
 homepage: https://webinstall.dev/ssh-pubkey
 tagline: |
   Get your SSH public key.
-linux: true
 description: |
   > Your SSH Public Key is used for secure login from your laptop to servers and
   > other network devices - such as Raspberry Pis, game consoles, and home cloud
