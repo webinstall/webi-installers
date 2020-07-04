@@ -63,7 +63,7 @@ app.use('/', function (req, res, next) {
   res.end("Hello, World!");
 });
 
-module.exports = app;</code></pre>
+module.exports = app;
 ```
 
 `server.js`:
