@@ -35,6 +35,11 @@ pkgs.create = function (Pkgs, basepath) {
   };
 
   Pkgs.get = function (node) {
+    return fs.promises.access(path.join(basepath, node)).then(function () {
+      return Pkgs._get(node);
+    });
+  };
+  Pkgs._get = function (node) {
     var yash = path.join(basepath, node, 'package.yash');
     var curlbash = path.join(basepath, node, 'install.sh');
     var readme = path.join(basepath, node, 'README.md');
