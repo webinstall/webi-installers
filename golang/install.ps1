@@ -9,6 +9,11 @@ $pkg_dst = "$Env:USERPROFILE\.local\opt\$pkg_cmd_name"
 $pkg_dst_cmd = "$pkg_dst\bin\$pkg_cmd_name"
 $pkg_dst_bin = "$pkg_dst\bin"
 
+if (!(Get-Command "git.exe" -ErrorAction SilentlyContinue))
+{
+    & powershell -ExecutionPolicy Bypass "$Env:USERPROFILE\.local\bin\webi.ps1" git
+}
+
 # Fetch archive
 IF (!(Test-Path -Path "$pkg_download"))
 {
