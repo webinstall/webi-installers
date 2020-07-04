@@ -48,7 +48,8 @@ if (!(Test-Path -Path .local\bin\pathman.exe))
 }
 
 # Run pathman to set up the folder
-& "$Env:USERPROFILE\.local\bin\pathman.exe" add "$Env:USERPROFILE\.local\bin"
+& "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/bin
+#& "$Env:USERPROFILE\.local\bin\pathman.exe" add "$Env:USERPROFILE\.local\bin"
 #& "$Env:USERPROFILE\.local\bin\pathman.exe" add %USERPROFILE%\.local\bin
 
 # {{ baseurl }}
