@@ -6,7 +6,7 @@ tagline: |
 description: |
   `vim-go` provides integration with various official and 3rd part go tooling for linting, vetting, etc.
 
-  You'll also need `syntastic` or similar.
+  You'll also need `ALE`, `syntastic`, or similar.
 ---
 
 ### How to install by hand

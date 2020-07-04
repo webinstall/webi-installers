@@ -25,7 +25,7 @@ set shell=bash
 " or remove it otherwise
 packloadall
 
-" turn on the systax checker
+" turn on the syntax checker
 syntax on
 
 " don't check syntax immediately on open or on quit
