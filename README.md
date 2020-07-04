@@ -243,7 +243,7 @@ webi_path_add /new/path # Adds /new/path to PATH for bash, zsh, and fish
 webi_pre_install        # Runs webi_check, webi_download, and webi_extract
 webi_install            # Moves extracted files from $WEBI_TMP to $pkg_src
 webi_link               # replaces any existing symlink with the currently selected version
-webi_post_install       # Runs `webi_add_path $pkg_dst_bin`
+webi_post_install       # Runs `webi_path_add $pkg_dst_bin`
 ```
 
 # Roadmap
@@ -254,7 +254,7 @@ webi_post_install       # Runs `webi_add_path $pkg_dst_bin`
   - (maybe `ghi node/node` for github specifically)
 - [ ] Support git as an archive format
 
-<!-- 
+<!--
 
 # Windows Notes
 
