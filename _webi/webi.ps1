@@ -1,5 +1,10 @@
 ﻿#!/usr/bin/env pwsh
 
+# this allows us to call ps1 files, which allows us to have spaces in filenames
+# ('powershell "$Env:USERPROFILE\test.ps1" foo' will fail if it has a space in
+# the path but '& "$Env:USERPROFILE\test.ps1" foo' will work even with a space)
+Set-ExecutionPolicy -Scope Process Bypass
+
 # If a command returns an error, halt the script.
 $ErrorActionPreference = 'Stop'
 
@@ -28,6 +33,7 @@ if (!(Test-Path -Path .local\xbin))
 {
     New-Item -Path .local\xbin -ItemType Directory
 }
+# See note on Set-ExecutionPolicy above
 Set-Content -Path .local\bin\webi.bat -Value "@echo off`r`npushd %USERPROFILE%`r`npowershell -ExecutionPolicy Bypass .local\bin\webi.ps1 %1`r`npopd"
 if (!(Test-Path -Path .local\opt))
 {

@@ -11,7 +11,9 @@ $pkg_dst_bin = "$pkg_dst\bin"
 
 if (!(Get-Command "git.exe" -ErrorAction SilentlyContinue))
 {
-    & powershell -ExecutionPolicy Bypass "$Env:USERPROFILE\.local\bin\webi.ps1" git
+    & "$Env:USERPROFILE\.local\bin\webi.ps1" git
+    # because we need git.exe to be available to golang immediately
+    $Env:PATH = "$Env:USERPROFILE\.local\opt\git\cmd;$Env:PATH"
 }
 
 # Fetch archive

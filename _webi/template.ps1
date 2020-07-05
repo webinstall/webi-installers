@@ -1,5 +1,10 @@
 ﻿#!/usr/bin/env pwsh
 
+# this allows us to call ps1 files, which allows us to have spaces in filenames
+# ('powershell "$Env:USERPROFILE\test.ps1" foo' will fail if it has a space in
+# the path but '& "$Env:USERPROFILE\test.ps1" foo' will work even with a space)
+Set-ExecutionPolicy -Scope Process Bypass
+
 # If a command returns an error, halt the script.
 $ErrorActionPreference = 'Stop'
 
