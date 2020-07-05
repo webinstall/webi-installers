@@ -235,6 +235,20 @@ webi_post_install() {
     webi_path_add "$(dirname "$pkg_dst_cmd")"
 }
 
+_webi_enable_exec() {
+    if [ -n "$(command -v spctl)" ]; then
+        echo "Checking permission to execute '$pkg_cmd_name' on macOS 11+"
+        set +e
+        is_allowed="$(spctl -a "$pkg_src_cmd" 2>&1 | grep valid)"
+        set -e
+        if [ -z "$is_allowed" ]; then
+            echo "Requesting permission to execute '$pkg_cmd_name' on Catalina and macOS 11+"
+            sleep 1
+            spctl --add "$pkg_src_cmd"
+        fi
+    fi
+}
+
 # a friendly message when all is well, showing the final install path in $HOME/.local
 _webi_done_message() {
     echo "Installed $(_webi_canonical_name) as $pkg_dst_cmd"
@@ -292,6 +306,7 @@ if [ -n "$(command -v pkg_get_current_version)" ]; then
     pushd "$WEBI_TMP" 2>&1 >/dev/null
         [ -n "$(command -v pkg_post_install)" ] && pkg_post_install || webi_post_install
     popd 2>&1 >/dev/null
+    _webi_enable_exec
 
     pushd "$WEBI_TMP" 2>&1 >/dev/null
         [ -n "$(command -v pkg_done_message)" ] && pkg_done_message || _webi_done_message
