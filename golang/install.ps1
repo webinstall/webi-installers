@@ -74,7 +74,7 @@ echo stringer
 & "$pkg_dst_cmd" get golang.org/x/tools/cmd/stringer 
 
 # Add to path
-& "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/opt/go/bin"
+& "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/opt/go/bin
 #& "$Env:USERPROFILE\.local\bin\pathman.exe" add "$Env:USERPROFILE\.local\opt\go\bin"
 #& "$Env:USERPROFILE\.local\bin\pathman.exe" add %USERPROFILE%\.local\opt\go\bin
 
