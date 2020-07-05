@@ -4,10 +4,19 @@ homepage: https://github.com/sharkdp/bat
 tagline: |
   bat: A cat(1) clone with syntax highlighting and Git integration.
 description: |
-  `bat` is pretty much what `cat` would be if it were developed today in the world of Markdown, git, etc.
+  `bat` is pretty much what `cat` would be if it were developed today's in the world of Markdown, git, etc.
 ---
 
-## How to alias as `cat`
+### How to run on Windows 10
+
+On Windows 10 you'll get an error like this:
+
+> execution cannot proceed run because vcruntime140.dll was not found
+
+You need to download and install the
+[Microsoft Visual C++ Redistributable](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads)
+
+### How to alias as `cat`
 
 Update your `.bashrc`, `.zshrc`, or `.profile`
 
@@ -15,7 +24,7 @@ Update your `.bashrc`, `.zshrc`, or `.profile`
 alias cat="bat --style=plain"
 ```
 
-## How to change the default behavior
+### How to change the default behavior
 
 Take a look at the config options:
 
