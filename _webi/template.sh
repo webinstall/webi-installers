@@ -242,8 +242,14 @@ _webi_enable_exec() {
         is_allowed="$(spctl -a "$pkg_src_cmd" 2>&1 | grep valid)"
         set -e
         if [ -z "$is_allowed" ]; then
-            echo "Requesting permission to execute '$pkg_cmd_name' on Catalina and macOS 11+"
-            sleep 1
+            echo ""
+            echo "##########################################"
+            echo "#  IMPORTANT: Permission Grant Required  #"
+            echo "##########################################"
+            echo ""
+            echo "Requesting permission to execute '$pkg_cmd_name' on macOS 10.14+"
+            echo ""
+            sleep 3
             spctl --add "$pkg_src_cmd"
         fi
     fi
