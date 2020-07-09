@@ -17,7 +17,7 @@ Since `webi` is just a small helper script, it's always update on each use.
 
 > `webi` is what you would have created if you automated how you install your
 > common tools yourself: Simple, direct downloads from official sources,
-> unpacked into `$HOME/.local`, added to `PATH`, symlinked for easy version
+> unpacked into `~/.local`, added to `PATH`, symlinked for easy version
 > switching, with minimal niceties like resuming downloads and 'stable' tags.
 
 - Easy to remember.
@@ -34,16 +34,10 @@ Or via `webi`, the tiny `curl | bash` shortcut command that comes with each
 install:
 
 ```bash
-webi node@latest
+webi node@lts golang@stable flutter@beta rustlang
 ```
 
-```bash
-webi golang@v1.14
-```
-
-```bash
-webi rustlang
-```
+### webi PATHs
 
 You can see exactly what PATHs have been edited:
 
@@ -54,5 +48,19 @@ pathman list
 And where:
 
 ```bash
-cat $HOME/.config/envman/PATH.env
+cat ~/.config/envman/PATH.env
+```
+
+### Uninstall `webi`
+
+`webi` uses standard paths and touches very little.
+
+```bash
+rm -rf ~/.local/opt ~/.local/bin
+```
+
+If you haven't used `pathman` for anything else, you can also remove its config:
+
+```bash
+rm -f ~/.config/envman/PATH.env
 ```
