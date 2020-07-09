@@ -3,9 +3,22 @@ title: Deno
 homepage: https://github.com/denoland/deno
 tagline: |
   Deno: A secure runtime for JavaScript and TypeScript.
-description: |
-  Deno proves that lightning does strike twice. It's the ease of use of node, the intentional tooling of Go, and built in Rust.
 ---
+
+## Updating `deno`
+
+```bash
+webi deno@stable
+```
+
+Use the `@beta` tag for pre-releases, or `@x.y.z` for a specific version.
+
+## Cheat Sheet
+
+> Deno proves that lightning does strike twice. It's the ease of use of node,
+> the intentional tooling of Go, and built in Rust.
+
+### Hello World
 
 The obligatory Hello World
 

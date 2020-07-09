@@ -3,9 +3,20 @@ title: bat
 homepage: https://github.com/sharkdp/bat
 tagline: |
   bat: A cat(1) clone with syntax highlighting and Git integration.
-description: |
-  `bat` is pretty much what `cat` would be if it were developed today's in the world of Markdown, git, etc.
 ---
+
+## Updating `bat`
+
+```bash
+webi bat@stable
+```
+
+Use the `@beta` tag for pre-releases.
+
+## Cheat Sheet
+
+> `bat` is pretty much what `cat` would be if it were developed today's in the
+> world of Markdown, git, etc.
 
 ### How to run on Windows 10
 

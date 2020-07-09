@@ -3,21 +3,39 @@ title: Serviceman
 homepage: https://git.rootprojects.org/root/serviceman
 tagline: |
   Serviceman: cross-platform service management for Linux, Mac, and Windows.
-description: |
-  Serviceman is a hassle-free wrapper around your system launcher. It works with the default system launcher to make it easy to start _user_- and _system_-level services, such as webservers, backup scripts, network and system tools, etc.
-
-  Supports
-    - `launchctl` (macOS)
-    - `systemctl` (Linux)
-    - The Registry (Windows)
 ---
+
+## Updating `serviceman`
+
+```bash
+webi serviceman@stable
+```
+
+## Cheat Sheet
+
+> Serviceman is a hassle-free wrapper around your system launcher. It works with
+> the default system launcher to make it easy to start _user_- and
+> _system_-level services, such as webservers, backup scripts, network and
+> system tools, etc.
+
+Supports
+
+- `launchctl` (macOS)
+- `systemctl` (Linux)
+- The Registry (Windows)
 
 Serviceman can run an app in just about any programming language very simply.
 
 If you'd like to learn what `serviceman` does without actually making changes,
 add the `--dryrun` option.
 
-### Node.js
+### Example: Bash
+
+```bash
+sudo env PATH="$PATH" serviceman add bash ./backup.sh /mnt/data
+```
+
+### Example: Node.js
 
 **Development Server**
 
@@ -39,7 +57,7 @@ sudo env PATH="$PATH" \
     npm start
 ```
 
-### Golang
+### Example: Golang
 
 ```bash
 pushd ./my-go-package/
@@ -56,12 +74,6 @@ go build -mod=vendor cmd/my-service
 sudo env PATH="$PATH" \
     serviceman add --cap-net-bind --system \
     ./my-service --port 80
-```
-
-### And even bash!
-
-```bash
-sudo env PATH="$PATH" serviceman add bash ./backup.sh /mnt/data
 ```
 
 ### How to see all services

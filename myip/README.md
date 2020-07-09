@@ -3,12 +3,20 @@ title: My IP
 homepage: https://webinstall.dev/myip
 tagline: |
   My IP answers the question "what's my IP address?"
-description: |
-  `myip` will contact ipify.org to tell you your IP addresses:
-
-    1. `api.ipify.org` for your IPv4 or A address
-    2. `api6.ipify.org` for your IPv6 or AAAA address
 ---
+
+## Updating `myip`
+
+```bash
+webi myip
+```
+
+## Cheat Sheet
+
+`myip` will contact ipify.org to tell you your IP addresses:
+
+1. `api.ipify.org` for your IPv4 or A address
+2. `api6.ipify.org` for your IPv6 or AAAA address
 
 Example output:
 

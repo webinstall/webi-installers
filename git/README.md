@@ -3,11 +3,19 @@ title: Git
 homepage: https://git-scm.com
 tagline: |
   git: --fast-version-control
-description: |
-  > Git is a fast, scalable, distributed revision control system with an
-  > unusually rich command set that provides both high-level operations and full
-  > access to internals.
 ---
+
+## Updating `git`
+
+```bash
+webi git@stable
+```
+
+## Cheat Sheet
+
+> Git is a fast, scalable, distributed revision control system with an unusually
+> rich command set that provides both high-level operations and full access to
+> internals.
 
 Github's [Git 'Hello World'](https://guides.github.com/activities/hello-world/)
 is a good place to get started if you're new to git.

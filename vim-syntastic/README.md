@@ -3,9 +3,19 @@ title: vim-syntastic
 homepage: https://github.com/vim-syntastic/syntastic
 tagline: |
   Syntastic runs files through external syntax checkers and displays any resulting errors to the user.
-description: |
-  vim-syntastic has been superseded by [ALE](https://github.com/dense-analysis/ale), but it lives on in my heart, my `.vim`, and my `.vimrc`.
 ---
+
+## Updating `vim-syntastic`
+
+```bash
+webi vim-syntastic
+```
+
+## Cheat Sheet
+
+`vim-syntastic` has been superseded by
+[ALE](https://github.com/dense-analysis/ale), but it lives on in my heart, my
+`.vim`, and my `.vimrc`.
 
 ### How to install manually
 

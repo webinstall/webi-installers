@@ -4,15 +4,17 @@ homepage: https://webinstall.dev/vps-addswap
 tagline: |
   VPS Add Swap: because a little RAM can go a long way.
 linux: true
-description: |
-  Creates permanent swap space that will be activated on each boot.
-
-  `vps-addswap` will
-
-    1. create a permanent swapfile `/var/swapfile`
-    2. format and activate the swapfile
-    3. add '/var/swapfile none swap sw 0 0' to `/etc/fstab`
 ---
+
+## Cheat Sheet
+
+> Creates permanent swap space that will be activated on each boot.
+
+`vps-addswap` will
+
+1. create a permanent swapfile `/var/swapfile`
+2. format and activate the swapfile
+3. add '/var/swapfile none swap sw 0 0' to `/etc/fstab`
 
 ### What is `swap`?
 

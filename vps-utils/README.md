@@ -3,9 +3,12 @@ title: VPS Utils
 homepage: https://webinstall.dev/vps-utils
 tagline: |
   VPS Utils make it easy to setup and manage a VPS
-description: |
-  VPS Utils includes shortcut commands for some common tasks, including `cap-net-bind`, 'vps-addswap', and 'vps-myip'
 ---
+
+## Cheat Sheet
+
+> VPS Utils includes shortcut commands for some common tasks, including
+> `cap-net-bind`, 'vps-addswap', and 'myip'
 
 **cap-net-bind**:
 
@@ -23,13 +26,13 @@ This is the same as running the full command:
 setcap 'cap_net_bind_service=+ep' $(readlink -f $(which node))
 ```
 
-**vps-myip**:
+**myip**:
 
 Will output externally detected IPv4 and IPv6 addresses. See
 <https://webinstall.dev/vps-myip>.
 
 ```bash
-vps-myip
+myip
 ```
 
 ```txt

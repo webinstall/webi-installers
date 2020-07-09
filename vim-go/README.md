@@ -3,11 +3,20 @@ title: vim-go
 homepage: https://github.com/fatih/vim-go
 tagline: |
   vim-go adds Go language support for Vim.
-description: |
-  `vim-go` provides integration with various official and 3rd part go tooling for linting, vetting, etc.
-
-  You'll also need `ALE`, `syntastic`, or similar.
 ---
+
+## Updating `vim-go`
+
+```bash
+webi vim-go
+```
+
+## Cheat Sheet
+
+> `vim-go` provides integration with various official and 3rd part go tooling
+> for linting, vetting, etc.
+
+You'll also need `ALE`, `syntastic`, or similar.
 
 ### How to install by hand
 

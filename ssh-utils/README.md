@@ -3,9 +3,12 @@ title: SSH Utils
 homepage: https://webinstall.dev/ssh-utils
 tagline: |
   SSH Utils: Because --help takes to long.
-description: |
-  SSH Utils includes shortcut commands for some common tasks, including `ssh-pubkey`, `ssh-setpass`, and `ssh-adduser`
 ---
+
+## Cheat Sheet
+
+> SSH Utils includes shortcut commands for some common tasks, including
+> `ssh-pubkey`, `ssh-setpass`, and `ssh-adduser`
 
 **ssh-pubkey**:
 

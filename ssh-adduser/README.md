@@ -4,17 +4,21 @@ homepage: https://webinstall.dev/ssh-adduser
 tagline: |
   SSH adduser: Because friends don't let friends login or run stuff as root
 linux: true
-description: |
-  Many modern web programs (`npm` and `postgres`, for example) will not function correctly if run as root.
-
-  `ssh-adduser` will
-
-    1. add the user `app`
-    2. set a random, 32-character password (as a failsafe)
-    3. copy the `root` user's **`~/.ssh/authorized_keys`** (so the same users can still login)
-    4. give the `app` user `sudo` (admin) privileges
-    5. allow `app` to `sudo` without a password
 ---
+
+## Cheat Sheet
+
+> Many modern web programs (`npm` and `postgres`, for example) will not function
+> correctly if run as root.
+
+`ssh-adduser` will
+
+1. add the user `app`
+2. set a random, 32-character password (as a failsafe)
+3. copy the `root` user's **`~/.ssh/authorized_keys`** (so the same users can
+   still login)
+4. give the `app` user `sudo` (admin) privileges
+5. allow `app` to `sudo` without a password
 
 How to create a new user named 'app':
 

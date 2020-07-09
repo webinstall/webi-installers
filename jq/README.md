@@ -3,9 +3,21 @@ title: jq
 homepage: https://stedolan.github.io/jq/
 tagline: |
   jq is a lightweight and flexible command-line JSON processor.
-description: |
-  `jq` is like `sed` for JSON data - you can use it to slice and filter and map and transform structured data with the same ease that `sed`, `awk`, `grep` and friends let you play with text.
 ---
+
+## Updating `jq`
+
+```bash
+webi jq@stable
+```
+
+Use the `@beta` tag for pre-releases.
+
+## Cheat Sheet
+
+> `jq` is like `sed` for JSON data - you can use it to slice and filter and map
+> and transform structured data with the same ease that `sed`, `awk`, `grep` and
+> friends let you play with text.
 
 All jq selectors begin with `.` - don't forget that!
 
