@@ -10,13 +10,11 @@ function getOs(ua) {
     return 'android';
   } else if (/iOS|iPhone|Macintosh|Darwin|OS\s*X|macOS|mac/i.test(ua)) {
     return 'macos';
-  } else if (/Microsoft\s*Linux/i.test(ua)) {
-    // It's the year of the Linux Desktop!
-    // WSL / WSL2
-    // (checking linux twice because I'm not sure about cygwin / msysgit)
-    // See also http://www.mslinux.org/
-    return 'linux';
   } else if (/^ms$|Microsoft|Windows|win32|win|PowerShell/i.test(ua)) {
+    // It's the year of the Linux Desktop!
+    // (TODO: what about cygwin / msysgit?)
+    // See also http://www.mslinux.org/
+    // 'linux' must be tested before 'Microsoft' because WSL
     // 'win' must be tested after 'darwin'
     return 'windows';
   } else if (/Linux|curl|wget/i.test(ua)) {
