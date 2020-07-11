@@ -38,3 +38,20 @@ brew cask install docker
 /usr/local/Cellar/
 /opt/homebrew-cask/Caskroom/
 ```
+
+### `brew` screwed up everything, now what?
+
+Sometimes you're compelled against all reason to do something really stupid,
+like `brew upgrade` or `brew update python`, and your whole system gets borked.
+
+For _Mojave_, _Catalina_, _Big Sur_, and above:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)"
+```
+
+For _High Sierra_ and below:
+
+```bash
+/bin/bash -c ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
+```
