@@ -27,7 +27,7 @@ Installing node via webi will:
 - update your `PATH` in `$HOME/.config/envman/PATH.env`
 - run `npm config set scripts-prepend-node-path=true`
   - (prevents conflicts with other installed node versions)
-- absolutely leave system file permisions alone
+- absolutely leave system file permissions alone
   - (no dreaded `sudo npm` permission errors)
 
 ### Hello World
