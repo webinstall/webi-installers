@@ -5,7 +5,7 @@ tagline: |
   Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
 ---
 
-## Updating `node`
+## Updating and Switch versions
 
 ```bash
 webi node@stable
@@ -16,8 +16,8 @@ Use `@lts` for long-term support and the `@beta` tag for pre-releases, or
 
 ## Cheat Sheet
 
-Node is great for simple, snappy HTTP(S) servers, and for stitching APIs
-together with minimal fuss or muss.
+> Node is great for simple, snappy HTTP(S) servers, and for stitching APIs
+> together with minimal fuss or muss.
 
 Installing node via webi will:
 
@@ -55,11 +55,26 @@ http.createServer(app).listen(8080, function () {
 node server.js
 ```
 
+### Generate a Secure Random Key
+
+This generates a hex-encoded 128-bit random key.
+
+```bash
+node -p 'crypto.randomBytes(16).toString("hex")'
+```
+
+This generates a url-safe base64 256-bit random key.
+
+```bash
+node -p 'crypto.randomBytes(32).toString("base64")
+            .replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "")'
+```
+
 ### An Express App
 
 ```bash
 mkdir my-server
-pushd my-server
+pushd my-server/
 npm init
 npm install --save express
 ```
