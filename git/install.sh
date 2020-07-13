@@ -1,8 +1,18 @@
 #!/bin/bash
-{
-    set -e
-    set -u
+set -e
+set -u
 
-    echo "This package doesn't work for Mac or Linux yet - only Windows 10"
-    exit 1
+{
+
+    if [ -z "$(command -v git)" ]; then
+        >&2 echo "Error: to install 'git' on Mac or Linux use the built-in package manager."
+        >&2 echo "       for example: apt install -y git"
+        >&2 echo "       for example: xcode-select --install"
+        # sudo xcodebuild -license accept
+
+        exit 1
+    else
+        echo "'git' already installed"
+    fi
+
 }
