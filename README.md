@@ -1,6 +1,11 @@
 # @webinstall/packages
 
-> WebInstall is how developers install their tools
+> `webi` is how developers install their tools
+
+- no `sudo`
+- no package manager
+- no messing with system permissions
+- in short: no nonsense
 
 ```bash
 curl https://webinstall.dev/webi | bash
@@ -9,30 +14,11 @@ curl https://webinstall.dev/webi | bash
 This repository contains the primary and community-submitted packages for
 [webinstall.dev](https://webinstall.dev).
 
-# Installer Guidelines
-
-- Should install to `$HOME/.local/opt/<package>-<version>` or `$HOME/.local/bin`
-- Should not need `sudo` (except perhaps for a one-time `setcap`, etc)
-- Examples:
-  - Full Packages:
-    - Node.js: <https://github.com/webinstall/packages/tree/master/node>
-    - Golang: <https://github.com/webinstall/packages/tree/master/golang>
-    - PostgreSQL: <https://github.com/webinstall/packages/tree/master/postgres>
-  - Single-Binary Installers:
-    - Caddy: <https://github.com/webinstall/packages/tree/master/caddy>
-    - Ripgrep: <https://github.com/webinstall/packages/tree/master/ripgrep>
-    - Gitea: <https://github.com/webinstall/packages/tree/master/gitea>
-  - Convenience Scripts:
-    - Prettier: <https://github.com/webinstall/packages/tree/master/prettier>
-    - Rust-lang: <https://github.com/webinstall/packages/tree/master/rustlang>
-    - Rust-lang:
-      <https://github.com/webinstall/packages/tree/master/vim-sensible>
-
-# How it works
+# How `webi` works
 
 - Contacts official release APIs for download URLs
 - Selects the appropriate package version and archive format
-- Installs to `$HOME/.local/`
+- Installs to `$HOME/.local/opt` or `$HOME/.local/bin`, as appropriate.
 - Updates `PATH` via `$HOME/.config/envman/PATH.env`
 - Symlinks or copies current selected version
 
@@ -57,6 +43,25 @@ More technically:
    - `bash bootstrap-<pkg>.sh` =>
      `https://webinstall.dev/api/installers/<pkg>@<ver>.sh?formats=zip,tar`
    - `bash install-<pkg>.sh` => download, unpack, move, link, update PATH
+
+# Philosophy (for package authors / maintainers publishing with webi)
+
+- Should install to `$HOME/.local/opt/<package>-<version>` or `$HOME/.local/bin`
+- Should not need `sudo` (except perhaps for a one-time `setcap`, etc)
+- Examples:
+  - Full Packages:
+    - Node.js: <https://github.com/webinstall/packages/tree/master/node>
+    - Golang: <https://github.com/webinstall/packages/tree/master/golang>
+    - PostgreSQL: <https://github.com/webinstall/packages/tree/master/postgres>
+  - Single-Binary Installers:
+    - Caddy: <https://github.com/webinstall/packages/tree/master/caddy>
+    - Ripgrep: <https://github.com/webinstall/packages/tree/master/ripgrep>
+    - Gitea: <https://github.com/webinstall/packages/tree/master/gitea>
+  - Convenience Scripts:
+    - Prettier: <https://github.com/webinstall/packages/tree/master/prettier>
+    - Rust-lang: <https://github.com/webinstall/packages/tree/master/rustlang>
+    - vim-sensible:
+      <https://github.com/webinstall/packages/tree/master/vim-sensible>
 
 ## Creating an Installer
 
