@@ -18,6 +18,12 @@ brew upgrade
 
 > Homebrew installs the stuff you need that Apple (or your Linux system) didn’t.
 
+**Important**: This will install `brew` to `~/.local/opt/brew/`, NOT
+`/usr/local`. The ability to install brew, without `sudo`, in your HOME
+directory is a relatively new feature. If you do encounter a `brew install`
+issue, [report it to brew](https://github.com/Homebrew/homebrew-core/issues).
+way, report it to brew.
+
 ### How to install CLI packages
 
 ```bash
@@ -35,6 +41,12 @@ brew cask install docker
 ### Where are things installed?
 
 ```bash
+~/.local/opt/brew/
+```
+
+For reference, traditional `brew` installs here:
+
+```bash
 /usr/local/Cellar/
 /opt/homebrew-cask/Caskroom/
 ```
@@ -43,6 +55,15 @@ brew cask install docker
 
 Sometimes you're compelled against all reason to do something really stupid,
 like `brew upgrade` or `brew update python`, and your whole system gets borked.
+
+If you need to _uninstall_ and _reinstall_ local brew:
+
+```bash
+rm -rf ~/.local/opt/brew
+webi brew
+```
+
+If you need to _uninstall_ global brew:
 
 For _Mojave_, _Catalina_, _Big Sur_, and above:
 
