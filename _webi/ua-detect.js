@@ -1,5 +1,27 @@
 'use strict';
 
+function getRequest(req) {
+  var ua = req.headers['user-agent'] || '';
+  var os = req.query.os;
+  var arch = req.query.arch;
+  var scheme = req.socket.encrypted ? 'https' : 'http';
+  var host = req.headers.host || 'beta.webinstall.dev';
+  var url = scheme + '://' + host + '/api/debug';
+  if (os && arch) {
+    ua = os + ' ' + arch;
+  } else if (os || arch) {
+    ua = os || arch;
+  }
+
+  return {
+    unix: 'curl -fsSA "$(uname -a)" ' + url,
+    windows: 'curl.exe -fsSA "MS $Env:PROCESSOR_ARCHITECTURE" ' + url,
+    ua: ua,
+    os: uaDetect.os(ua),
+    arch: uaDetect.arch(ua)
+  };
+}
+
 function getOs(ua) {
   if ('-' === ua) {
     return '-';
@@ -56,5 +78,7 @@ function getArch(ua) {
   }
 }
 
-module.exports.os = getOs;
-module.exports.arch = getArch;
+var uaDetect = module.exports;
+uaDetect.os = getOs;
+uaDetect.arch = getArch;
+uaDetect.request = getRequest;
