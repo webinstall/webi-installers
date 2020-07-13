@@ -268,6 +268,12 @@ _webi_done_message() {
 
 WEBI_SINGLE=
 
+echo ""
+echo "Thanks for using webi to install '$PKG_NAME' on '$WEBI_OS/$WEBI_ARCH'."
+echo "Have a problem? Experience a bug? Please let us know:"
+echo "        https://github.com/webinstall/packages/issues"
+echo ""
+
 {
 
 {{ installer }}
