@@ -1,0 +1,28 @@
+{
+  "name": "@root/webi",
+  "version": "0.5.0",
+  "description": "Effortlessly install developer tools with easy-to-remember URLs",
+  "main": "index.js",
+  "homepage": "https://webinstall.dev",
+  "files": [
+    "scripts/"
+  ],
+  "scripts": {
+    "postinstall": "node scripts/webi.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webinstall/packages"
+  },
+  "keywords": [
+    "webi",
+    "webinstall",
+    "install"
+  ],
+  "author": "AJ ONeal <coolaj86@gmail.com> (https://coolaj86.com/)",
+  "license": "MPL-2.0",
+  "dependencies": {
+    "@root/request": "^1.6.1"
+  }
+}
