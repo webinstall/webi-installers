@@ -36,6 +36,12 @@ www.example.com {
 }
 
 example.com {
+    # log to stdout, which is captured by journalctl
+    log {
+        output stdout
+        format console
+    }
+
     # turn on standard streaming compression
     encode gzip zstd
 
