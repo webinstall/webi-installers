@@ -22,7 +22,7 @@
         # $HOME/.local/xbin
         mkdir -p "$pkg_src_bin"
 
-        # mv ./bat-*/bat "$HOME/.local/xbin/bat-v0.15.4"
+        # mv ./bat-*/bat "$HOME/.local/opt/bat-v0.15.4/bin/bat"
         mv ./bat-*/bat "$pkg_src_cmd"
 
         # chmod a+x "$HOME/.local/xbin/rg-v11.1.0"

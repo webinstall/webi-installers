@@ -22,7 +22,7 @@
         # $HOME/.local/
         mkdir -p "$pkg_src_bin"
 
-        # mv ./hexyl-*/hexyl "$HOME/.local/opt/hexyl-v0.8.0/bin/hexyl-v0.8.0"
+        # mv ./hexyl-*/hexyl "$HOME/.local/opt/hexyl-v0.8.0/bin/hexyl"
         mv ./hexyl-*/hexyl "$pkg_src_cmd"
 
         # chmod a+x "$HOME/.local/xbin/rg-v11.1.0"
