@@ -294,7 +294,8 @@ if [ -n "$(command -v pkg_get_current_version)" ]; then
         pkg_dst_cmd="${pkg_dst_cmd:-$HOME/.local/bin/$pkg_cmd_name}"
         pkg_dst="$pkg_dst_cmd" # "$(dirname "$(dirname $pkg_dst_cmd)")"
 
-        pkg_src_cmd="${pkg_src_cmd:-$HOME/.local/xbin/$pkg_cmd_name-v$WEBI_VERSION}"
+        #pkg_src_cmd="${pkg_src_cmd:-$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION}/bin/$pkg_cmd_name-v$WEBI_VERSION}"
+        pkg_src_cmd="${pkg_src_cmd:-$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION}/bin/$pkg_cmd_name}"
         pkg_src="$pkg_src_cmd" # "$(dirname "$(dirname $pkg_src_cmd)")"
     else
         pkg_dst="${pkg_dst:-$HOME/.local/opt/$pkg_cmd_name}"
