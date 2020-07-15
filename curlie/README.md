@@ -56,5 +56,5 @@ a remote hostname and TLS SNI (or when you want to break things 😈).
 
 ```bash
 curlie https://foo.example.com:8443 "Host: foo.example.com" \
-    --resolve foo.example.com:8443:localhost
+    --resolve foo.example.com:8443:127.0.0.1
 ```
