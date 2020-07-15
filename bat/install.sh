@@ -19,13 +19,13 @@
     }
 
     pkg_install() {
-        # $HOME/.local/xbin
+        # ~/.local/xbin
         mkdir -p "$pkg_src_bin"
 
-        # mv ./bat-*/bat "$HOME/.local/opt/bat-v0.15.4/bin/bat"
+        # mv ./bat-*/bat ~/.local/opt/bat-v0.15.4/bin/bat
         mv ./bat-*/bat "$pkg_src_cmd"
 
-        # chmod a+x "$HOME/.local/xbin/rg-v11.1.0"
+        # chmod a+x ~/.local/opt/bat-v0.15.4/bin/bat
         chmod a+x "$pkg_src_cmd"
     }
 }

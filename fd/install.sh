@@ -25,7 +25,7 @@
         # mv ./fd-*/fd "$HOME/.local/opt/fd-v8.1.1/bin/fd"
         mv ./fd-*/fd "$pkg_src_cmd"
 
-        # chmod a+x "$HOME/.local/xbin/rg-v11.1.0"
+        # chmod a+x "$HOME/.local/opt/fd-v8.1.1/bin/fd"
         chmod a+x "$pkg_src_cmd"
     }
 }

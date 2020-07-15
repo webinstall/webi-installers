@@ -14,13 +14,13 @@
     }
 
     pkg_install() {
-        # $HOME/.local/xbin
+        # ~/.local/opt/rg-v11.1.0/bin
         mkdir -p "$pkg_src_bin"
 
-        # mv ./ripgrep-*/rg "$HOME/.local/xbin/rg-v11.1.0"
+        # mv ./ripgrep-*/rg ~/.local/opt/rg-v11.1.0/bin/rg
         mv ./ripgrep-*/rg "$pkg_src_cmd"
 
-        # chmod a+x "$HOME/.local/xbin/rg-v11.1.0"
+        # chmod a+x ~/.local/opt/rg-v11.1.0/bin/rg
         chmod a+x "$pkg_src_cmd"
     }
 }
