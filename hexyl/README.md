@@ -36,3 +36,13 @@ For options, such as `--length`, `--skip`, and `--offset`, see:
 ```bash
 hexyl --help
 ```
+
+### Convert hex to binary
+
+If you have some hex (say from some server logs) that you'd like to encode back
+to binary to view in hexyl, you can convert it with `xxd`:
+
+```bash
+echo '48656c6c6f210a' > foo.hex
+xxd -r -p foo.hex foo.bin
+```
