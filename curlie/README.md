@@ -25,19 +25,19 @@ Use the `@beta` tag for pre-releases.
 
 **JSON** (`=`) is the default encoding for `key=value` pairs.
 
-## Simple GET
+### Simple GET
 
 ```bash
 curlie -v example.com
 ```
 
-## POST simple JSON with headers
+### POST simple JSON with headers
 
 ```bash
 curlie -v POST httpbin.org/status/201 "Authorization: Bearer xxxx" "name=John Doe"
 ```
 
-## POST large JSON
+### POST large JSON
 
 ```bash
 curlie -v POST httpbin.org/status/201 "Authorization: Bearer xxxx" -d '
@@ -47,4 +47,14 @@ curlie -v POST httpbin.org/status/201 "Authorization: Bearer xxxx" -d '
     }
 ]
 '
+```
+
+### Spoof Host and SNI
+
+The `--resolve` option is for when you need to test a local service as if it had
+a remote hostname and TLS SNI (or when you want to break things 😈).
+
+```bash
+curlie https://foo.example.com:8443 "Host: foo.example.com" \
+    --resolve foo.example.com:8443:localhost
 ```
