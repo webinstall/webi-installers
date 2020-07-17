@@ -5,7 +5,7 @@
     set -u
 
     my_bin="$1"
-    if [ -z "$(which $my_bin)"]; then
+    if [ -z "$(which $my_bin)" ]; then
         echo "'$my_bin' not found"
         exit 1
     fi
