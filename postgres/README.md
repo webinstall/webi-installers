@@ -35,7 +35,7 @@ rm /tmp/pwfile
 ### Start the postgres server
 
 ```bash
-postgres -D $HOME/.local/share/var/postgres -p 5432
+postgres -D $HOME/.local/share/postgres/var -p 5432
 ```
 
 ### Connect with the psql client
