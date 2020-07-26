@@ -46,7 +46,7 @@ echo '{ "name": "foo" }' | jq -r '.name'
 ```
 
 ```txt
-"foo"
+foo
 ```
 
 ### How to select a whole object
