@@ -35,6 +35,12 @@ Update your `.bashrc`, `.zshrc`, or `.profile`
 alias cat="bat --style=plain"
 ```
 
+For situations in which you must use `cat` exactly, remember that you can escape the alias:
+
+```bash
+\cat foo
+```
+
 ### How to change the default behavior
 
 Take a look at the config options:
@@ -56,10 +62,4 @@ Edit the config file:
 ```txt
 # no numbers or headers, just highlighting and such
 --style="plain"
-```
-
-For situations in which you must use `cat` exactly, remember that you can escape the alias:
-
-```bash
-\cat foo
 ```
