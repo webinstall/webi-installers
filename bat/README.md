@@ -57,3 +57,9 @@ Edit the config file:
 # no numbers or headers, just highlighting and such
 --style="plain"
 ```
+
+For situations in which you must use `cat` exactly, remember that you can escape the alias:
+
+```bash
+\cat foo
+```
