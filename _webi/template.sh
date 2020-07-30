@@ -40,35 +40,15 @@ export WEBI_HOST
 WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-${WEBI_PKG:-}.XXXXXXXX)"}
 export _webi_tmp="${_webi_tmp:-"$HOME/.local/opt/webi-tmp.d"}"
 
+WEBI_PREFIX=${WEBI_PREFIX:-"$HOME/.local"}
+
 mkdir -p "$HOME/Downloads"
-mkdir -p "$HOME/.local/bin"
-mkdir -p "$HOME/.local/opt"
+mkdir -p "$WEBI_PREFIX/bin"
+mkdir -p "$WEBI_PREFIX/opt"
 
 ##
 ## Detect http client
 ##
-set +e
-export WEBI_CURL="$(command -v curl)"
-export WEBI_WGET="$(command -v wget)"
-set -e
-
-
-# get the special formatted version (i.e. "go is go1.14" while node is "node v12.10.8")
-my_versioned_name=""
-_webi_canonical_name() {
-    if [ -n "$my_versioned_name" ]; then
-        echo "$my_versioned_name"
-        return 0
-    fi
-
-    if [ -n "$(command -v pkg_format_cmd_version)" ]; then
-        my_versioned_name="$(pkg_format_cmd_version "$WEBI_VERSION")"
-    else
-        my_versioned_name="'$pkg_cmd_name' v$WEBI_VERSION"
-    fi
-
-    echo "$my_versioned_name"
-}
 
 # update symlinks according to $HOME/.local/opt and $HOME/.local/bin install paths.
 webi_link() {
@@ -77,15 +57,11 @@ webi_link() {
         return 0
     fi
 
-    if [ -n "$WEBI_SINGLE" ] || [ "single" == "${1:-}" ]; then
-        rm -rf "$pkg_dst_cmd"
-        ln -s "$pkg_src_cmd" "$pkg_dst_cmd"
-    else
-        # 'pkg_dst' will default to $HOME/.local/opt/<pkg>
-        # 'pkg_src' will be the installed version, such as to $HOME/.local/opt/<pkg>-<version>
-        rm -rf "$pkg_dst"
-        ln -s "$pkg_src" "$pkg_dst"
-    fi
+    # 'pkg_dst' should be $HOME/.local/opt/<pkg> or $HOME/.local/bin/<cmd>
+    rm -rf "$pkg_dst"
+
+    # 'pkg_src' will be the installed version, such as to $HOME/.local/opt/<pkg>-v<version>
+    ln -s "$pkg_src" "$pkg_dst"
 }
 
 # detect if this program is already installed or if an installed version may cause conflict
@@ -95,28 +71,28 @@ webi_check() {
     my_path="$PATH"
     export PATH="$(dirname "$pkg_dst_cmd"):$PATH"
     my_current_cmd="$(command -v "$pkg_cmd_name")"
-    set -e
-    if [ -n "$my_current_cmd" ]; then
-        pkg_current_version="$(pkg_get_current_version 2>/dev/null | head -n 1)"
-        # remove trailing '.0's for golang's sake
-        my_current_version="$(echo $pkg_current_version | sed 's:\.0::g')"
-        my_src_version="$(echo $WEBI_VERSION | sed 's:\.0::g')"
-        my_canonical_name="$(_webi_canonical_name)"
-        if [ "$my_src_version" == "$my_current_version" ]; then
-            echo "$my_canonical_name already installed at $my_current_cmd"
-            exit 0
-        else
-            if [ "$my_current_cmd" != "$pkg_dst_cmd" ]; then
-                >&2 echo "WARN: possible conflict between $my_canonical_name and $pkg_current_version at $my_current_cmd"
-            fi
-            if [ -x "$pkg_src_cmd" ]; then
-                webi_link
-                echo "switched to $my_canonical_name at $pkg_src"
-                exit 0
-            fi
-          fi
-    fi
     export PATH="$my_path"
+    set -e
+
+    my_canonical_name="'$pkg_cmd_name' v$WEBI_VERSION"
+    if [ -n "$my_current_cmd" ] &&  "$my_current_cmd" != "$pkg_dst_cmd" ]; then
+        >&2 echo "WARN: possible conflict between $my_canonical_name and $pkg_current_version at $my_current_cmd"
+        echo ""
+    fi
+
+    if [ -f "$pkg_dst_cmd" ] \
+        && [ -x "$pkg_src_cmd" ] \
+        && [ "$(readlink "$pkg_dst_cmd")" == "$pkg_src_cmd" ]
+    then
+        echo "$my_canonical_name already installed at $my_current_cmd"
+        exit 0
+    fi
+
+    if [ -x "$pkg_src_cmd" ]; then
+        webi_link
+        echo "switched to $my_canonical_name at $pkg_src"
+        exit 0
+    fi
 }
 
 # detect if file is downloaded, and how to download it
@@ -152,7 +128,10 @@ webi_download() {
 
     # It's only 2020, we can't expect to have reliable CLI tools
     # to tell us the size of a file as part of a base system...
-    if [ -n "$WEBI_WGET" ]; then
+    set +e
+    my_wget="$(command -v wget)"
+    set -e
+    if [ -n "$my_wget" ]; then
         # wget has resumable downloads
         # TODO wget -c --content-disposition "$my_url"
         set +e
@@ -199,6 +178,7 @@ webi_extract() {
 # use 'pathman' to update $HOME/.config/envman/PATH.env
 webi_path_add() {
     # make sure that we don't recursively install pathman with webi
+    # (we don't use WEBI_PREFIX here because this is never a sub-install)
     my_path="$PATH"
     export PATH="$HOME/.local/bin:$PATH"
 
@@ -221,46 +201,22 @@ webi_pre_install() {
     webi_extract
 }
 
-# move commands from the extracted archive directory to $HOME/.local/opt or $HOME/.local/bin
-webi_install() {
-    if [ -n "$WEBI_SINGLE" ] || [ "single" == "${1:-}" ]; then
-        mkdir -p "$(dirname $pkg_src_cmd)"
-        mv ./"$pkg_cmd_name"* "$pkg_src_cmd"
-        chmod a+x "$pkg_src_cmd"
-    else
-        rm -rf "$pkg_src"
-        mv ./"$pkg_cmd_name"* "$pkg_src"
-    fi
-}
-
 # run post-install functions - just updating PATH by default
 webi_post_install() {
     webi_path_add "$(dirname "$pkg_dst_cmd")"
 }
 
 _webi_enable_exec() {
-    if [ -n "$(command -v spctl)" ]; then
-        echo "Checking permission to execute '$pkg_cmd_name' on macOS 11+"
-        set +e
-        is_allowed="$(spctl -a "$pkg_src_cmd" 2>&1 | grep valid)"
-        set -e
-        if [ -z "$is_allowed" ]; then
-            echo ""
-            echo "##########################################"
-            echo "#  IMPORTANT: Permission Grant Required  #"
-            echo "##########################################"
-            echo ""
-            echo "Requesting permission to execute '$pkg_cmd_name' on macOS 10.14+"
-            echo ""
-            sleep 3
-            spctl --add "$pkg_src_cmd"
-        fi
+    # See also https://coolaj86.com/articles/getting-around-gatekeep-on-macos10-14/
+    if [ -n "$(command -v spctl)" ] && [ -n "$(command -v xattr)" ] ; then
+        xattr -r -d com.apple.quarantine "$pkg_src"
+        return 0
     fi
 }
 
 # a friendly message when all is well, showing the final install path in $HOME/.local
 _webi_done_message() {
-    echo "Installed $(_webi_canonical_name) as $pkg_dst_cmd"
+    echo "Installed $pkg_cmd_name v$WEBI_VERSION as $pkg_dst_cmd"
 }
 
 ##
@@ -268,8 +224,6 @@ _webi_done_message() {
 ## BEGIN custom override functions from <package>/install.sh
 ##
 ##
-
-WEBI_SINGLE=
 
 echo ""
 echo "Thanks for using webi to install '$PKG_NAME' on '$WEBI_OS/$WEBI_ARCH'."
@@ -290,23 +244,11 @@ echo ""
 ##
 
 # run everything with defaults or overrides as needed
-if [ -n "$(command -v pkg_get_current_version)" ]; then
+if [ -n "$(command -v pkg_install)" ]; then
     pkg_cmd_name="${pkg_cmd_name:-$PKG_NAME}"
 
-    if [ -n "$WEBI_SINGLE" ]; then
-        pkg_dst_cmd="${pkg_dst_cmd:-$HOME/.local/bin/$pkg_cmd_name}"
-        pkg_dst="$pkg_dst_cmd" # "$(dirname "$(dirname $pkg_dst_cmd)")"
+    pkg_src_dir="${pkg_src_dir:-"$pkg_src"}"
 
-        #pkg_src_cmd="${pkg_src_cmd:-$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION/bin/$pkg_cmd_name-v$WEBI_VERSION}"
-        pkg_src_cmd="${pkg_src_cmd:-$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION/bin/$pkg_cmd_name}"
-        pkg_src="$pkg_src_cmd" # "$(dirname "$(dirname $pkg_src_cmd)")"
-    else
-        pkg_dst="${pkg_dst:-$HOME/.local/opt/$pkg_cmd_name}"
-        pkg_dst_cmd="${pkg_dst_cmd:-$pkg_dst/bin/$pkg_cmd_name}"
-
-        pkg_src="${pkg_src:-$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION}"
-        pkg_src_cmd="${pkg_src_cmd:-$pkg_src/bin/$pkg_cmd_name}"
-    fi
     pkg_src_bin="$(dirname "$pkg_src_cmd")"
     pkg_dst_bin="$(dirname "$pkg_dst_cmd")"
 
@@ -314,7 +256,10 @@ if [ -n "$(command -v pkg_get_current_version)" ]; then
 
     pushd "$WEBI_TMP" 2>&1 >/dev/null
         echo "Installing to $pkg_src_cmd"
-        [ -n "$(command -v pkg_install)" ] && pkg_install || webi_install
+        rm -rf "$pkg_src_dir"
+        pkg_install
+        chmod a+x "$pkg_src"
+        chmod a+x "$pkg_src_cmd"
     popd 2>&1 >/dev/null
 
     webi_link
