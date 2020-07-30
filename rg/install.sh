@@ -6,21 +6,33 @@
     # Install ripgrep #
     ###################
 
-    new_rg="${HOME}/.local/bin/rg"
-    WEBI_SINGLE=true
+    # Every package should define these 6 variables
+    pkg_cmd_name="rg"
 
-    pkg_get_current_version() {
-      echo $(rg --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2)
+    pkg_dst_cmd="$HOME/.local/bin/rg"
+    pkg_dst="$pkg_dst_cmd"
+
+    pkg_src_cmd="$HOME/.local/opt/rg-v$WEBI_VERSION/bin/rg"
+    pkg_src_dir="$HOME/.local/opt/rg-v$WEBI_VERSION"
+    pkg_src="$pkg_src_cmd"
+
+    # pkg_install must be defined by every package
+    pkg_install() {
+        # ~/.local/opt/rg-v12.1.1/bin
+        mkdir -p "$(dirname $pkg_src_cmd)"
+
+        # mv ./ripgrep-*/rg ~/.local/opt/rg-v12.1.1/bin/rg
+        mv ./ripgrep-*/rg "$pkg_src_cmd"
     }
 
-    pkg_install() {
-        # ~/.local/opt/rg-v11.1.0/bin
-        mkdir -p "$pkg_src_bin"
-
-        # mv ./ripgrep-*/rg ~/.local/opt/rg-v11.1.0/bin/rg
-        mv ./ripgrep-*/rg "$pkg_src_cmd"
-
-        # chmod a+x ~/.local/opt/rg-v11.1.0/bin/rg
-        chmod a+x "$pkg_src_cmd"
+    # pkg_get_current_version is recommended, but (soon) not required
+    pkg_get_current_version() {
+        # 'rg --version' has output in this format:
+        #       ripgrep 12.1.1 (rev 7cb211378a)
+        #       -SIMD -AVX (compiled)
+        #       +SIMD -AVX (runtime)
+        # This trims it down to just the version number:
+        #       12.1.1
+      echo $(rg --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2)
     }
 }
