@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+_webi_run() {
 
 set -e
 set -u
@@ -75,7 +75,7 @@ webi_check() {
     set -e
 
     my_canonical_name="'$pkg_cmd_name' v$WEBI_VERSION"
-    if [ -n "$my_current_cmd" ] &&  "$my_current_cmd" != "$pkg_dst_cmd" ]; then
+    if [ -n "$my_current_cmd" ] && [ "$my_current_cmd" != "$pkg_dst_cmd" ]; then
         >&2 echo "WARN: possible conflict between $my_canonical_name and $pkg_current_version at $my_current_cmd"
         echo ""
     fi
@@ -290,3 +290,5 @@ rm -rf "$WEBI_TMP"
 # See? No magic. Just downloading and moving files.
 
 }
+
+_webi_run
