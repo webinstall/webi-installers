@@ -147,7 +147,8 @@ webi_download() {
         return 0
     fi
 
-    echo "Downloading $PKG_NAME to $my_dl"
+    echo "Downloading $PKG_NAME from"
+    echo "$my_url"
 
     # It's only 2020, we can't expect to have reliable CLI tools
     # to tell us the size of a file as part of a base system...
@@ -168,6 +169,8 @@ webi_download() {
     fi
 
     mv "$my_dl.part" "$my_dl"
+
+    echo "Saved as $my_dl"
 }
 
 # detect which archives can be used
