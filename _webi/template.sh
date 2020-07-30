@@ -147,8 +147,9 @@ webi_download() {
         return 0
     fi
 
-    echo "Downloading $PKG_NAME from:" #Show the package and the source URL  
-    echo "$WEBI_PKG_URL"
+    echo "Downloading $PKG_NAME from"
+    echo "$my_url"
+
     # It's only 2020, we can't expect to have reliable CLI tools
     # to tell us the size of a file as part of a base system...
     if [ -n "$WEBI_WGET" ]; then
@@ -166,9 +167,10 @@ webi_download() {
         # TODO curl -fsSL --remote-name --remote-header-name --write-out "$my_url"
         curl -fSL -H "User-Agent: curl $WEBI_UA" "$my_url" -o "$my_dl.part"
     fi
-    echo ""
-    echo "Saved as $my_dl" #Show the path of the package
     mv "$my_dl.part" "$my_dl"
+
+    echo ""
+    echo "Saved as $my_dl"
 }
 
 # detect which archives can be used
