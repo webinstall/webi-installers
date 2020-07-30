@@ -1,5 +1,7 @@
 'use strict';
 
+require('dotenv').config();
+
 /**
  * Gets the releases for 'ripgrep'. This function could be trimmed down and made
  * for use with any github release.
@@ -21,10 +23,20 @@ function getAllReleases(
   if (!repo) {
     return Promise.reject('missing repo name');
   }
-  return request({
+
+  var req = {
     url: `${baseurl}/repos/${owner}/${repo}/releases`,
     json: true
-  }).then((resp) => {
+  };
+  // TODO I really don't like global config, find a way to do better
+  if (process.env.GITHUB_USERNAME) {
+    req.auth = {
+      user: process.env.GITHUB_USERNAME,
+      pass: process.env.GITHUB_TOKEN
+    };
+  }
+
+  return request(req).then((resp) => {
     const gHubResp = resp.body;
     const all = {
       releases: [],
