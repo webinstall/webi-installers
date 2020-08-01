@@ -20,13 +20,13 @@ npm install -g prettier@latest
 Prettify all web files in a project, recursively:
 
 ```bash
-prettier --write '**/*{.md,.js,.html,.css}' --ignore ./dist
+prettier --write '**/*{.md,.js,.html,.css}'
 ```
 
 Tell Prettier which files to ignore every time
 
 ```bash
-echo "./dist" >> .prettierignore
+echo "dist/" >> .prettierignore
 ```
 
 Tell Prettier which settings to use - do NOT use `package.json` when it's not
