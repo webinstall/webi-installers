@@ -9,6 +9,12 @@ Effortlessly install developer tools with easy-to-remember URLs.
 - without touching system files or permissions
 - without looking up docs
 
+## Install webi via npm:
+
+```bash
+npm install -g webi
+```
+
 ## Example: Installing node
 
 Mac & Linux:
@@ -24,6 +30,9 @@ curl.exe -fsSA "MS" https://webinstall.dev/node | powershell
 ```
 
 ## Example: Switching node versions
+
+Once `webi` is installed, you can then install commands or switch versions with
+webi itself:
 
 ```bash
 webi node@stable

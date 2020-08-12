@@ -1,6 +1,6 @@
 {
-  "name": "@root/webi",
-  "version": "0.5.0",
+  "name": "webi",
+  "version": "0.5.1",
   "description": "Effortlessly install developer tools with easy-to-remember URLs",
   "main": "index.js",
   "homepage": "https://webinstall.dev",
@@ -8,7 +8,7 @@
     "scripts/"
   ],
   "scripts": {
-    "postinstall": "node scripts/webi.js",
+    "postinstall": "node scripts/install-webi.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
