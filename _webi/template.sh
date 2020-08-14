@@ -319,10 +319,10 @@ if [ -n "$(command -v pkg_get_current_version)" ]; then
 
     webi_link
 
+    _webi_enable_exec
     pushd "$WEBI_TMP" 2>&1 >/dev/null
         [ -n "$(command -v pkg_post_install)" ] && pkg_post_install || webi_post_install
     popd 2>&1 >/dev/null
-    _webi_enable_exec
 
     pushd "$WEBI_TMP" 2>&1 >/dev/null
         [ -n "$(command -v pkg_done_message)" ] && pkg_done_message || _webi_done_message
