@@ -1,33 +1,38 @@
 ---
 title: Foo Bar
-bin: foobar
-homepage: https://example.com/foobar
-tagline: To err is human, but to foobar...
+homepage: https://github.com/webinstall/foobar
+tagline: |
+  foobar: An example that doesn't exist.
 ---
 
 <!--
- - The first h1 is for README.md preview only and will be ignored
+    Note: Delete this comment section.
+
+    Need an example that has an **alias**? See `bat`.
+    Need a Windows example using **msvc**? See `bat`.
 -->
 
-# Foo Bar
+### Updating `foo`
 
-<!--
-  - Everything before the first h1 is ignored
-  - Everything after that and before the first h2 is the description
--->
+`webi foo@stable`
 
-Foo Bar is a community-developed, commercially supported destruction system.
+Use the `@beta` tag for pre-releases.
 
-## Examples
+## Cheat Sheet
 
-Really mess something up
+> `foo` doesn't exist and this text should have been replaced. It doesn't do
+> anything, but what it does is useful because it is; everybody knows it.
+
+To run foo:
 
 ```bash
-foobar my-file.txt
+foo
 ```
 
-Mess up the entire volume, forcefully and recursively
+### Add Baz Highlighting
+
+To run foo with both bar and baz highlighting turned on:
 
 ```bash
-foobar -rf /
+foo --bar=baz
 ```

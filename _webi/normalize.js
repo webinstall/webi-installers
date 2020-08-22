@@ -84,6 +84,7 @@ function normalize(all) {
     }
     supported.arches[rel.arch] = true;
 
+    var tarExt;
     if (!rel.ext) {
       // pkg-v1.0.tar.gz => ['gz', 'tar', '0', 'pkg-v1']
       // pkg-v1.0.tar => ['tar', '0' ,'pkg-v1']
@@ -96,8 +97,10 @@ function normalize(all) {
       exts = exts.reverse().slice(0, 2);
       if ('tar' === exts[1]) {
         rel.ext = exts.reverse().join('.');
+        tarExt = 'tar';
       } else if ('tgz' == exts[0]) {
         rel.ext = 'tar.gz';
+        tarExt = 'tar';
       } else {
         rel.ext = exts[0];
       }
@@ -106,7 +109,7 @@ function normalize(all) {
         rel.ext = 'exe';
       }
     }
-    supported.formats[rel.ext] = true;
+    supported.formats[tarExt || rel.ext] = true;
 
     if (all.download) {
       rel.download = all.download.replace(/{{ download }}/, rel.download);

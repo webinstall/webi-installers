@@ -1,79 +1,39 @@
 #!/bin/bash
 
-set -e
-set -u
+{
+    set -e
+    set -u
 
-## The defaults can be assumed if these are not set
+    ##################
+    # Install foobar #
+    ##################
 
-## The command name may be different from the package name
-## (i.e. golang => go, rustlang => cargo, ripgrep => rg)
-## Note: $HOME may contain special characters and should alway be quoted
+    # Every package should define these 6 variables
+    pkg_cmd_name="foo"
 
-pkg_cmd_name="xmpl"
+    pkg_dst_cmd="$HOME/.local/bin/foo"
+    pkg_dst="$pkg_dst_cmd"
 
-## Some of these directories may be the same, in some cases
-#pkg_dst="$HOME/.local/opt/xmpl"
-#pkg_dst_bin="$HOME/.local/opt/xmpl/bin"
-#pkg_dst_cmd="$HOME/.local/opt/xmpl/bin/xmpl"
+    pkg_src_cmd="$HOME/.local/opt/foobar-v$WEBI_VERSION/bin/foo"
+    pkg_src_dir="$HOME/.local/opt/foobar-v$WEBI_VERSION"
+    pkg_src="$pkg_src_cmd"
 
-#pkg_src="$HOME/.local/opt/xmpl-v$WEBI_VERSION"
-#pkg_src_bin="$HOME/.local/opt/xmpl-v$WEBI_VERSION/bin"
-#pkg_src_cmd="$HOME/.local/opt/xmpl-v$WEBI_VERSION/bin/xmpl"
+    # pkg_install must be defined by every package
+    pkg_install() {
+        # ~/.local/opt/foobar-v0.99.9/bin
+        mkdir -p "$(dirname $pkg_src_cmd)"
 
-# Different packages represent the version in different ways
-# ex: node v12.8.0 (leading 'v')
-# ex: go1.14 (no space, nor trailing '.0's)
-# ex: flutter 1.17.2 (plain)
-pkg_format_cmd_version() {
-    my_version=$1
-    echo "$pkg_cmd_name v$my_version"
-}
+        # mv ./foobar-*/foo ~/.local/opt/foobar-v0.99.9/bin/foo
+        mv ./foobar-*/foo "$pkg_src_cmd"
+    }
 
-# The version info should be reduced to a sortable version, without any leading characters
-# (i.e. v12.8.0 => 12.8.0, go1.14 => 1.14, 1.12.13+hotfix => 1.12.13+hotfix)
-pkg_get_current_version() {
-    echo "$(xmpl --version 2>/dev/null | head -n 1 | cut -d' ' -f2)"
-}
+    # pkg_get_current_version is recommended, but (soon) not required
+    pkg_get_current_version() {
+        # 'foo --version' has output in this format:
+        #       foobar 0.99.9 (rev abcdef0123)
+        # This trims it down to just the version number:
+        #       0.99.9
+        echo $(foo --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2)
+    }
 
-# For (re-)linking to the desired installed version
-# (for example: 'go' is special and needs both $HOME/go and $HOME/.local/opt/go)
-# (others like 'rg', 'hugo', and 'caddy' are single files that just get replaced)
-pkg_link() {
-    rm -rf "$pkg_dst"
-    ln -s "$pkg_src" "$pkg_dst"
-}
-
-pkg_pre_install() {
-    # web_* are defined in _webi/template.sh at https://github.com/webinstall/packages
-
-    # if selected version is installed, re-link it and quit
-    webi_check
-
-    # will save to ~/Downloads/$WEBI_PKG_FILE by default
-    webi_download
-
-    # supported formats (.xz, .tar.*, .zip) will be extracted to $WEBI_TMP
-    webi_extract
-}
-
-# For installing from the extracted package tmp directory
-pkg_install() {
-    # remove the versioned folder, just in case it's there with junk
-    rm -rf "$pkg_src"
-
-    # rename the entire extracted folder to the new location
-    # (this will be "$HOME/.local/opt/xmpl-v$WEBI_VERSION" by default)
-    mv ./"$pkg_cmd_name"* "$pkg_src"
-}
-
-# For updating PATHs and installing companion tools
-pkg_post_install() {
-    pkg_link
-
-    # web_path_add is defined in _webi/template.sh at https://github.com/webinstall/packages
-    webi_path_add "$pkg_dst_bin"
-}
-
-pkg_done_message() {
-    echo "Installed 'example' as 'xmpl' at $pkg_dst_cmd"
 }
