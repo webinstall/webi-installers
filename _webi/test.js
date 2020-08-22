@@ -128,11 +128,15 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
         'REM todo debug'
       );
     }
-    console.info('Has the necessary files?');
-    fs.writeFileSync(bashFile, bashTxt, 'utf-8');
-    console.info('\tNEEDS MANUAL TEST: bash %s', bashFile);
-    fs.writeFileSync(ps1File, ps1Txt, 'utf-8');
-    console.info('\tNEEDS MANUAL TEST: powershell.exe %s', ps1File);
+    console.info('Do the scripts actually work?');
+    if (bashFile && bashTxt) {
+      fs.writeFileSync(bashFile, bashTxt, 'utf-8');
+      console.info('\tNEEDS MANUAL TEST: bash %s', bashFile);
+    }
+    if (ps1File && ps1Txt) {
+      fs.writeFileSync(ps1File, ps1Txt, 'utf-8');
+      console.info('\tNEEDS MANUAL TEST: powershell.exe %s', ps1File);
+    }
     console.info('');
   });
 });
