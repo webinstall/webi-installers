@@ -50,7 +50,7 @@ info, and doing a find and replace on a few file system path names.
      - [ ] tagline
      - [ ] Switch versions
      - [ ] description / summary
-     - [ ] General pointers on usage (and differences from `sed`)
+     - [ ] General pointers on usage (and perhaps "gotchas")
 
 It's also okay to have multiple people work on part of this (i.e. the Cheat
 Sheet can be done independently from the `install.sh`)
