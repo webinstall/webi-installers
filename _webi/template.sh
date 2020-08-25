@@ -239,6 +239,12 @@ webi_post_install() {
 }
 
 _webi_enable_exec() {
+    if [ -n "$(command -v spctl)" ] && [ -n "$(command -v xattr)" ] ; then
+        xattr -r -d com.apple.quarantine "$pkg_src"
+        return 0
+    fi
+    # TODO need to test that the above actually worked
+    # (and proceed to this below if it did not)
     if [ -n "$(command -v spctl)" ]; then
         echo "Checking permission to execute '$pkg_cmd_name' on macOS 11+"
         set +e
