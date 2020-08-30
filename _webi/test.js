@@ -66,7 +66,7 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
   var pkgname = path.basename(pkgdir.replace(/\/$/, ''));
   var osrel = os.platform() + '-' + os.release();
   var arch = os.arch();
-  var formats = ['xz', 'tar', 'zip'];
+  var formats = ['exe', 'xz', 'tar', 'zip'];
 
   var rel = all.releases.filter(function (rel) {
     return (
