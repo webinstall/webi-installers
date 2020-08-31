@@ -3,5 +3,4 @@ node_modules
 install-*.sh
 install-*.bat
 install-*.ps1
-.install.sh.swp
-.install.sh.swo
+.*.sw*
