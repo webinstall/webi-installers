@@ -54,7 +54,7 @@ IF (!(Test-Path -Path "$pkg_src"))
 echo "Copying into '$pkg_dst' from '$pkg_src'"
 Remove-Item -Path "$pkg_dst" -Recurse -ErrorAction Ignore
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse
-IF (!(Test-Path -Path go\bin)) { New-Item -Path go\bin -ItemType Directory }
+IF (!(Test-Path -Path go\bin)) { New-Item -Path go\bin -ItemType Directory -Force }
 
 # Special to go: re-run all go tooling builds
 echo "Building go language tools..."

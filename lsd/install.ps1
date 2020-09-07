@@ -46,7 +46,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
 
         # Settle unpacked archive into place
         echo "Install Location: $pkg_src_cmd"
-        New-Item "$pkg_src_bin" -ItemType Directory
+        New-Item "$pkg_src_bin" -ItemType Directory -Force
         Move-Item -Path ".\lsd-*\lsd.exe" -Destination "$pkg_src_bin"
 
     # Exit tmp
