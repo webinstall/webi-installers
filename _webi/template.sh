@@ -226,7 +226,6 @@ webi_install() {
     if [ -n "$WEBI_SINGLE" ] || [ "single" == "${1:-}" ]; then
         mkdir -p "$(dirname $pkg_src_cmd)"
         mv ./"$pkg_cmd_name"* "$pkg_src_cmd"
-        chmod a+x "$pkg_src_cmd"
     else
         rm -rf "$pkg_src"
         mv ./"$pkg_cmd_name"* "$pkg_src"
@@ -321,6 +320,8 @@ if [ -n "$(command -v pkg_get_current_version)" ]; then
     pushd "$WEBI_TMP" 2>&1 >/dev/null
         echo "Installing to $pkg_src_cmd"
         [ -n "$(command -v pkg_install)" ] && pkg_install || webi_install
+        chmod a+x "$pkg_src"
+        chmod a+x "$pkg_src_cmd"
     popd 2>&1 >/dev/null
 
     webi_link
