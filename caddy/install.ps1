@@ -8,6 +8,7 @@
 $pkg_cmd_name = "caddy"
 
 $pkg_dst_cmd = "$Env:USERPROFILE\.local\bin\caddy.exe"
+$pkg_dst_bin = "$Env:USERPROFILE\.local\bin"
 $pkg_dst = "$pkg_dst_cmd"
 
 $pkg_src_cmd = "$Env:USERPROFILE\.local\opt\caddy-v$Env:WEBI_VERSION\bin\caddy.exe"
@@ -40,12 +41,11 @@ IF (!(Test-Path -Path "$pkg_src_cmd")) {
     # Windows BSD-tar handles zip. Imagine that.
     echo "Unpacking $pkg_download"
     & tar xf "$pkg_download"
-    & dir
 
     # Settle unpacked archive into place
     echo "Install Location: $pkg_src_cmd"
-    New-Item "$pkg_src_bin" -ItemType Directory
-    Move-Item -Path ".\caddy-*\caddy.exe" -Destination "$pkg_src_bin"
+    New-Item "$pkg_src_bin" -ItemType Directory -Force
+    Move-Item -Path ".\caddy.exe" -Destination "$pkg_src_bin"
 
     # Exit tmp
     popd
@@ -53,4 +53,5 @@ IF (!(Test-Path -Path "$pkg_src_cmd")) {
 
 echo "Copying into '$pkg_dst_cmd' from '$pkg_src_cmd'"
 Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore
+New-Item "$pkg_dst_bin" -ItemType Directory -Force
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse
