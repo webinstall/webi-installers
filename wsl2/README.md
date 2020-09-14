@@ -37,6 +37,27 @@ powershell Add-AppxPackage Ubuntu_2004_x64.appx
 
 See also <https://docs.microsoft.com/en-us/windows/wsl/install-manual>.
 
+### How to Launch Linux
+
+To Launch the default Linux:
+
+```pwsh
+wsl.exe
+```
+
+To Launch a specific Linux:
+
+```pwsh
+wsl.exe --list
+wsl.exe Ubuntu
+```
+
+### How to Set or Reset Root Password
+
+```pwsh
+wsl -d Ubuntu -u root
+```
+
 ### How to Switch Between WSL 1 and WSL 2
 
 Despite the name, WSL 2 is neither a "better" version of nor a replacement for
