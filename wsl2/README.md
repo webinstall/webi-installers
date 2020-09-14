@@ -49,13 +49,27 @@ To Launch a specific Linux:
 
 ```pwsh
 wsl.exe --list
-wsl.exe Ubuntu
+wsl.exe -d Ubuntu-20.04
 ```
 
 ### How to Set or Reset Root Password
 
 ```pwsh
-wsl -d Ubuntu -u root
+wsl -d Ubuntu-20.04 -u root passwd
+```
+
+### How to Run a Single Command
+
+Assuming you want to run `ls ~/` as the default user:
+
+```pwsh
+wsl -- ls ~/
+```
+
+Assuming your username is `app` and you wanted to run `ls`:
+
+```pwsh
+wsl -d Ubuntu-20.04 -u app -- ls ~/
 ```
 
 ### How to Switch Between WSL 1 and WSL 2
