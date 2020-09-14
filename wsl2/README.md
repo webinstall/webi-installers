@@ -26,7 +26,22 @@ You _will_ need to allow the installer to run as Admin when asked.
 
 You will not be able to use WSL without rebooting.
 
-### Switching Between WSL and WSL 2
+### How to Install Linux Bash
+
+You can download Linux from the Windows Store, or from the Command Line:
+
+```pwsh
+curl.exe -L -o Ubuntu_2004_x64.appx https://aka.ms/wslubuntu2004
+powershell Add-AppxPackage Ubuntu_2004_x64.appx
+```
+
+See also <https://docs.microsoft.com/en-us/windows/wsl/install-manual>.
+
+### How to Switch Between WSL 1 and WSL 2
+
+Despite the name, WSL 2 is neither a "better" version of nor a replacement for
+WSL 1. Rather WSL 1 uses a syscall wrapper (much like WINE) whereas WSL 2 uses
+Hyper-V virtualization.
 
 After rebooting you can set WSL 2 as the default:
 
@@ -46,6 +61,8 @@ And you can switch between using WSL and WSL 2 without an issues:
 wsl --set-version Ubuntu 2
 ```
 
+See also <https://docs.microsoft.com/en-us/windows/wsl/wsl2-index>.
+
 ### Raw PowerShell Install Commands
 
 If you'd like to install manually, or create your own script, this is how we do
@@ -64,6 +81,8 @@ powershell -Command "Start-Process msiexec -Wait -ArgumentList '/a wsl_update_x6
 Copy-Item -Path "$env:TEMP\System32\lxss" -Destination "C:\System32" -Recurse
 ```
 
+See also <https://github.com/microsoft/WSL/issues/5014>
+
 ### Nested VMs
 
 WSL2 may not work properly if you are already running Windows inside of a
@@ -75,3 +94,4 @@ Virtual Machine, especially if MacOS or Linux is the VM Host.
 - https://github.com/microsoft/WSL/issues/5014
 - https://docs.microsoft.com/en-us/windows/wsl/wsl2-index
 - https://aka.ms/wsl2kernel
+- https://docs.microsoft.com/en-us/windows/wsl/install-manual
