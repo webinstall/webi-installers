@@ -1,53 +1,83 @@
 ---
-title: WSL (Complete)
-homepage: https://docs.microsoft.com/en-us/windows/wsl/wsl2-index
+title: WSL + Linux
+homepage: https://docs.microsoft.com/en-us/windows/wsl/compare-versions
 tagline: |
-  WSL (Windows Subsystem for Linux) runs a true Linux kernel via Hyper-V virtualization.
+  WSL (Windows Subsystem for Linux) lets you run Linux seemlessly on Windows.
 ---
 
 ## Read Carefully!
 
-1. WSL is a **system** service which **requires Admin privileges** to install.
-2. A **System Reboot** is **required** before WSL can be used.
-3. Not all systems can use WSL 2, so **WSL 1** is the **default**.
+1. Run **Windows Update** and reboot before attempting to install WSL.
+2. You will be prompted to give the installer **Admin** access.\
+   WSL is an exception to our "no sudo" rule.
+3. You must **run the installer again**, after a **Restart**.\
+   WSL 2 must be installed after WSL 1.
+
+Since _WSL 2_ is not compatible with all system, _WSL 1_ is the _default_.
 
 ## Cheat Sheet
 
-> This is a complete WSL installer that includes **_WSL 1_**, **_WSL 2_**
-> (Hyper-V), and **_Ubuntu Linux_**.
+> WSL lets you run Linux seemlessly on Windows.
 >
-> WSL 2 is not "version 2" of WSL, but more "layer 2" WSL 1 uses a Linux syscall
-> wrapper around the Windows Kernel WSL 2 uses `VirtualMachinePlatform` and
-> Hyper-V to run a full Linux kernel with 100% syscall compatibility.
+> The Windows Subsystem for Linux has two modes:
+>
+> - **_WSL 1_** - a Windows Kernel syscall wrapper (similar to WINE)
+> - **_WSL 2_** - a true Linux Kernel run with Hyper-V virtualization
+>
+> Each mode has its
+> [tradeoffs](https://docs.microsoft.com/en-us/windows/wsl/compare-versions),
+> but the main differences are that WSL 1 has better compatibility with
+> inexpensive laptops and better seemless integration with the Windows file
+> system and that WSL 2 can run certain low-level software (such as for
+> networking and virtual file systems) that WSL 1 cannot.
 
-After installing WSL and **Rebooting** you will be able to install Linux
-variants from the Windows 10 Store:
+Once installed,
+[Ubuntu Linux 20.04](https://www.microsoft.com/store/apps/9n6svws3rx71) will be
+available from the **Windows Start Menu**.
 
-- [Ubuntu Linux 20.04](https://www.microsoft.com/store/apps/9n6svws3rx71)
-- [Alpine WSL](https://www.microsoft.com/store/apps/9p804crf0395)
+You can use the `wsl` command to start Ubuntu Linux with the `wsl` command, but
+only **after** clicking on it in the Windows Start Menu to add a `username` and
+`password`.
+
+- **Username**: We recommend `app` as the username (this is a common convention)
+  - The `root` (admin) account always exists, no matter what username you pick
+- **Password**: You can change the password at any time:
+  - For `app`: `wsl -u root passwd app`
+  - For `root`: `wsl -u root passwd`
 
 ### How to Launch Linux
 
-To Launch the default Linux:
+How to launch the default Linux:
 
 ```pwsh
 wsl.exe
 ```
 
-To Launch a specific Linux:
+How to launch a specific Linux distribution with `-d`:
 
 ```pwsh
-wsl.exe --list
+wsl.exe --list --verbose
 wsl.exe -d Ubuntu-20.04
 ```
 
-### How to Set or Reset Root Password
+**Note**: Linux is _NOT AVAILABLE_ until you complete the installation and
+create a username and password.
+
+### How to Set or Reset Linux Password
+
+To reset the `root` password:
 
 ```pwsh
 wsl -d Ubuntu-20.04 -u root passwd
 ```
 
-### How to Run a Single Command
+To reset the `app` user's password:
+
+```pwsh
+wsl -d Ubuntu-20.04 -u root passwd app
+```
+
+### How to Run a Single Linux Command
 
 Assuming you want to run `ls ~/` as the default user:
 
@@ -94,35 +124,60 @@ Note that you _cannot_ set the mode before rebooting.
 
 See also <https://docs.microsoft.com/en-us/windows/wsl/wsl2-index>.
 
-### How to Install Linux with PowerShell
+### How to Install WSL with PowerShell
 
-You can download Linux from the Windows Store, or with `curl.exe` on the Command
-Line:
+1. Install WSL 1 + parts of WSL 2
 
-```pwsh
-curl.exe -L -o Ubuntu_2004_x64.appx https://aka.ms/wslubuntu2004
-powershell Add-AppxPackage Ubuntu_2004_x64.appx
-```
+   ```pwsh
+   # Install WSL 1
+   dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 
-See also <https://docs.microsoft.com/en-us/windows/wsl/install-manual>.
+   # Install VirtualMachinePlatform for WSL 2
+   dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+   ```
 
-### Raw PowerShell Install Commands
+2. Install Ubuntu Linux
 
-This is already detailed at [webinstall.dev/wsl1](https://webinstall.dev/wsl1)
-and [webinstall.dev/wsl2](https://webinstall.dev/wsl2)
+   ```pwsh
+   # Install Ubunut Linux
+   curl.exe -L -o Ubuntu_2004_x64.appx https://aka.ms/wslubuntu2004
+   powershell Add-AppxPackage Ubuntu_2004_x64.appx
+   ```
 
-See also <https://github.com/microsoft/WSL/issues/5014>
+3. Reboot
+
+4. Finish installing WSL 2 (copying the `kernel` twice for good measure)
+
+   ```pwsh
+   # Download and Install the WSL 2 Update (contains Microsoft Linux kernel)
+   & curl.exe -f -o wsl_update_x64.msi "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
+   powershell -Command "Start-Process msiexec -Wait -ArgumentList '/a ""wsl_update_x64.msi"" /quiet /qn TARGETDIR=""C:\Temp""'"
+   Copy-Item -Path "$env:TEMP\System32\lxss" -Destination "C:\System32" -Recurse
+
+   # Also install the WSL 2 update with a normal full install
+   powershell -Command "Start-Process msiexec -Wait -ArgumentList '/i','wsl_update_x64.msi','/quiet','/qn'"
+   ```
+
+5. Then click Ubuntu Linux in the start menu.
+
+See also:
+
+- <https://github.com/microsoft/WSL/issues/5014#issuecomment-692432322>
+- <https://docs.microsoft.com/en-us/windows/wsl/install-manual>.
 
 ### Errors: Feature Not Installed & Nested VMs
 
-These errors are detailed at <https://webinstall.dev/wsl2>.
+The most likely problem is that you're on a computer that does not support WSL 2
+(or the necessary VT-x options have been disabled).
 
-Likely solution:
+The simplest workaround is to switch back to WSL 1:
 
 ```pwsh
 wsl --set-default-version 1
 wsl --set-version Ubuntu-20.04 1
 ```
+
+See also <https://webinstall.dev/wsl2> (errors section).
 
 ## References
 
