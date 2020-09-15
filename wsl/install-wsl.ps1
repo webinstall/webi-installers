@@ -1,10 +1,10 @@
 #!/usr/bin/env pwsh
 
-echo "Installing 1 of 3 Microsoft-Windows-Subsystem-Linux ..."
+echo "Installing 1 of 5 Microsoft-Windows-Subsystem-Linux (for WSL 1 and WSL 2) ..."
 & dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 
 echo ""
-echo "Installing 2 of 3 VirtualMachinePlatform ..."
+echo "Installing 2 of 5 VirtualMachinePlatform (for WSL 2 Hyper-V) ..."
 & dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 
 Function Test-CommandExists
@@ -13,19 +13,18 @@ Function Test-CommandExists
     $oldPreference = $ErrorActionPreference
     $ErrorActionPreference = 'stop'
     try {if(Get-Command $command){RETURN $true}}
-    Catch {Write-Host “$command does not exist”; RETURN $false}
+    Catch {RETURN $false}
     Finally {$ErrorActionPreference=$oldPreference}
 }
 
 echo ""
 IF(!(Test-CommandExists wsl))
 {
-    echo "Skipping 3 of 3: Microsoft Linux Kernel requires WSL 1 to be installed first ..."
+    echo "Skipping 3 of 5: Microsoft Linux Kernel requires WSL 1 to be installed first ..."
 }
 ELSE
 {
-    echo "Installing 3 of 3 Microsoft Linux Kernel (wsl_update_x64.msi) ..."
-
+    echo "Installing 3 of 5 Microsoft Linux Kernel (wsl_update_x64.msi for WSL 2) ..."
     IF (!(Test-Path -Path "$Env:TEMP\wsl_update_x64.msi")) {
         & curl.exe -f -o "$Env:TEMP\wsl_update_x64.msi" "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
     }
