@@ -16,9 +16,9 @@ Use the `@beta` tag for pre-releases.
 ## Cheat Sheet
 
 > Ripgrep (`rg`) is smart. It's like grep if grep were built for code. It
-> respects `.gitignore` and `.ignore`, has all of the sensible options you want
-> (colors, numbers, etc) turned on by default, is written in Rust, and simply
-> outperforms grep in every imaginable way.
+> respects `.gitignore` and `.ignore`, has all of the sensible options you
+> want (colors, numbers, etc) turned on by default, is written in Rust, and
+> typically outperforms grep in many use cases.
 
 ```bash
 rg <search-term> # searches recursively, ignoring .git, node_modules, etc
