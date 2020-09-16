@@ -16,7 +16,8 @@ webi vim-go
 > `vim-go` provides integration with various official and 3rd part go tooling
 > for linting, vetting, etc.
 
-You'll also need `ALE`, `syntastic`, or similar.
+You'll also need `ALE`, [`syntastic`](https://webinstall.dev/vim-syntastic), or
+similar.
 
 ### How to install by hand
 
@@ -26,7 +27,7 @@ git clone --depth=1 https://github.com/fatih/vim-go.git ~/.vim/pack/plugins/star
 
 ### How to configure your `.vimrc`
 
-```vimrc
+```vim
 " don't check syntax immediately on open or on quit
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
@@ -35,7 +36,7 @@ let g:syntastic_check_on_wq = 0
 autocmd BufWritePre * :%s/\s\+$//e
 ```
 
-```vimrc
+```vim
 """""""""""""""""""""""""""
 " Golang-specific options "
 """""""""""""""""""""""""""
@@ -74,6 +75,9 @@ go get golang.org/x/tools/cmd/goimports
 
 # gorename
 go get golang.org/x/tools/cmd/gorename
+
+# goreturns
+go get github.com/sqs/goreturns
 
 # gotype
 go get golang.org/x/tools/cmd/gotype

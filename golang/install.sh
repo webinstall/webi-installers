@@ -70,6 +70,8 @@ pkg_post_install() {
     "$pkg_dst_cmd" get golang.org/x/tools/cmd/gotype > /dev/null #2>/dev/null
     echo stringer
     "$pkg_dst_cmd" get golang.org/x/tools/cmd/stringer > /dev/null #2>/dev/null
+    echo goreturns
+    "$pkg_dst_cmd" get github.com/sqs/goreturns > /dev/null #2>/dev/null
 }
 
 pkg_done_message() {
