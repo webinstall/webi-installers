@@ -51,7 +51,7 @@ example.com {
     # serve static files from public folder, but not /api
     @notApi {
         file {
-            try_files {path} {path}/ /index.html
+            try_files {path} {path}/ {path}/index.html
         }
         not path /api/*
     }
