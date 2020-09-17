@@ -46,7 +46,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
         # Windows BSD-tar handles zip. Imagine that.
         echo "Unpacking $pkg_download"
         & tar xf "$pkg_download"
-        & dir
+      
 
         # Settle unpacked archive into place
         echo "Install Location: $pkg_src_cmd"

@@ -24,7 +24,7 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERS
 
         # Move single binary into root of temporary folder
         & move "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE" "$VERNAME"
-        & dir
+        
 
         # Settle unpacked archive into place
         echo "New Name: $VERNAME"
