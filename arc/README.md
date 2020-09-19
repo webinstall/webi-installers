@@ -64,15 +64,18 @@ arc decompress   ./example.tar.xz
 
 ## Supported extensions
 
-| format | packaged        | raw compressed |
-| ------ | --------------- | -------------- |
-| RAR    | .rar            | -              |
-| -      | .tar            | -              |
-| brotli | .tar.br, .tbr   | .br            |
-| gzip   | .tar.gz, .tgz   | .gz            |
-| bzip2  | .tar.bz2, .tbz2 | .bz2           |
-| xz     | .tar.xz, .txz   | .xz            |
-| lzma   | .tar.lz4, .tlz4 | .lz4           |
-| snappy | .tar.sz, .tsz   | .lsz           |
-| zstd   | .tar.zst        | .zst           |
-| ZIP    | .zip            | -              |
+These are the support compression formats, archive formats, and tar file and
+other extensions.
+
+| Compression | Archive  | Tar File | Bare Extension |
+| ----------- | -------- | -------- | -------------- |
+| -           | .tar     | -        | -              |
+| xz          | .tar.xz  | .txz     | .xz            |
+| gzip        | .tar.gz  | .tgz     | .gz            |
+| bzip2       | .tar.bz2 | .tbz2    | .bz2           |
+| brotli      | .tar.br  | .tbr     | .br            |
+| lzma        | .tar.lz4 | .tlz4    | .lz4           |
+| snappy      | .tar.sz  | .tsz     | .lsz           |
+| zstd        | .tar.zst | -        | .zst           |
+| ZIP         | .zip     | -        | -              |
+| RAR         | .rar     | -        | -              |
