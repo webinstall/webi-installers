@@ -25,7 +25,7 @@ This repository contains the primary and community-submitted packages for
 More technically:
 
 1. `<package>/releases.js` transforms the package's release API into a common
-   formatt
+   format
    - (i.e. HTML, CSV, TAB, or JSON into a specific JSON format)
    - common release APIs are in `_common/` (i.e. `_common/github.js`)
 2. `_webi/bootstrap.sh` is a template that exchanges system information for a

@@ -54,9 +54,9 @@ function getArch(ua) {
     return '-';
   }
 
-  if (/arm64|arm8|armv8/i.test(ua)) {
+  if (/aarch64|arm64|arm8|armv8/i.test(ua)) {
     return 'arm64';
-  } else if (/arm7|armv7/i.test(ua)) {
+  } else if (/aarch|arm7|armv7/i.test(ua)) {
     return 'armv7l';
   } else if (/arm6|armv6/i.test(ua)) {
     return 'armv6l';

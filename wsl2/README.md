@@ -72,7 +72,7 @@ Copy-Item -Path "$env:TEMP\System32\lxss" -Destination "C:\System32" -Recurse
 powershell -Command "Start-Process msiexec -Wait -ArgumentList '/i','wsl_update_x64.msi','/quiet','/qn'"
 ```
 
-See also <https://github.com/microsoft/WSL/issues/5014>
+See also <https://github.com/microsoft/WSL/issues/5014#issuecomment-692432322>
 
 ### Error: Required Feature Not Installed
 
