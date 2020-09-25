@@ -105,6 +105,20 @@ Select `Settings` from the drop down and update `profiles.defaults.fontFace`:
 
 ![Windows Terminal Settings](https://i.imgur.com/4RgK6s9.png 'lsd using The Nerd Font in Windows Terminal')
 
+### Nerd Fonts for iTerm2
+
+Find `iTerm2` in the top Mac menu, then...
+
+- => Preferences (`Cmd ⌘ + ,`)
+- => Profiles
+- => Text
+- => Font
+- => Select "DroidSansMono Nerd Font"
+- => (you may also want to turn on Anti-Aliasing and turn off highlight bold
+  text)
+
+![MacOS iTerm2 Settings](https://i.imgur.com/OUSOEIA.png 'how to select The Nerd Font in Terminal.app')
+
 ### Nerd Fonts for Terminal.app (similar for iTerm2)
 
 Find `Terminal` in the top Mac menu, then...
