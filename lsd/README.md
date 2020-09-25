@@ -55,17 +55,17 @@ lsd
 Update your `.bashrc`, `.zshrc`, or `.profile`
 
 ```bash
-alias ls="lsd"
-alias la="lsd -A"
-alias ll="lsd -l"
-alias lg="lsd --group-dirs=first"
+alias ls="lsd -F"
+alias la="lsd -AF"
+alias ll="lsd -lAF"
+alias lg="lsd -F --group-dirs=first"
 ```
 
 For situations in which you must use `ls` exactly, remember that you can escape
 the alias:
 
 ```bash
-\ls
+\ls -lAF
 ```
 
 ### How to alias as `tree`
@@ -73,7 +73,7 @@ the alias:
 Update your `.bashrc`, `.zshrc`, or `.profile`
 
 ```bash
-alias tree="lsd --tree"
+alias tree="lsd -AF --tree"
 ```
 
 And when you want to use GNU `tree`, just escape the alias:
