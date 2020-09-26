@@ -239,7 +239,8 @@ webi_post_install() {
 
 _webi_enable_exec() {
     if [ -n "$(command -v spctl)" ] && [ -n "$(command -v xattr)" ] ; then
-        xattr -r -d com.apple.quarantine "$pkg_src"
+        # note: some packages contain files that cannot be affected by xattr
+        xattr -r -d com.apple.quarantine "$pkg_src" || true
         return 0
     fi
     # TODO need to test that the above actually worked
