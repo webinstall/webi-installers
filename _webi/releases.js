@@ -7,7 +7,12 @@ var _normalize = require('../_webi/normalize.js');
 
 var Releases = module.exports;
 Releases.get = async function (pkgdir) {
-  var get = require(path.join(pkgdir, 'releases.js'));
+  var get;
+  try {
+    get = require(path.join(pkgdir, 'releases.js'));
+  } catch (e) {
+    throw new Error('no releases.js for', pkgdir.split(/[\/\\]+/).pop());
+  }
   return get(request).then(function (all) {
     return _normalize(all);
   });
