@@ -10,7 +10,17 @@ set -u
 #
 # Their defaults are defined in _webi/template.sh at https://github.com/webinstall/packages
 
+# Every package should define these 6 variables
 pkg_cmd_name="flutter"
+
+pkg_dst_cmd="$HOME/.local/opt/flutter/bin/flutter"
+pkg_dst_dir="$HOME/.local/opt/flutter"
+pkg_dst="$pkg_dst_dir"
+
+pkg_src_cmd="$HOME/.local/opt/flutter-v$WEBI_VERSION/bin/flutter"
+pkg_src_dir="$HOME/.local/opt/flutter-v$WEBI_VERSION"
+pkg_src="$pkg_src_dir"
+
 
 pkg_get_current_version() {
     # 'flutter --version' outputs a lot of information:
