@@ -1,6 +1,6 @@
-# @webinstall/packages
+# @[webinstall](https://webinstall.dev)/webi-installers
 
-> `webi` is how developers install their tools
+> [`webi`](https://webinstall.dev) is how developers install their tools
 
 - no `sudo`
 - no package manager
