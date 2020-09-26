@@ -14,7 +14,7 @@ curl https://webinstall.dev/webi | bash
 This repository contains the primary and community-submitted packages for
 [webinstall.dev](https://webinstall.dev).
 
-# How `webi` works
+# How webi works
 
 - Contacts official release APIs for download URLs
 - Selects the appropriate package version and archive format
