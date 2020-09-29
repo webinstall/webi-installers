@@ -1,6 +1,6 @@
-# @[webinstall](https://webinstall.dev)/webi-installers
+# [webi-installers](https://github.com/webinstall/webi-packages)
 
-> [`webi`](https://webinstall.dev) is how developers install their tools
+> [webi](https://webinstall.dev) is how developers install their tools
 
 - no `sudo`
 - no package manager
@@ -14,7 +14,7 @@ curl https://webinstall.dev/webi | bash
 This repository contains the primary and community-submitted packages for
 [webinstall.dev](https://webinstall.dev).
 
-# How `webi` works
+# How webi works
 
 - Contacts official release APIs for download URLs
 - Selects the appropriate package version and archive format

@@ -1,6 +1,7 @@
 {
-  "name": "@webinstall/packages",
-  "version": "0.1.0",
+  "name": "@webinstall/webi-installers",
+  "private": true,
+  "version": "0.2.0",
   "description": "webinstall script repository",
   "main": "_webi/",
   "scripts": {
@@ -8,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/webinstall/packages.git"
+    "url": "git+https://github.com/webinstall/webi-installers.git"
   },
   "keywords": [
     "webinstall",
@@ -19,9 +20,9 @@
   "author": "AJ ONeal <coolaj86@gmail.com> (https://coolaj86.com/)",
   "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/webinstall/packages/issues"
+    "url": "https://github.com/webinstall/webi-installers/issues"
   },
-  "homepage": "https://github.com/webinstall/packages#readme",
+  "homepage": "https://github.com/webinstall/webi-installers#readme",
   "dependencies": {
     "@root/request": "^1.6.1",
     "dotenv": "^8.2.0",
