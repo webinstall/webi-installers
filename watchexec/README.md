@@ -20,22 +20,22 @@ The full `--help` detailed and very useful. Here's the shortlist of what I find
 most useful:
 
 ```txt
--w, --watch     ./src/          watch the given directory
--e, --exts      js,html,css     watch only the given extensions
--i, --ignore    '*.md'          do not watch the given pattern
--d, --debounce  5000            the minimum number of milleseconds
-                                    to wait between changes
+-w, --watch     ./src/      watch the given directory
+-e, --exts      js,css      watch only the given extensions
+-i, --ignore    '*.md'      do not watch the given pattern
+-d, --debounce  5000        the minimum number of milleseconds
+                                to wait between changes
 
--r, --restart                   restart the process (for servers and such)
--s, --signal    SIGHUP          like -r, but with a signal (ex: SIGHUP)
--c, --clear                     clear the screen between command runs
--W  (wait)                      ignore all changes while the command runs
+-r, --restart               restart the process (for servers, etc)
+-s, --signal    SIGHUP      like -r, but with a signal (ex: SIGHUP)
+-c, --clear                 clear the screen between command runs
+-W  (wait)                  ignore all changes as the command runs
 
---              npm start       what command to run, which its arguments
+--              npm start   what command to run, with its arguments
 
---no-ignore                     disregard both .ignore and .gitignore
---no-vcs-ignore                 disregard only .gitignore
---no-default-ignore             disregard built-in ignore lists
+--no-ignore                 disregard both .ignore and .gitignore
+--no-vcs-ignore             disregard only .gitignore
+--no-default-ignore         disregard built-in ignore lists
 ```
 
 ### How to use
