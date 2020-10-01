@@ -16,8 +16,7 @@ Use the `@beta` tag for pre-releases.
 `watchexec` runs a given command when any files in watched directories change. \
 It respects `.[git]ignore`.
 
-The full `--help` detailed and very useful. Here's the shortlist of what I find
-most useful:
+Here's the shortlist of options we've found most useful:
 
 ```txt
 -w, --watch     ./src/      watch the given directory
@@ -52,9 +51,9 @@ Here's a "kitchen sink" example.
 
 ```bash
 watchexec -c -r -s SIGKILL -d 2000 -W --verbose \
-    -w ./src -w ./lib -w ./server.js \
-    -e ts,js,sass,css,html \
-    -i '.git' '*.min.js' -i '*.min.css' \
+    -w ./src -w ./server.js \
+    -e js,css,html \
+    -i '*.md' -i 'package-lock.json' \
     -- npm run build
 ```
 
