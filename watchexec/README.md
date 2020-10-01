@@ -13,22 +13,72 @@ Use the `@beta` tag for pre-releases.
 
 ## Cheat Sheet
 
-Watch all JavaScript, CSS and HTML files in the current directory and all
-subdirectories for changes, running `make` when a change is detected:
+`watchexec` runs a given command when any files in watched directories change. \
+It respects `.[git]ignore`.
 
-```bash
-watchexec --exts js,css,html make
+The full `--help` detailed and very useful. Here's the shortlist of what I find
+most useful:
+
+```txt
+-w, --watch     ./src/          watch the given directory
+-e, --exts      js,html,css     watch only the given extensions
+-i, --ignore    '*.md'          do not watch the given pattern
+-d, --debounce  5000            the minimum number of milleseconds
+                                    to wait between changes
+
+-r, --restart                   restart the process (for servers and such)
+-s, --signal    SIGHUP          like -r, but with a signal (ex: SIGHUP)
+-c, --clear                     clear the screen between command runs
+-W  (wait)                      ignore all changes while the command runs
+
+--              npm start       what command to run, which its arguments
+
+--no-ignore                     disregard both .ignore and .gitignore
+--no-vcs-ignore                 disregard only .gitignore
+--no-default-ignore             disregard built-in ignore lists
 ```
 
-Call `make test` when any file changes in this directory/subdirectory, except
-for everything below `target`:
+### How to use
+
+Example: List the directory when any files change.
 
 ```bash
-watchexec -i target make test
+watchexec -c -- ls -lah
 ```
 
-Call `ls -la` when any file changes in this directory/subdirectory:
+### Advanced Usage Example
+
+Here's a "kitchen sink" example.
 
 ```bash
-watchexec -- ls -la
+watchexec -c -r -s SIGKILL -d 2000 -W --verbose \
+    -w ./src -w ./lib -w ./server.js \
+    -e ts,js,sass,css,html \
+    -i '.git' '*.min.js' -i '*.min.css' \
+    -- npm run build
+```
+
+### How to use (Node, Go, Rust, rsync)
+
+These examples show how you might use this for builds, servers, and publishing
+or deploying.
+
+```bash
+# Node / npm
+watchexec -W -- npm run build
+watchexec -r -- npm start
+
+# Golang
+watchexec -- go build .
+watchexec -r -- go run .
+
+# Rust
+watchexec -- cargo build --bin
+watchexec -r -- cargo run --bin
+
+# rsync (local copy)
+watchexec -- rsync -avhP ./ ./srv/MY_PROJECT/
+
+# rsync (remote publish)
+watchexec -- rsync -avhP ./ app@example.com:~/srv/MY_PROJECT/
 ```
