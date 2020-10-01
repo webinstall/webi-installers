@@ -56,6 +56,12 @@ pkg_post_install() {
     echo "Building go language tools..."
     export GO111MODULE=on
 
+    # See https://pkg.go.dev/mod/golang.org/x/tools?tab=packages
+
+    echo ""
+    echo godoc
+    "$pkg_dst_cmd" get golang.org/x/tools/cmd/godoc@latest > /dev/null #2>/dev/null
+
     echo ""
     echo gopls
     "$pkg_dst_cmd" get golang.org/x/tools/gopls@latest > /dev/null #2>/dev/null
@@ -71,6 +77,10 @@ pkg_post_install() {
     echo ""
     echo goimports
     "$pkg_dst_cmd" get golang.org/x/tools/cmd/goimports@latest > /dev/null #2>/dev/null
+
+    echo ""
+    echo gomvpkg
+    "$pkg_dst_cmd" get golang.org/x/tools/cmd/gomvpkg@latest > /dev/null #2>/dev/null
 
     echo ""
     echo gorename
