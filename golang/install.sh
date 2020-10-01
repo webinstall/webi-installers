@@ -54,24 +54,41 @@ pkg_post_install() {
 
     # Install x go
     echo "Building go language tools..."
+    export GO111MODULE=on
+
+    echo ""
     echo gopls
-    "$pkg_dst_cmd" get golang.org/x/tools/gopls > /dev/null #2>/dev/null
+    "$pkg_dst_cmd" get golang.org/x/tools/gopls@latest > /dev/null #2>/dev/null
+
+    echo ""
+    echo guru
+    "$pkg_dst_cmd" get golang.org/x/tools/cmd/guru@latest > /dev/null #2>/dev/null
+
+    echo ""
     echo golint
-    "$pkg_dst_cmd" get golang.org/x/lint/golint > /dev/null #2>/dev/null
-    echo errcheck
-    "$pkg_dst_cmd" get github.com/kisielk/errcheck > /dev/null #2>/dev/null
-    echo gotags
-    "$pkg_dst_cmd" get github.com/jstemmer/gotags > /dev/null #2>/dev/null
+    "$pkg_dst_cmd" get golang.org/x/lint/golint@latest > /dev/null #2>/dev/null
+
+    echo ""
     echo goimports
-    "$pkg_dst_cmd" get golang.org/x/tools/cmd/goimports > /dev/null #2>/dev/null
+    "$pkg_dst_cmd" get golang.org/x/tools/cmd/goimports@latest > /dev/null #2>/dev/null
+
+    echo ""
     echo gorename
-    "$pkg_dst_cmd" get golang.org/x/tools/cmd/gorename > /dev/null #2>/dev/null
+    "$pkg_dst_cmd" get golang.org/x/tools/cmd/gorename@latest > /dev/null #2>/dev/null
+
+    echo ""
     echo gotype
-    "$pkg_dst_cmd" get golang.org/x/tools/cmd/gotype > /dev/null #2>/dev/null
+    "$pkg_dst_cmd" get golang.org/x/tools/cmd/gotype@latest > /dev/null #2>/dev/null
+
+    echo ""
     echo stringer
-    "$pkg_dst_cmd" get golang.org/x/tools/cmd/stringer > /dev/null #2>/dev/null
-    echo goreturns
-    "$pkg_dst_cmd" get github.com/sqs/goreturns > /dev/null #2>/dev/null
+    "$pkg_dst_cmd" get golang.org/x/tools/cmd/stringer@latest > /dev/null #2>/dev/null
+
+    echo ""
+    echo golangci-lint
+    "$pkg_dst_cmd" get github.com/golangci/golangci-lint/cmd/golangci-lint@latest > /dev/null #2>/dev/null
+
+    echo ""
 }
 
 pkg_done_message() {
