@@ -89,7 +89,7 @@ The `webinstall.dev` server uses the list of releases returned by
 `<your-package>/releases.js` to generate a bash script with most necessary
 variables and functions pre-defined.
 
-You just fill in the blanks.
+You just need to fill in the blanks.
 
 ### TL;DR
 
