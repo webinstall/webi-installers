@@ -4,14 +4,6 @@ var github = require('../_common/github.js');
 var owner = 'goreleaser';
 var repo = 'goreleaser';
 
-/******************************************************************************/
-/** Note: Delete this Comment!                                               **/
-/**                                                                          **/
-/** Need a an example that filters out miscellaneous release files?          **/
-/**   See `deno`, `gitea`, or `caddy`                                        **/
-/**                                                                          **/
-/******************************************************************************/
-
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
     return all;
