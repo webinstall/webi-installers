@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __bootstrap_webi() {
 
 set -e
 set -u
@@ -284,11 +284,13 @@ echo "Have a problem? Experience a bug? Please let us know:"
 echo "        https://github.com/webinstall/packages/issues"
 echo ""
 
-{
+function __init_installer() {
 
 {{ installer }}
 
 }
+
+__init_installer
 
 ##
 ##
@@ -354,3 +356,5 @@ rm -rf "$WEBI_TMP"
 # See? No magic. Just downloading and moving files.
 
 }
+
+__bootstrap_webi
