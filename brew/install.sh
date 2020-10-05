@@ -3,9 +3,23 @@
 set -e
 set -u
 
-{
+function _install_brew() {
     # Straight from https://brew.sh
     #/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+
+    needs_xcode="$(/usr/bin/xcode-select -p >/dev/null 2> /dev/null || echo "true")"
+    if [[ -n "${needs_xcode}" ]]
+    then
+        echo ""
+        echo ""
+        echo "ERROR: Run this command to install XCode Command Line Tools first:"
+        echo ""
+        echo "    xcode-select --install"
+        echo ""
+        echo "After the install, close this terminal, open a new one, and try again."
+        echo ""
+        exit 1
+    fi
 
     # From Straight from https://brew.sh
     if ! [ -d "$HOME/.local/opt/brew" ]; then
@@ -35,3 +49,5 @@ set -u
     echo '        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
     echo ""
 }
+
+_install_brew
