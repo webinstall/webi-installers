@@ -56,6 +56,15 @@ You can also run bash explicitly:
 bash ./some-script.sh
 ```
 
+### How to set the fish Color Scheme
+
+You may like to have your `fish` theme match your Terminal or iTerm2 theme (such
+as _Solarized_, _Dracula_, or _Tomorrow Night_).
+
+```bash
+fish_config colors
+```
+
 ### How to set vim to keep using bash
 
 The first line of your `.vimrc` should always be `set shell=/bin/bash`.
