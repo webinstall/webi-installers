@@ -118,7 +118,7 @@ Use Serviceman to create a _systemd_ config file.
 
 ```bash
 sudo env PATH="$PATH" \
-    serviceman --system --username $(whoami) --name caddy -- \
+    serviceman add --system --username $(whoami) --name caddy -- \
         caddy run --config ./Caddyfile
 ```
 
@@ -149,7 +149,7 @@ webi serviceman
 Use Serviceman to create a _launchd_ plist file.
 
 ```bash
-serviceman --username $(whoami) --name caddy -- \
+serviceman add --username $(whoami) --name caddy -- \
     caddy run --config ./Caddyfile
 ```
 
@@ -189,7 +189,7 @@ webi.bat serviceman
 Use Serviceman to create a Startup entry in the Windows Registry:
 
 ```bash
-serviceman.exe --name caddy -- \
+serviceman.exe add --name caddy -- \
     caddy run --config ./Caddyfile
 ```
 
