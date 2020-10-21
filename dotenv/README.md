@@ -5,13 +5,7 @@ tagline: |
   dotenv: a cross-platform tool to load a .env and run a command.
 ---
 
-## Updating `dotenv`
-
-```bash
-webi dotenv@stable
-```
-
-Use the `@beta` tag for pre-releases, or `@x.y.z` for a specific version.
+To update or switch versions, run `webi dotenv@stable`.
 
 ## Cheat Sheet
 

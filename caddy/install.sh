@@ -18,18 +18,18 @@ pkg_get_current_version() {
     # 'caddy version' has output in this format:
     #       v2.1.0 h1:pQSaIJGFluFvu8KDGDODV8u4/QRED/OPyIR+MWYYse8=
     # This trims it down to just the version number:
-    #       2.0.0
+    #       2.1.0
     echo "$(caddy version 2>/dev/null | head -n 1 | cut -d' ' -f1 | sed 's:^v::')"
 }
 
 pkg_install() {
-    # $HOME/.local/xbin
+    # $HOME/.local/opt/caddy-v2.1.0/bin
     mkdir -p "$pkg_src_bin"
 
-    # mv ./caddy* "$HOME/.local/xbin/caddy-v2.0.0"
+    # mv ./caddy* "$HOME/.local/opt/caddy-v2.1.0/bin/caddy"
     mv ./"$pkg_cmd_name"* "$pkg_src_cmd"
 
-    # chmod a+x "$HOME/.local/xbin/caddy-v2.0.0"
+    # chmod a+x "$HOME/.local/opt/caddy-v2.1.0/bin/caddy"
     chmod a+x "$pkg_src_cmd"
 }
 
@@ -37,6 +37,6 @@ pkg_link() {
     # rm -f "$HOME/.local/bin/caddy"
     rm -f "$pkg_dst_cmd"
 
-    # ln -s "$HOME/.local/xbin/caddy-v2.0.0" "$HOME/.local/bin/caddy"
+    # ln -s "$HOME/.local/opt/caddy-v2.1.0/bin/caddy" "$HOME/.local/bin/caddy"
     ln -s "$pkg_src_cmd" "$pkg_dst_cmd"
 }

@@ -25,15 +25,15 @@ function __init_dotenv() {
         # mv ./dotenv* "$HOME/.local/opt/dotenv-v1.0.0/bin/dotenv"
         mv ./"$pkg_cmd_name"* "$pkg_src_cmd"
 
-        # chmod a+x "$HOME/.local/xbin/dotenv-v1.0.0/bin/dotenv"
+        # chmod a+x "$HOME/.local/opt/dotenv-v1.0.0/bin/dotenv"
         chmod a+x "$pkg_src_cmd"
     }
 
     pkg_get_current_version() {
         # 'dotenv version' has output in this format:
-        #       v2.1.0 h1:pQSaIJGFluFvu8KDGDODV8u4/QRED/OPyIR+MWYYse8=
+        #       dotenv v1.0.0 (17c7677) 2020-10-19T23:43:57Z
         # This trims it down to just the version number:
-        #       2.0.0
+        #       1.0.0
         echo "$(dotenv --version 2>/dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
     }
 
