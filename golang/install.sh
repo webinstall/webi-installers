@@ -95,10 +95,6 @@ pkg_post_install() {
     "$pkg_dst_cmd" get golang.org/x/tools/cmd/stringer@latest > /dev/null #2>/dev/null
 
     echo ""
-    echo golangci-lint
-    "$pkg_dst_cmd" get github.com/golangci/golangci-lint/cmd/golangci-lint@latest > /dev/null #2>/dev/null
-
-    echo ""
 }
 
 pkg_done_message() {

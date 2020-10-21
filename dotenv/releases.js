@@ -6,7 +6,6 @@ var repo = 'dotenv';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
-    // remove checksums and .deb
     return all;
   });
 };

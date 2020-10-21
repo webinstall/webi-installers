@@ -29,7 +29,7 @@
     go get golang.org/x/tools/cmd/gotype@latest > /dev/null #2>/dev/null
 
     echo -n "golangci-lint: "
-    go get github.com/golangci/golangci-lint/cmd/golangci-lint@master > /dev/null #2>/dev/null 
+    go get github.com/golangci/golangci-lint/cmd/golangci-lint@latest > /dev/null #2>/dev/null
 
     # Community Tooling
     echo -n "fillstruct: "
