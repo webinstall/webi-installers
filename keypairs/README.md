@@ -51,7 +51,7 @@ A JWT (JSON Web Token) has 3 sections (protected header, payload, and signature)
 separated by dots (`.`):
 
 ```txt
-eyJhbGciOiJFUzI1NiIsImtpZCI6ImpkeHhZY1NCZUJfeUdoZWlCVW14NjF0eHExZGFjR1hIX191bEJuWlZHMEUiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE1NDU5MzkxNzksInN1YiI6Im1lQGV4YW1wbGUuY29tIn0.izlx0ylMtxqof7PABjpFAlP-1tNslEFoosHPCVTD-D1aIY7rq1jZikQerdA0lFEEsiD9D_DdBW3Eaq9s63jcBA
+eyJhbGciOiJFUzI1NiIsImtpZCI6ImpkeHhZY1NCZUJfeUdoZWlCVW14NjF0eHExZGFjR1hIX191bEJuWlZHMEUiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjIxNDczODU3MTIsInN1YiI6Im1lQGV4YW1wbGUuY29tIn0.oh8-PUMdrbQU6seRXjo68wPWAKbA-V9LMnd_wZEkPHc3C8A5xJzV7mDDMNOLEy4VcuNGxced_yjYulzcMa5FLQ
 ```
 
 A JWS (JSON Web Signature), is just a parsed JWT:
@@ -59,7 +59,7 @@ A JWS (JSON Web Signature), is just a parsed JWT:
 ```json
 {
   "claims": {
-    "exp": 1545939179,
+    "exp": 2147385712,
     "sub": "me@example.com"
   },
   "header": {
@@ -67,9 +67,9 @@ A JWS (JSON Web Signature), is just a parsed JWT:
     "kid": "jdxxYcSBeB_yGheiBUmx61txq1dacGXH__ulBnZVG0E",
     "typ": "JWT"
   },
-  "payload": "eyJleHAiOjE1NDU5MzkxNzksInN1YiI6Im1lQGV4YW1wbGUuY29tIn0",
+  "payload": "eyJleHAiOjIxNDczODU3MTIsInN1YiI6Im1lQGV4YW1wbGUuY29tIn0",
   "protected": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImpkeHhZY1NCZUJfeUdoZWlCVW14NjF0eHExZGFjR1hIX191bEJuWlZHMEUiLCJ0eXAiOiJKV1QifQ",
-  "signature": "izlx0ylMtxqof7PABjpFAlP-1tNslEFoosHPCVTD-D1aIY7rq1jZikQerdA0lFEEsiD9D_DdBW3Eaq9s63jcBA"
+  "signature": "oh8-PUMdrbQU6seRXjo68wPWAKbA-V9LMnd_wZEkPHc3C8A5xJzV7mDDMNOLEy4VcuNGxced_yjYulzcMa5FLQ"
 }
 ```
 
@@ -87,8 +87,8 @@ You can use files or strings.
 
 ```bash
 keypairs verify \
-  '{ "crv": "P-256", "d": "hYmoRZJp8b98wl0Daw49R1NjHfDhGNXP34-QyaCuZIk", "kty": "EC", "x": "5K5ALgtWw37KsZOrBdwCyGOGKCFd27u-t61dmUiieJY", "y": "wr3BNL-CeqkGtiRVqo3yizKxUA0bwS1MNZeqytdwICA" }' \
-  eyJhbGciOiJFUzI1NiIsImtpZCI6ImpkeHhZY1NCZUJfeUdoZWlCVW14NjF0eHExZGFjR1hIX191bEJuWlZHMEUiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE1NDU5MzkxNzksInN1YiI6Im1lQGV4YW1wbGUuY29tIn0.izlx0ylMtxqof7PABjpFAlP-1tNslEFoosHPCVTD-D1aIY7rq1jZikQerdA0lFEEsiD9D_DdBW3Eaq9s63jcBA
+  '{ "crv": "P-256", "kty": "EC", "x": "5K5ALgtWw37KsZOrBdwCyGOGKCFd27u-t61dmUiieJY", "y": "wr3BNL-CeqkGtiRVqo3yizKxUA0bwS1MNZeqytdwICA" }' \
+  eyJhbGciOiJFUzI1NiIsImtpZCI6ImpkeHhZY1NCZUJfeUdoZWlCVW14NjF0eHExZGFjR1hIX191bEJuWlZHMEUiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjIxNDczODU3MTIsInN1YiI6Im1lQGV4YW1wbGUuY29tIn0.oh8-PUMdrbQU6seRXjo68wPWAKbA-V9LMnd_wZEkPHc3C8A5xJzV7mDDMNOLEy4VcuNGxced_yjYulzcMa5FLQ
 ```
 
 ### What do RSA and ECDSA JWKs look like?
