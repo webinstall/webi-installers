@@ -80,7 +80,12 @@ function normalize(all) {
           rel.arch = arch;
           return true;
         }
-      })[0];
+      });
+    }
+    if (!rel.arch) {
+      if ('macos' === rel.os) {
+        rel.arch = 'amd64';
+      }
     }
     supported.arches[rel.arch] = true;
 
