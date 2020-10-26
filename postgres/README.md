@@ -19,6 +19,28 @@ Use `@x.y.z` for a specific version.
 > handles SQL, 'NoSQL', JSON, HSTORE, Full-Text Search, Messages Queues and
 > more. Best bang for buck.
 
+### Start the postgres server
+
+Run just once (for development):
+
+```bash
+postgres -D $HOME/.local/share/postgres/var -p 5432
+```
+
+Run as a system service on Linux:
+
+```bash
+sudo env PATH="$PATH" \
+    serviceman add --system --username $(whoami) --name postgres -- \
+    postgres -D "$HOME/.local/share/postgres/var" -p 5432
+```
+
+### Connect with the psql client
+
+```bash
+psql 'postgres://postgres:postgres@localhost:5432/postgres'
+```
+
 ### Initialize a database with a password
 
 ```bash
@@ -30,16 +52,4 @@ initdb -D $HOME/.local/share/postgres/var/ \
     --auth-local=password --auth-host=password
 
 rm /tmp/pwfile
-```
-
-### Start the postgres server
-
-```bash
-postgres -D $HOME/.local/share/postgres/var -p 5432
-```
-
-### Connect with the psql client
-
-```bash
-psql 'postgres://postgres:postgres@localhost:5432/postgres'
 ```
