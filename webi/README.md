@@ -56,7 +56,7 @@ cat ~/.config/envman/PATH.env
 `webi` uses standard paths and touches very little.
 
 ```bash
-rm -rf ~/.local/opt ~/.local/bin
+rm -rf ~/.local/opt/webi ~/.local/bin/webi
 ```
 
 If you haven't used `pathman` for anything else, you can also remove its config:
