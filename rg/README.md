@@ -16,9 +16,9 @@ Use the `@beta` tag for pre-releases.
 ## Cheat Sheet
 
 > Ripgrep (`rg`) is smart. It's like grep if grep were built for code. It
-> respects `.gitignore` and `.ignore`, has all of the sensible options you
-> want (colors, numbers, etc) turned on by default, is written in Rust, and
-> typically outperforms grep in many use cases.
+> respects `.gitignore` and `.ignore`, has all of the sensible options you want
+> (colors, numbers, etc) turned on by default, is written in Rust, and typically
+> outperforms grep in many use cases.
 
 ```bash
 rg <search-term> # searches recursively, ignoring .git, node_modules, etc
@@ -30,4 +30,23 @@ rg 'function doStuff'
 
 ```bash
 rg 'doStuff\(.*\)'
+```
+
+### Inverse Search
+
+Use `-v` to filter out all matches so that only non-matches are left.
+
+```bash
+rg 'bar' | rg -v 'foobar'
+```
+
+### Disable Smart Filtering
+
+By default `rg` respects `.gitignore`, `.ignore`, `.git/info/exclude` and
+ignores many types of hidden files, dot files, etc.
+
+You can use `-uu` to set all of the `--no-ignore-*` options and others.
+
+```bash
+rg -uu 'SECRET='
 ```
