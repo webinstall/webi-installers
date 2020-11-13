@@ -58,7 +58,7 @@ func main() {
 	if len(os.Args) >= 2 && "version" == strings.TrimPrefix(os.Args[1]) {
 		fmt.Printf("YOUR_CLI_NAME v%s %s (%s)\n", version, commit[:7], date)
 	}
-	
+
 	// ...
 }
 ```
@@ -163,6 +163,7 @@ you should update your `builds` directive accordingly.
 - builds:
   - id: command123
     main: ./cmd/command123/command123.go
+    binary: command123
     goos:
       - linux
       - windows
@@ -172,6 +173,7 @@ you should update your `builds` directive accordingly.
       - arm64
   - id: other321
     main: ./cmd/other321/other321.go
+    binary: other123
     goos:
       - linux
       - windows
