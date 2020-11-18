@@ -34,16 +34,16 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
     # Enter tmp
     pushd .local\tmp
 
-        # Remove any leftover tmp cruft 
+        # Remove any leftover tmp cruft
         Remove-Item -Path ".\watchexec-v*" -Recurse -ErrorAction Ignore
         Remove-Item -Path ".\watchexec.exe" -Recurse -ErrorAction Ignore
 
         echo "Unpacking $pkg_download"
         & tar xf "$pkg_download"
-      
+
         # Settle unpacked archive into place
         echo "Install Location: $pkg_src_cmd"
-        New-Item "$pkg_src_bin" -ItemType Directory
+        New-Item "$pkg_src_bin" -ItemType Directory -Force
         Move-Item -Path ".\watchexec-*\watchexec.exe" -Destination "$pkg_src_bin"
 
     # Exit tmp

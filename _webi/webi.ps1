@@ -25,24 +25,20 @@ $exename = $args[0]
 pushd $Env:USERPROFILE
 
 # Make paths if needed
-if (!(Test-Path -Path .local\bin))
-{
-    New-Item -Path .local\bin -ItemType Directory
-}
-if (!(Test-Path -Path .local\xbin))
-{
-    New-Item -Path .local\xbin -ItemType Directory
-}
+New-Item -Path .local\bin -ItemType Directory -Force
+# TODO replace all xbin with opt\bin\
+New-Item -Path .local\xbin -ItemType Directory -Force
+
 # See note on Set-ExecutionPolicy above
 Set-Content -Path .local\bin\webi.bat -Value "@echo off`r`npushd %USERPROFILE%`r`npowershell -ExecutionPolicy Bypass .local\bin\webi.ps1 %1`r`npopd"
 if (!(Test-Path -Path .local\opt))
 {
-    New-Item -Path .local\opt -ItemType Directory
+    New-Item -Path .local\opt -ItemType Directory -Force
 }
 # TODO windows version of mktemp -d
 if (!(Test-Path -Path .local\tmp))
 {
-    New-Item -Path .local\tmp -ItemType Directory
+    New-Item -Path .local\tmp -ItemType Directory -Force
 }
 
 # TODO SetStrictMode

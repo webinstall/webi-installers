@@ -34,7 +34,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
     # Enter tmp
     pushd .local\tmp
 
-        # Remove any leftover tmp cruft 
+        # Remove any leftover tmp cruft
         Remove-Item -Path ".\goreleaser-v*" -Recurse -ErrorAction Ignore
         Remove-Item -Path ".\goreleaser.exe" -Recurse -ErrorAction Ignore
 
@@ -45,7 +45,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
 
         # Settle unpacked archive into place
         echo "Install Location: $pkg_src_cmd"
-        New-Item "$pkg_src_bin" -ItemType Directory
+        New-Item "$pkg_src_bin" -ItemType Directory -Force
         Move-Item -Path ".\goreleaser.exe" -Destination "$pkg_src_bin"
 
     # Exit tmp

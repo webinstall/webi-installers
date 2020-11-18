@@ -24,15 +24,15 @@ pushd $Env:USERPROFILE
 # Make paths if needed
 if (!(Test-Path -Path Downloads))
 {
-    New-Item -Path Downloads -ItemType Directory
+    New-Item -Path Downloads -ItemType Directory -Force
 }
 if (!(Test-Path -Path .local\bin))
 {
-    New-Item -Path .local\bin -ItemType Directory
+    New-Item -Path .local\bin -ItemType Directory -Force
 }
 if (!(Test-Path -Path .local\opt))
 {
-    New-Item -Path .local\opt -ItemType Directory
+    New-Item -Path .local\opt -ItemType Directory -Force
 }
 
 # {{ baseurl }}

@@ -19,7 +19,7 @@
     }
 
     pkg_install() {
-        # $HOME/.local/xbin
+        # $HOME/.local/bin
         mkdir -p "$pkg_src_bin"
 
         # mv ./fzf* "$HOME/.local/opt/fzf-v0.21.1/bin/fzf"
