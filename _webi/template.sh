@@ -156,7 +156,11 @@ webi_download() {
         # wget has resumable downloads
         # TODO wget -c --content-disposition "$my_url"
         set +e
-        wget -q --show-progress --user-agent="wget $WEBI_UA" -c "$my_url" -O "$my_dl.part"
+        my_show_progress=""
+        if [[ $- == *i* ]]; then
+          my_show_progress="--show-progress"
+        fi
+        wget -q $my_show_progress --user-agent="wget $WEBI_UA" -c "$my_url" -O "$my_dl.part"
         if ! [ $? -eq 0 ]; then
           >&2 echo "failed to download from $WEBI_PKG_URL"
           exit 1
@@ -165,7 +169,11 @@ webi_download() {
     else
         # Neither GNU nor BSD curl have sane resume download options, hence we don't bother
         # TODO curl -fsSL --remote-name --remote-header-name --write-out "$my_url"
-        curl -fSL -H "User-Agent: curl $WEBI_UA" "$my_url" -o "$my_dl.part"
+        my_show_progress="-#"
+        if [[ $- == *i* ]]; then
+          my_show_progress=""
+        fi
+        curl -fSL $my_show_progress -H "User-Agent: curl $WEBI_UA" "$my_url" -o "$my_dl.part"
     fi
     mv "$my_dl.part" "$my_dl"
 
