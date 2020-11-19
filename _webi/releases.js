@@ -42,6 +42,7 @@ Releases.renderBash = function (
           .replace(/[^+\-]*/, '')
           .replace(/^-/, '')
       };
+      var pkgFile = rel.filename || rel.name;
       return fs.promises
         .readFile(path.join(__dirname, 'template.sh'), 'utf8')
         .then(function (tplTxt) {
@@ -113,7 +114,7 @@ Releases.renderBash = function (
               )
               .replace(
                 /^#?WEBI_PKG_FILE=.*/m,
-                "WEBI_PKG_FILE='" + rel.name + "'"
+                "WEBI_PKG_FILE='" + pkgFile + "'"
               )
               // PKG details
               .replace(/^#?PKG_NAME=.*/m, "PKG_NAME='" + pkg + "'")
