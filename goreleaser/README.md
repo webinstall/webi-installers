@@ -13,11 +13,12 @@ Use the `@beta` tag for pre-releases.
 
 ## Cheat Sheet
 
-> `goreleaser` makes it easy to build versioned Go binaries for Mac, Linux, Windows, and
-> Raspberry Pi, and to publish the ChangeLog and binaries to common release platforms
-> including GitHub, Gitea, Gitlab, and Homebrew.
+> `goreleaser` makes it easy to build versioned Go binaries for Mac, Linux,
+> Windows, and Raspberry Pi, and to publish the ChangeLog and binaries to common
+> release platforms including GitHub, Gitea, Gitlab, and Homebrew.
 
-There's a lot that you can do with GoReleaser. These are the things that we've found the most useful for the majority of projects:
+There's a lot that you can do with GoReleaser. These are the things that we've
+found the most useful for the majority of projects:
 
 - Basic Usage & Versioning
 - Publishing Builds to GitHub
@@ -40,9 +41,11 @@ goreleaser --snapshot --skip-publish --rm-dist
 - `--skip-publish` will NOT publish to GitHub, etc
 - `--rm-dist` will automatically remove the `./dist/` directory
 
-The default `.goreleaser.yml` works well for projects for which `package main` is at the root.
+The default `.goreleaser.yml` works well for projects for which `package main`
+is at the root.
 
-GoReleaser provides version information. Here's a good, generic way to print it out:
+GoReleaser provides version information. Here's a good, generic way to print it
+out:
 
 ```go
 package main
@@ -74,16 +77,22 @@ You can export the environment variable:
 export GITHUB_TOKEN="YOUR_GITHUB_TOKEN"
 ```
 
-Or place the token in `~/.config/goreleaser/github_token.txt` and update `.goreleaser.yml` accordingly:
+Or place the token in the default config location:
+
+```bash
+~/.config/goreleaser/github_token
+```
+
+You can also set `env_files` in `.goreleaser.yml`:
 
 ```yml
 env_files:
-  github_token: ~/.config/goreleaser/github_token.txt
+  github_token: ~/.config/goreleaser/github_token
 ```
 
 Running GoReleaser without `--snapshot` must use the latest
-[Git tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging)
-of your repository. Create a tag and push it to Git:
+[Git tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging) of your repository.
+Create a tag and push it to Git:
 
 ```bash
 git tag -a v1.0.0 -m "First release"
@@ -96,8 +105,10 @@ Running GoReleaser without `--skip-publish` will publish the builds:
 goreleaser --rm-dist
 ```
 
-Check the console output to make sure that there are no messages about a failed publish. \
-If all is well you should the git tag on the releases page updated with a ChangeLog and the published binaries.
+Check the console output to make sure that there are no messages about a failed
+publish. \
+If all is well you should the git tag on the releases page updated with a ChangeLog
+and the published binaries.
 
 ### How to Publish to Gitea and others
 
@@ -123,13 +134,15 @@ Also see https://goreleaser.com/environment/
 
 ### How to Build for Raspberry Pi (ARM)
 
-All of the Raspberry Pis are ARM processors and can run Linux. Most can run Windows as well.
+All of the Raspberry Pis are ARM processors and can run Linux. Most can run
+Windows as well.
 
 - RPi 4 is ARM 64, also known as `aarch64`, `arm64`, and `armv8`.
 - RPi 3 could run `armv7` and `arm64`.
 - RPi 2, RPi Zero, and RPi can run either `armv6` or `armv7`.
 
-To build Go binaries for ARM, you'll need to update the `build` section of your `.goreleases.yml`.
+To build Go binaries for ARM, you'll need to update the `build` section of your
+`.goreleases.yml`.
 
 ```yml
 builds:
@@ -161,35 +174,37 @@ you should update your `builds` directive accordingly.
 
 ```yml
 - builds:
-  - id: command123
-    main: ./cmd/command123/command123.go
-    binary: command123
-    goos:
-      - linux
-      - windows
-      - darwin
-    goarch:
-      - amd64
-      - arm64
-  - id: other321
-    main: ./cmd/other321/other321.go
-    binary: other123
-    goos:
-      - linux
-      - windows
-      - darwin
-    goarch:
-      - amd64
-      - arm64
+    - id: command123
+      main: ./cmd/command123/command123.go
+      binary: command123
+      goos:
+        - linux
+        - windows
+        - darwin
+      goarch:
+        - amd64
+        - arm64
+    - id: other321
+      main: ./cmd/other321/other321.go
+      binary: other123
+      goos:
+        - linux
+        - windows
+        - darwin
+      goarch:
+        - amd64
+        - arm64
 ```
 
 ### How to Cross-Compile cgo
 
 > [cgo](https://golang.org/cmd/cgo/) is not Go - Dave Cheney
 
-Most Go programs are "pure Go" and will cross-compile `CGO_ENABLED=0` without any special configuration.
+Most Go programs are "pure Go" and will cross-compile `CGO_ENABLED=0` without
+any special configuration.
 
-Some programs include C libraries, especially SQLite3 or 7z, and require integration with C libraries.
+Some programs include C libraries, especially SQLite3 or 7z, and require
+integration with C libraries.
 
 #### Mac Cross-Compilers
 
@@ -209,7 +224,8 @@ brew install mingw-w64
 brew install FiloSottile/musl-cross/musl-cross --with-aarch64 --with-arm # --with-mips --with-486
 ```
 
-You may want to manually test compiling for multiple platforms before automating it:
+You may want to manually test compiling for multiple platforms before automating
+it:
 
 ```bash
 GOARCH=amd64 GOOS=darwin                              go build -o unarr_darwin cmd/unarr/unarr.go
@@ -219,7 +235,8 @@ GOARCH=arm64 GOOS=linux   CC=aarch64-linux-musl-gcc   go build -o unarr_linux_ar
 GOARCH=arm   GOOS=linux   CC=arm-linux-musl-gcc       go build -o unarr_linux_armv7 cmd/unarr/unarr.go
 ```
 
-If you have simple instructions for how to set up cross-compiling from Windows or Linux, please let us know.
+If you have simple instructions for how to set up cross-compiling from Windows
+or Linux, please let us know.
 
 #### Build Changes
 
@@ -227,59 +244,60 @@ You'll need to manually create a different `builds` item for each unique `id`:
 
 ```yml
 - builds:
-  - id: unarr-linux-x64
-    main: ./cmd/unarr/unarr.go
-    env:
-      - CGO_ENABLED=1
-      - CC=x86_64-linux-musl-gcc
-    flags:
-      - "-ldflags"
-      - '-extldflags "-static"'
-    goos:
-      - linux
-    goarch:
-      - amd64
-  - id: unarr-linux-aarch64
-    main: ./cmd/unarr/unarr.go
-    env:
-      - CGO_ENABLED=1
-      - CC=aarch64-linux-musl-gcc
-    flags:
-      - "-ldflags"
-      - '-extldflags "-static"'
-    goos:
-      - linux
-    goarch:
-      - arm64
-  - id: unarr-linux-armv7
-    main: ./cmd/unarr/unarr.go
-    env:
-      - CGO_ENABLED=1
-      - CC=arm-linux-musleabi-gcc
-    flags:
-      - "-ldflags"
-      - '-extldflags "-static"'
-    goos:
-      - linux
-    goarch:
-      - arm
-    goarm:
-      - 7
-  - id: unarr-windows-x64
-    main: ./cmd/unarr/unarr.go
-    env:
-      - CGO_ENABLED=1
-      - CC=x86_64-w64-mingw32-gcc
-    flags:
-      - "-ldflags"
-      - '-extldflags "-static"'
-    goos:
-      - linux
-    goarch:
-      - amd64
+    - id: unarr-linux-x64
+      main: ./cmd/unarr/unarr.go
+      env:
+        - CGO_ENABLED=1
+        - CC=x86_64-linux-musl-gcc
+      flags:
+        - '-ldflags'
+        - '-extldflags "-static"'
+      goos:
+        - linux
+      goarch:
+        - amd64
+    - id: unarr-linux-aarch64
+      main: ./cmd/unarr/unarr.go
+      env:
+        - CGO_ENABLED=1
+        - CC=aarch64-linux-musl-gcc
+      flags:
+        - '-ldflags'
+        - '-extldflags "-static"'
+      goos:
+        - linux
+      goarch:
+        - arm64
+    - id: unarr-linux-armv7
+      main: ./cmd/unarr/unarr.go
+      env:
+        - CGO_ENABLED=1
+        - CC=arm-linux-musleabi-gcc
+      flags:
+        - '-ldflags'
+        - '-extldflags "-static"'
+      goos:
+        - linux
+      goarch:
+        - arm
+      goarm:
+        - 7
+    - id: unarr-windows-x64
+      main: ./cmd/unarr/unarr.go
+      env:
+        - CGO_ENABLED=1
+        - CC=x86_64-w64-mingw32-gcc
+      flags:
+        - '-ldflags'
+        - '-extldflags "-static"'
+      goos:
+        - linux
+      goarch:
+        - amd64
 ```
 
-If you compile without `-static`, you will need the `musl` libraries to run on (non-Alpine) Linuxes:
+If you compile without `-static`, you will need the `musl` libraries to run on
+(non-Alpine) Linuxes:
 
 ```bash
 sudo apt-get install -y musl
@@ -325,7 +343,7 @@ archives:
 checksum:
   name_template: 'checksums.txt'
 snapshot:
-  name_template: "{{ .Tag }}-next"
+  name_template: '{{ .Tag }}-next'
 changelog:
   sort: asc
   filters:
