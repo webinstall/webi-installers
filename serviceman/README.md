@@ -5,11 +5,7 @@ tagline: |
   Serviceman: cross-platform service management for Linux, Mac, and Windows.
 ---
 
-## Updating `serviceman`
-
-```bash
-webi serviceman@stable
-```
+To update or switch versions, run `webi serviceman@stable`
 
 ## Cheat Sheet
 
