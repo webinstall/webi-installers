@@ -77,25 +77,25 @@ distinct.
 
 Two-finger click "Save Link As" (or similar) to download.
 
-- <a href="./packages/iterm2/schemes/Tomorrow%20Night.itermcolors" download>Tomorrow
+- <a href="/packages/iterm2/schemes/Tomorrow%20Night.itermcolors" download>Tomorrow
   Night</a>
   ![](https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/screenshots/tomorrow_night.png)
-- <a href="./packages/iterm2/schemes/Firewatch.itermcolors" download>Firewatch</a>
+- <a href="/packages/iterm2/schemes/Firewatch.itermcolors" download>Firewatch</a>
   ![](https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/screenshots/firewatch.png)
-- <a href="./packages/iterm2/schemes/Dracula.itermcolors" download>Dracula</a>
+- <a href="/packages/iterm2/schemes/Dracula.itermcolors" download>Dracula</a>
   ![](https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/screenshots/dracula.png)
-- <a href="./packages/iterm2/schemes/Elemental.itermcolors" download>Elemental</a>
+- <a href="/packages/iterm2/schemes/Elemental.itermcolors" download>Elemental</a>
   ![](https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/screenshots/elemental.png)
-- <a href="./packages/iterm2/schemes/Ubuntu.itermcolors" download>Ubuntu</a>
+- <a href="/packages/iterm2/schemes/Ubuntu.itermcolors" download>Ubuntu</a>
   ![](https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/screenshots/ubuntu.png)
-- <a href="./packages/iterm2/schemes/cyberpunk.itermcolors" download>cyberpunk</a>
+- <a href="/packages/iterm2/schemes/cyberpunk.itermcolors" download>cyberpunk</a>
   ![](https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/screenshots/cyberpunk.png)
-- <a href="./packages/iterm2/schemes/Hivacruz.itermcolors" download>Hivacruz</a>
+- <a href="/packages/iterm2/schemes/Hivacruz.itermcolors" download>Hivacruz</a>
   ![](https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/screenshots/hivacruz.png)
-- <a href="./packages/iterm2/schemes/Builtin%20Solarized%20Dark.itermcolors" download>Builtin
+- <a href="/packages/iterm2/schemes/Builtin%20Solarized%20Dark.itermcolors" download>Builtin
   Solarized Dark</a>
   ![](https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/screenshots/builtin_solarized_dark.png)
-- <a href="./packages/iterm2/schemes/ToyChest.itermcolors" download>ToyChest</a>
+- <a href="/packages/iterm2/schemes/ToyChest.itermcolors" download>ToyChest</a>
   (not for the colorblind)
   ![](https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/screenshots/toy_chest.png)
 
