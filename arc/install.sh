@@ -27,9 +27,10 @@
 
     # pkg_get_current_version is recommended, but (soon) not required
     pkg_get_current_version() {
-        # 'arc version' has no version output
-        # TODO https://github.com/mholt/archiver/issues/196
-        #echo $(arc version 2>/dev/null | head -n 1 | cut -d ' ' -f 2)
-        echo v0.0.0
+        # 'arc version' has output in this format:
+        #       arc v3.5.0 (25e050d) 2020-10-30T03:27:58Z
+        # This trims it down to just the version number:
+        #       3.5.0
+        echo "$(arc version 2>/dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
     }
 }
