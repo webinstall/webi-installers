@@ -44,7 +44,7 @@ or Windows Startup config file.
 If successful your browser will open to <http://127.0.0.1:8384/#settings-gui>
 automatically.
 
-### Basic Setup: Sharing
+### Basic Setup & Sharing
 
 You need to install syncthing on TWO OR MORE devices for it to be effective.
 
