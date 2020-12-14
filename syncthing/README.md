@@ -26,21 +26,23 @@ You can test that syncthing was installed correctly by checking it's version:
 syncthing --version
 ```
 
-If that works, you'll want to set your system launcher to run it on login.
-You can install and use [serviceman](/serviceman) to do this:
+If that works, you'll want to set your system launcher to run it on login. You
+can install and use [serviceman](/serviceman) to do this:
 
 ```bash
 webi serviceman
 ```
 
 ```bash
-env PATH="$PATH" serviceman add --user --name syncthing -- syncthing
+env PATH="$PATH" serviceman add --user --name syncthing -- \
+  syncthing --home ~/.config/syncthing/
 ```
 
 Serviceman is cross-platform and will create the correct _launchd_, _systemd_,
 or Windows Startup config file.
 
-If successful your browser will open to <http://127.0.0.1:8384/#settings-gui> automatically.
+If successful your browser will open to <http://127.0.0.1:8384/#settings-gui>
+automatically.
 
 ### Basic Setup: Sharing
 
@@ -57,9 +59,10 @@ Go to <http://127.0.0.1:8384/#settings-gui> and make these changes:
   - Set the remote computer name
   - Then go to "Sharing" and select "Default Folder"
   - Save
-  - NOTE: You will need to accept the device share on the first computer, and
-    then the folder on the second (alternatively you can set Auto-Accept on
-    both)
+  - NOTE: For every device add and folder share action you will get a popup
+    notification in the web admin, possibly alternating between both computers.
+    You will need to accept those for the sync to begin (oralternatively you can
+    set Auto-Accept on both).
 
 You may also want to password protect the local GUI. It only runs on localhost
 by default, so this may not be strictly necessary.
@@ -77,9 +80,9 @@ Otherwise, yes, forward both UDP and TCP ports 22000.
 
 ### How to run Syncthing manually
 
-It can be useful for debugging and testing configuration to run syncthing from your Terminal.
-Just run `syncthing` without any arguments.
+It can be useful for debugging and testing configuration to run syncthing from
+your Terminal. Just run `syncthing` pointing to the config directory:
 
 ```bash
-syncthing
+syncthing --home ~/.config/syncthing/
 ```
