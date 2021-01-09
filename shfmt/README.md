@@ -7,65 +7,70 @@ tagline: |
 
 To update or switch versions, run `webi shfmt@stable` or `webi shfmt@beta`, etc.
 
-# Cheat Sheet
+## Cheat Sheet
 
-> shfmt is a shell parser, formatter and interpretter that supports POSIX Shell, Bash and mksh.
+> shfmt is a shell parser, formatter and interpretter that supports POSIX Shell,
+> Bash and mksh.
 
 Usage: `shfmt <flags> <filepath>`
 
-Note: If given path is directory, all shell scripts in the directory will be used. 
+Note: If given path is directory, all shell scripts in the directory will be
+used.
 
-## Flags:
+### Flags:
 
-*-version*
+````txt
+-version
 	Show version and exit.
 
-*-l*
+-l
 	List files whose formatting differs from shfmt's.
 
-*-w*
+-w
 	Write result to file instead of stdout.
 
-*-d*
+-d
 	Error with a diff when the formatting differs.
 
-*-s*
+-s
 	Simplify the code.
 
-*-mn*
+-mn
 	Minify the code to reduce its size (implies -s).
 
-*-ln* <str>
+-ln <str>
 	Language variant to parse (bash/posix/mksh/bats, default "bash").
 
-*-p*
+-p
 	Shorthand for -ln=posix.
 
-*-filename* str
+-filename <str>
 	Provide a name for the standard input file.
 
-*-i* <uint>
+-i <uint>
 	Indent: 0 for tabs (default), >0 for number of spaces.
 
-*-bn*
+-bn
 	Binary ops like && and | may start a line.
 
-*-ci*
+-ci
 	Switch cases will be indented.
 
-*-sr*
+-sr
 	Redirect operators will be followed by a space.
 
-*-kp*
+-kp
 	Keep column alignment paddings.
 
-*-fn*
+-fn
 	Function opening braces are placed on a separate line.
 
-*-f*
+-f
 	Recursively find all shell files and print the paths.
 
-*-tojson*
+-tojson
 	Print syntax tree to stdout as a typed JSON.
+```txt
 
 See https://github.com/mvdan/sh for more info.
+````
