@@ -17,9 +17,9 @@ Usage: `shfmt <flags> <filepath>`
 Note: If given path is directory, all shell scripts in the directory will be
 used.
 
-### Flags:
+### Frequently used flags:
 
-````txt
+```txt
 -version
 	Show version and exit.
 
@@ -35,42 +35,22 @@ used.
 -s
 	Simplify the code.
 
--mn
-	Minify the code to reduce its size (implies -s).
-
--ln <str>
-	Language variant to parse (bash/posix/mksh/bats, default "bash").
-
--p
-	Shorthand for -ln=posix.
-
--filename <str>
-	Provide a name for the standard input file.
-
--i <uint>
-	Indent: 0 for tabs (default), >0 for number of spaces.
-
--bn
-	Binary ops like && and | may start a line.
-
--ci
-	Switch cases will be indented.
-
--sr
-	Redirect operators will be followed by a space.
-
--kp
-	Keep column alignment paddings.
-
--fn
-	Function opening braces are placed on a separate line.
-
 -f
 	Recursively find all shell files and print the paths.
+```
 
--tojson
-	Print syntax tree to stdout as a typed JSON.
-```txt
+### Examples
+
+To list files being formatted and write directly to file
+
+```bash
+shfmt -l -w <filepath>
+```
+
+To show differences between shfmt formatting and original file formatting
+
+```bash
+shfmt -d <filepath>
+```
 
 See https://github.com/mvdan/sh for more info.
-````
