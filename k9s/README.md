@@ -13,6 +13,8 @@ Use the `@beta` tag for pre-releases.
 
 ## Cheat Sheet
 
+The information in this section is a copy of the preflight requirements and common command line arguments from k9s (https://github.com/derailed/k9s).
+
 > `k9s` aim is to make it easier to navigate, observe and manage your applications in the wild. K9s continually watches Kubernetes for changes and offers subsequent commands to interact with your observed resources.
 
 ### Preflight check
