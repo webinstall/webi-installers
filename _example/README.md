@@ -12,11 +12,8 @@ tagline: |
     Need a Windows example using **msvc**? See `bat`.
 -->
 
-### Updating `foo`
-
-`webi foo@stable`
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi example@stable` (or `@v2`, `@beta`,
+etc).
 
 ## Cheat Sheet
 
