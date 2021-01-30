@@ -1,35 +1,41 @@
 ---
-title: Foo Bar
-homepage: https://github.com/webinstall/foobar
+title: lf
+homepage: https://github.com/gokcehan/lf
 tagline: |
-  foobar: An example that doesn't exist.
+  lf: terminal file manager written in Go
 ---
 
-<!--
-    Note: Delete this comment section.
-
-    Need an example that has an **alias**? See `bat`.
-    Need a Windows example using **msvc**? See `bat`.
--->
-
-To update or switch versions, run `webi example@stable` (or `@v2`, `@beta`,
+To update or switch versions, run `webi lf@stable` (or `@v2`, `@beta`,
 etc).
 
 ## Cheat Sheet
 
-> `foo` doesn't exist and this text should have been replaced. It doesn't do
-> anything, but what it does is useful because it is; everybody knows it.
+> lf (as in "list files") is a terminal file manager written in Go. It is heavily inspired by ranger with some missing and extra features.
 
-To run foo:
-
+To start the application in the current directory:
 ```bash
-foo
+lf
+```
+### Navigating in lf:
+| Action    | Command/Key |
+|-----------|-------------|
+| quit      | 'q'                |
+| up        | 'k' or '\<up>'     |
+| page-up   | '\<pgup>'          |
+| down      | 'j' or '\<down>'   |
+| page-down | '\<pgdn>'          |
+| updir     | 'h' or '\<left>'   |
+| open      | 'l' or '\<right>'  |
+| top       | 'gg' and '\<home>' |
+| bottom    | 'G' and '\<end>'   |
+|||
+
+### For command line options:
+```bash
+lf -help
 ```
 
-### Add Baz Highlighting
-
-To run foo with both bar and baz highlighting turned on:
-
+### For documentation
 ```bash
-foo --bar=baz
+lf -doc
 ```
