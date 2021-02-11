@@ -1,29 +1,31 @@
 ---
-title: dart-sass
-homepage: https://github.com/webinstall/dart-sass
+title: sass
+homepage: https://github.com/sass/dart-sass
 tagline: |
-  dart-sass: A Dart implementation of Sass. Sass makes CSS fun again.
+  sass: The reference implementation of Sass, written in Dart. Sass makes CSS fun again.
 ---
 
-To update or switch versions, run `webi example@dart-sass` (or `@v2`, `@beta`,
-etc).
+To update or switch versions, run `webi sass@stable` (or `@v2`, `@beta`, etc).
 
 ## Cheat Sheet
 
-> Dart Sass has replaced Ruby Sass as the canonical implementation of the Sass language.
+> Dart Sass has replaced Ruby Sass as the canonical implementation of the Sass
+> language.
 
 ### Command format:
+
 ```bash
 sass <input.scss> [output.css]
 ```
+
 or
+
 ```bash
 sass <input.scss>:<output.css> <input/>:<output/> <dir/>
 ```
 
-
-| Input and Output             | Functionality                                             |
-|------------------|-----------------------------------------------------------|
+| Input and Output | Functionality                                             |
+| ---------------- | --------------------------------------------------------- |
 | --[no-]stdin     | Read the stylesheet from stdin.                           |
 | --[no-]indented  | Use the indented syntax for input from stdin.             |
 | -I, --load-path= | A path to use when resolving imports.                     |

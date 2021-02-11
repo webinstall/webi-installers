@@ -1,16 +1,16 @@
 #!/bin/bash
 
-function __init_dart-sass() {
+function __init_sass() {
     set -e
     set -u
 
     ##################
-    # Install dart-sass #
+    # Install sass #
     ##################
 
-    pkg_cmd_name="dart-sass"
+    pkg_cmd_name="sass"
 
-    pkg_dst_cmd="$HOME/.local/bin/dart-sass"
+    pkg_dst_cmd="$HOME/.local/bin/sass"
     pkg_dst="$pkg_dst_cmd"
 
     # no ./bin dir here because of how the macOS version is packaged
@@ -26,9 +26,9 @@ function __init_dart-sass() {
     }
 
     pkg_get_current_version() {
-        echo $(dart-sass --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2)
+        echo $(sass --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2)
     }
 
 }
 
-__init_dart-sass
+__init_sass
