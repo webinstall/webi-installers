@@ -13,15 +13,16 @@ function __init_dart-sass() {
     pkg_dst_cmd="$HOME/.local/bin/dart-sass"
     pkg_dst="$pkg_dst_cmd"
 
-    pkg_src_cmd="$HOME/.local/opt/dart-sass-v$WEBI_VERSION/bin/dart-sass"
+    # no ./bin dir here because of how the macOS version is packaged
+    pkg_src_cmd="$HOME/.local/opt/dart-sass-v$WEBI_VERSION/sass"
     pkg_src_dir="$HOME/.local/opt/dart-sass-v$WEBI_VERSION"
     pkg_src="$pkg_src_cmd"
 
     # pkg_install must be defined by every package
     pkg_install() {
-        mkdir -p "$(dirname $pkg_src_cmd)"
-        mv ./dart-sass-*/dart-sass "$pkg_src_cmd"
-        pathman add ~/.local/bin/dart-sass
+        # moves everything, for macOS' sake
+        mkdir -p "$pkg_src_dir"
+        mv ./dart-sass/* "$pkg_src_dir"
     }
 
     pkg_get_current_version() {
