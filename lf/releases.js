@@ -19,14 +19,7 @@ module.exports = function (request) {
 
 if (module === require.main) {
   module.exports(require('@root/request')).then(function (all) {
-    all = require('../_webi/normalize.js')(all);
-    all.releases = all.releases
-      .filter(function (r) {
-        return (
-          ['windows', 'macos', 'linux'].includes(r.os) && 'amd64' === r.arch
-        );
-      })
-      .slice(0, 10);
+    all = require('../_webi/normalize.js')._debug(all);
     console.info(JSON.stringify(all, null, 2));
   });
 }

@@ -20,7 +20,7 @@ function __init_keypairs() {
 
     pkg_install() {
         # $HOME/.local/opt/keypairs-v0.6.5/bin
-        mkdir -p "$pkg_src_bin"
+        mkdir -p "$(dirname $pkg_src_cmd)"
 
         # mv ./keypairs* "$HOME/.local/opt/keypairs-v0.6.5/bin/keypairs"
         mv ./"$pkg_cmd_name"* "$pkg_src_cmd"

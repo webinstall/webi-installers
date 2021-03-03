@@ -135,6 +135,15 @@ function normalize(all) {
 }
 
 module.exports = normalize;
+module.exports._debug = function (all) {
+  all = normalize(all);
+  all.releases = all.releases
+    .filter(function (r) {
+      return ['windows', 'macos', 'linux'].includes(r.os) && 'amd64' === r.arch;
+    })
+    .slice(0, 10);
+  return all;
+};
 // NOT in order of priority (which would be tar, xz, zip, ...)
 module.exports.formats = formats;
 module.exports.arches = arches;

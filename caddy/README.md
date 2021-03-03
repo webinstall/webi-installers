@@ -100,7 +100,7 @@ Using a user named `app` to run your services is common industry convention.
 You can use `setcap` to allow Caddy to use privileged ports.
 
 ```bash
-sudo setcap cap_net_bind_service=+ep $(readlink $(command -v caddy))
+sudo setcap cap_net_bind_service=+ep $(readlink -f $(command -v caddy))
 ```
 
 **systemd config**

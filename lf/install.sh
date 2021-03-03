@@ -30,7 +30,7 @@ function __init_lf() {
     }
 
     pkg_get_current_version() {
-        # 'lf version' has output in this format:
+        # 'lf --version' has output in this format:
         #       r21
         # This treats it as a minor version number:
         #       0.21.0
