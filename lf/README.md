@@ -5,20 +5,23 @@ tagline: |
   lf: terminal file manager written in Go
 ---
 
-To update or switch versions, run `webi lf@stable` (or `@v2`, `@beta`,
-etc).
+To update or switch versions, run `webi lf@stable` (or `@v2`, `@beta`, etc).
 
 ## Cheat Sheet
 
-> lf (as in "list files") is a terminal file manager written in Go. It is heavily inspired by ranger with some missing and extra features.
+> lf (as in "list files") is a terminal file manager written in Go. It is
+> heavily inspired by ranger with some missing and extra features.
 
 To start the application in the current directory:
+
 ```bash
 lf
 ```
+
 ### Navigating in lf:
-| Action    | Command/Key |
-|-----------|-------------|
+
+| Action    | Command/Key        |
+| --------- | ------------------ |
 | quit      | 'q'                |
 | up        | 'k' or '\<up>'     |
 | page-up   | '\<pgup>'          |
@@ -28,14 +31,16 @@ lf
 | open      | 'l' or '\<right>'  |
 | top       | 'gg' and '\<home>' |
 | bottom    | 'G' and '\<end>'   |
-|||
+|           |                    |
 
 ### For command line options:
+
 ```bash
-lf -help
+lf --help
 ```
 
 ### For documentation
+
 ```bash
-lf -doc
+lf --doc
 ```

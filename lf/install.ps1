@@ -1,8 +1,8 @@
 #!/usr/bin/env pwsh
 
-##################
+##############
 # Install lf #
-##################
+##############
 
 $pkg_cmd_name = "lf"
 
@@ -29,7 +29,6 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
 
     pushd .local\tmp
 
-        Remove-Item -Path ".\lf-v*" -Recurse -ErrorAction Ignore
         Remove-Item -Path ".\lf.exe" -Recurse -ErrorAction Ignore
 
         echo "Unpacking $pkg_download"
@@ -37,7 +36,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
 
         echo "Install Location: $pkg_src_cmd"
         New-Item "$pkg_src_bin" -ItemType Directory -Force
-        Move-Item -Path ".\lf-*\lf.exe" -Destination "$pkg_src_bin"
+        Move-Item -Path ".\lf.exe" -Destination "$pkg_src_bin"
 
     popd
 }
