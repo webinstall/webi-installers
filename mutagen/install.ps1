@@ -29,7 +29,6 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
 
     pushd .local\tmp
 
-        Remove-Item -Path ".\mutagen-v*" -Recurse -ErrorAction Ignore
         Remove-Item -Path ".\mutagen.exe" -Recurse -ErrorAction Ignore
 
         echo "Unpacking $pkg_download"
@@ -37,7 +36,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
 
         echo "Install Location: $pkg_src_cmd"
         New-Item "$pkg_src_bin" -ItemType Directory -Force
-        Move-Item -Path ".\mutagen-*\mutagen.exe" -Destination "$pkg_src_bin"
+        Move-Item -Path ".\mutagen.exe" -Destination "$pkg_src_bin"
 
     popd
 }

@@ -4,9 +4,9 @@ function __init_mutagen() {
     set -e
     set -u
 
-    ##################
+    ###################
     # Install mutagen #
-    ##################
+    ###################
 
     pkg_cmd_name="mutagen"
 
@@ -18,13 +18,22 @@ function __init_mutagen() {
     pkg_src="$pkg_src_cmd"
 
     pkg_install() {
+        # $HOME/.local/opt/mutagen-v0.11.8/bin
         mkdir -p "$(dirname $pkg_src_cmd)"
 
+        # mv ./mutagen* "$HOME/.local/opt/mutagen-v0.11.8/bin/mutagen"
         mv ./mutagen "$pkg_src_cmd"
+
+        # chmod a+x "$HOME/.local/opt/mutagen-v0.11.8/bin/mutagen"
+        chmod a+x "$pkg_src_cmd"
     }
 
     pkg_get_current_version() {
-        echo $(mutagen --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2)
+        # 'mutagen version' has output in this format:
+        #       0.11.8
+        # This trims it down to just the version number:
+        #       0.11.8
+        echo $(mutagen version 2>/dev/null | head -n 1 | cut -d ' ' -f1)
     }
 
 }
