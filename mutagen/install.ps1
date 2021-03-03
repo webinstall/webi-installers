@@ -9,8 +9,8 @@ $pkg_cmd_name = "mutagen"
 $pkg_dst_cmd = "$Env:USERPROFILE\.local\bin\mutagen.exe"
 $pkg_dst = "$pkg_dst_cmd"
 
-$pkg_src_cmd = "$Env:USERPROFILE\.local\opt\mutagen-v$Env:WEBI_VERSION\bin\mutagen.exe"
-$pkg_src_bin = "$Env:USERPROFILE\.local\opt\mutagen-v$Env:WEBI_VERSION\bin"
+$pkg_src_cmd = "$Env:USERPROFILE\.local\opt\mutagen-v$Env:WEBI_VERSION\mutagen.exe"
+$pkg_src_bin = "$Env:USERPROFILE\.local\opt\mutagen-v$Env:WEBI_VERSION"
 $pkg_src_dir = "$Env:USERPROFILE\.local\opt\mutagen-v$Env:WEBI_VERSION"
 $pkg_src = "$pkg_src_cmd"
 
@@ -35,8 +35,8 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
         & tar xf "$pkg_download"
 
         echo "Install Location: $pkg_src_cmd"
-        New-Item "$pkg_src_bin" -ItemType Directory -Force
-        Move-Item -Path ".\mutagen.exe" -Destination "$pkg_src_bin"
+        New-Item "$pkg_src_dir" -ItemType Directory -Force
+        Move-Item -Path ".\*" -Destination "$pkg_src_dir"
 
     popd
 }
