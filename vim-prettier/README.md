@@ -5,11 +5,7 @@ tagline: |
   vim-prettier adds Prettier support for Vim.
 ---
 
-## Updating `vim-prettier`
-
-```bash
-webi vim-prettier
-```
+To update (replacing the current version) run `webi vim-prettier`.
 
 ## Cheat Sheet
 
