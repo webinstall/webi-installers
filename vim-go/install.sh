@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_vim_go() {
     set -e
     set -u
 
@@ -74,3 +74,5 @@
     echo 'Running :GoInstallBinaries in vim ...'
     printf ':GoInstallBinaries\n:q\n' | vim -e
 }
+
+__init_vim_go
