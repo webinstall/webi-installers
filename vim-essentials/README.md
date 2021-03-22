@@ -1,11 +1,11 @@
 ---
-title: vim-standard
-homepage: https://webinstall.dev/vim-standard
+title: vim-essentials
+homepage: https://webinstall.dev/vim-essentials
 tagline: |
   meta package for our recommended vim plugins and settings
 ---
 
-To update (replacing the current version) run `webi vim-standard`.
+To update (replacing the current version) run `webi vim-essentials`.
 
 ## Cheat Sheet
 
@@ -17,10 +17,18 @@ recommended.
 
 It includes many of the vim plugins available on webinstall.dev such as:
 
+- [vim-leader](/vim-leader)
 - [vim-shell](/vim-shell)
 - [vim-sensible](/vim-sensible)
-- [vim-spell](/vim-spell)
-- [vim-lastplace](/vim-lastplace)
 - [vim-viminfo](/vim-viminfo)
-- [vim-syntastic](/vim-syntastic)
+- [vim-lastplace](/vim-lastplace)
+- [vim-spell](/vim-spell)
+- [vim-ale](/vim-ale)
 - [vim-prettier](/vim-prettier)
+- [vim-whitespace](/vim-whitespace)
+
+It **DOES NOT** include these, which you may also want:
+
+- [vim-gui](/vim-gui) (mouse and clipboard support)
+- [vim-nerdtree](/vim-nerdtree)
+- [vim-devicons](/vim-devicons)
