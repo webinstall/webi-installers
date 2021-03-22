@@ -20,6 +20,7 @@ This installer includes a few reasonable defaults.
 ### How to install and configure manually
 
 ```bash
+mkdir -p ~/.vim/pack/plugins/start/
 git clone --depth=1 https://github.com/dense-analysis/ale.git ~/.vim/pack/plugins/start/ale
 ```
 
