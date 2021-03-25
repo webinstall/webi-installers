@@ -30,7 +30,7 @@ New-Item -Path .local\bin -ItemType Directory -Force
 New-Item -Path .local\xbin -ItemType Directory -Force
 
 # See note on Set-ExecutionPolicy above
-Set-Content -Path .local\bin\webi.bat -Value "@echo off`r`npushd %USERPROFILE%`r`npowershell -ExecutionPolicy Bypass .local\bin\webi.ps1 %1`r`npopd"
+Set-Content -Path .local\bin\webi.bat -Value "@echo off`r`npushd %USERPROFILE%`r`npowershell -ExecutionPolicy Bypass .local\bin\webi-pwsh.ps1 %1`r`npopd"
 if (!(Test-Path -Path .local\opt))
 {
     New-Item -Path .local\opt -ItemType Directory -Force

@@ -1,1 +1,1 @@
-powershell -ExecutionPolicy Bypass .\.local\bin\webi.ps1 %1
+powershell -ExecutionPolicy Bypass .\.local\bin\webi-pwsh.ps1 %1
