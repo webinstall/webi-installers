@@ -1,4 +1,4 @@
-# [webi-installers](https://github.com/webinstall/webi-packages)
+# [webi-installers](https://github.com/webinstall/webi-installers)
 
 > [webi](https://webinstall.dev) is how developers install their tools
 
