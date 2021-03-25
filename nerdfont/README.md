@@ -97,7 +97,7 @@ Select `Settings` from the drop down and update `profiles.defaults.fontFace`:
 {
   "profiles": {
     "defaults": {
-      "fontFace": "DroidSansMono Nerd Font"
+      "fontFace": "DroidSansMono NF"
     }
   }
 }
