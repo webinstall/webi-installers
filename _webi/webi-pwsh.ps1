@@ -31,6 +31,8 @@ New-Item -Path .local\xbin -ItemType Directory -Force
 
 # See note on Set-ExecutionPolicy above
 Set-Content -Path .local\bin\webi.bat -Value "@echo off`r`npushd %USERPROFILE%`r`npowershell -ExecutionPolicy Bypass .local\bin\webi-pwsh.ps1 %1`r`npopd"
+# Backwards-compat bugfix: remove old webi-pwsh.ps1 location
+Remove-Item -Path .local\bin\webi.ps1 -Recurse -ErrorAction Ignore
 if (!(Test-Path -Path .local\opt))
 {
     New-Item -Path .local\opt -ItemType Directory -Force
