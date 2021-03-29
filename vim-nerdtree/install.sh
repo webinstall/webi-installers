@@ -21,7 +21,7 @@ function __init_vim_nerdtree() {
     if ! grep 'source.*plugins.nerdtree.vim' -r ~/.vimrc >/dev/null 2>/dev/null; then
         set +e
         mkdir -p ~/.vim/plugins
-        printf '\n" CtrlP: reasonable defaults from webinstall.dev/vim-nerdtree\n' >> ~/.vimrc
+        printf '\n" NERDTree: reasonable defaults from webinstall.dev/vim-nerdtree\n' >> ~/.vimrc
         printf 'source ~/.vim/plugins/nerdtree.vim\n' >> ~/.vimrc
         set -e
         echo ""
