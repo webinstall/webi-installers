@@ -52,7 +52,7 @@ package main
 
 var (
 	// these will be replaced by goreleaser
-	version = "0.0.0"
+	version = "v0.0.0"
 	date    = "0001-01-01T00:00:00Z"
 	commit  = "0000000"
 )
