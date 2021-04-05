@@ -39,7 +39,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
 
         # Settle unpacked archive into place
         echo "Install Location: $pkg_src_cmd"
-        New-Item "$pkg_src_bin" -ItemType Directory -Force
+        
         Move-Item -Path ".\bin_x86-64\xz.exe" -Destination "$pkg_src_bin"
         Move-Item -Path ".\bin_x86-64\xzdec.exe" -Destination "$pkg_src_bin"
         Copy-Item -Path "$pkg_src_bin\xzdec.exe" -Destination "$pkg_src_bin\unxz.exe"
@@ -49,7 +49,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
     # Exit tmp
     popd
 }
-
+New-Item "$pkg_src_bin" -ItemType Directory -Force | out-null
 echo "Copying into '$pkg_dst_cmd' from '$pkg_src_cmd'"
-Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore
+Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore | out-null
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse

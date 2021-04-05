@@ -37,5 +37,5 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\.local\xbin\$VERNAME"))
 }
 
 echo "Copying into '$Env:USERPROFILE\.local\bin\$EXENAME' from '$Env:USERPROFILE\.local\xbin\$VERNAME'"
-Remove-Item -Path "$Env:USERPROFILE\.local\bin\$EXENAME" -Recurse -ErrorAction Ignore
+Remove-Item -Path "$Env:USERPROFILE\.local\bin\$EXENAME" -Recurse -ErrorAction Ignore | out-null
 Copy-Item -Path "$Env:USERPROFILE\.local\xbin\$VERNAME" -Destination "$Env:USERPROFILE\.local\bin\$EXENAME" -Recurse

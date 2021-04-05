@@ -37,7 +37,7 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERS
 }
 
 echo "Copying into '$Env:USERPROFILE\.local\opt\$Env:PKG_NAME' from '$Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERSION'"
-Remove-Item -Path "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME" -Recurse -ErrorAction Ignore
+Remove-Item -Path "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME" -Recurse -ErrorAction Ignore | out-null
 Copy-Item -Path "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERSION" -Destination "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME" -Recurse
 
 # make npm not act stupid about which node to use... ugh (this should be the default)

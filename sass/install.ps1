@@ -40,14 +40,14 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
         & tar xf "$pkg_download"
 
         echo "Install Location: $pkg_src_cmd"
-        New-Item "$pkg_src_bin" -ItemType Directory -Force > $null
+        
         Move-Item -Path ".\dart-sass\*" -Destination "$pkg_src_dir"
 
     # Exit tmp
     popd
 }
-
-Remove-Item "$pkg_dst_dir" -Force -Confirm:$False -Recurse -ErrorAction Ignore
+New-Item "$pkg_src_bin" -ItemType Directory -Force > $null | out-null
+Remove-Item "$pkg_dst_dir" -Force -Confirm:$False -Recurse -ErrorAction Ignore | out-null
 echo "Linking '$pkg_dst_dir' from '$pkg_src_dir'"
 New-Item -ItemType Junction -Path "$pkg_dst_dir" -Target "$pkg_src_dir" > $null
 

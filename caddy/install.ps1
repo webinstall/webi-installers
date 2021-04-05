@@ -44,13 +44,14 @@ IF (!(Test-Path -Path "$pkg_src_cmd")) {
 
     # Settle unpacked archive into place
     echo "Install Location: $pkg_src_cmd"
-    New-Item "$pkg_src_bin" -ItemType Directory -Force
+    
     Move-Item -Path ".\caddy.exe" -Destination "$pkg_src_bin"
 
     # Exit tmp
     popd
 }
 
+New-Item "$pkg_src_bin" -ItemType Directory -Force | out-null
 echo "Copying into '$pkg_dst_cmd' from '$pkg_src_cmd'"
 Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore
 New-Item "$pkg_dst_bin" -ItemType Directory -Force

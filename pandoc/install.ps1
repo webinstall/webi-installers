@@ -35,8 +35,8 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
     pushd .local\tmp
 
         # Remove any leftover tmp cruft 
-        Remove-Item -Path ".\pandoc-v*" -Recurse -ErrorAction Ignore
-        Remove-Item -Path ".\pandoc.exe" -Recurse -ErrorAction Ignore
+        Remove-Item -Path ".\pandoc-v*" -Recurse -ErrorAction Ignore 
+        Remove-Item -Path ".\pandoc.exe" -Recurse -ErrorAction Ignore 
 
         # Unpack archive file into this temporary directory
         # Windows BSD-tar handles zip. Imagine that.
@@ -46,13 +46,13 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
 
         # Settle unpacked archive into place
         echo "Install Location: $pkg_src_cmd"
-        New-Item "$pkg_src_bin" -ItemType Directory -Force
+        
         Move-Item -Path ".\pandoc-*\pandoc.exe" -Destination "$pkg_src_bin"
 
     # Exit tmp
     popd
 }
-
+New-Item "$pkg_src_bin" -ItemType Directory -Force | out-null
 echo "Copying into '$pkg_dst_cmd' from '$pkg_src_cmd'"
-Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore
+Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore | out-null
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse
