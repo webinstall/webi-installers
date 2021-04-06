@@ -27,8 +27,7 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"))
     & move "$pkg_download.part" "$pkg_download"
 }
 
-IF (!(Test-Path -Path "$pkg_src_cmd"))
-{
+
     echo "Installing sass (dart-sass)"
 
     pushd .local\tmp
@@ -40,14 +39,14 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
         & tar xf "$pkg_download"
 
         echo "Install Location: $pkg_src_cmd"
-        New-Item "$pkg_src_bin" -ItemType Directory -Force > $null
+        New-Item "$pkg_src_bin" -ItemType Directory -Force > $null | out-null
         Move-Item -Path ".\dart-sass\*" -Destination "$pkg_src_dir"
 
     # Exit tmp
     popd
-}
 
-Remove-Item "$pkg_dst_dir" -Force -Confirm:$False -Recurse -ErrorAction Ignore
+
+Remove-Item "$pkg_dst_dir" -Force -Confirm:$False -Recurse -ErrorAction Ignore | out-null
 echo "Linking '$pkg_dst_dir' from '$pkg_src_dir'"
 New-Item -ItemType Junction -Path "$pkg_dst_dir" -Target "$pkg_src_dir" > $null
 

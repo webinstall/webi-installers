@@ -52,7 +52,7 @@ IF (!(Test-Path -Path "$pkg_src"))
 }
 
 echo "Copying into '$pkg_dst' from '$pkg_src'"
-Remove-Item -Path "$pkg_dst" -Recurse -ErrorAction Ignore
+Remove-Item -Path "$pkg_dst" -Recurse -ErrorAction Ignore | out-null
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse
 IF (!(Test-Path -Path go\bin)) { New-Item -Path go\bin -ItemType Directory -Force }
 

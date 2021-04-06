@@ -26,8 +26,7 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"))
     Move-Item -Path "$pkg_download.part" -Destination "$pkg_download" -Force
 }
 
-IF (!(Test-Path -Path "$pkg_src_cmd"))
-{
+
     echo "Installing ffmpeg"
 
     # TODO: create package-specific temp directory
@@ -39,13 +38,13 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
 
         # Settle unpacked archive into place
         echo "Install Location: $pkg_src_cmd"
-        New-Item "$pkg_src_bin" -ItemType Directory -Force
+        New-Item "$pkg_src_bin" -ItemType Directory -Force | out-null
         Move-Item -Path "$pkg_download" -Destination "$pkg_src_cmd" -Force
 
     # Exit tmp
     popd
-}
+
 
 echo "Copying into '$pkg_dst_cmd' from '$pkg_src_cmd'"
-Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore
+Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore | out-null
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse

@@ -26,8 +26,8 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"))
     & move "$pkg_download.part" "$pkg_download"
 }
 
-IF (!(Test-Path -Path "$pkg_src_cmd"))
-{
+
+
     echo "Installing chromedriver"
 
     # TODO: create package-specific temp directory
@@ -48,13 +48,13 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
 
         # Settle unpacked archive into place
         echo "Install Location: $pkg_src_cmd"
-        New-Item "$pkg_src_bin" -ItemType Directory -Force
+        New-Item "$pkg_src_bin" -ItemType Directory -Force | out-null
         Move-Item -Path ".\chromedriver-*\chromedriver.exe" -Destination "$pkg_src_bin"
 
     # Exit tmp
     popd
-}
+
 
 echo "Copying into '$pkg_dst_cmd' from '$pkg_src_cmd'"
-Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore
+Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore | out-null
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse
