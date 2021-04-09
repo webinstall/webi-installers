@@ -12,30 +12,53 @@ specific version.
 
 > shellcheck catches rookie mistakes (and old-habits-die-hard mistakes) in bash
 
-### Run shellcheck in your terminal:
+Also recommended by Google's
+[Shell Style Guide](https://google.github.io/styleguide/shellguide.html)
+
+### How to run shellcheck from the CLI
 
 ```bash
-shellcheck yourscript
+shellcheck ./script.sh
 ```
 
-<!---
-### Run shellcheck in your editor:
+### How to run shellcheck in vim
 
-Include running shellcheck in editor?
+`shellcheck` is
+[supported by `vim-ale`](https://github.com/dense-analysis/ale/blob/master/supported-tools.md)
+out-of-the-box™.
 
-It's just links to other linters or extensions
--->
+Just [install `vim-ale`](https://webinstall.dev/vim-ale) and `shellcheck` and
+you're good to go.
+
+### How to run shellcheck in VS Code
+
+See
+[Visual Studio Marketplace: ShellCheck](https://marketplace.visualstudio.com/items?itemName=timonwong.shellcheck).
 
 ### To use shellcheck in a build or test suite:
 
 Simply include shellcheck in the process.
 
-```bash
+```yaml
 check-scripts:
-    # Fail if any of these files have warnings
-    shellcheck myscripts/*.sh
+  # Fail if any of these files have warnings
+  shellcheck myscripts/*.sh
 ```
 
-<!---
-Improve this as you need to!
--->
+### How to ignore an error
+
+You can ignore an error by putting a comment with the `SCXXXX` error code above
+it:
+
+```bash
+# shellcheck disable=<code>
+```
+
+```bash
+# shellcheck disable=SC1004
+NOT_AN_ERROR='Look, a literal \
+inside of a string!'
+```
+
+Complete list of `SCXXXX` error codes:
+<https://gist.github.com/nicerobot/53cee11ee0abbdc997661e65b348f375>
