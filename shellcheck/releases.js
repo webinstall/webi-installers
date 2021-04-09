@@ -6,27 +6,27 @@ var repo = 'shellcheck';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
-    all.releases
-      .filter(function (rel) {
-        // don't include meta versions as actual versions
-        if (
-          ['latest', 'stable'].includes(rel.version) ||
-          'v' !== rel.version[0]
-        ) {
-          return false;
-        }
-        return true;
-      })
-      .forEach(function (rel) {
-        // if there is no os or arch or source designation, and it's a .zip, it's Windows amd64
-        if (
-          !/(darwin|mac|linux|x86_64|arm|src|source)/i.test(rel.name) &&
-          /\.zip$/.test(rel.name)
-        ) {
-          rel.os = 'windows';
-          rel.arch = 'amd64';
-        }
-      });
+    all.releases = all.releases.filter(function (rel) {
+      // don't include meta versions as actual versions
+      if (
+        ['latest', 'stable'].includes(rel.version) ||
+        'v' !== rel.version[0]
+      ) {
+        return false;
+      }
+      return true;
+    });
+
+    all.releases.forEach(function (rel) {
+      // if there is no os or arch or source designation, and it's a .zip, it's Windows amd64
+      if (
+        !/(darwin|mac|linux|x86_64|arm|src|source)/i.test(rel.name) &&
+        /\.zip$/.test(rel.name)
+      ) {
+        rel.os = 'windows';
+        rel.arch = 'amd64';
+      }
+    });
     return all;
   });
 };
