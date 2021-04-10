@@ -22,10 +22,10 @@ $Env:WEBI_HOST = 'https://webinstall.dev'
 pushd $Env:USERPROFILE
 
 # Make paths if needed
-if (!(Test-Path -Path Downloads))
-{
-    New-Item -Path Downloads -ItemType Directory -Force
-}
+
+
+New-Item -Path Downloads -ItemType Directory -Force | out-null
+
 if (!(Test-Path -Path .local\bin))
 {
     New-Item -Path .local\bin -ItemType Directory -Force

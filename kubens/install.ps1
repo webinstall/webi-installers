@@ -53,6 +53,6 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
 }
 
 echo "Copying into '$pkg_dst_cmd' from '$pkg_src_cmd'"
-Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore
+Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore | out-null
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse
 Remove-Item -Path "$pkg_src" -Recurse -ErrorAction Ignore
