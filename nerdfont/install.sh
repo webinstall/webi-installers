@@ -10,15 +10,15 @@ install() {
     if [ -e "$HOME/Library/Fonts" ]; then
         # OS X
         mv "$my_nerdfont" ~/Library/Fonts/
-        my_fontdir="~/Library/Fonts/"
+        my_fontdir="Library/Fonts/"
     else
         # Linux
         mkdir -p ~/.local/share/fonts
         mv "$my_nerdfont" ~/.local/share/fonts/
-        my_fontdir="~/.local/share/fonts/"
+        my_fontdir=".local/share/fonts/"
     fi
 
-    echo "Installed $my_nerdfont to $my_fontdir"
+    echo "Installed $my_nerdfont to ~/$my_fontdir"
 }
 
 install
