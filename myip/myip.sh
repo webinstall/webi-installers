@@ -11,11 +11,11 @@ function __show_my_ip {
         echo "IPv4 (A)   : $ipv4"
     fi
 
-    if [[ -n $ipv6 ]] && [[ "ipv6" != "ipv4" ]]; then
-        echo "IPv6 (AAAA): $ipv6"
+    if [[ -n ${ipv6} ]] && [[ ${ipv6} != "${ipv4}" ]]; then
+        echo "IPv6 (AAAA): ${ipv6}"
     fi
 
-    if [[ -z $ipv4 ]] && [[ -z "ipv6" ]]; then
+    if [[ -z ${ipv4} ]] && [[ -z ${ipv6} ]]; then
         echo >&2 "error: no public IP address"
     fi
 }
