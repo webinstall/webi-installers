@@ -7,17 +7,28 @@ function _install_brew() {
     # Straight from https://brew.sh
     #/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
-    needs_xcode="$(/usr/bin/xcode-select -p > /dev/null 2> /dev/null || echo "true")"
-    if [[ -n ${needs_xcode} ]]; then
-        echo ""
-        echo ""
-        echo "ERROR: Run this command to install XCode Command Line Tools first:"
-        echo ""
-        echo "    xcode-select --install"
-        echo ""
-        echo "After the install, close this terminal, open a new one, and try again."
-        echo ""
-        exit 1
+    if [[ -n "$(uname -a | grep -i darwin)" ]]; then
+        needs_xcode="$(/usr/bin/xcode-select -p > /dev/null 2> /dev/null || echo "true")"
+        if [[ -n ${needs_xcode} ]]; then
+            echo ""
+            echo ""
+            echo "ERROR: Run this command to install XCode Command Line Tools first:"
+            echo ""
+            echo "    xcode-select --install"
+            echo ""
+            echo "After the install, close this terminal, open a new one, and try again."
+            echo ""
+        fi
+    else
+        if [ -z "$(command -v gcc)" ]; then
+            echo >&2 "Warning: to install 'gcc' et al on Linux use the built-in package manager."
+            echo >&2 "       For example, try: sudo apt install -y build-essential"
+        fi
+        if [ -z "$(command -v git)" ]; then
+            echo >&2 "Error: to install 'git' on Linux use the built-in package manager."
+            echo >&2 "       For example, try: sudo apt install -y git"
+            exit 1
+        fi
     fi
 
     # From Straight from https://brew.sh
