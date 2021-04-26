@@ -40,7 +40,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
         & tar xf "$pkg_download"
 
         echo "Install Location: $pkg_src_cmd"
-        New-Item "$pkg_src_bin" -ItemType Directory -Force > $null
+        New-Item "$pkg_src_bin" -ItemType Directory -Force | out-null > $null
         Move-Item -Path ".\dart-sass\*" -Destination "$pkg_src_dir"
 
     # Exit tmp

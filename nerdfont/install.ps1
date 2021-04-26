@@ -3,7 +3,7 @@
 $my_nerdfont_otf = "Droid Sans Mono for Powerline Nerd Font Complete Windows Compatible.otf"
 $my_fontdir = "$Env:UserProfile\AppData\Local\Microsoft\Windows\Fonts"
 
-New-Item -Path "$my_fontdir" -ItemType Directory -Force
+New-Item -Path "$my_fontdir" -ItemType Directory -Force | out-null
 IF (!(Test-Path -Path "$my_fontdir\$my_nerdfont_otf"))
 {
 

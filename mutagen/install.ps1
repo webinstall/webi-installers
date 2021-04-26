@@ -35,7 +35,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
         & tar xf "$pkg_download"
 
         echo "Install Location: $pkg_src_cmd"
-        New-Item "$pkg_src_dir" -ItemType Directory -Force
+        New-Item "$pkg_src_dir" -ItemType Directory -Force | out-null
         Move-Item -Path ".\*" -Destination "$pkg_src_dir"
 
     popd

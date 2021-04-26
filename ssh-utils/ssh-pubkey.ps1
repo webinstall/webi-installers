@@ -5,7 +5,7 @@
 
 if (!(Test-Path -Path "$Env:USERPROFILE/.ssh"))
 {
-    New-Item -Path "$Env:USERPROFILE/.ssh" -ItemType Directory -Force
+    New-Item -Path "$Env:USERPROFILE/.ssh" -ItemType Directory -Force | out-null
     #& icacls "$Env:USERPROFILE/.ssh" /inheritance:r
     #& icacls "$Env:USERPROFILE/.ssh" /grant:r "$Env:USERNAME":"(F)"
 }

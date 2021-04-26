@@ -28,7 +28,7 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERS
         # Settle unpacked archive into place
         echo "New Name: $VERNAME"
         echo "New Location: $Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERSION\bin\$VERNAME"
-        New-Item "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERSION\bin" -ItemType Directory -Force
+        New-Item "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERSION\bin" -ItemType Directory -Force | out-null
         Move-Item -Path "$VERNAME" -Destination "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERSION\bin"
 
     # Exit tmp

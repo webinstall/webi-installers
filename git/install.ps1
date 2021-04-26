@@ -33,7 +33,7 @@ IF (!(Test-Path -Path "$pkg_src"))
         # Windows BSD-tar handles zip. Imagine that.
         echo "Unpacking $pkg_download"
         IF (!(Test-Path -Path "$pkg_cmd_name-v$Env:WEBI_VERSION")) {
-            New-Item -Path "$pkg_cmd_name-v$Env:WEBI_VERSION" -ItemType Directory -Force
+            New-Item -Path "$pkg_cmd_name-v$Env:WEBI_VERSION" -ItemType Directory -Force | out-null
         }
         ($none = pushd "$pkg_cmd_name-v$Env:WEBI_VERSION")  | out-null
             & tar xf "$pkg_download"
