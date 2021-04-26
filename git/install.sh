@@ -11,7 +11,7 @@ function __init_git() {
             # sudo xcodebuild -license accept
         else
             echo >&2 "Error: to install 'git' on Linux use the built-in package manager."
-            echo >&2 "       for example, try: xcode-select --install"
+            echo >&2 "       for example, try: sudo apt install -y git"
         fi
         exit 1
     else
