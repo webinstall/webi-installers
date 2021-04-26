@@ -8,13 +8,13 @@
     my_size=${1:-$default_size}
 
     if [ "0" != "$EUID" ] && [ "0" != "$UID" ]; then
-      echo Usage:
-      echo '        sudo env PATH="$PATH" vps-addswap' $my_size
-      exit 1
+        echo Usage:
+        echo '        sudo env PATH="$PATH" vps-addswap' $my_size
+        exit 1
     fi
 
     if [ -f "/var/swapfile" ]; then
-      swapoff /var/swapfile
+        swapoff /var/swapfile
     fi
 
     # Allocate a swapfile

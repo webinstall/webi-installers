@@ -33,7 +33,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd")) {
     # Enter tmp
     pushd .local\tmp
 
-    # Remove any leftover tmp cruft 
+    # Remove any leftover tmp cruft
     Remove-Item -Path ".\awless-v*" -Recurse -ErrorAction Ignore
     Remove-Item -Path ".\awless.exe" -Recurse -ErrorAction Ignore
 

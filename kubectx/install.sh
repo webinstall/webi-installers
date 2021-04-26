@@ -30,7 +30,7 @@
     # pkg_get_current_version is recommended, but (soon) not required
     pkg_get_current_version() {
         # 'kubectx' has no version parameter
-        echo       
+        echo
     }
 
 }

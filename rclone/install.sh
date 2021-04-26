@@ -36,7 +36,7 @@ function __init_rclone() {
         #       - go version: go1.15.7
         # This trims it down to just the version number:
         #       1.54.0
-        echo "$(rclone --version 2>/dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
+        echo "$(rclone --version 2> /dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
     }
 
 }

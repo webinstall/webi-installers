@@ -33,7 +33,7 @@ function __init_mutagen() {
         #       0.11.8
         # This trims it down to just the version number:
         #       0.11.8
-        echo $(mutagen version 2>/dev/null | head -n 1 | cut -d ' ' -f1)
+        echo $(mutagen version 2> /dev/null | head -n 1 | cut -d ' ' -f1)
     }
 
 }

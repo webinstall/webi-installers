@@ -26,7 +26,7 @@ function __init_sass() {
     }
 
     pkg_get_current_version() {
-        echo $(sass --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2)
+        echo $(sass --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
     }
 
 }

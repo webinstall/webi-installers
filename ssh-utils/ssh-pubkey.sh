@@ -22,20 +22,20 @@
 
     if [ ! -f "$HOME/.ssh/id_rsa" ]; then
         ssh-keygen -b 2048 -t rsa -f "$HOME/.ssh/id_rsa" -q -N ""
-        >&2 echo ""
+        echo >&2 ""
     fi
 
     if [ ! -f "$HOME/.ssh/id_rsa.pub" ]; then
         ssh-keygen -y -f "$HOME/.ssh/id_rsa" > "$HOME/.ssh/id_rsa.pub"
-        >&2 echo ""
+        echo >&2 ""
     fi
 
     # TODO use the comment (if any) for the name of the file
-    >&2 echo ""
-    >&2 echo "~/Downloads/id_rsa.$(whoami).pub":
-    >&2 echo ""
+    echo >&2 ""
+    echo >&2 "~/Downloads/id_rsa.$(whoami).pub":
+    echo >&2 ""
     rm -f "$HOME/Downloads/id_rsa.$(whoami).pub"
     cp -r "$HOME/.ssh/id_rsa.pub" "$HOME/Downloads/id_rsa.$(whoami).pub"
     cat "$HOME/Downloads/id_rsa.$(whoami).pub"
-    >&2 echo ""
+    echo >&2 ""
 }

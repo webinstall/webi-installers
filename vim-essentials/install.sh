@@ -1,14 +1,14 @@
 webi \
-  vim-leader \
-  vim-shell \
-  vim-sensible \
-  vim-viminfo \
-  vim-lastplace \
-  vim-spell \
-  vim-ale \
-  vim-prettier \
-  vim-whitespace \
-  # done
+    vim-leader \
+    vim-shell \
+    vim-sensible \
+    vim-viminfo \
+    vim-lastplace \
+    vim-spell \
+    vim-ale \
+    vim-prettier \
+    vim-whitespace
+# done
 
 printf '\n'
 printf 'Suggestion: Also check out these great plugins:\n'

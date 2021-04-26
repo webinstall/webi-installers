@@ -61,19 +61,19 @@ echo "Building go language tools..."
 echo gopls
 & "$pkg_dst_cmd" get golang.org/x/tools/gopls
 echo golint
-& "$pkg_dst_cmd" get golang.org/x/lint/golint 
+& "$pkg_dst_cmd" get golang.org/x/lint/golint
 echo errcheck
-& "$pkg_dst_cmd" get github.com/kisielk/errcheck 
+& "$pkg_dst_cmd" get github.com/kisielk/errcheck
 echo gotags
-& "$pkg_dst_cmd" get github.com/jstemmer/gotags 
+& "$pkg_dst_cmd" get github.com/jstemmer/gotags
 echo goimports
-& "$pkg_dst_cmd" get golang.org/x/tools/cmd/goimports 
+& "$pkg_dst_cmd" get golang.org/x/tools/cmd/goimports
 echo gorename
-& "$pkg_dst_cmd" get golang.org/x/tools/cmd/gorename 
+& "$pkg_dst_cmd" get golang.org/x/tools/cmd/gorename
 echo gotype
-& "$pkg_dst_cmd" get golang.org/x/tools/cmd/gotype 
+& "$pkg_dst_cmd" get golang.org/x/tools/cmd/gotype
 echo stringer
-& "$pkg_dst_cmd" get golang.org/x/tools/cmd/stringer 
+& "$pkg_dst_cmd" get golang.org/x/tools/cmd/stringer
 
 # Add to path
 & "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/opt/go/bin

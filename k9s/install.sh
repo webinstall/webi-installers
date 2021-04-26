@@ -37,7 +37,7 @@
 
         # This trims it down to just the version number:
         # 0.24.2
-        echo $(k9s version 2>/dev/null | grep Version: | cut -d 'v' -f 2)
+        echo $(k9s version 2> /dev/null | grep Version: | cut -d 'v' -f 2)
     }
 
 }

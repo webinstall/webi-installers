@@ -35,7 +35,7 @@
         #       ...
         # This trims it down to just the version number:
         #       4.3.1
-        echo $(ffmpeg -version 2>/dev/null | head -n 1 | cut -d ' ' -f 3)
+        echo $(ffmpeg -version 2> /dev/null | head -n 1 | cut -d ' ' -f 3)
     }
 
 }

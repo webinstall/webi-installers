@@ -38,6 +38,6 @@
         # for a particular purpose.
         # This trims it down to just the version number:
         #       2.10.1
-      echo $(pandoc --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2)
+        echo $(pandoc --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
     }
 }

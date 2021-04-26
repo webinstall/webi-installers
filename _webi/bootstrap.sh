@@ -2,16 +2,16 @@
 
 {
 
-set -e
-set -u
+    set -e
+    set -u
 
-#WEBI_PKG=
-#WEBI_HOST=https://webinstall.dev
-export WEBI_HOST
+    #WEBI_PKG=
+    #WEBI_HOST=https://webinstall.dev
+    export WEBI_HOST
 
-mkdir -p "$HOME/.local/bin"
+    mkdir -p "$HOME/.local/bin"
 
-cat << EOF > "$HOME/.local/bin/webi"
+    cat << EOF > "$HOME/.local/bin/webi"
 #!/bin/bash
 
 set -e
@@ -139,10 +139,10 @@ show_path_updates
 
 EOF
 
-chmod a+x "$HOME/.local/bin/webi"
+    chmod a+x "$HOME/.local/bin/webi"
 
-if [ -n "${WEBI_PKG:-}" ]; then
-    "$HOME/.local/bin/webi" "${WEBI_PKG}"
-fi
+    if [ -n "${WEBI_PKG:-}" ]; then
+        "$HOME/.local/bin/webi" "${WEBI_PKG}"
+    fi
 
 }

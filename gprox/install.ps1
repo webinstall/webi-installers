@@ -34,7 +34,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
     # Enter tmp
     pushd .local\tmp
 
-        # Remove any leftover tmp cruft 
+        # Remove any leftover tmp cruft
         Remove-Item -Path ".\gprox-v*" -Recurse -ErrorAction Ignore
         Remove-Item -Path ".\gprox.exe" -Recurse -ErrorAction Ignore
 
@@ -46,7 +46,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
         # Windows BSD-tar handles zip. Imagine that.
         echo "Unpacking $pkg_download"
         & tar xf "$pkg_download"
-      
+
         # Settle unpacked archive into place
         echo "Install Location: $pkg_src_cmd"
         New-Item "$pkg_src_bin" -ItemType Directory

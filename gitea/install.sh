@@ -10,7 +10,7 @@ pkg_get_current_version() {
     #       v2.1.0 h1:pQSaIJGFluFvu8KDGDODV8u4/QRED/OPyIR+MWYYse8=
     # This trims it down to just the version number:
     #       2.0.0
-    echo "$(gitea --version 2>/dev/null | head -n 1 | cut -d' ' -f3)"
+    echo "$(gitea --version 2> /dev/null | head -n 1 | cut -d' ' -f3)"
 }
 
 pkg_link() {

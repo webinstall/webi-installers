@@ -11,7 +11,7 @@ pkg_get_current_version() {
     #       postgres (PostgreSQL) 10.13
     # This trims it down to just the version number:
     #       10.13
-    echo "$(postgres --version 2>/dev/null | head -n 1 | cut -d' ' -f3)"
+    echo "$(postgres --version 2> /dev/null | head -n 1 | cut -d' ' -f3)"
 }
 
 pkg_install() {
@@ -42,11 +42,11 @@ pkg_post_install() {
     chmod 0700 "$POSTGRES_DATA_DIR"
 
     if [ ! -f "$POSTGRES_DATA_DIR/postgresql.conf" ]; then
-      echo "postgres" > "$PWFILE"
-      "$pkg_src/bin/initdb" \
-        -D "$POSTGRES_DATA_DIR/" \
-        --username postgres --pwfile "$PWFILE" \
-        --auth-local=password --auth-host=password
+        echo "postgres" > "$PWFILE"
+        "$pkg_src/bin/initdb" \
+            -D "$POSTGRES_DATA_DIR/" \
+            --username postgres --pwfile "$PWFILE" \
+            --auth-local=password --auth-host=password
     fi
 }
 
@@ -63,4 +63,3 @@ pkg_done_message() {
     echo "    psql 'postgres://postgres:postgres@localhost:5432/postgres'"
     echo ""
 }
-

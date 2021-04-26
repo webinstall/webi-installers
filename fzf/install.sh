@@ -11,11 +11,11 @@
     WEBI_SINGLE=true
 
     pkg_get_current_version() {
-      # 'fzf --version' has output in this format:
-      #       0.21.1 (334a4fa)
-      # This trims it down to just the version number:
-      #       0.21.1
-      echo $(fzf --version 2>/dev/null | head -n 1 | cut -d' ' -f 1)
+        # 'fzf --version' has output in this format:
+        #       0.21.1 (334a4fa)
+        # This trims it down to just the version number:
+        #       0.21.1
+        echo $(fzf --version 2> /dev/null | head -n 1 | cut -d' ' -f 1)
     }
 
     pkg_install() {

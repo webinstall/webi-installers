@@ -80,5 +80,5 @@ function pkg_get_current_version() {
     #       fish, version 3.1.2
     # This trims it down to just the version number:
     #       3.1.2
-    echo $(fish --version 2>/dev/null | head -n 1 | cut -d ' ' -f 3)
+    echo $(fish --version 2> /dev/null | head -n 1 | cut -d ' ' -f 3)
 }

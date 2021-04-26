@@ -9,8 +9,8 @@ function __init_vim_shfmt() {
     git clone --depth=1 https://github.com/z0mbix/vim-shfmt.git "$HOME/.vim/pack/plugins/start/vim-shfmt"
 
     if [ -z "$(command -v shfmt)" ]; then
-      export PATH="$HOME/.local/bin:${PATH}"
-      webi shfmt
+        export PATH="$HOME/.local/bin:${PATH}"
+        webi shfmt
     fi
 
     if [ ! -f "$HOME/.vimrc" ]; then
@@ -23,7 +23,7 @@ function __init_vim_shfmt() {
         curl -fsSL -o ~/.vim/plugins/shfmt.vim "$WEBI_HOST/packages/vim-shfmt/shfmt.vim"
     fi
 
-    if ! grep 'source.*plugins.shfmt.vim' -r ~/.vimrc >/dev/null 2>/dev/null; then
+    if ! grep 'source.*plugins.shfmt.vim' -r ~/.vimrc > /dev/null 2> /dev/null; then
         set +e
         mkdir -p ~/.vim/plugins
         printf '\n" shfmt: reasonable defaults from webinstall.dev/vim-shfmt\n' >> ~/.vimrc

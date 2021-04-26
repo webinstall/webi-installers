@@ -19,7 +19,7 @@ pkg_get_current_version() {
     #       typescript 3.9.2
     # This trims it down to just the version number:
     #       1.1.1
-    echo "$(deno --version 2>/dev/null | head -n 1 | cut -d' ' -f2)"
+    echo "$(deno --version 2> /dev/null | head -n 1 | cut -d' ' -f2)"
 }
 
 pkg_install() {

@@ -30,10 +30,10 @@
     # pkg_get_current_version is recommended, but (soon) not required
     pkg_get_current_version() {
         # 'watchexec --version' has output in this format:
-        #       watchexec 0.99.9 
+        #       watchexec 0.99.9
         # This trims it down to just the version number:
         #       0.99.9
-        echo $(watchexec --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2)
+        echo $(watchexec --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
     }
 
 }

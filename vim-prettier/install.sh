@@ -9,8 +9,8 @@ function __init_vim_prettier() {
     git clone --depth=1 https://github.com/prettier/vim-prettier.git "$HOME/.vim/pack/plugins/start/vim-prettier"
 
     if [ -z "$(command -v node)" ]; then
-      export PATH="$HOME/.local/opt/node/bin:$HOME/.local/bin:${PATH}"
-      webi node
+        export PATH="$HOME/.local/opt/node/bin:$HOME/.local/bin:${PATH}"
+        webi node
     fi
     npm install -g prettier@2
 
@@ -24,7 +24,7 @@ function __init_vim_prettier() {
         curl -fsSL -o ~/.vim/plugins/prettier.vim "$WEBI_HOST/packages/vim-prettier/prettier.vim"
     fi
 
-    if ! grep 'source.*plugins.prettier.vim' -r ~/.vimrc >/dev/null 2>/dev/null; then
+    if ! grep 'source.*plugins.prettier.vim' -r ~/.vimrc > /dev/null 2> /dev/null; then
         set +e
         mkdir -p ~/.vim/plugins
         printf '\n" Prettier: reasonable defaults from webinstall.dev/vim-prettier\n' >> ~/.vimrc

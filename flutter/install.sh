@@ -21,7 +21,6 @@ pkg_src_cmd="$HOME/.local/opt/flutter-v$WEBI_VERSION/bin/flutter"
 pkg_src_dir="$HOME/.local/opt/flutter-v$WEBI_VERSION"
 pkg_src="$pkg_src_dir"
 
-
 pkg_get_current_version() {
     # 'flutter --version' outputs a lot of information:
     #       Flutter 1.19.0-4.1.pre • channel beta • https://github.com/flutter/flutter.git
@@ -30,7 +29,7 @@ pkg_get_current_version() {
     #       Tools • Dart 2.9.0 (build 2.9.0-14.1.beta)
     # This trims it down to just the version number:
     #       1.19.0-4.1.pre
-    echo "$(flutter --version 2>/dev/null | head -n 1 | cut -d' ' -f2)"
+    echo "$(flutter --version 2> /dev/null | head -n 1 | cut -d' ' -f2)"
 }
 
 pkg_format_cmd_version() {

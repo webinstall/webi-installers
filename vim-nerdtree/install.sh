@@ -18,7 +18,7 @@ function __init_vim_nerdtree() {
         curl -fsSL -o ~/.vim/plugins/nerdtree.vim "$WEBI_HOST/packages/vim-nerdtree/nerdtree.vim"
     fi
 
-    if ! grep 'source.*plugins.nerdtree.vim' -r ~/.vimrc >/dev/null 2>/dev/null; then
+    if ! grep 'source.*plugins.nerdtree.vim' -r ~/.vimrc > /dev/null 2> /dev/null; then
         set +e
         mkdir -p ~/.vim/plugins
         printf '\n" NERDTree: reasonable defaults from webinstall.dev/vim-nerdtree\n' >> ~/.vimrc

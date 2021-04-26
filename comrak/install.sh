@@ -11,11 +11,11 @@
     WEBI_SINGLE=true
 
     pkg_get_current_version() {
-      # 'comrak --version' has output in this format:
-      #       comrak 0.8.1
-      # This trims it down to just the version number:
-      #       0.8.1
-      echo $(comrak --version 2>/dev/null | head -n 1 | cut -d' ' -f 2)
+        # 'comrak --version' has output in this format:
+        #       comrak 0.8.1
+        # This trims it down to just the version number:
+        #       0.8.1
+        echo $(comrak --version 2> /dev/null | head -n 1 | cut -d' ' -f 2)
     }
 
     pkg_install() {

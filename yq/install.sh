@@ -20,7 +20,7 @@
     }
 
     pkg_get_current_version() {
-        echo $(yq --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2)
+        echo $(yq --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
     }
 
 }

@@ -23,7 +23,7 @@
         # ~/.local/opt/sd-v0.99.9/bin
         mkdir -p "$(dirname $pkg_src_cmd)"
         # mv ./sd-*/sd "$pkg_src_cmd"
-	mv sd-* "$pkg_src_cmd"
+        mv sd-* "$pkg_src_cmd"
     }
 
     # pkg_get_current_version is recommended, but (soon) not required
@@ -32,8 +32,7 @@
         #       sd 0.99.9 (rev abcdef0123)
         # This trims it down to just the version number:
         #       0.99.9
-        echo $(sd --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2)
+        echo $(sd --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
     }
-
 
 }

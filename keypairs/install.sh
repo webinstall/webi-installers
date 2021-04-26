@@ -34,7 +34,7 @@ function __init_keypairs() {
         #       keypairs v0.6.5 (7e6fd17) 2020-10-21T06:26:46Z
         # This trims it down to just the version number:
         #       0.6.5
-        echo "$(keypairs --version 2>/dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
+        echo "$(keypairs --version 2> /dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
     }
 
 }

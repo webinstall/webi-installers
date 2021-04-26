@@ -9,8 +9,8 @@ function __init_pyenv() {
     if [ ! -f ~/.bashrc ] || [ -z "$(grep 'pyenv init' ~/.bashrc)" ]; then
         echo '' >> ~/.bashrc
         echo '# added by Webi for pyenv' >> ~/.bashrc
-        echo 'eval "$(pyenv init -)"'>> ~/.bashrc
-        echo 'eval "$(pyenv virtualenv-init -)"'>> ~/.bashrc
+        echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+        echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
     fi
 
     if [ -n "$(command -v zsh)" ]; then

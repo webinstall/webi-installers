@@ -8,8 +8,8 @@
 
     # TODO would $EUID be better?
     if [ "root" != "$(whoami)" ]; then
-      echo "webi adduser: running user is already a non-root user"
-      exit 0
+        echo "webi adduser: running user is already a non-root user"
+        exit 0
     fi
 
     #apt-get -y update
@@ -41,8 +41,8 @@
 
     # Install webi for the new 'app' user
     WEBI_HOST=${WEBI_HOST:-"https://webinstall.dev"}
-    sudo -i -u "$my_name" bash -c "curl -fsSL '$WEBI_HOST/webi' | bash" \
-        || sudo -i -u "$my_name" bash -c "wget -q -O - '$WEBI_HOST/webi' | bash"
+    sudo -i -u "$my_name" bash -c "curl -fsSL '$WEBI_HOST/webi' | bash" ||
+        sudo -i -u "$my_name" bash -c "wget -q -O - '$WEBI_HOST/webi' | bash"
 
     # TODO ensure that ssh-password login is off
 

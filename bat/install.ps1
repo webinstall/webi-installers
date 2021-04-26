@@ -28,7 +28,7 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\.local\xbin\$VERNAME"))
         & tar xf "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"
         # Move single binary into root of temporary folder
         & move "$EXENAME" "$VERNAME"
-        
+
 
         # Settle unpacked archive into place
         echo "New Name: $VERNAME"

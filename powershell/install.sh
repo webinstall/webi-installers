@@ -14,7 +14,7 @@
         #       PowerShell 7.0.2
         # This trims it down to just the version number:
         #       7.0.2
-        echo "$(pwsh --version 2>/dev/null | head -n 1 | cut -d' ' -f2)"
+        echo "$(pwsh --version 2> /dev/null | head -n 1 | cut -d' ' -f2)"
     }
 
     pkg_install() {
@@ -23,9 +23,9 @@
         mv ./* "$pkg_src"
 
         # symlink powershell to pwsh
-        pushd "$pkg_src" >/dev/null
-            ln -s pwsh powershell
-        popd >/dev/null
+        pushd "$pkg_src" > /dev/null
+        ln -s pwsh powershell
+        popd > /dev/null
     }
 
     pkg_link() {

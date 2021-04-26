@@ -31,6 +31,6 @@
         #       arc v3.5.0 (25e050d) 2020-10-30T03:27:58Z
         # This trims it down to just the version number:
         #       3.5.0
-        echo "$(arc version 2>/dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
+        echo "$(arc version 2> /dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
     }
 }

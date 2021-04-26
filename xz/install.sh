@@ -42,6 +42,6 @@
         #       liblzma 5.2.5
         # This trims it down to just the version number:
         #       5.2.5
-        echo $(xz --version 2>/dev/null | head -n 1 | cut -d ' ' -f 4)
+        echo $(xz --version 2> /dev/null | head -n 1 | cut -d ' ' -f 4)
     }
 }

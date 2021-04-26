@@ -33,7 +33,7 @@
         #       ChromeDriver 88.0.4324.96 (68dba2d8a0b149a1d3afac56fa74648032bcf46b-refs/branch-heads/4324@{#1784})
         # This trims it down to just the version number:
         #       88.0.4324.96
-        echo $(chromedriver --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2)
+        echo $(chromedriver --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
     }
 
 }

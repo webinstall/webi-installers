@@ -7,9 +7,8 @@ function _install_brew() {
     # Straight from https://brew.sh
     #/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
-    needs_xcode="$(/usr/bin/xcode-select -p >/dev/null 2> /dev/null || echo "true")"
-    if [[ -n "${needs_xcode}" ]]
-    then
+    needs_xcode="$(/usr/bin/xcode-select -p > /dev/null 2> /dev/null || echo "true")"
+    if [[ -n ${needs_xcode} ]]; then
         echo ""
         echo ""
         echo "ERROR: Run this command to install XCode Command Line Tools first:"

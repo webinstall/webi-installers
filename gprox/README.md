@@ -20,7 +20,7 @@ gprox
 # example output
 # 9:12PM INF Running proxy! from=https://localhost:9001 to=http://localhost:9000
 ```
-And you're off to the races! 
+And you're off to the races!
 
 That is... if you're app happens to be running on port `9000`. If not, no worries! Simply pass the target port option `-t, --target` and specify the port your app _is_ running on.
 

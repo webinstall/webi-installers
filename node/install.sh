@@ -17,7 +17,7 @@ pkg_get_current_version() {
     #       v12.8.0
     # This trims it down to just the version number:
     #       12.8.0
-    echo "$(node --version 2>/dev/null | head -n 1 | cut -d' ' -f1 | sed 's:^v::')"
+    echo "$(node --version 2> /dev/null | head -n 1 | cut -d' ' -f1 | sed 's:^v::')"
 }
 
 pkg_install() {

@@ -12,7 +12,7 @@ module.exports = function (request) {
     });
     return all;
   });
-}; 
+};
 
 if (module === require.main) {
   module.exports(require('@root/request')).then(function (all) {

@@ -18,7 +18,7 @@ function __init_vim_ale() {
         curl -fsSL -o ~/.vim/plugins/ale.vim "$WEBI_HOST/packages/vim-ale/ale.vim"
     fi
 
-    if ! grep 'source.*plugins.ale.vim' -r ~/.vimrc >/dev/null 2>/dev/null; then
+    if ! grep 'source.*plugins.ale.vim' -r ~/.vimrc > /dev/null 2> /dev/null; then
         set +e
         mkdir -p ~/.vim/plugins
         printf '\n" ALE: reasonable defaults from webinstall.dev/vim-ale\n' >> ~/.vimrc
