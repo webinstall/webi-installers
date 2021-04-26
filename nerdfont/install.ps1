@@ -18,7 +18,7 @@ pushd "$my_fontdir"
 $regFontPath = "\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
 $fontRegistryPath = "HKCU:$regFontPath"
 $fontFiles = Get-ChildItem -Recurse -Include *.ttf, *.otf
-$null = foreach($font in $fontFiles) {
+foreach($font in $fontFiles) {
     # See https://github.com/PPOSHGROUP/PPoShTools/blob/master/PPoShTools/Public/FileSystem/Add-Font.ps1#L80
     Add-Type -AssemblyName System.Drawing
     $objFontCollection = New-Object System.Drawing.Text.PrivateFontCollection
@@ -27,9 +27,12 @@ $null = foreach($font in $fontFiles) {
 
     $regTest = Get-ItemProperty -Path $fontRegistryPath -Name "*$FontName*" -ErrorAction SilentlyContinue
     if (-not ($regTest)) {
-        New-ItemProperty -Name $FontName -Path $fontRegistryPath -PropertyType string -Value $font.FullName
-        Write-Output "Registering font {$($font.Name)} in registry with name {$FontName}"
+        New-ItemProperty -Name $FontName -Path $fontRegistryPath -PropertyType string -Value $font.Name
+        Write-Output "Registered font {$($font.Name)} in Current User registry as {$FontName}"
     }
+    echo "Installed $my_nerdfont_otf to $my_fontdir"
+    # because adding to the registry alone doesn't actually take
+    & start $font.FullName
+    echo ""
+    echo "IMPORTANT: Click 'Install' to complete installation"
 }
-
-echo "Installed $my_nerdfont_otf to $my_fontdir"
