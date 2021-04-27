@@ -27,7 +27,7 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\.local\xbin\$VERNAME"))
         echo "Unpacking $Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"
         & tar xf "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"
         # Move single binary into root of temporary folder
-        & move "$EXENAME" "$VERNAME"
+        & move "bat-*\$EXENAME" "$VERNAME"
 
 
         # Settle unpacked archive into place
