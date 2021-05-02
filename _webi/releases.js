@@ -5,6 +5,8 @@ var path = require('path');
 var request = require('@root/request');
 var _normalize = require('../_webi/normalize.js');
 
+var reInstallTpl = /\s*#?\s*{{ installer }}/;
+
 var Releases = module.exports;
 Releases.get = async function (pkgdir) {
   var get;
@@ -17,6 +19,10 @@ Releases.get = async function (pkgdir) {
     return _normalize(all);
   });
 };
+
+function padScript(txt) {
+  return txt.replace(/^/g, '        ');
+}
 
 Releases.renderBash = function (
   pkgdir,
@@ -32,6 +38,7 @@ Releases.renderBash = function (
   return fs.promises
     .readFile(path.join(pkgdir, 'install.sh'), 'utf8')
     .then(function (installTxt) {
+      installTxt = padScript(installTxt);
       var vers = rel.version.split('.');
       var v = {
         major: vers.shift() || '',
@@ -136,7 +143,7 @@ Releases.renderBash = function (
                 /^\s*#?PKG_FORMATS=.*/m,
                 "PKG_FORMATS='" + ((rel && rel.formats) || []).join(',') + "'"
               )
-              .replace(/{{ installer }}/, installTxt)
+              .replace(reInstallTpl, '\n' + installTxt)
           );
         });
     });
@@ -156,16 +163,19 @@ Releases.renderBatch = function (
   return fs.promises
     .readFile(path.join(pkgdir, 'install.bat'), 'utf8')
     .then(function (installTxt) {
+      installTxt = padScript(installTxt);
+      /*
       var vers = rel.version.split('.');
       var v = {
         major: vers.shift() || '',
         minor: vers.shift() || '',
-        patch: vers.join('.').replace(/[+\-].*/, ''),
+        patch: vers.join('.').replace(/[+\-].*$/, ''),
         build: vers
           .join('.')
-          .replace(/[^+\-]*/, '')
+          .replace(/[^+\-]*()/, '')
           .replace(/^-/, '')
       };
+      */
       return fs.promises
         .readFile(path.join(__dirname, 'template.bat'), 'utf8')
         .then(function (tplTxt) {
@@ -174,7 +184,7 @@ Releases.renderBatch = function (
               /^(REM )?WEBI_PKG=.*/im,
               "WEBI_PKG='" + pkg + '@' + ver + "'"
             )
-            .replace(/{{ installer }}/, installTxt);
+            .replace(reInstallTpl, '\n' + installTxt);
         });
     });
 };
@@ -193,16 +203,19 @@ Releases.renderPowerShell = function (
   return fs.promises
     .readFile(path.join(pkgdir, 'install.ps1'), 'utf8')
     .then(function (installTxt) {
+      installTxt = padScript(installTxt);
+      /*
       var vers = rel.version.split('.');
       var v = {
         major: vers.shift() || '',
         minor: vers.shift() || '',
-        patch: vers.join('.').replace(/[+\-].*/, ''),
+        patch: vers.join('.').replace(/[+\-].*$/, ''),
         build: vers
           .join('.')
-          .replace(/[^+\-]*/, '')
+          .replace(/[^+\-]*()/, '')
           .replace(/^-/, '')
       };
+      */
       return fs.promises
         .readFile(path.join(__dirname, 'template.ps1'), 'utf8')
         .then(function (tplTxt) {
@@ -232,7 +245,7 @@ Releases.renderPowerShell = function (
               /^(#)?\$Env:WEBI_PKG_FILE\s*=.*/im,
               "$Env:WEBI_PKG_FILE = '" + rel.name + "'"
             )
-            .replace(/{{ installer }}/, installTxt);
+            .replace(reInstallTpl, '\n' + installTxt);
         });
     });
 };

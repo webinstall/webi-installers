@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# shellcheck disable=2001
+# because I prefer to use sed rather than bash replace
+# (there's too little space in my head to learn both syntaxes)
+
 function __bootstrap_webi() {
 
     set -e
@@ -37,7 +41,7 @@ function __bootstrap_webi() {
     ## Set up tmp, download, and install directories
     ##
 
-    WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-${WEBI_PKG:-}.XXXXXXXX)"}
+    WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-"${WEBI_PKG:-}".XXXXXXXX)"}
     export _webi_tmp="${_webi_tmp:-"$HOME/.local/opt/webi-tmp.d"}"
 
     mkdir -p "$HOME/Downloads"
@@ -48,8 +52,10 @@ function __bootstrap_webi() {
     ## Detect http client
     ##
     set +e
-    export WEBI_CURL="$(command -v curl)"
-    export WEBI_WGET="$(command -v wget)"
+    WEBI_CURL="$(command -v curl)"
+    export WEBI_CURL
+    WEBI_WGET="$(command -v wget)"
+    export WEBI_WGET
     set -e
 
     # get the special formatted version (i.e. "go is go1.14" while node is "node v12.10.8")
@@ -70,6 +76,8 @@ function __bootstrap_webi() {
     }
 
     # update symlinks according to $HOME/.local/opt and $HOME/.local/bin install paths.
+    # shellcheck disable=2120
+    # webi_link may be used in the templated install script
     webi_link() {
         if [ -n "$(command -v pkg_link)" ]; then
             pkg_link
@@ -92,14 +100,15 @@ function __bootstrap_webi() {
         # Test for existing version
         set +e
         my_path="$PATH"
-        export PATH="$(dirname "$pkg_dst_cmd"):$PATH"
+        PATH="$(dirname "$pkg_dst_cmd"):$PATH"
+        export PATH
         my_current_cmd="$(command -v "$pkg_cmd_name")"
         set -e
         if [ -n "$my_current_cmd" ]; then
             pkg_current_version="$(pkg_get_current_version 2> /dev/null | head -n 1)"
             # remove trailing '.0's for golang's sake
-            my_current_version="$(echo $pkg_current_version | sed 's:\.0::g')"
-            my_src_version="$(echo $WEBI_VERSION | sed 's:\.0::g')"
+            my_current_version="$(echo "$pkg_current_version" | sed 's:\.0::g')"
+            my_src_version="$(echo "$WEBI_VERSION" | sed 's:\.0::g')"
             my_canonical_name="$(_webi_canonical_name)"
             if [ "$my_src_version" == "$my_current_version" ]; then
                 echo "$my_canonical_name already installed at $my_current_cmd"
@@ -109,6 +118,8 @@ function __bootstrap_webi() {
                     echo >&2 "WARN: possible conflict between $my_canonical_name and $pkg_current_version at $my_current_cmd"
                 fi
                 if [ -x "$pkg_src_cmd" ]; then
+                    # shellcheck disable=2119
+                    # this function takes no args
                     webi_link
                     echo "switched to $my_canonical_name at $pkg_src"
                     exit 0
@@ -125,7 +136,7 @@ function __bootstrap_webi() {
         else
             if [ "error" == "$WEBI_CHANNEL" ]; then
                 # TODO pass back requested OS / Arch / Version
-                echo >&2 "Error: no '$PKG_NAME' release for '$WEBI_OS' on '$WEBI_ARCH' as one of '$WEBI_FORMATS' by the tag '$WEBI_TAG'"
+                echo >&2 "Error: no '$PKG_NAME' release for '${WEBI_OS:-}' on '$WEBI_ARCH' as one of '$WEBI_FORMATS' by the tag '${WEBI_TAG:-}'"
                 echo >&2 "       '$PKG_NAME' is available for '$PKG_OSES' on '$PKG_ARCHES' as one of '$PKG_FORMATS'"
                 echo >&2 "       (check that the package name and version are correct)"
                 echo >&2 ""
@@ -159,8 +170,7 @@ function __bootstrap_webi() {
             if [[ $- == *i* ]]; then
                 my_show_progress="--show-progress"
             fi
-            wget -q $my_show_progress --user-agent="wget $WEBI_UA" -c "$my_url" -O "$my_dl.part"
-            if ! [ $? -eq 0 ]; then
+            if wget -q $my_show_progress --user-agent="wget $WEBI_UA" -c "$my_url" -O "$my_dl.part"; then
                 echo >&2 "failed to download from $WEBI_PKG_URL"
                 exit 1
             fi
@@ -172,6 +182,8 @@ function __bootstrap_webi() {
             if [[ $- == *i* ]]; then
                 my_show_progress=""
             fi
+            # shellcheck disable=SC2086
+            # we want the flags to be split
             curl -fSL $my_show_progress -H "User-Agent: curl $WEBI_UA" "$my_url" -o "$my_dl.part"
         fi
         mv "$my_dl.part" "$my_dl"
@@ -182,7 +194,7 @@ function __bootstrap_webi() {
 
     # detect which archives can be used
     webi_extract() {
-        pushd "$WEBI_TMP" 2>&1 > /dev/null
+        pushd "$WEBI_TMP" > /dev/null 2>&1
         if [ "tar" == "$WEBI_EXT" ]; then
             echo "Extracting $HOME/Downloads/$WEBI_PKG_FILE"
             tar xf "$HOME/Downloads/$WEBI_PKG_FILE"
@@ -194,13 +206,13 @@ function __bootstrap_webi() {
             mv "$HOME/Downloads/$WEBI_PKG_FILE" .
         elif [ "xz" == "$WEBI_EXT" ]; then
             echo "Inflating $HOME/Downloads/$WEBI_PKG_FILE"
-            unxz -c "$HOME/Downloads/$WEBI_PKG_FILE" > $(basename "$WEBI_PKG_FILE")
+            unxz -c "$HOME/Downloads/$WEBI_PKG_FILE" > "$(basename "$WEBI_PKG_FILE")"
         else
             # do nothing
             echo "Failed to extract $HOME/Downloads/$WEBI_PKG_FILE"
             exit 1
         fi
-        popd 2>&1 > /dev/null
+        popd > /dev/null 2>&1
     }
 
     # use 'pathman' to update $HOME/.config/envman/PATH.env
@@ -230,9 +242,11 @@ function __bootstrap_webi() {
     }
 
     # move commands from the extracted archive directory to $HOME/.local/opt or $HOME/.local/bin
+    # shellcheck disable=2120
+    # webi_install may be sourced and used elsewhere
     webi_install() {
         if [ -n "$WEBI_SINGLE" ] || [ "single" == "${1:-}" ]; then
-            mkdir -p "$(dirname $pkg_src_cmd)"
+            mkdir -p "$(dirname "$pkg_src_cmd")"
             mv ./"$pkg_cmd_name"* "$pkg_src_cmd"
         else
             rm -rf "$pkg_src"
@@ -285,15 +299,20 @@ function __bootstrap_webi() {
 
     WEBI_SINGLE=
 
-    echo ""
-    echo "Thanks for using webi to install '$PKG_NAME' on '$WEBI_OS/$WEBI_ARCH'."
-    echo "Have a problem? Experience a bug? Please let us know:"
-    echo "        https://github.com/webinstall/packages/issues"
-    echo ""
+    if [[ -z ${WEBI_WELCOME:-} ]]; then
+        echo ""
+        echo "Thanks for using webi to install '$PKG_NAME' on '$WEBI_OS/$WEBI_ARCH'."
+        echo "Have a problem? Experience a bug? Please let us know:"
+        echo "        https://github.com/webinstall/packages/issues"
+        echo ""
+    fi
 
     function __init_installer() {
 
-        {{ installer }}
+        # do nothing - to satisfy parser prior to templating
+        echo -n ""
+
+        # {{ installer }}
 
     }
 
@@ -323,38 +342,43 @@ function __bootstrap_webi() {
             pkg_src="${pkg_src:-$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION}"
             pkg_src_cmd="${pkg_src_cmd:-$pkg_src/bin/$pkg_cmd_name}"
         fi
+        # this script is templated and these are used elsewhere
+        # shellcheck disable=SC2034
         pkg_src_bin="$(dirname "$pkg_src_cmd")"
+        # shellcheck disable=SC2034
         pkg_dst_bin="$(dirname "$pkg_dst_cmd")"
 
-        [ -n "$(command -v pkg_pre_install)" ] && pkg_pre_install || webi_pre_install
+        if [[ -n "$(command -v pkg_pre_install)" ]]; then pkg_pre_install; else webi_pre_install; fi
 
-        pushd "$WEBI_TMP" 2>&1 > /dev/null
+        pushd "$WEBI_TMP" > /dev/null 2>&1
         echo "Installing to $pkg_src_cmd"
-        [ -n "$(command -v pkg_install)" ] && pkg_install || webi_install
+        if [[ -n "$(command -v pkg_install)" ]]; then pkg_install; else webi_install; fi
         chmod a+x "$pkg_src"
         chmod a+x "$pkg_src_cmd"
-        popd 2>&1 > /dev/null
+        popd > /dev/null 2>&1
 
         webi_link
 
         _webi_enable_exec
-        pushd "$WEBI_TMP" 2>&1 > /dev/null
-        [ -n "$(command -v pkg_post_install)" ] && pkg_post_install || webi_post_install
-        popd 2>&1 > /dev/null
+        pushd "$WEBI_TMP" > /dev/null 2>&1
+        if [[ -n "$(command -v pkg_post_install)" ]]; then pkg_post_install; else webi_post_install; fi
+        popd > /dev/null 2>&1
 
-        pushd "$WEBI_TMP" 2>&1 > /dev/null
-        [ -n "$(command -v pkg_done_message)" ] && pkg_done_message || _webi_done_message
-        popd 2>&1 > /dev/null
+        pushd "$WEBI_TMP" > /dev/null 2>&1
+        if [[ -n "$(command -v pkg_done_message)" ]]; then pkg_done_message; else _webi_done_message; fi
+        popd > /dev/null 2>&1
 
         echo ""
     fi
 
     webi_path_add "$HOME/.local/bin"
-    if [ -z "${_WEBI_CHILD:-}" ] && [ -f '$_webi_tmp/.PATH.env' ]; then
-        echo "You need to update your PATH to use $PKG_NAME:"
-        echo ""
-        cat "$_webi_tmp/.PATH.env" | sort -u
-        rm -f "$_webi_tmp/.PATH.env"
+    if [[ -z ${_WEBI_CHILD:-} ]] && [[ -f "$_webi_tmp/.PATH.env" ]]; then
+        if [[ -n $(cat "$_webi_tmp/.PATH.env") ]]; then
+            echo "You need to update your PATH to use $PKG_NAME:"
+            echo ""
+            sort -u "$_webi_tmp/.PATH.env"
+            rm -f "$_webi_tmp/.PATH.env"
+        fi
     fi
 
     # cleanup the temp directory
