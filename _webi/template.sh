@@ -170,7 +170,7 @@ function __bootstrap_webi() {
             if [[ $- == *i* ]]; then
                 my_show_progress="--show-progress"
             fi
-            if wget -q $my_show_progress --user-agent="wget $WEBI_UA" -c "$my_url" -O "$my_dl.part"; then
+            if ! wget -q $my_show_progress --user-agent="wget $WEBI_UA" -c "$my_url" -O "$my_dl.part"; then
                 echo >&2 "failed to download from $WEBI_PKG_URL"
                 exit 1
             fi
