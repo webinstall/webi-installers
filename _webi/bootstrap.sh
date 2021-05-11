@@ -9,7 +9,7 @@ function __install_webi() {
     export WEBI_HOST
 
     echo ""
-    echo "Thanks for using webi to install '${PKG_NAME:-}' on '$(uname -s)/$(uname -m)'."
+    echo "Thanks for using webi to install '${WEBI_PKG:-}' on '$(uname -s)/$(uname -m)'."
     echo "Have a problem? Experience a bug? Please let us know:"
     echo "        https://github.com/webinstall/packages/issues"
     echo ""
@@ -162,7 +162,7 @@ EOF
         echo ""
         echo "Hmm... no WEBI_PKG was specified. This is probably an error in the script."
         echo ""
-        echo "Please open an issue with this information: Package '${PKG_NAME:-}' on '$(uname -s)/$(uname -m)'"
+        echo "Please open an issue with this information: Package '${WEBI_PKG:-}' on '$(uname -s)/$(uname -m)'"
         echo "    https://github.com/webinstall/packages/issues"
         echo ""
     fi
