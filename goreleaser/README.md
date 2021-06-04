@@ -52,7 +52,7 @@ package main
 
 var (
 	// these will be replaced by goreleaser
-	version = "v0.0.0"
+	version = "0.0.0"
 	date    = "0001-01-01T00:00:00Z"
 	commit  = "0000000"
 )
@@ -95,7 +95,7 @@ Running GoReleaser without `--snapshot` must use the latest
 Create a tag and push it to Git:
 
 ```bash
-git tag -a v1.0.0 -m "First release"
+git tag -a 1.0.0 -m "First release"
 git push origin v1.0.0
 ```
 
