@@ -5,11 +5,7 @@ tagline: |
   `gh` is GitHub on the command line.
 ---
 
-## Updating and Switch versions
-
-```bash
-webi gh
-```
+To update or switch versions, run `webi gh@stable` (or `@v1`, `@beta`, etc).
 
 ## Cheat Sheet
 
