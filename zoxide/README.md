@@ -30,31 +30,31 @@ zi foo      # cd with interactive selection (requires fzf)
 
 To use zoxide, it needs to be first initialized on your shell:
 
-### bash
+### `bash`
 
-Add the following line to your configuration file (usually `~/.bashrc`):
+Add this to your configuration (usually `~/.bashrc`):
 
 ```sh
 eval "$(zoxide init bash)"
 ```
 
-### elvish
+### `elvish`
 
-Add the following line to your configuration file (usually `~/.elvish/rc.elv`):
+Add this to your configuration (usually `~/.elvish/rc.elv`):
 
 ```sh
-eval $(zoxide init elvish | slurp)
+eval (zoxide init elvish | slurp)
 ```
 
-### fish
+### `fish`
 
-Add the following line to your configuration file (usually `~/.config/fish/config.fish`):
+Add this to your configuration (usually `~/.config/fish/config.fish`):
 
 ```fish
 zoxide init fish | source
 ```
 
-### nushell
+### `nushell 0.32.0+`
 
 Initialize zoxide's Nushell script:
 
@@ -62,16 +62,18 @@ Initialize zoxide's Nushell script:
 zoxide init nushell --hook prompt | save ~/.zoxide.nu
 ```
 
-Then, in your Nushell configuration file:
+Add this to your configuration (usually `~/.config/nu/config.toml`):
 
-- Prepend `__zoxide_hook;` to the `prompt` variable.
-- Add the following lines to the `startup` variable:
-  - `zoxide init nushell --hook prompt | save ~/.zoxide.nu`
-  - `source ~/.zoxide.nu`
+```toml
+prompt = "__zoxide_hook;__zoxide_prompt"
+startup = ["zoxide init nushell --hook prompt | save ~/.zoxide.nu", "source ~/.zoxide.nu"]
+```
 
-### powershell
+You can replace `__zoxide_prompt` with a custom prompt.
 
-Add the following line to your profile:
+### `powershell`
+
+Add this to your configuration (the location is stored in `$profile`):
 
 ```powershell
 Invoke-Expression (& {
@@ -80,17 +82,17 @@ Invoke-Expression (& {
 })
 ```
 
-### xonsh
+### `xonsh`
 
-Add the following line to your configuration file (usually `~/.xonshrc`):
+Add this to your configuration (usually `~/.xonshrc`):
 
 ```python
 execx($(zoxide init xonsh), 'exec', __xonsh__.ctx, filename='zoxide')
 ```
 
-### zsh
+### `zsh`
 
-Add the following line to your configuration file (usually `~/.zshrc`):
+Add this to your configuration (usually `~/.zshrc`):
 
 ```sh
 eval "$(zoxide init zsh)"
@@ -98,7 +100,7 @@ eval "$(zoxide init zsh)"
 
 ### Any POSIX shell
 
-Add the following line to your configuration file:
+Add this to your configuration:
 
 ```sh
 eval "$(zoxide init posix --hook prompt)"
