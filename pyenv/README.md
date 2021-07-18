@@ -59,6 +59,12 @@ python --version
 #> Python 3.9.1
 ```
 
+Revert back to your system python:
+
+```bash
+pyenv global system
+```
+
 ### List all available python version
 
 ```bash
