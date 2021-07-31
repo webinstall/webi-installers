@@ -12,7 +12,7 @@ nnoremap <leader>f :NERDTreeFind<CR>
 let NERDTreeShowHidden=1
 
 " keep ignoring .git, node_modules, vendor, and dist
-let NERDTreeIgnore=["\.git", "node_modules", "vendor", "dist"]
+let NERDTreeIgnore=["\.git/", "node_modules/", "vendor/", "dist/"]
 
 " Start NERDTree when Vim is started without file arguments.
 autocmd StdinReadPre * let s:std_in=1
