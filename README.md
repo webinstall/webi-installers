@@ -2,6 +2,8 @@
 
 > [webi](https://webinstall.dev) is how developers install their tools
 
+[![webinstall-dev-ogimage-github](https://user-images.githubusercontent.com/122831/129465590-136b5a8a-f8f5-4e8d-a010-784eaa9f21bb.png)](https://webinstall.dev)
+
 - no `sudo`
 - no package manager
 - no messing with system permissions
