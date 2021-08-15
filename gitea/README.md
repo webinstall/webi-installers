@@ -5,8 +5,10 @@ tagline: |
   Gitea: Git with a cup of tea, painless self-hosted git service.
 ---
 
-To update or switch versions, run `webi gitea@stable` (or `@v1.0`, `@beta`,
+To update or switch versions, run `webi gitea@stable` (or `@v1.14`, `@beta`,
 etc).
+
+**Windows users**: You must [install git](/git) first.
 
 ## Cheat Sheet
 
