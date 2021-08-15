@@ -12,8 +12,9 @@ To update (replacing the current version) run `webi vim-prettier`.
 > `vim-prettier` is a vim plugin wrapper for prettier, pre-configured with
 > custom default prettier settings.
 
-You'll also need `ALE`, [`syntastic`](https://webinstall.dev/vim-syntastic), or
-similar.
+You'll also need to install [`ALE`](https://webinstall.dev/vim-ale) (part of
+[`vim-essentials`](https://webinstall.dev/vim-essentials)) or
+[`syntastic`](https://webinstall.dev/vim-syntastic) first.
 
 ### How to install by hand
 

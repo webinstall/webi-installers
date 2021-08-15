@@ -80,8 +80,6 @@ module.exports.parse = parseYamlish;
 
 if (require.main === module) {
   console.info(
-    parseYamlish(
-      fs.readFileSync(__dirname + '/../node/README.md', 'utf8')
-    )
+    parseYamlish(fs.readFileSync(__dirname + '/../node/README.md', 'utf8'))
   );
 }

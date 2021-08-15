@@ -35,7 +35,8 @@ Update your `.bashrc`, `.zshrc`, or `.profile`
 alias cat="bat --style=plain"
 ```
 
-For situations in which you must use `cat` exactly, remember that you can escape the alias:
+For situations in which you must use `cat` exactly, remember that you can escape
+the alias:
 
 ```bash
 \cat foo

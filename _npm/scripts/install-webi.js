@@ -21,21 +21,20 @@ if (/^win/i.test(os.platform())) {
   return;
 }
 
-exec('curl -fsS https://webinstall.dev/webi | bash', function (
-  err,
-  stdout,
-  stderr
-) {
-  if (err) {
-    console.error(err);
+exec(
+  'curl -fsS https://webinstall.dev/webi | bash',
+  function (err, stdout, stderr) {
+    if (err) {
+      console.error(err);
+    }
+    if (stdout) {
+      console.info(stdout);
+    }
+    if (stderr) {
+      console.error(stderr);
+    }
   }
-  if (stdout) {
-    console.info(stdout);
-  }
-  if (stderr) {
-    console.error(stderr);
-  }
-});
+);
 /*
   .then(function () {
     // nada

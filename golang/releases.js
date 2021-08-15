@@ -4,7 +4,7 @@ var osMap = {
   darwin: 'macos'
 };
 var archMap = {
-  '386': 'x86'
+  386: 'x86'
 };
 
 function getAllReleases(request) {

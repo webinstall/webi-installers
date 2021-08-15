@@ -14,7 +14,7 @@ To update (replacing the current version) run `webi vim-leader`.
 The `<Leader>` key is typically used for your own custom shortcuts.
 
 By default it's mapped to `\` (backslash) - a legacy from a time when `\` was in
-a more accessible place - but most people remap it to `,` or ` ` (space).
+a more accessible place - but most people remap it to `,` or `` (space).
 
 This vim-leader plugin makes Space the Leader key, but also remaps `\` and `,`
 as aliases.

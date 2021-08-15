@@ -7,7 +7,7 @@ var repo = 'lsd';
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
     all.releases = all.releases.filter(function (rel) {
-      return !/(-musl\.)|(-msvc\.)|(\.deb$)/.test(rel.name)
+      return !/(-musl\.)|(-msvc\.)|(\.deb$)/.test(rel.name);
     });
     return all;
   });

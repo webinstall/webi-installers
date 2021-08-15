@@ -22,8 +22,8 @@ You need to download and install the
 
 ## Cheat Sheet
 
-> Dotenv Linter is a lightning-fast check for your `.env` files.
-> It can rapidly detect and automatically fix issues.
+> Dotenv Linter is a lightning-fast check for your `.env` files. It can rapidly
+> detect and automatically fix issues.
 
 By default, `dotenv-linter` checks all `.env` files in the current directory:
 
@@ -43,7 +43,8 @@ To lint .env files recursively, use `-r`:
 dotenv-linter -r
 ```
 
-For the complete usage, see the official [Dotenv Linter Usage Guide](https://dotenv-linter.github.io/#/usage).
+For the complete usage, see the official
+[Dotenv Linter Usage Guide](https://dotenv-linter.github.io/#/usage).
 
 ### How to automatically fix errors
 
@@ -53,8 +54,8 @@ Use the `--fix` flag.
 dotenv-linter --fix
 ```
 
-Backup files in the format of `.env_0000000000` will be created by default.
-You can use `--no-backup` to skip this.
+Backup files in the format of `.env_0000000000` will be created by default. You
+can use `--no-backup` to skip this.
 
 ### How to toggle linter rules
 

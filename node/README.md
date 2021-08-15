@@ -82,7 +82,7 @@ npm install --save express
 var express = require('express');
 var app = express();
 
-app.use('/', function(req, res, next) {
+app.use('/', function (req, res, next) {
   res.end('Hello, World!');
 });
 
@@ -97,7 +97,7 @@ module.exports = app;
 var http = require('http');
 var app = require('./app.js');
 
-http.createServer(app).listen(8080, function() {
+http.createServer(app).listen(8080, function () {
   console.info('Listening on', this.address());
 });
 ```

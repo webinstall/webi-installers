@@ -38,10 +38,11 @@ module.exports = function (request) {
         date: ver.date,
         os: 'linux',
         arch: 'amd64',
-        download: 'http://archive.mariadb.org/mariadb-{{ v }}/bintar-linux-x86_64/mariadb-{{ v }}-linux-x86_64.tar.gz'.replace(
-          /{{ v }}/g,
-          ver.version
-        )
+        download:
+          'http://archive.mariadb.org/mariadb-{{ v }}/bintar-linux-x86_64/mariadb-{{ v }}-linux-x86_64.tar.gz'.replace(
+            /{{ v }}/g,
+            ver.version
+          )
       });
       all.releases.push({
         version: ver.version,
@@ -50,10 +51,11 @@ module.exports = function (request) {
         date: ver.date,
         os: 'linux',
         arch: 'amd64',
-        download: 'http://archive.mariadb.org/mariadb-{{ v }}/bintar-linux-x86/mariadb-{{ v }}-linux-x86.tar.gz'.replace(
-          /{{ v }}/g,
-          ver.version
-        )
+        download:
+          'http://archive.mariadb.org/mariadb-{{ v }}/bintar-linux-x86/mariadb-{{ v }}-linux-x86.tar.gz'.replace(
+            /{{ v }}/g,
+            ver.version
+          )
       });
 
       // windows
@@ -64,10 +66,11 @@ module.exports = function (request) {
         date: ver.date,
         os: 'windows',
         arch: 'amd64',
-        download: 'http://archive.mariadb.org/mariadb-{{ v }}/winx64-packages/mariadb-{{ v }}-winx64.zip'.replace(
-          /{{ v }}/g,
-          ver.version
-        )
+        download:
+          'http://archive.mariadb.org/mariadb-{{ v }}/winx64-packages/mariadb-{{ v }}-winx64.zip'.replace(
+            /{{ v }}/g,
+            ver.version
+          )
       });
       all.releases.push({
         version: ver.version,
@@ -76,10 +79,11 @@ module.exports = function (request) {
         date: ver.date,
         os: 'windows',
         arch: 'x86',
-        download: 'http://archive.mariadb.org/mariadb-{{ v }}/win32-packages/mariadb-{{ v }}-win32.zip'.replace(
-          /{{ v }}/g,
-          ver.version
-        )
+        download:
+          'http://archive.mariadb.org/mariadb-{{ v }}/win32-packages/mariadb-{{ v }}-win32.zip'.replace(
+            /{{ v }}/g,
+            ver.version
+          )
       });
 
       // Note: versions are sorted most-recent first.
@@ -139,7 +143,8 @@ module.exports = function (request) {
         // </tr><tr><td><a href="/mariadb/10.0.36/">10.0.36</a></td><td>2018-08-01</td><td>Stable</td>
         //
         // To this:
-        var reVer = /<tr>.*mariadb\/(10[^\/]+)\/">.*(20\d\d-\d\d-\d\d)<\/td><td>(\w+)<\/td>/;
+        var reVer =
+          /<tr>.*mariadb\/(10[^\/]+)\/">.*(20\d\d-\d\d-\d\d)<\/td><td>(\w+)<\/td>/;
         //
         // { "version": "10.0.36", "date": "2018-08-01", "channel": "stable" }
 

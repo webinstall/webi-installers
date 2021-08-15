@@ -22,5 +22,5 @@ It includes many of the vim plugins available on webinstall.dev such as:
 - [vim-spell](/vim-spell)
 - [vim-lastplace](/vim-lastplace)
 - [vim-viminfo](/vim-viminfo)
-- [vim-syntastic](/vim-syntastic)
+- [vim-ale](/vim-ale)
 - [vim-prettier](/vim-prettier)

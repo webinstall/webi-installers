@@ -5,19 +5,16 @@ tagline: |
   vim-go adds Go language support for Vim.
 ---
 
-## Updating `vim-go`
-
-```bash
-webi vim-go
-```
+To update (replacing the current version) run `webi vim-go`.
 
 ## Cheat Sheet
 
-> `vim-go` provides integration with various official and 3rd part go tooling
+> `vim-go` provides integration with various official and 3rd party go tooling
 > for linting, vetting, etc.
 
-You'll also need `ALE`, [`syntastic`](https://webinstall.dev/vim-syntastic), or
-similar.
+You'll also need to install [`ALE`](https://webinstall.dev/vim-ale) (part of
+[`vim-essentials`](https://webinstall.dev/vim-essentials)) or
+[`syntastic`](https://webinstall.dev/vim-syntastic) first.
 
 ### How to install by hand
 
