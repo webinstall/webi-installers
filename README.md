@@ -244,7 +244,7 @@ WEBI_SINGLE=""
 
 ```bash
 webi_check              # Checks to see if the selected version is already installed (and re-links if so)
-webi_download           # Downloads the selected release to $HOME/Downloads/<package-name>.tar.gz
+webi_download           # Downloads the selected release to $HOME/Downloads/webi/<package-name>.tar.gz
 webi_extract            # Extracts the download to /tmp/<package-name>-<random>/
 webi_path_add /new/path # Adds /new/path to PATH for bash, zsh, and fish
 webi_pre_install        # Runs webi_check, webi_download, and webi_extract

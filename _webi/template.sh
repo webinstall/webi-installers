@@ -45,7 +45,7 @@ function __bootstrap_webi() {
     WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-"${WEBI_PKG:-}".XXXXXXXX)"}
     export _webi_tmp="${_webi_tmp:-"$HOME/.local/opt/webi-tmp.d"}"
 
-    mkdir -p "$HOME/Downloads"
+    mkdir -p "$HOME/Downloads/webi"
     mkdir -p "$HOME/.local/bin"
     mkdir -p "$HOME/.local/opt"
 
@@ -150,7 +150,7 @@ function __bootstrap_webi() {
         if [ -n "${2:-}" ]; then
             my_dl="$2"
         else
-            my_dl="$HOME/Downloads/$WEBI_PKG_FILE"
+            my_dl="$HOME/Downloads/webi/$WEBI_PKG_FILE"
         fi
 
         WEBI_PKG_DOWNLOAD="${my_dl}"
@@ -200,20 +200,20 @@ function __bootstrap_webi() {
     webi_extract() {
         pushd "$WEBI_TMP" > /dev/null 2>&1
         if [ "tar" == "$WEBI_EXT" ]; then
-            echo "Extracting $HOME/Downloads/$WEBI_PKG_FILE"
-            tar xf "$HOME/Downloads/$WEBI_PKG_FILE"
+            echo "Extracting $HOME/Downloads/webi/$WEBI_PKG_FILE"
+            tar xf "$HOME/Downloads/webi/$WEBI_PKG_FILE"
         elif [ "zip" == "$WEBI_EXT" ]; then
-            echo "Extracting $HOME/Downloads/$WEBI_PKG_FILE"
-            unzip "$HOME/Downloads/$WEBI_PKG_FILE" > __unzip__.log
+            echo "Extracting $HOME/Downloads/webi/$WEBI_PKG_FILE"
+            unzip "$HOME/Downloads/webi/$WEBI_PKG_FILE" > __unzip__.log
         elif [ "exe" == "$WEBI_EXT" ]; then
-            echo "Moving $HOME/Downloads/$WEBI_PKG_FILE"
-            mv "$HOME/Downloads/$WEBI_PKG_FILE" .
+            echo "Moving $HOME/Downloads/webi/$WEBI_PKG_FILE"
+            mv "$HOME/Downloads/webi/$WEBI_PKG_FILE" .
         elif [ "xz" == "$WEBI_EXT" ]; then
-            echo "Inflating $HOME/Downloads/$WEBI_PKG_FILE"
-            unxz -c "$HOME/Downloads/$WEBI_PKG_FILE" > "$(basename "$WEBI_PKG_FILE")"
+            echo "Inflating $HOME/Downloads/webi/$WEBI_PKG_FILE"
+            unxz -c "$HOME/Downloads/webi/$WEBI_PKG_FILE" > "$(basename "$WEBI_PKG_FILE")"
         else
             # do nothing
-            echo "Failed to extract $HOME/Downloads/$WEBI_PKG_FILE"
+            echo "Failed to extract $HOME/Downloads/webi/$WEBI_PKG_FILE"
             exit 1
         fi
         popd > /dev/null 2>&1
