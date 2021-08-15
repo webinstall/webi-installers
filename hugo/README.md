@@ -29,3 +29,12 @@ hugo
 # serve a site in dev mode
 hugo server -D
 ```
+
+### Use the Hugo+eon Bliss Template
+
+Check out
+[BeyondCodeBootcamp/bliss-template](https://github.com/BeyondCodeBootcamp/bliss-template).
+
+- Build automatically with GitHub Actions (or GitDeploy)
+- Good-looking template ([eon](https://github.com/ryanburnette/eon))
+- Works with the [Bliss](https://bliss.js.org) blog front end
