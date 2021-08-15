@@ -5,13 +5,8 @@ tagline: |
   PostgreSQL: The World's Most Advanced Open Source Relational Database.
 ---
 
-## Updating `postgres`
-
-```bash
-webi postgres@stable
-```
-
-Use `@x.y.z` for a specific version.
+To update or switch versions, run `webi postgres@stable` (or `@v10`, `@beta`,
+etc).
 
 ## Cheat Sheet
 

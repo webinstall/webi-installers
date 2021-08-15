@@ -5,13 +5,8 @@ tagline: |
   Go makes it easy to build simple, reliable, and efficient software.
 ---
 
-## Updating `go`
-
-```bash
-webi golang@stable
-```
-
-Use the `@beta` tag for pre-releases, or `@x.y.z` for a specific version.
+To update or switch versions, run `webi golang@stable` (or `@v1.16`, `@beta`,
+etc).
 
 ## Cheat Sheet
 

@@ -5,13 +5,8 @@ tagline: |
   hexyl is a simple hex viewer for the terminal.
 ---
 
-## Updating
-
-```bash
-webi hexyl@stable
-```
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi hexyl@stable` (or `@v0.9`, `@beta`,
+etc).
 
 ## Cheat Sheet
 

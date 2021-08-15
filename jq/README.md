@@ -5,13 +5,7 @@ tagline: |
   jq is a lightweight and flexible command-line JSON processor.
 ---
 
-## Updating `jq`
-
-```bash
-webi jq@stable
-```
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi jq@stable` (or `@v1.6`, `@beta`, etc).
 
 ## Cheat Sheet
 

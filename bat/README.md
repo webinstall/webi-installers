@@ -5,13 +5,7 @@ tagline: |
   bat: A cat(1) clone with syntax highlighting and Git integration.
 ---
 
-## Updating `bat`
-
-```bash
-webi bat@stable
-```
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi bat@stable` (or `@v0.18`, `@beta`, etc).
 
 ## Cheat Sheet
 

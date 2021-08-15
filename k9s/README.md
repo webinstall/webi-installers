@@ -5,11 +5,7 @@ tagline: |
   K9s provides a terminal UI to interact with your Kubernetes clusters
 ---
 
-### Updating `k9s`
-
-`webi k9s@stable`
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi k9s@stable` (or `@v0.24`, `@beta`, etc).
 
 ## Cheat Sheet
 

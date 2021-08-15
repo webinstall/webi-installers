@@ -5,11 +5,8 @@ tagline: |
   kubens: kubens is a utility to easily switch between Kubernetes namespaces.
 ---
 
-### Updating `kubens`
-
-`webi kubens@stable`
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi kubens@stable` (or `@v0.9`, `@beta`,
+etc).
 
 ## Cheat Sheet
 

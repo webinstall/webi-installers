@@ -5,13 +5,8 @@ tagline: |
   Gitea: Git with a cup of tea, painless self-hosted git service.
 ---
 
-## Updating `gitea`
-
-```bash
-webi gitea@stable
-```
-
-Use the `@beta` tag for pre-releases, or `@x.y.z` for a specific version.
+To update or switch versions, run `webi gitea@stable` (or `@v1.0`, `@beta`,
+etc).
 
 ## Cheat Sheet
 

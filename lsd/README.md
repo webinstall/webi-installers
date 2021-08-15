@@ -5,11 +5,7 @@ tagline: |
   LSDeluxe: next gen ls command
 ---
 
-### Updating `lsd`
-
-`webi lsd@stable`
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi lsd@stable` (or `@v0.20`, `@beta`, etc).
 
 ## Cheat Sheet
 

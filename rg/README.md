@@ -5,13 +5,7 @@ tagline: |
   Ripgrep is a git and sourcecode-aware drop-in grep replacement.
 ---
 
-## Updating `rg`
-
-```bash
-webi rg@stable
-```
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi rg@stable` (or `@v13.0`, `@beta`, etc).
 
 ## Cheat Sheet
 

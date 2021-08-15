@@ -5,11 +5,8 @@ tagline: |
   Comrak is a Rust port of github's cmark-gfm.
 ---
 
-### Updating `comrak`
-
-`webi comrak@stable`
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi comrak@stable` (or `@v0.11`, `@beta`,
+etc).
 
 ## Cheat Sheet
 

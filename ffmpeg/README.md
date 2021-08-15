@@ -5,14 +5,8 @@ tagline: |
   FFmpeg: A complete, cross-platform solution to record, convert and stream audio and video.
 ---
 
-## Updating `ffmpeg`
-
-```bash
-webi ffmpeg@stable
-```
-
-Disclaimer: ffmpeg does not provide official binaries, so
-<https://github.com/eugeneware/ffmpeg-static> is used.
+To update or switch versions, run `webi ffmpeg@stable` (or `@v4.4`, `@beta`,
+etc).
 
 ## Cheat Sheet
 

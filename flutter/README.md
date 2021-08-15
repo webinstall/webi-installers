@@ -5,14 +5,8 @@ tagline: |
   Flutter is a UI Toolkit for mobile, web, and desktop.
 ---
 
-## Updating `flutter`
-
-```bash
-webi flutter@stable
-```
-
-Use `@lts` for long-term support and the `@beta` and `@alpha` tags for
-pre-releases and dev releases, or `@x.y.z` for a specific version.
+To update or switch versions, run `webi flutter@stable` (or `@v2.2`, `@beta`,
+etc).
 
 ## Cheat Sheet
 

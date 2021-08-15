@@ -5,11 +5,8 @@ tagline: |
   watchexec is a simple, standalone tool that watches a path and runs a command whenever it detects modifications.
 ---
 
-### Updating `watchexec`
-
-`webi watchexec@stable`
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi watchexec@stable` (or `@v1.17`, `@beta`,
+etc).
 
 ## Cheat Sheet
 

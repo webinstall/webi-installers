@@ -5,13 +5,7 @@ tagline: |
   fd is a git-aware, simple, fast and user-friendly alternative to find.
 ---
 
-## Updating
-
-```bash
-webi fd@stable
-```
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi fd@stable` (or `@v8.2`, `@beta`, etc).
 
 ## Cheat Sheet
 

@@ -5,13 +5,8 @@ tagline: |
   Caddy is a fast, multi-platform web server with automatic HTTPS.
 ---
 
-## Updating `caddy`
-
-```bash
-webi caddy@stable
-```
-
-Use the `@beta` tag for pre-releases, or `@x.y.z` for a specific version.
+To update or switch versions, run `webi caddy@stable` (or `@v2.4`, `@beta`,
+etc).
 
 ## Cheat Sheet
 

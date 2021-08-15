@@ -5,13 +5,8 @@ tagline: |
   Hugo: The world’s fastest framework for building websites.
 ---
 
-## Updating `hugo`
-
-```bash
-webi hugo@stable
-```
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi hugo@stable` (or `@v0.87`, `@beta`,
+etc).
 
 ## Cheat Sheet
 

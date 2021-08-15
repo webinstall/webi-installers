@@ -5,11 +5,8 @@ tagline: |
   kubectx: kubectx is a utility to manage and switch between kubectl contexts.
 ---
 
-### Updating `kubectx`
-
-`webi kubectx@stable`
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi kubectx@stable` (or `@v0.9`, `@beta`,
+etc).
 
 ## Cheat Sheet
 

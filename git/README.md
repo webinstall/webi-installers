@@ -5,11 +5,7 @@ tagline: |
   git: --fast-version-control
 ---
 
-## Updating `git`
-
-```bash
-webi git@stable
-```
+To update or switch versions, run `webi git@stable` (or `@v2.30`, `@beta`, etc).
 
 ## Cheat Sheet
 

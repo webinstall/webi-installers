@@ -5,11 +5,7 @@ tagline: |
   Arc is a cross-platform, multi-format archive utility.
 ---
 
-## Updating `arc`
-
-`webi arc@stable`
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi arc@stable` (or `@v3.5`, `@beta`, etc).
 
 ## Cheat Sheet
 

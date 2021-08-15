@@ -5,13 +5,8 @@ tagline: |
   curlie wraps `curl` with modern defaults and `httpie`-like syntax highlighting
 ---
 
-## Updating
-
-```bash
-webi curlie@stable
-```
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi curlie@stable` (or `@v1.6`, `@beta`,
+etc).
 
 ## Cheat Sheet
 

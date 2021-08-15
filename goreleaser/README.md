@@ -5,11 +5,8 @@ tagline: |
   goreleaser: Deliver Go binaries as fast and easily as possible
 ---
 
-### Updating `goreleaser`
-
-`webi goreleaser@stable`
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi goreleaser@stable` (or `@v0.174`,
+`@beta`, etc).
 
 ## Cheat Sheet
 

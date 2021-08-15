@@ -5,13 +5,7 @@ tagline: |
   fzf is a general-purpose command-line fuzzy finder.
 ---
 
-### Updating
-
-```bash
-webi fzf@stable
-```
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi fzf@stable` (or `@v0.23`, `@beta`, etc).
 
 ## Cheat Sheet
 

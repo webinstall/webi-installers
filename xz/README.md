@@ -5,12 +5,7 @@ tagline: |
   XZ Utils is free general-purpose data compression software with a high compression ratio.
 ---
 
-### Updating `xz`
-
-`webi xz@stable`
-
-The Windows builds are the official builds. The Mac and Linux builds are from
-[github.com/therootcompany/xz-static](https://github.com/therootcompany/xz-static).
+To update or switch versions, run `webi xz@stable` (or `@v5.2`, `@beta`, etc).
 
 ## Cheat Sheet
 

@@ -5,13 +5,8 @@ tagline: |
   Deno: A secure runtime for JavaScript and TypeScript.
 ---
 
-## Updating `deno`
-
-```bash
-webi deno@stable
-```
-
-Use the `@beta` tag for pre-releases, or `@x.y.z` for a specific version.
+To update or switch versions, run `webi deno@stable` (or `@v1.13`, `@beta`,
+etc).
 
 ## Cheat Sheet
 

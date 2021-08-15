@@ -5,13 +5,8 @@ tagline: |
   Pandoc is a Haskell library for converting from one markup format to another.
 ---
 
-## Updating `pandoc`
-
-```bash
-webi pandoc@stable
-```
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi pandoc@stable` (or `@v2.14`, `@beta`,
+etc).
 
 ## Cheat Sheet
 

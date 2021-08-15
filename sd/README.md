@@ -5,11 +5,7 @@ tagline: |
   sd is an intuitive find & replace CLI.
 ---
 
-### Updating `sd`
-
-`webi sd@stable`
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi sd@stable` (or `@v0.7`, `@beta`, etc).
 
 ## Cheat Sheet
 

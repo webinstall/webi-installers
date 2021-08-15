@@ -5,11 +5,7 @@ tagline: |
   fish is a smart and user-friendly command line shell for Linux, macOS, and the rest of the family.
 ---
 
-### Updating `fish`
-
-`webi fish@stable`
-
-Use the `@beta` tag for pre-releases.
+To update or switch versions, run `webi fish@stable` (or `@v3.3`, `@beta`, etc).
 
 ## Cheat Sheet
 
