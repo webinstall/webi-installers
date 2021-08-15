@@ -15,7 +15,7 @@ function __init_vim_leader() {
 
     if ! grep '^let mapleader =' -r ~/.vimrc > /dev/null 2> /dev/null; then
         rm -rf ~/.vimrc.new.1
-        printf '" Set Leader to Space (with \\ and , as aliases) by webinstall.dev/vim-shell\n' >> ~/.vimrc.new.1
+        printf '" Set Leader to Space (with \\ and , as aliases) by webinstall.dev/vim-leader\n' >> ~/.vimrc.new.1
         printf 'let mapleader = " "\n' >> ~/.vimrc.new.1
         printf 'nmap <bslash> <space>\n' >> ~/.vimrc.new.1
         printf 'nmap , <space>\n' >> ~/.vimrc.new.1
