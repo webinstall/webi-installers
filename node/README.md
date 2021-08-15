@@ -5,14 +5,9 @@ tagline: |
   Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
 ---
 
-## Updating and Switch versions
-
-```bash
-webi node@stable
-```
-
-Use `@lts` for long-term support and the `@beta` tag for pre-releases, or
-`@x.y.z` for a specific version.
+To update or switch versions, run `webi node@<tag>`. \
+(you can use `@lts` for long-term support, `@beta` for pre-releases, or `@x.y.z`
+for a specific version)
 
 ## Cheat Sheet
 
@@ -87,7 +82,7 @@ npm install --save express
 var express = require('express');
 var app = express();
 
-app.use('/', function (req, res, next) {
+app.use('/', function(req, res, next) {
   res.end('Hello, World!');
 });
 
@@ -102,7 +97,7 @@ module.exports = app;
 var http = require('http');
 var app = require('./app.js');
 
-http.createServer(app).listen(8080, function () {
+http.createServer(app).listen(8080, function() {
   console.info('Listening on', this.address());
 });
 ```
