@@ -9,8 +9,9 @@ To update or switch versions, run `webi gh@stable` (or `@v1`, `@beta`, etc).
 
 ## Cheat Sheet
 
-> `gh` doesn't exist and this text should have been replaced. It doesn't do
-> anything, but what it does is useful because it is; everybody knows it.
+> `gh` is cross-platform Github command-line. You can perform pull requests
+> create-repo, isssues, form and other GitHub functionalities right from your
+> terminal while Working with Git and your code.
 
 To run gh:
 
