@@ -29,6 +29,7 @@ pkg_link() {
 
     # ln -s "$HOME/.local/opt/postgres-v10.13" "$HOME/.local/opt/postgres"
     ln -s "$pkg_src" "$pkg_dst"
+    mkdir -p ~/Applications
     ln -s "$pkg_src/pgAdmin 4.app" "$HOME/Applications/pgAdmin 4.app" || true
 }
 
