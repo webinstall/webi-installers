@@ -13,62 +13,73 @@ To update or switch versions, run `webi gh@stable` (or `@v1`, `@beta`, etc).
 > create-repo, isssues, fork and other GitHub functionalities right from your
 > terminal while Working with Git and your code.
 
-###Installation:
-  - For macOS and Windows [macOS/Windows](https://github.com/cli/cli/blob/trunk/README.md)
-  - For linux Installation on specific distribution [linux](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
+Installation:
 
+- For macOS and Windows [macOS/Windows](https://github.com/cli/cli/blob/trunk/README.md)
+- For linux Installation on specific distribution [linux](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
 
-###Authentication
-- Authenticate with your Github account
+### Authentication
+
+Authenticate with your Github account.
+
 ```bash
 gh auth login
 ```
 
-###Pull requests
-- Create a pull request.
+### Pull Request
+
+Create a pull request.
+
 ```bash
 gh pr create -t <title> -b <body>
 ```
 
-- Check out pull requests locally.
+Check out pull requests locally.
+
 ```bash
 gh pr checkout
 ```
 
-- Check the status of yout pull requests.
+Check the status of yout pull requests.
+
 ```bash
 gh pr status
 ```
 
-- View Your pull requests' checks.
+View Your pull requests' checks.
+
 ```bash
 gh pr check
 ```
 
+### Issues
 
-###Issues
-- View and filter a repository's open issues.
+View and filter a repository's open issues.
+
 ```bash
 gh issue list
 ```
 
+### Release
 
-###Release
-- Create a new release
+Create a new release.
+
 ```bash
 gh release create 0.1
 ```
 
+### Repo
 
-###Repo
-- View repository READMEs
+View repository READMEs.
+
 ```bash
 gh repo view
 ```
 
+### Create Shortcut
 
-###Create Shortcut
-- Create Shortcut for a gh command
+Create Shortcut for a gh command.
+
 ```bash
 gh alias set bugs 'issue list --label="bugs"'
 ```
