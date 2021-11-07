@@ -23,8 +23,8 @@ function __init_zoxide() {
         # mkdir -p "~/.local/opt/zoxide-v0.99.9/bin"
         mkdir -p "$(dirname "$pkg_src_cmd")"
 
-        # mv ./zoxide-*/zoxide "~/.local/opt/zoxide-v0.99.9/bin/zoxide"
-        mv ./zoxide-*/zoxide "$pkg_src_cmd"
+        # mv ./zoxide "~/.local/opt/zoxide-v0.99.9/bin/zoxide"
+        mv ./zoxide "$pkg_src_cmd"
     }
 
     # pkg_get_current_version is recommended, but (soon) not required
