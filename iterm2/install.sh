@@ -26,7 +26,7 @@ function _install_iterm2() {
     fi
 
     if [[ -d ~/Applications/iTerm.app ]]; then
-        mv ~/Applications/iTerm.app ${WEBI_TMP}/iTerm.app-webi.bak
+        mv ~/Applications/iTerm.app "${WEBI_TMP}/iTerm.app-webi.bak"
     fi
     mv "${WEBI_TMP}/iTerm.app" ~/Applications/
 }
