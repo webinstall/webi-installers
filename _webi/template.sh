@@ -35,6 +35,7 @@ function __bootstrap_webi() {
     #PKG_ARCHES=
     #PKG_FORMATS=
     WEBI_UA="$(uname -a)"
+    WEBI_PKG_DOWNLOAD=""
     export WEBI_HOST
 
     ##
@@ -151,6 +152,9 @@ function __bootstrap_webi() {
         else
             my_dl="$HOME/Downloads/$WEBI_PKG_FILE"
         fi
+
+        WEBI_PKG_DOWNLOAD="${my_dl}"
+        export WEBI_PKG_DOWNLOAD
 
         if [ -e "$my_dl" ]; then
             echo "Found $my_dl"
