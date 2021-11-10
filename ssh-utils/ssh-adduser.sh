@@ -53,20 +53,33 @@ function __run_ssh_adduser() {
         sudo -i -u "$my_new_user" bash -c "wget -q -O - '$WEBI_HOST/webi' | bash"
 
     # TODO ensure that ssh-password login is off
-    my_user="$(grep 'PasswordAuthentication yes' /etc/ssh/sshd_config)"
-    if [[ -n ${my_user} ]]; then
-
+    my_pass="$(grep 'PasswordAuthentication yes' /etc/ssh/sshd_config)"
+    my_pam=""
+    if [[ "Darwin" == "$(uname -s)" ]]; then
+        # Turn off PAM for macOS or it will allow password login
+        my_pam="$(grep 'UsePAM yes' /etc/ssh/sshd_config)"
+    fi
+    if [[ -n ${my_pass} ]] || [[ -n ${my_pam} ]]; then
         echo "######################################################################"
         echo "#                                                                    #"
         echo "#                             WARNING                                #"
         echo "#                                                                    #"
-        echo "# Found /etc/ssh/sshd_config: PasswordAuthentication yes             #"
+        echo "# Found /etc/ssh/sshd_config:                                        #"
+        if [[ -n ${my_pass} ]]; then
+            echo "#     PasswordAuthentication yes                                     #"
+        fi
+        if [[ -n ${my_pam} ]]; then
+            echo "#     UsePAM yes                                                     #"
+        fi
         echo "#                                                                    #"
         echo "# This is EXTREMELY DANGEROUS and insecure.                          #"
         echo "# We'll attempt to fix this now...                                   #"
         echo "#                                                                    #"
 
         sed -i 's/#\?PasswordAuthentication \(yes\|no\)/PasswordAuthentication no/' \
+            /etc/ssh/sshd_config
+
+        sed -i 's/#\?UsePAM \(yes\|no\)/UsePAM no/' \
             /etc/ssh/sshd_config
 
         if grep "PasswordAuthentication yes" /etc/ssh/sshd_config; then
