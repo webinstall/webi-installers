@@ -72,10 +72,10 @@ module.exports = function (request) {
       if ('10.11.6' === a.version) {
         return -1;
       }
-      if (a.date > a.date) {
+      if (a.date > b.date) {
         return 1;
       }
-      if (a.date < a.date) {
+      if (a.date < b.date) {
         return -1;
       }
     });
