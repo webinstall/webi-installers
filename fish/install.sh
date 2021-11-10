@@ -1,3 +1,4 @@
+#!/bin/bash
 set -e
 set -u
 
@@ -12,13 +13,17 @@ fi
 ################
 
 # Every package should define these 6 variables
+# shellcheck disable=2034
 pkg_cmd_name="fish"
 
 pkg_dst_cmd="$HOME/.local/bin/fish"
+# shellcheck disable=2034
 pkg_dst="$pkg_dst_cmd"
 
 pkg_src_cmd="$HOME/.local/opt/fish-v$WEBI_VERSION/bin/fish"
+# shellcheck disable=2034
 pkg_src_dir="$HOME/.local/opt/fish-v$WEBI_VERSION"
+# shellcheck disable=2034
 pkg_src="$pkg_src_cmd"
 
 # pkg_install must be defined by every package
@@ -45,10 +50,10 @@ function _macos_post_install() {
     if [ -e "$HOME/Library/Preferences/com.googlecode.iterm2.plist" ]; then
         /usr/libexec/PlistBuddy \
             -c "SET ':New Bookmarks:0:Custom Command' 'Custom Shell'" \
-            $HOME/Library/Preferences/com.googlecode.iterm2.plist
+            "$HOME/Library/Preferences/com.googlecode.iterm2.plist"
         /usr/libexec/PlistBuddy \
             -c "SET ':New Bookmarks:0:Command' $HOME/.local/bin/fish" \
-            $HOME/Library/Preferences/com.googlecode.iterm2.plist
+            "$HOME/Library/Preferences/com.googlecode.iterm2.plist"
         echo "To set 'fish' as the default iTerm2 shell:"
         echo "    iTerm2 > Preferences > Profiles > General > Command >"
         echo "    Custom Shell: $HOME/.local/bin/fish"
@@ -80,5 +85,5 @@ function pkg_get_current_version() {
     #       fish, version 3.1.2
     # This trims it down to just the version number:
     #       3.1.2
-    echo $(fish --version 2> /dev/null | head -n 1 | cut -d ' ' -f 3)
+    fish --version 2> /dev/null | head -n 1 | cut -d ' ' -f 3
 }
