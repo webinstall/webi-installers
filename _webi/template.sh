@@ -305,9 +305,12 @@ function __bootstrap_webi() {
 
     if [[ -z ${WEBI_WELCOME:-} ]]; then
         echo ""
-        echo "Thanks for using webi to install '$PKG_NAME' on '$WEBI_OS/$WEBI_ARCH'."
+        echo -e "Thanks for using webi to install '\e[32m${WEBI_PKG:-}\e[0m' on '\e[31m$(uname -s)/$(uname -m)\e[0m'."
         echo "Have a problem? Experience a bug? Please let us know:"
-        echo "        https://github.com/webinstall/packages/issues"
+        echo "        https://github.com/webinstall/webi-installers/issues"
+        echo ""
+        echo -e "\e[31mLovin'\e[0m it? Say thanks with a \e[34mStar on GitHub\e[0m:"
+        echo -e "        \e[32mhttps://github.com/webinstall/webi-installers\e[0m"
         echo ""
     fi
 
