@@ -11,7 +11,7 @@ function _install_gpg() {
     fi
 
     # Download the latest LTS
-    #curl -fsSL -o ~/Downloads/GnuPG-2.2.32.dmg 'https://sourceforge.net/projects/gpgosx/files/GnuPG-2.2.32.dmg/download'
+    #curl -fsSL -o ~/Downloads/webi/GnuPG-2.2.32.dmg 'https://sourceforge.net/projects/gpgosx/files/GnuPG-2.2.32.dmg/download'
     webi_download
     chmod a-w "${WEBI_PKG_DOWNLOAD}"
 
@@ -19,15 +19,15 @@ function _install_gpg() {
     hdiutil detach -quiet /Volumes/GnuPG* 2> /dev/null || true
     hdiutil attach -quiet -readonly "${WEBI_PKG_DOWNLOAD}"
 
-    # Extract (completely) to ~/Downloads/GnuGP-VERSION.d
+    # Extract (completely) to ~/Downloads/webi/GnuGP-VERSION.d
     # (and detach the DMG)
-    rm -rf ~/Downloads/GnuPG-"${WEBI_VERSION}".d
-    pkgutil --expand-full /Volumes/GnuPG*/*.pkg ~/Downloads/GnuPG-"${WEBI_VERSION}".d
+    rm -rf ~/Downloads/webi/GnuPG-"${WEBI_VERSION}".d
+    pkgutil --expand-full /Volumes/GnuPG*/*.pkg ~/Downloads/webi/GnuPG-"${WEBI_VERSION}".d
     hdiutil detach -quiet /Volumes/GnuPG*
 
     # Move to ~/.local/opt/gnugp (where it belongs!)
     if [[ ! -e ~/.local/opt/gnupg-"${WEBI_VERSION}" ]]; then
-        mv ~/Downloads/GnuPG-"${WEBI_VERSION}".d/GnuPG.pkg/Payload/ ~/.local/opt/gnupg-"${WEBI_VERSION}"
+        mv ~/Downloads/webi/GnuPG-"${WEBI_VERSION}".d/GnuPG.pkg/Payload/ ~/.local/opt/gnupg-"${WEBI_VERSION}"
     fi
 
     # Update symlink to latest
