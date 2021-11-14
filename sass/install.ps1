@@ -17,6 +17,7 @@ $pkg_src_bin = "$Env:USERPROFILE\.local\opt\dart-sass-v$Env:WEBI_VERSION"
 $pkg_src_dir = "$Env:USERPROFILE\.local\opt\dart-sass-v$Env:WEBI_VERSION"
 $pkg_src = "$pkg_src_dir"
 
+New-Item "$Env:USERPROFILE\Downloads" -ItemType Directory -Force | out-null
 $pkg_download = "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"
 
 IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"))

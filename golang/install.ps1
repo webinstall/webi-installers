@@ -1,6 +1,7 @@
 #!/usr/bin/env pwsh
 
 $pkg_cmd_name = "go"
+New-Item "$Env:USERPROFILE\Downloads" -ItemType Directory -Force | out-null
 $pkg_download = "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"
 
 $pkg_src = "$Env:USERPROFILE\.local\opt\$pkg_cmd_name-v$Env:WEBI_VERSION"

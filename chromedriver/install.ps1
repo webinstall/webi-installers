@@ -15,6 +15,7 @@ $pkg_src_bin = "$Env:USERPROFILE\.local\opt\chromedriver-v$Env:WEBI_VERSION\bin"
 $pkg_src_dir = "$Env:USERPROFILE\.local\opt\chromedriver-v$Env:WEBI_VERSION"
 $pkg_src = "$pkg_src_cmd"
 
+New-Item "$Env:USERPROFILE\Downloads" -ItemType Directory -Force | out-null
 $pkg_download = "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"
 
 # Fetch archive
