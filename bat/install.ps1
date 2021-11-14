@@ -3,12 +3,12 @@
 $VERNAME = "$Env:PKG_NAME-v$Env:WEBI_VERSION.exe"
 $EXENAME = "$Env:PKG_NAME.exe"
 # Fetch archive
-IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"))
+IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"))
 {
     # TODO: arch detection
-    echo "Downloading $Env:PKG_NAME from $Env:WEBI_PKG_URL to $Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"
-    & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE.part"
-    & move "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE.part" "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"
+    echo "Downloading $Env:PKG_NAME from $Env:WEBI_PKG_URL to $Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
+    & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE.part"
+    & move "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE.part" "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 }
 
 IF (!(Test-Path -Path "$Env:USERPROFILE\.local\xbin\$VERNAME"))
@@ -24,8 +24,8 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\.local\xbin\$VERNAME"))
 
         # Unpack archive
         # Windows BSD-tar handles zip. Imagine that.
-        echo "Unpacking $Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"
-        & tar xf "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"
+        echo "Unpacking $Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
+        & tar xf "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
         # Move single binary into root of temporary folder
         & move "bat-*\$EXENAME" "$VERNAME"
 

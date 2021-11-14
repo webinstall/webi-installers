@@ -16,11 +16,11 @@ $pkg_src_bin = "$Env:USERPROFILE\.local\opt\hugo-v$Env:WEBI_VERSION\bin"
 $pkg_src_dir = "$Env:USERPROFILE\.local\opt\hugo-v$Env:WEBI_VERSION"
 $pkg_src = "$pkg_src_cmd"
 
-New-Item "$Env:USERPROFILE\Downloads" -ItemType Directory -Force | out-null
-$pkg_download = "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE"
+New-Item "$Env:USERPROFILE\Downloads\webi" -ItemType Directory -Force | out-null
+$pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 
 # Fetch archive
-IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\$Env:WEBI_PKG_FILE")) {
+IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE")) {
     # TODO: arch detection
     echo "Downloading hugo from $Env:WEBI_PKG_URL to $pkg_download"
     & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"

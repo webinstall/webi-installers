@@ -28,13 +28,13 @@ IF(!(Test-CommandExists wsl))
 }
 
 echo ""
-IF ((Test-Path -Path "$Env:UserProfile\Downloads\Ubuntu_2004_x64.appx" )) {
+IF ((Test-Path -Path "$Env:UserProfile\Downloads\webi\Ubuntu_2004_x64.appx" )) {
     echo "Skipping 4 of 5: Ubuntu Linux 20.04 already installed"
 } ELSE {
     echo "Installing 4 of 5 Ubuntu Linux 20.04 (for WSL 1 and WSL 2) ..."
-    curl.exe -fL -o "$Env:UserProfile\Downloads\Ubuntu_2004_x64.appx.part" https://aka.ms/wslubuntu2004
-    & move "$Env:UserProfile\Downloads\Ubuntu_2004_x64.appx.part" "$Env:UserProfile\Downloads\Ubuntu_2004_x64.appx"
-    Add-AppxPackage "$Env:UserProfile\Downloads\Ubuntu_2004_x64.appx"
+    curl.exe -fL -o "$Env:UserProfile\Downloads\webi\Ubuntu_2004_x64.appx.part" https://aka.ms/wslubuntu2004
+    & move "$Env:UserProfile\Downloads\webi\Ubuntu_2004_x64.appx.part" "$Env:UserProfile\Downloads\webi\Ubuntu_2004_x64.appx"
+    Add-AppxPackage "$Env:UserProfile\Downloads\webi\Ubuntu_2004_x64.appx"
 }
 
 echo ""
