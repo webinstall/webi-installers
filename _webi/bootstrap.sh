@@ -9,13 +9,14 @@ function __install_webi() {
     export WEBI_HOST
 
     echo ""
-    echo -e "Thanks for using webi to install '\e[32m${WEBI_PKG:-}\e[0m' on '\e[31m$(uname -s)/$(uname -m)\e[0m'."
+    printf "Thanks for using webi to install '\e[32m${WEBI_PKG:-}\e[0m' on '\e[31m$(uname -s)/$(uname -m)\e[0m'.\n"
     echo "Have a problem? Experience a bug? Please let us know:"
     echo "        https://github.com/webinstall/webi-installers/issues"
     echo ""
-    echo -e "\e[31mLovin'\e[0m it? Say thanks with a \e[34mStar on GitHub\e[0m:"
-    echo -e "        \e[32mhttps://github.com/webinstall/webi-installers\e[0m"
+    printf "\e[31mLovin'\e[0m it? Say thanks with a \e[34mStar on GitHub\e[0m:\n"
+    printf "        \e[32mhttps://github.com/webinstall/webi-installers\e[0m\n"
     echo ""
+
     WEBI_WELCOME=true
     export WEBI_WELCOME
 
