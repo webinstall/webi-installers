@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
-{
-    set -e
-    set -u
+function _ssh_pubkey() {
 
     if [ ! -d "$HOME/.ssh" ]; then
         mkdir -p "$HOME/.ssh/"
@@ -32,6 +32,7 @@
 
     # TODO use the comment (if any) for the name of the file
     echo >&2 ""
+    #shellcheck disable=SC2088
     echo >&2 "~/Downloads/id_rsa.$(whoami).pub":
     echo >&2 ""
     rm -f "$HOME/Downloads/id_rsa.$(whoami).pub"
@@ -39,3 +40,5 @@
     cat "$HOME/Downloads/id_rsa.$(whoami).pub"
     echo >&2 ""
 }
+
+_ssh_pubkey

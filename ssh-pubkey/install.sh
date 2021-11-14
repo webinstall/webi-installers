@@ -1,9 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
-{
-    set -e
-    set -u
-
+function __install_ssh_pubkey() {
     MY_CMD="ssh-pubkey"
 
     rm -f "$HOME/.local/bin/$MY_CMD"
@@ -13,3 +12,5 @@
     # run the command
     "$HOME/.local/bin/$MY_CMD"
 }
+
+__install_ssh_pubkey
