@@ -69,9 +69,9 @@ function __bootstrap_webi() {
         fi
 
         if [ -n "$(command -v pkg_format_cmd_version)" ]; then
-            my_versioned_name="$(pkg_format_cmd_version "$WEBI_VERSION")"
+            my_versioned_name="'$(pkg_format_cmd_version "$WEBI_VERSION")'"
         else
-            my_versioned_name="'$pkg_cmd_name' v$WEBI_VERSION"
+            my_versioned_name="'$pkg_cmd_name v$WEBI_VERSION'"
         fi
 
         echo "$my_versioned_name"
@@ -107,32 +107,31 @@ function __bootstrap_webi() {
         my_current_cmd="$(command -v "$pkg_cmd_name")"
         set -e
         if [ -n "$my_current_cmd" ]; then
-            # TODO get version from symlink?
-            pkg_current_version=""
-            if [ -n "$(command -v pkg_get_current_version)" ]; then
-                pkg_current_version="$(
-                    pkg_get_current_version 2> /dev/null |
-                        head -n 1
-                )"
-            fi
-            # remove trailing '.0's for golang's sake
-            my_current_version="$(echo "$pkg_current_version" | sed 's:\.0::g')"
-            my_src_version="$(echo "$WEBI_VERSION" | sed 's:\.0::g')"
             my_canonical_name="$(_webi_canonical_name)"
-            if [ "$my_src_version" == "$my_current_version" ]; then
-                echo "$my_canonical_name already installed at $my_current_cmd"
+            if [ "$my_current_cmd" != "$pkg_dst_cmd" ]; then
+                echo >&2 "WARN: possible PATH conflict between $my_canonical_name and currently installed version"
+                echo >&2 "    ${pkg_dst_cmd} (new)"
+                echo >&2 "    ${my_current_cmd} (existing)"
+                #my_current_version=false
+            fi
+            # 'readlink' can't read links in paths on macOS 🤦
+            # but that's okay, 'cmp -s' is good enough for us
+            if cmp -s "${pkg_src_cmd}" "${my_current_cmd}"; then
+                echo "${my_canonical_name} already installed:"
+                echo -n "    ${pkg_dst}"
+                if [[ ${pkg_src_cmd} != "${my_current_cmd}" ]]; then
+                    echo -n " => ${pkg_src}"
+                fi
+                echo ""
                 exit 0
-            else
-                if [ "$my_current_cmd" != "$pkg_dst_cmd" ]; then
-                    echo >&2 "WARN: possible conflict between $my_canonical_name and $pkg_current_version at $my_current_cmd"
-                fi
-                if [ -x "$pkg_src_cmd" ]; then
-                    # shellcheck disable=2119
-                    # this function takes no args
-                    webi_link
-                    echo "switched to $my_canonical_name at $pkg_src"
-                    exit 0
-                fi
+            fi
+            if [ -x "$pkg_src_cmd" ]; then
+                # shellcheck disable=2119
+                # this function takes no args
+                webi_link
+                echo "switched to $my_canonical_name:"
+                echo "    ${pkg_dst} => ${pkg_src}"
+                exit 0
             fi
         fi
         export PATH="$my_path"
@@ -340,7 +339,20 @@ function __bootstrap_webi() {
     ##
 
     # run everything with defaults or overrides as needed
-    if [ -n "$(command -v pkg_get_current_version)" ]; then
+    if command -v pkg_install > /dev/null ||
+        command -v pkg_link > /dev/null ||
+        command -v pkg_post_install > /dev/null ||
+        command -v pkg_done_message > /dev/null ||
+        command -v pkg_format_cmd_version > /dev/null ||
+        [[ -n ${WEBI_SINGLE:-} ]] ||
+        [[ -n ${pkg_cmd_name:-} ]] ||
+        [[ -n ${pkg_dst_cmd:-} ]] ||
+        [[ -n ${pkg_dst_dir:-} ]] ||
+        [[ -n ${pkg_dst:-} ]] ||
+        [[ -n ${pkg_src_cmd:-} ]] ||
+        [[ -n ${pkg_src_dir:-} ]] ||
+        [[ -n ${pkg_src:-} ]]; then
+
         pkg_cmd_name="${pkg_cmd_name:-$PKG_NAME}"
 
         if [ -n "$WEBI_SINGLE" ]; then

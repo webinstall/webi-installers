@@ -27,13 +27,15 @@ function __init_foobar() {
         mv ./foobar-*/foo "$pkg_src_cmd"
     }
 
-    # pkg_get_current_version is recommended, but (soon) not required
+    # pkg_get_current_version is recommended, but not required
     pkg_get_current_version() {
         # 'foo --version' has output in this format:
         #       foobar 0.99.9 (rev abcdef0123)
         # This trims it down to just the version number:
         #       0.99.9
-        echo $(foo --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
+        foo --version 2> /dev/null |
+            head -n 1 |
+            cut -d ' ' -f 2
     }
 
 }
