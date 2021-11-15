@@ -1,3 +1,4 @@
+#!/bin/bash
 set -e
 set -u
 
@@ -19,7 +20,10 @@ pkg_get_current_version() {
     #       go version go1.14.2 darwin/amd64
     # This trims it down to just the version number:
     #       1.14.2
-    echo "$(go version 2> /dev/null | head -n 1 | cut -d' ' -f3 | sed 's:go::')"
+    go version 2> /dev/null |
+        head -n 1 |
+        cut -d' ' -f3 |
+        sed 's:go::'
 }
 
 pkg_format_cmd_version() {
@@ -58,46 +62,55 @@ pkg_post_install() {
 
     # See https://pkg.go.dev/mod/golang.org/x/tools?tab=packages
 
+    my_install="install"
+    # note: we intend a lexical comparison, so this is correct
+    #shellcheck disable=SC2072
+    if [[ ${WEBI_VERSION} < "1.16" ]]; then
+        my_install="get"
+    fi
+
     echo ""
     echo godoc
-    "$pkg_dst_cmd" get golang.org/x/tools/cmd/godoc@latest > /dev/null #2>/dev/null
+    "$pkg_dst_cmd" "${my_install}" golang.org/x/tools/cmd/godoc@latest > /dev/null #2>/dev/null
 
     echo ""
     echo gopls
-    "$pkg_dst_cmd" get golang.org/x/tools/gopls@latest > /dev/null #2>/dev/null
+    "$pkg_dst_cmd" "${my_install}" golang.org/x/tools/gopls@latest > /dev/null #2>/dev/null
 
     echo ""
     echo guru
-    "$pkg_dst_cmd" get golang.org/x/tools/cmd/guru@latest > /dev/null #2>/dev/null
+    "$pkg_dst_cmd" "${my_install}" golang.org/x/tools/cmd/guru@latest > /dev/null #2>/dev/null
 
     echo ""
     echo golint
-    "$pkg_dst_cmd" get golang.org/x/lint/golint@latest > /dev/null #2>/dev/null
+    "$pkg_dst_cmd" "${my_install}" golang.org/x/lint/golint@latest > /dev/null #2>/dev/null
 
     echo ""
     echo goimports
-    "$pkg_dst_cmd" get golang.org/x/tools/cmd/goimports@latest > /dev/null #2>/dev/null
+    "$pkg_dst_cmd" "${my_install}" golang.org/x/tools/cmd/goimports@latest > /dev/null #2>/dev/null
 
     echo ""
     echo gomvpkg
-    "$pkg_dst_cmd" get golang.org/x/tools/cmd/gomvpkg@latest > /dev/null #2>/dev/null
+    "$pkg_dst_cmd" "${my_install}" golang.org/x/tools/cmd/gomvpkg@latest > /dev/null #2>/dev/null
 
     echo ""
     echo gorename
-    "$pkg_dst_cmd" get golang.org/x/tools/cmd/gorename@latest > /dev/null #2>/dev/null
+    "$pkg_dst_cmd" "${my_install}" golang.org/x/tools/cmd/gorename@latest > /dev/null #2>/dev/null
 
     echo ""
     echo gotype
-    "$pkg_dst_cmd" get golang.org/x/tools/cmd/gotype@latest > /dev/null #2>/dev/null
+    "$pkg_dst_cmd" "${my_install}" golang.org/x/tools/cmd/gotype@latest > /dev/null #2>/dev/null
 
     echo ""
     echo stringer
-    "$pkg_dst_cmd" get golang.org/x/tools/cmd/stringer@latest > /dev/null #2>/dev/null
+    "$pkg_dst_cmd" "${my_install}" golang.org/x/tools/cmd/stringer@latest > /dev/null #2>/dev/null
 
     echo ""
 }
 
 pkg_done_message() {
-    echo "Installed 'go' v$WEBI_VERSION to ~/.local/opt/go"
-    echo "Installed go 'x' tools to GOBIN=\$HOME/go/bin"
+    echo "Installed 'go v$WEBI_VERSION' to ~/.local/opt/go"
+    # note: literal $HOME on purpose
+    #shellcheck disable=SC2016
+    echo 'Installed go "x" tools to GOBIN=$HOME/go/bin'
 }
