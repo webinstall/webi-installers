@@ -3,6 +3,12 @@ title: Ripgrep
 homepage: https://github.com/BurntSushi/ripgrep
 tagline: |
   Ripgrep is a git and sourcecode-aware drop-in grep replacement.
+bash_version: |
+  rg --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2
+files:
+  - ~/.config/envman/PATH.env
+  - ~/.local/bin/rg
+  - ~/.local/opt/rg/
 ---
 
 To update or switch versions, run `webi rg@stable` (or `@v13.0`, `@beta`, etc).
