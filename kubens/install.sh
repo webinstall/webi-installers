@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_kubens() {
     set -e
     set -u
 
@@ -34,3 +34,5 @@
     }
 
 }
+
+__init_kubens

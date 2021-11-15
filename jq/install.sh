@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_jq() {
     set -e
     set -u
 
@@ -18,3 +18,5 @@
         echo $(jq --version 2> /dev/null | head -n 1 | sed 's:^jq-::')
     }
 }
+
+__init_jq

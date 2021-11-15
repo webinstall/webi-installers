@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_k9s() {
     set -e
     set -u
 
@@ -41,3 +41,5 @@
     }
 
 }
+
+__init_k9s

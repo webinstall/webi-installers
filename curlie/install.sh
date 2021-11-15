@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_curlie() {
     set -e
     set -u
 
@@ -31,3 +31,5 @@
         chmod a+x "$pkg_src_cmd"
     }
 }
+
+__init_curlie

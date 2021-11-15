@@ -1,3 +1,4 @@
+#!/bin/bash
 # title: Archiver (arc alias)
 # homepage: https://webinstall.dev/arc
 # tagline: Alias for https://webinstall.dev/arc

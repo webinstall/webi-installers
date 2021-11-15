@@ -12,7 +12,7 @@ pkg_cmd_name="deno"
 # IMPORTANT: this let's other functions know to expect this to be a single file
 WEBI_SINGLE=true
 
-pkg_get_current_version() {
+function pkg_get_current_version() {
     # 'deno --version' has output in this format:
     #       deno 1.1.0
     #       v8 8.4.300
@@ -22,7 +22,7 @@ pkg_get_current_version() {
     echo "$(deno --version 2> /dev/null | head -n 1 | cut -d' ' -f2)"
 }
 
-pkg_install() {
+function pkg_install() {
     # $HOME/.local/xbin
     mkdir -p "$pkg_src_bin"
 
@@ -33,7 +33,7 @@ pkg_install() {
     chmod a+x "$pkg_src_cmd"
 }
 
-pkg_link() {
+function pkg_link() {
     # rm -f "$HOME/.local/bin/deno"
     rm -f "$pkg_dst_cmd"
 

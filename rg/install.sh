@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __install_rg() {
+function __init_rg() {
 
     ###################
     # Install ripgrep #
@@ -39,4 +39,4 @@ function __install_rg() {
     }
 }
 
-__install_rg
+__init_rg

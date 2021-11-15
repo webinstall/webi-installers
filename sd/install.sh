@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_sd() {
     set -e
     set -u
 
@@ -36,3 +36,5 @@
     }
 
 }
+
+__init_sd

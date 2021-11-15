@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_myip() {
     set -e
     set -u
 
@@ -10,3 +10,5 @@
 
     "$HOME/.local/bin/myip"
 }
+
+__init_myip

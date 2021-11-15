@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_xz() {
     set -e
     set -u
 
@@ -45,3 +45,5 @@
         echo $(xz --version 2> /dev/null | head -n 1 | cut -d ' ' -f 4)
     }
 }
+
+__init_xz

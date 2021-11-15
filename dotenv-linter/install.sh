@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __dotenv_linter() {
     set -e
     set -u
 
@@ -37,3 +37,5 @@
     }
 
 }
+
+__dotenv_linter

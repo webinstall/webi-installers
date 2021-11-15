@@ -1,4 +1,5 @@
-{
+#!/bin/bash
+function __init_pandoc{
     set -e
     set -u
 
@@ -41,3 +42,5 @@
         echo $(pandoc --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
     }
 }
+
+__init_pandoc

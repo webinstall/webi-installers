@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_gprox() {
     set -e
     set -u
 
@@ -27,3 +27,5 @@
         echo $(gprox --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
     }
 }
+
+__init_gprox

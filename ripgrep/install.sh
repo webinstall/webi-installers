@@ -1,3 +1,4 @@
+#!/bin/bash
 # title: Ripgrep (alias)
 # homepage: https://webinstall.dev/rg
 # tagline: `ripgrep` (project) is an alias for `rg` (command)

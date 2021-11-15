@@ -1,5 +1,6 @@
+#!/bin/bash
 # For installing from the extracted package tmp directory
-pkg_install() {
+function pkg_install() {
     pushd "$WEBI_TMP" 2>&1 > /dev/null
 
     if [ -n "$(command -v rsync 2> /dev/null | grep rsync)" ]; then

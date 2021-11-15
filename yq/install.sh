@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_yq() {
     set -e
     set -u
 
@@ -34,3 +34,5 @@
     }
 
 }
+
+__init_yq

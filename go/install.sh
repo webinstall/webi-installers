@@ -1,3 +1,4 @@
+#!/bin/bash
 # title: Go (golang alias)
 # homepage: https://webinstall.dev/golang
 # tagline: Alias for https://webinstall.dev/golang

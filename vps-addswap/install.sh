@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_vps_addswap() {
     set -e
     set -u
 
@@ -31,3 +31,5 @@
     # Cause swap to be activated on boot
     echo '/var/swapfile none swap sw 0 0' | tee -a /etc/fstab
 }
+
+__init_vps_addswap "$@"

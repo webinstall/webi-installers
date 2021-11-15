@@ -1,4 +1,6 @@
-install() {
+#!/bin/bash
+
+function __init_nerdfont() {
     set -e
     set -u
 
@@ -21,4 +23,4 @@ install() {
     echo "Installed $my_nerdfont to ~/$my_fontdir"
 }
 
-install
+__init_nerdfont

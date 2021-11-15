@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_shfmt() {
     set -e
     set -u
 
@@ -28,3 +28,5 @@
     }
 
 }
+
+__init_shfmt

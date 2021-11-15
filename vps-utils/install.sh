@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_vps_utils() {
     set -e
     set -u
 
@@ -13,3 +13,5 @@
     chmod a+x "$HOME/.local/bin/myip"
     chmod a+x "$HOME/.local/bin/vps-"*
 }
+
+__init_vps_utils

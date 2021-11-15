@@ -1,3 +1,4 @@
+#!/bin/bash
 # title: PostgreSQL (Postgres alias)
 # homepage: https://webinstall.dev/postgres
 # tagline: Alias for https://webinstall.dev/postgres

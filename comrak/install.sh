@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_comrak() {
     set -e
     set -u
 
@@ -34,3 +34,5 @@
         "$pkg_src_cmd" --version > /dev/null
     }
 }
+
+__init_comrak

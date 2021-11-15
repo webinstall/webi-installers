@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_ffmpeg() {
     set -e
     set -u
 
@@ -39,3 +39,5 @@
     }
 
 }
+
+__init_ffmpeg

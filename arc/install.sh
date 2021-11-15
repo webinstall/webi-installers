@@ -1,4 +1,5 @@
-{
+#!/bin/bash
+function __init_arc() {
     set -e
     set -u
 
@@ -34,3 +35,5 @@
         echo "$(arc version 2> /dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
     }
 }
+
+__init_arc

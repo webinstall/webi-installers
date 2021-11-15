@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_chromedriver() {
     set -e
     set -u
 
@@ -37,3 +37,5 @@
     }
 
 }
+
+__init_chromedriver

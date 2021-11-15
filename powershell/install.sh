@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{
+function __init_powershell() {
     set -e
     set -u
 
@@ -40,3 +40,5 @@
         echo "Installed 'pwsh' at $pkg_dst"
     }
 }
+
+__init_powershell

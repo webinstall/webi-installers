@@ -1,3 +1,4 @@
+#!/bin/bash
 # title: GnuPG (gpg alias)
 # homepage: https://webinstall.dev/gpg
 # tagline: Alias for https://webinstall.dev/gpg

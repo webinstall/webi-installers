@@ -1,3 +1,4 @@
+#!/bin/bash
 # title: Rust (rustlang alias)
 # homepage: https://webinstall.dev/rustlang
 # tagline: Alias for https://webinstall.dev/rustlang
