@@ -25,15 +25,19 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
     echo "Installing yq"
     pushd .local\tmp
 
-        Remove-Item -Path ".\yq-v*" -Recurse -ErrorAction Ignore
-        Remove-Item -Path ".\yq.exe" -Recurse -ErrorAction Ignore
+    	# Remove any leftover tmp cruft
+        Remove-Item -Path ".\yq-*" -Recurse -ErrorAction Ignore
+        Remove-Item -Path ".\yq*.exe" -Recurse -ErrorAction Ignore
 
+        # Unpack archive file into this temporary directory
+        # Windows BSD-tar handles zip. Imagine that.
         echo "Unpacking $pkg_download"
         & tar xf "$pkg_download"
 
+        # Settle unpacked archive into place
         echo "Install Location: $pkg_src_cmd"
         New-Item "$pkg_src_bin" -ItemType Directory -Force | out-null
-        Move-Item -Path ".\yq.exe" -Destination "$pkg_src_bin"
+        Move-Item -Path ".\yq*.exe" -Destination "$pkg_src_bin"
 
     popd
 }

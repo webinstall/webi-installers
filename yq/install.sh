@@ -15,7 +15,11 @@
 
     pkg_install() {
         mkdir -p "$(dirname $pkg_src_cmd)"
-        mv ./"$pkg_cmd_name"* "$pkg_src_cmd"
+        if [[ -e "yq.1" ]]; then
+            mkdir -p ~/.local/share/man/man1
+            mv yq.1 ~/.local/share/man/man1
+        fi
+        mv ./"${pkg_cmd_name}"* "$pkg_src_cmd"
         chmod a+x "$pkg_src_cmd"
     }
 
