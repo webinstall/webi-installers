@@ -15,7 +15,10 @@
 
     pkg_install() {
         mkdir -p "$(dirname $pkg_src_cmd)"
-        mv ./"$pkg_cmd_name"* "$pkg_src_cmd"
+        # The downloaded file yq_linux_amd64.tar.gz which contains: ./yq_linux_amd64, yq.1, install-man-page.sh now.
+        mv ./"$pkg_cmd_name"_* "$pkg_src_cmd"
+        # Todo: need root permission to install man doc
+        # bash ./install-man-page.sh
         chmod a+x "$pkg_src_cmd"
     }
 
