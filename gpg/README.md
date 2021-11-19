@@ -52,7 +52,7 @@ gpg --list-secret-keys --keyid-format LONG
 
 ### How to configure git to sign commits
 
-See the [Cheat Sheet](./git-gpg-init) at [gpg-pubkey](./git-gpg-init).
+See the [Cheat Sheet](./git-config-gpg) at [gpg-pubkey](./git-config-gpg).
 
 ### How to Export GPG Key for GitHub
 

@@ -1,6 +1,6 @@
 ---
-title: git-gpg-init
-homepage: https://webinstall.dev/git-gpg-init
+title: git-config-gpg
+homepage: https://webinstall.dev/git-config-gpg
 tagline: |
   Get your GnuPG Public Key.
 ---
@@ -24,7 +24,7 @@ Here we'll cover
 Usage:
 
 ```bash
-git-gpg-init
+git-config-gpg
 ```
 
 Example output:
@@ -57,7 +57,7 @@ install:
 
 ```txt
 ~/.config/envman/PATH.env
-~/.local/bin/git-gpg-init
+~/.local/bin/git-config-gpg
 ~/Downloads/YOU.KEY_ID.gpg.asc
 ```
 
@@ -104,7 +104,7 @@ See:
 
 ### How to manually set up git commit gpg signing
 
-(this is what `git-gpg-init` does)
+(this is what `git-config-gpg` does)
 
 Run [gpg-pubkey-id](./gpg-pubkey) to get your GnuPG Public Key ID and then
 update your `~/.gitconfig` to sign with it by default:

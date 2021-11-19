@@ -3,7 +3,7 @@ set -e
 set -u
 
 function __install_git_gpg_init() {
-    MY_CMD="git-gpg-init"
+    MY_CMD="git-config-gpg"
 
     rm -f "$HOME/.local/bin/$MY_CMD"
     webi_download "$WEBI_HOST/packages/$MY_CMD/$MY_CMD.sh" "$HOME/.local/bin/$MY_CMD"
