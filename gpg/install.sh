@@ -35,7 +35,8 @@ function _install_gpg() {
     ln -s gnupg-"${WEBI_VERSION}" ~/.local/opt/gnupg
 
     pathman add ~/.local/opt/gnupg/bin
-    export PATH="$HOME/.local/opt/gnupg/bin/:$PATH"
+    export PATH="$HOME/.local/opt/gnupg/bin:$PATH"
+    export PATH="$HOME/.local/opt/gnupg/bin/pinentry-mac.app/Contents/MacOS:$PATH"
 
     # Prep for first use
     mkdir -p ~/.gnupg/
@@ -56,7 +57,7 @@ function _install_gpg() {
 	<string>gpg-agent</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>'"${HOME}"'/.local/opt/gpg/bin/gpg-connect-agent</string>
+		<string>'"${HOME}"'/.local/opt/gnupg/bin/gpg-connect-agent</string>
 		<string>--agent-program</string>
 		<string>'"${HOME}"'/.local/opt/gnupg/bin/gpg-agent</string>
 		<string>--homedir</string>
@@ -78,6 +79,10 @@ function _install_gpg() {
 </plist>' > ~/Library/LaunchAgents/gpg-agent.plist
     launchctl load -w ~/Library/LaunchAgents/gpg-agent.plist
     sleep 3
+    ~/.local/opt/gnupg/bin/gpg-connect-agent \
+        --agent-program ~/.local/opt/gnupg/bin/gpg-agent \
+        --homedir ~/.gnupg/ \
+        /bye
 
     # (maybe) Create first key
     if ! gpg --list-secret-keys | grep -q sec; then
@@ -90,21 +95,14 @@ function _create_gpg_key() {
         return 0
     fi
 
-    MY_NAME="$(
-        grep 'name\s*=' ~/.gitconfig |
-            head -n 1 |
-            cut -d'=' -f2 |
-            sed -e 's/^[\t ]*//'
-    )"
+    #grep 'name\s*=' ~/.gitconfig | head -n 1 | cut -d'=' -f2 | sed -e 's/^[\t ]*//'
+    MY_NAME="$(git config --global user.name)"
     if [[ -z ${MY_NAME} ]]; then
         return 0
     fi
 
-    MY_EMAIL="$(
-        grep 'email\s*=.*@' ~/.gitconfig |
-            tr -d '\t ' | head -n 1 |
-            cut -d'=' -f2
-    )"
+    # grep 'email\s*=.*@' ~/.gitconfig | tr -d '\t ' | head -n 1 | cut -d'=' -f2
+    MY_EMAIL="$(git config --global user.email)"
     if [[ -z ${MY_EMAIL} ]]; then
         return 0
     fi

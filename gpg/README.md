@@ -90,7 +90,7 @@ You need to use `gpg-connect-agent` instead.
 	<string>gpg-agent</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>MY_HOME/.local/opt/gpg/bin/gpg-connect-agent</string>
+		<string>MY_HOME/.local/opt/gnupg/bin/gpg-connect-agent</string>
 		<string>--agent-program</string>
 		<string>MY_HOME/.local/opt/gnupg/bin/gpg-agent</string>
 		<string>--homedir</string>

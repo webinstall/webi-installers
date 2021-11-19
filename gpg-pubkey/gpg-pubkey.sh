@@ -3,9 +3,8 @@ set -e
 set -u
 
 function __get_git_email() {
-    grep 'email\s*=.*@' ~/.gitconfig |
-        tr -d '\t ' | head -n 1 |
-        cut -d'=' -f2
+    git config --global user.email
+    # grep 'email\s*=.*@' ~/.gitconfig | tr -d '\t ' | head -n 1 | cut -d'=' -f2
 }
 
 function __get_pubkey_id() {
@@ -20,12 +19,8 @@ function _create_gpg_key() {
         return 1
     fi
 
-    MY_NAME="$(
-        grep 'name\s*=' ~/.gitconfig |
-            head -n 1 |
-            cut -d'=' -f2 |
-            sed -e 's/^[\t ]*//'
-    )"
+    #grep 'name\s*=' ~/.gitconfig | head -n 1 | cut -d'=' -f2 | sed -e 's/^[\t ]*//'
+    MY_NAME="$(git config --global user.name)"
     if [[ -z ${MY_NAME} ]]; then
         return 1
     fi
