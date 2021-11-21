@@ -14,6 +14,7 @@ function __rmrf_local() {
             chromedriver \
             comrak \
             curlie \
+            delta \
             deno \
             dotenv \
             dotenv-linter \
@@ -103,6 +104,7 @@ function __rmrf_local() {
             chromedriver \
             comrak \
             curlie \
+            delta \
             deno \
             dotenv \
             dotenv-linter \
@@ -196,6 +198,7 @@ function __test() {
         chromedriver \
         comrak \
         curlie \
+        delta \
         deno \
         dotenv \
         dotenv-linter \
