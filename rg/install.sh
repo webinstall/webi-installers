@@ -1,6 +1,9 @@
-{
-    set -e
-    set -u
+#!/bin/bash
+set -e
+set -u
+
+function __install_rg() {
+
 
     ###################
     # Install ripgrep #
