@@ -4,7 +4,6 @@ set -u
 
 function __install_rg() {
 
-
     ###################
     # Install ripgrep #
     ###################
@@ -39,3 +38,5 @@ function __install_rg() {
         echo $(rg --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
     }
 }
+
+__install_rg
