@@ -14,16 +14,23 @@
     pkg_src="$pkg_src_cmd"
 
     pkg_install() {
-        mkdir -p "$(dirname $pkg_src_cmd)"
-        # The downloaded file yq_linux_amd64.tar.gz which contains: ./yq_linux_amd64, yq.1, install-man-page.sh now.
-        mv ./"$pkg_cmd_name"_* "$pkg_src_cmd"
-        # Todo: need root permission to install man doc
-        # bash ./install-man-page.sh
+        mkdir -p "$(dirname "$pkg_src_cmd")"
+        # yq_linux_amd64.tar.gz contains:
+        #   - yq_linux_amd64
+        #   - yq.1
+        #   - install-man-page.sh
+        if [[ -e ./yq.1 ]]; then
+            mkdir -p ~/.local/share/man/man1
+            mv ./yq.1 ~/.local/share/man/man1/
+        fi
+        mv ./"$pkg_cmd_name"* "$pkg_src_cmd"
         chmod a+x "$pkg_src_cmd"
     }
 
     pkg_get_current_version() {
-        echo $(yq --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
+        yq --version 2> /dev/null |
+            head -n 1 |
+            cut -d ' ' -f 2
     }
 
 }
