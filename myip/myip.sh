@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __show_my_ip {
+function __show_my_ip() {
     set -u
     set -e
 

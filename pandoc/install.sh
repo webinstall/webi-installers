@@ -1,5 +1,6 @@
 #!/bin/bash
-function __init_pandoc{
+
+function __init_pandoc() {
     set -e
     set -u
 

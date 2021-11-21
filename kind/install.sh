@@ -17,13 +17,12 @@ function __init_kind() {
     pkg_src_dir="$HOME/.local/opt/kind-v$WEBI_VERSION"
     pkg_src="$pkg_src_cmd"
 
-    pkg_install() {
-        mkdir -p "$(dirname $pkg_src_cmd)"
-        mv ./kind-*/kind "$pkg_src_cmd"
-    }
+    WEBI_SINGLE=true
 
     pkg_get_current_version() {
-        echo $(kind --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
+        kind --version 2> /dev/null |
+            head -n 1 |
+            cut -d ' ' -f 2
     }
 
 }
