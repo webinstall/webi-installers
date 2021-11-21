@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
 function __init_vps_utils() {
-    set -e
-    set -u
 
     rm -f "$HOME/.local/bin/myip" "$HOME/.local/bin/vps-myip" "$HOME/.local/bin/vps-addswap" "$HOME/.local/bin/cap-net-bind"
     webi_download "$WEBI_HOST/packages/vps-utils/cap-net-bind.sh" "$HOME/.local/bin/cap-net-bind"

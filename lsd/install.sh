@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
 function __init_lsd() {
-    set -e
-    set -u
 
     ###############
     # Install lsd #

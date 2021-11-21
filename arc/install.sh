@@ -1,7 +1,8 @@
 #!/bin/bash
+set -e
+set -u
+
 function __init_arc() {
-    set -e
-    set -u
 
     ####################
     # Install archiver #

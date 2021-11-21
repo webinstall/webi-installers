@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
 function __init_fzf() {
-    set -e
-    set -u
 
     ###############
     # Install fzf #

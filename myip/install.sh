@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
 function __init_myip() {
-    set -e
-    set -u
 
     rm -f "$HOME/.local/bin/myip"
     webi_download "$WEBI_HOST/packages/myip/myip.sh" "$HOME/.local/bin/myip"

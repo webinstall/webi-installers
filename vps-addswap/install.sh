@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
 function __init_vps_addswap() {
-    set -e
-    set -u
 
     default_size=2G
     my_size=${1:-$default_size}

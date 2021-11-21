@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
 function __init_k9s() {
-    set -e
-    set -u
 
     ##################
     # Install k9s #

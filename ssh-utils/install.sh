@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_ssh_utils() {
+function __install_ssh_utils() {
     rm -f \
         "$HOME/.local/bin/ssh-pubkey" \
         "$HOME/.local/bin/ssh-setpass" \
@@ -20,4 +20,4 @@ function __init_ssh_utils() {
     chmod a+x "$HOME/.local/bin/ssh-"*
 }
 
-__init_ssh_utils
+__install_ssh_utils

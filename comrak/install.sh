@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
 function __init_comrak() {
-    set -e
-    set -u
 
     ##################
     # Install comrak #

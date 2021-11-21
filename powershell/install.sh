@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
 function __init_powershell() {
-    set -e
-    set -u
 
     pkg_cmd_name="pwsh"
     # no ./bin prefix

@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
 function __init_yq() {
-    set -e
-    set -u
 
     pkg_cmd_name="yq"
 

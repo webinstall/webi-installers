@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
 function __init_bat() {
-    set -e
-    set -u
 
     ###############
     # Install bat #
