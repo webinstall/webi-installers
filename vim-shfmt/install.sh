@@ -5,7 +5,7 @@ function __init_vim_shfmt() {
     set -u
 
     mkdir -p "$HOME/.vim/pack/plugins/start"
-    rm -rf "$HOME/.vim/pack/plugins/start/shfmt.vim"
+    rm -rf "$HOME/.vim/pack/plugins/start/vim-shfmt"
     git clone --depth=1 https://github.com/z0mbix/vim-shfmt.git "$HOME/.vim/pack/plugins/start/vim-shfmt"
 
     if [ -z "$(command -v shfmt)" ]; then
