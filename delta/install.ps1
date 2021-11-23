@@ -21,10 +21,8 @@ $pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 # Fetch archive
 IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"))
 {
-    # TODO: arch detection
-    # useragent -A was causing download to fail at 1kb
     echo "Downloading delta from $Env:WEBI_PKG_URL to $pkg_download"
-    & curl.exe -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
+    & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
     & move "$pkg_download.part" "$pkg_download"
 }
 
