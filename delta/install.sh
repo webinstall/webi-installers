@@ -2,8 +2,10 @@
 set -e
 set -u
 
-function __init_delta() {
+# shellcheck disable=SC2034
+# "'pkg_cmd_name' appears unused. Verify it or export it."
 
+function __init_delta() {
 
     #################
     # Install delta #
@@ -22,10 +24,18 @@ function __init_delta() {
     # pkg_install must be defined by every package
     pkg_install() {
         # ~/.local/opt/delta-v0.99.9/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./delta-*/delta ~/.local/opt/delta-v0.99.9/bin/delta
         mv ./delta-*/delta "$pkg_src_cmd"
+
+        git config --global page.diff delta
+        git config --global page.show delta
+        git config --global page.log delta
+        git config --global page.blame delta
+        git config --global page.reflog delta
+
+        git config --global interactive.diffFilter 'delta --color-only'
     }
 
     # pkg_get_current_version is recommended, but not required

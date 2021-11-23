@@ -48,6 +48,14 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
         New-Item "$pkg_src_bin" -ItemType Directory -Force | out-null
         Move-Item -Path ".\delta-*\delta.exe" -Destination "$pkg_src_bin"
 
+        # set delta to be the default differ
+        git config --global page.diff delta
+        git config --global page.show delta
+        git config --global page.log delta
+        git config --global page.blame delta
+        git config --global page.reflog delta
+
+        git config --global interactive.diffFilter 'delta --color-only'
     # Exit tmp
     popd
 }

@@ -7,6 +7,8 @@ tagline: |
 
 To update or switch versions, run `webi delta` (or `@0.9.1`, `@0.9.0`, etc).
 
+**Note**: You should install [git](./git) before installing `delta`.
+
 ## Cheat Sheet
 
 > `delta` gives you GitHub-style diffs, with word-level diff coloring, right in
