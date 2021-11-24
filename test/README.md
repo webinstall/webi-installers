@@ -8,5 +8,5 @@ linux: true
 
 ## Cheat Sheet
 
-> Don't install this package. It will install (almost) everything.
-> This is for webi CI/CD testing, etc.
+> Don't install this package. It will install (almost) everything. This is for
+> webi CI/CD testing, etc.

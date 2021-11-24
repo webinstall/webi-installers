@@ -5,18 +5,14 @@
   "description": "webinstall script repository",
   "main": "_webi/",
   "scripts": {
+    "prettier": "npx prettier@2 -w '**/*.{js,md,html}'",
     "test": "node _webi/test.js ./node/"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/webinstall/webi-installers.git"
   },
-  "keywords": [
-    "webinstall",
-    "brew",
-    "apt",
-    "chocolately"
-  ],
+  "keywords": ["webinstall", "brew", "apt", "chocolately"],
   "author": "AJ ONeal <coolaj86@gmail.com> (https://coolaj86.com/)",
   "license": "MPL-2.0",
   "bugs": {

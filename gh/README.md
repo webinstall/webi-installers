@@ -15,8 +15,10 @@ To update or switch versions, run `webi gh@stable` (or `@v1`, `@beta`, etc).
 
 Installation:
 
-- For macOS and Windows [macOS/Windows](https://github.com/cli/cli/blob/trunk/README.md)
-- For linux Installation on specific distribution [linux](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
+- For macOS and Windows
+  [macOS/Windows](https://github.com/cli/cli/blob/trunk/README.md)
+- For linux Installation on specific distribution
+  [linux](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
 
 ### Authentication
 
