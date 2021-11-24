@@ -104,7 +104,7 @@ function normalize(all) {
       if ('tar' === exts[1]) {
         rel.ext = exts.reverse().join('.');
         tarExt = 'tar';
-      } else if ('tgz' == exts[0]) {
+      } else if ('tgz' === exts[0]) {
         rel.ext = 'tar.gz';
         tarExt = 'tar';
       } else {
