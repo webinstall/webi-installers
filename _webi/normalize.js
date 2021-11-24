@@ -72,6 +72,13 @@ function normalize(all) {
           return osMap[regKey].test(rel.name || rel.download);
         }) || 'unknown';
     }
+    // Hacky-doo for musl
+    // TODO some sort of glibc vs musl tag?
+    if (!rel._musl) {
+      if (/(\b|\.|_|-)(musl)(\b|\.|_|-)/.test(rel.download)) {
+        rel._musl = true;
+      }
+    }
     supported.oses[rel.os] = true;
 
     if (!rel.arch) {
