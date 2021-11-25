@@ -9,6 +9,7 @@ function __init_vim_essentials() {
         vim-lastplace \
         vim-spell \
         vim-ale \
+        vim-shfmt \
         vim-prettier \
         vim-whitespace
     # done

@@ -23,6 +23,7 @@ It includes many of the vim plugins available on webinstall.dev such as:
 - [vim-viminfo](/vim-viminfo)
 - [vim-lastplace](/vim-lastplace)
 - [vim-spell](/vim-spell)
+- [vim-shfmt](/vim-shfmt)
 - [vim-ale](/vim-ale)
 - [vim-prettier](/vim-prettier)
 - [vim-whitespace](/vim-whitespace)

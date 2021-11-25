@@ -8,9 +8,12 @@ function __init_vim_shfmt() {
     rm -rf "$HOME/.vim/pack/plugins/start/vim-shfmt"
     git clone --depth=1 https://github.com/z0mbix/vim-shfmt.git "$HOME/.vim/pack/plugins/start/vim-shfmt"
 
+    export PATH="$HOME/.local/bin:${PATH}"
     if [ -z "$(command -v shfmt)" ]; then
-        export PATH="$HOME/.local/bin:${PATH}"
         webi shfmt
+    fi
+    if [ -z "$(command -v shellcheck)" ]; then
+        webi shellcheck
     fi
 
     if [ ! -f "$HOME/.vimrc" ]; then
