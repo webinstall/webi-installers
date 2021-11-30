@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -eu
 
 # function __install_make_workflows_sh() {
 #     pkg_cmd_name="make-workflows.sh"
