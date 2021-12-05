@@ -13,7 +13,6 @@ $pkg_dst_bin = "$pkg_dst\cmd"
 # Fetch archive
 IF (!(Test-Path -Path "$pkg_download"))
 {
-    # TODO: arch detection
     echo "Downloading $Env:PKG_NAME from $Env:WEBI_PKG_URL to $pkg_download"
     & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
     & move "$pkg_download.part" "$pkg_download"
