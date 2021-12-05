@@ -5,10 +5,17 @@ tagline: |
   Prettier is an opinionated code formatter.
 ---
 
-## Updating `prettier`
+To update or switch versions, run `npm install -g prettier@latest` (or `@v2`,
+etc).
 
-```bash
-npm install -g prettier@latest
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```txt
+~/.config/envman/PATH.env
+~/.local/opt/node
 ```
 
 ## Cheat Sheet
@@ -32,7 +39,7 @@ echo "dist/" >> .prettierignore
 Tell Prettier which settings to use - do NOT use `package.json` when it's not
 necessary!
 
-**`.prettierrc`**:
+**`.prettierrc.json`**:
 
 ```bash
 {
