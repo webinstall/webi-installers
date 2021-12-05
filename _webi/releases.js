@@ -143,7 +143,11 @@ Releases.renderBash = function (
                 /^\s*#?PKG_FORMATS=.*/m,
                 "PKG_FORMATS='" + ((rel && rel.formats) || []).join(',') + "'"
               )
-              .replace(reInstallTpl, '\n' + installTxt)
+              // $', $0, ... $9, $`, $&, and $_ all have special meaning
+              // (see https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
+              // However, it can be escaped with $$ (which must be escaped with $$)
+
+              .replace(reInstallTpl, '\n' + installTxt.replace(/\$/g, '$$$$'))
           );
         });
     });
