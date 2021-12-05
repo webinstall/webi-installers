@@ -9,7 +9,10 @@ function __init_vim_essentials() {
         vim-lastplace \
         vim-spell \
         vim-ale \
+        shellcheck \
+        shfmt \
         vim-shfmt \
+        prettier \
         vim-prettier \
         vim-whitespace
     # done
@@ -21,6 +24,7 @@ function __init_vim_essentials() {
     printf '    - vim-gui      (mouse & clipboard support)\n'
     printf '    - vim-devicons (use nerdfont icons in vim)\n'
     printf '\n'
+    printf '    - jshint       (JavaScript linting, works with vim-ale)\n'
     printf '    - vim-go       (golang linting, etc)\n'
     printf '    - vim-rust     (rustlang linting, etc)\n'
     printf '\n'
