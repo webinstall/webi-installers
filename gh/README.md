@@ -20,6 +20,28 @@ Installation:
 - For linux Installation on specific distribution
   [linux](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
 
+### Actions
+
+Get a status of the most recently ran Actions workflows.
+
+```bash
+gh run list
+```
+
+View why a specific run failed.
+
+```bash
+gh view N
+```
+- where N is your failed job ID (third from the right column)
+
+Rerun a specific workflow that failed.
+
+```bash
+gh rerun N
+```
+- where N is your failed job ID (third from the right column)
+
 ### Authentication
 
 Authenticate with your Github account.
