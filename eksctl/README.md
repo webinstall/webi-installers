@@ -1,6 +1,6 @@
 ---
 title: eksctl
-homepage: https://github.com/webinstall/foobar
+homepage: https://github.com/weaveworks/eksctl
 tagline: |
   The official CLI for Amazon EKS
 ---
@@ -15,25 +15,34 @@ install:
 
 ```txt
 ~/.config/envman/PATH.env
-~/.local/bin/foo
-~/.local/opt/foo
+~/.local/bin/eksctl
+~/.local/opt/eksctl
 ```
 
 ## Cheat Sheet
 
-> `foo` doesn't exist and this text should have been replaced. It doesn't do
-> anything, but what it does is useful because it is; everybody knows it.
+> From the `eksctl` ReadMe:
+> You can create a cluster in minutes with just one command – eksctl create cluster!
+> AWS Account
+> You will need to have AWS API credentials configured. What works for AWS CLI or any other tools (kops, Terraform etc), should be sufficient. You can use ~/.aws/credentials file or environment variables. For more information read AWS documentation.
 
-To run foo:
+
+You will also need AWS IAM Authenticator for Kubernetes command (either aws-iam-authenticator or aws eks get-token (available in version 1.16.156 or greater of AWS CLI) in your PATH.
+
+
+The IAM account used for EKS cluster creation should have these minimal access levels.
+
+
+To run eksctl:
 
 ```bash
-foo
+eksctl
 ```
 
 ### Add Baz Highlighting
 
-To run foo with both bar and baz highlighting turned on:
+To run eksctl with both bar and baz highlighting turned on:
 
 ```bash
-foo --bar=baz
+eksctl --bar=baz
 ```

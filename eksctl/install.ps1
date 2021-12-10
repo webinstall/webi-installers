@@ -40,12 +40,12 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
 
         # NOTE: DELETE THIS COMMENT IF NOT USED
         # Move single binary into root of temporary folder
-        #& move "$pkg_download" "eksctl.exe"
+        & move "$pkg_download" "eksctl.exe"
 
         # Unpack archive file into this temporary directory
         # Windows BSD-tar handles zip. Imagine that.
-        echo "Unpacking $pkg_download"
-        & tar xf "$pkg_download"
+      #  echo "Unpacking $pkg_download"
+      #  & tar xf "$pkg_download"
 
         # Settle unpacked archive into place
         echo "Install Location: $pkg_src_cmd"
