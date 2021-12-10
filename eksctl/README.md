@@ -46,3 +46,6 @@ To run eksctl with both bar and baz highlighting turned on:
 ```bash
 eksctl --bar=baz
 ```
+
+### Further Reading and Direct Link to Original ReadMe:
+https://github.com/weaveworks/eksctl
