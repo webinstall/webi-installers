@@ -33,10 +33,10 @@ You will also need AWS IAM Authenticator for Kubernetes command (either aws-iam-
 The IAM account used for EKS cluster creation should have these minimal access levels.
 
 
-To run eksctl:
+To create a basic cluster:
 
 ```bash
-eksctl
+eksctl create cluster
 ```
 
 ### Add Baz Highlighting
