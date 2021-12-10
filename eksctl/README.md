@@ -5,13 +5,6 @@ tagline: |
   The official CLI for Amazon EKS
 ---
 
-<!--
-    Note: Delete this comment section.
-
-    Need an example that has an **alias**? See `bat`.
-    Need a Windows example using **msvc**? See `bat`.
--->
-
 To update or switch versions, run `webi example@stable` (or `@v2`, `@beta`,
 etc).
 
