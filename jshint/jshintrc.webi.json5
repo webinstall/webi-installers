@@ -2,7 +2,7 @@
 // Recommended config from https://webinstall.dev/jshint
 //
 // To copy this file into your project without comments, run this:
-//     sed -e ~/.jshintrc.webi.json5 's://.*::g' > .jshintrc
+//     sed -e 's://.*::g' ~/.jshintrc.webi.json5 > .jshintrc
 
 {
   "browser": true,
