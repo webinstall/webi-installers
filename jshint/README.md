@@ -61,9 +61,9 @@ this command:
 
 ```bash
 # convert from JSON5 (with comments) to JSON and copy into current directory
-sed -e ~/.jshintrc.webi.json5 \
-    's://.*::g' \
-     > .jshintrc
+sed -e 's://.*::g' \
+    ~/.jshintrc.webi.json5 \
+    > .jshintrc
 ```
 
 The `.jshintrc` will be read by code tools such as _[`vim-ale`][vim-ale]_ and
@@ -87,7 +87,7 @@ Engineering_ (as opposed to just _Code Monkey_-ing around):
 // Recommended config from https://webinstall.dev/jshint
 //
 // To copy this file into your project without comments, run this:
-//     sed -e ~/.jshintrc.webi.json5 's://.*::g' > .jshintrc
+//     sed -e 's://.*::g' ~/.jshintrc.webi.json5 > .jshintrc
 
 {
   browser: true,
