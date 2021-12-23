@@ -43,6 +43,7 @@ function __rmrf_local() {
             k9s \
             keypairs \
             kind \
+            koji \
             kubectx \
             kubens \
             lf \
@@ -133,6 +134,7 @@ function __rmrf_local() {
             k9s \
             keypairs \
             kind \
+            koji \
             kubectx \
             kubens \
             lf \
@@ -227,6 +229,7 @@ function __test() {
         k9s \
         keypairs \
         kind \
+        koji \
         kubectx \
         kubens \
         lf \
