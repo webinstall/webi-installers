@@ -1,4 +1,17 @@
 ﻿#!/usr/bin/env pwsh
+#350 check if windows user run as admin
+
+function Confirm-IsElevated {
+	$id = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+	$p = New-Object System.Security.Principal.WindowsPrincipal($id)
+	if ($p.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator))
+	{ Write-Output $true }
+	else
+	{ Write-Output $false }
+}
+
+if (Confirm-IsElevated)
+{ throw "Please run script NOT as administrator" }
 
 # this allows us to call ps1 files, which allows us to have spaces in filenames
 # ('powershell "$Env:USERPROFILE\test.ps1" foo' will fail if it has a space in
