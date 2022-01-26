@@ -5,7 +5,8 @@
   "description": "webinstall script repository",
   "main": "_webi/",
   "scripts": {
-    "prettier": "npx prettier@2 -w '**/*.{js,md,html}'",
+    "prettier": "npx prettier@2.x -w '**/*.{js,md,html}'",
+    "lint": "npx jshint@2.x -c ./.jshintrc */*.js",
     "shfmt": "shfmt -w -i 4 -sr -s ./",
     "test": "node _webi/test.js ./node/"
   },
