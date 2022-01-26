@@ -11,7 +11,7 @@ function Confirm-IsElevated {
 }
 
 if (Confirm-IsElevated)
-{ throw "Please run script NOT as administrator" }
+{ throw "Webi MUST NOT be run with elevated privileges. Please run again as a normal user, NOT as administrator." }
 
 # this allows us to call ps1 files, which allows us to have spaces in filenames
 # ('powershell "$Env:USERPROFILE\test.ps1" foo' will fail if it has a space in
