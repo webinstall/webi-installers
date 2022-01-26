@@ -6,6 +6,7 @@
   "main": "_webi/",
   "scripts": {
     "prettier": "npx prettier@2 -w '**/*.{js,md,html}'",
+    "shfmt": "shfmt -w -i 4 -sr -s ./",
     "test": "node _webi/test.js ./node/"
   },
   "repository": {
