@@ -8,12 +8,22 @@
 
 **Before you PR**:
 
-- You'll be asked to make changes if you don't code formatters and linters:
+- You'll be asked to make changes if you don't run the code formatters and
+  linters:
   - Node / JavaScript:
     - [prettier](https://webinstall.dev/prettier)
+      ```bash
+      npm run prettier
+      ```
     - [jshint](https://webinstall.dev/jshint)
+      ```bash
+      npm run lint
+      ```
   - Bash
     - [shfmt](https://webinstall.dev/shfmt)
+      ```bash
+      npm run shfmt
+      ```
     - [shellcheck](https://webinstall.dev/shellcheck)
 - If you use vim, [vim-essentials](https://webinstall.dev/vim-essentials)
   includes everything you need to automatically format and lint on save.
