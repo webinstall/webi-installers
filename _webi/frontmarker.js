@@ -12,7 +12,6 @@ function parseYamlish(txt) {
   var block = false;
 
   var lines = txt.trim().split('\n');
-  var moreRe = /\s+/;
   var last;
 
   if (frontmatter !== lines.shift()) {

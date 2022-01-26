@@ -119,7 +119,7 @@ Just copy the format from any of the existing packages. It's like this:
 title: Node.js
 homepage: https://nodejs.org
 tagline: |
-    JavaScript V8 runtime
+  JavaScript V8 runtime
 description: |
   Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine
 ---
