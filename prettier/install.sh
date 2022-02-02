@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -u
 
 function __init_prettier() {
     if [ -z "$(npm --version 2> /dev/null)" ]; then

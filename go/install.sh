@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -u
 
 function __redirect_alias_golang() {
     echo "'go@${WEBI_TAG:-stable}' is an alias for 'golang@${WEBI_VERSION:-}'"

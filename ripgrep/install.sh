@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -u
 
 function __redirect_alias_rg() {
     echo "'ripgrep@${WEBI_TAG:-}' (project) is an alias for 'rg@${WEBI_VERSION:-}' (command)"

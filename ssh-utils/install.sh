@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -u
 
 function __install_ssh_utils() {
     rm -f \

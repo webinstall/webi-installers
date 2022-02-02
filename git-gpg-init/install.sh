@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -u
 
 function __redirect_alias_git_config_gpg() {
     echo "'git-gpg-init' is a deprecated alias for 'git-config-gpg'"

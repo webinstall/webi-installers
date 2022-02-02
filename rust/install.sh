@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -u
 
 function __redirect_alias_rustlang() {
     echo "'rust' is an alias for 'rustlang'"

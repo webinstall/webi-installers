@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -u
 
 function __install_rust() {
     # Straight from https://rustup.rs/

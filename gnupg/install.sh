@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -u
 
 function __redirect_alias_gpg() {
     echo "'gnupg@${WEBI_TAG:-stable}' is an alias for 'gpg@${WEBI_VERSION:-}'"

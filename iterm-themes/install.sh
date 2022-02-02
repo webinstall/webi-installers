@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -u
 
 function __redirect_alias_iterm2_themes() {
     echo "'iterm-themes@${WEBI_TAG:-stable}' is an alias for 'iterm2-themes@${WEBI_VERSION:-}'"

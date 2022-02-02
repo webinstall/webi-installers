@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -u
 
 function __todo_nerdfonts() {
     echo "The full Nerd Fonts patcher is not yet available."

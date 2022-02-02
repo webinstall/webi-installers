@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -u
 
 function __redirect_alias_postgres() {
     echo "'postgresql' is an alias for 'postgres'"

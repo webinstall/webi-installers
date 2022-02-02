@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -u
 
 function __redirect_alias_iterm2_utils() {
     echo "'iterm-utils@${WEBI_TAG:-stable}' is an alias for 'iterm2-utils@${WEBI_VERSION:-}'"

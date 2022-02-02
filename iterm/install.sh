@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -u
 
 echo "'iterm@${WEBI_TAG:-stable}' is an alias for 'iterm2@${WEBI_VERSION:-}'"
 WEBI_HOST=${WEBI_HOST:-"https://webinstall.dev"}

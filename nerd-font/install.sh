@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -u
 
 function __redirect_alias_nerdfont() {
     echo "'nerd-font' is an alias for 'nerdfont'"

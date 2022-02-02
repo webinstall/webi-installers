@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -u
 
 function __redirect_alias_arc() {
     echo "'archiver@${WEBI_TAG:-stable}' is an alias for 'arc@${WEBI_VERSION:-}'"
