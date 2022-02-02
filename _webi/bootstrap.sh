@@ -145,6 +145,37 @@ function __webi_main () {
 
     }
 
+    usage() {
+
+        ## show help if no params given or help flags are used
+        if [ \$# -eq 0 ] || [[ "\$1" =~ ^(-h|--help)$ ]]; then
+            printf "\e[31mwebi\e[32m v1.x\e[0m Copyright 2020+ AJ ONeal\n"
+            printf "    \e[34mhttps://webinstall.dev/webi\e[0m\n"
+            echo ""
+            echo "Webi is the best way to install the modern developer tools you love."
+            echo "It's fast, easy-to-remember, and conflict free."
+            echo ""
+            echo "Usage:"
+            echo ""
+            echo "To install things:"
+            echo "    webi <thing1>[@version] [thing2] ..."
+            echo ""
+            echo "To uninstall things:"
+            echo "    rm -rf ~/.local/opt/<thing1>"
+            echo "(see, for example, https://webinstall.dev/<thing1> for any special notes on uninstalling)"
+            echo ""
+            echo "FAQ:"
+            printf "    See \e[34mhttps://webinstall.dev/faq\e[0m\n"
+            echo ""
+            echo "And always remember:"
+            echo "    Friends don't let friends use brew for simple, modern tools that don't need it."
+            exit 0
+        fi
+
+    }
+
+    usage "\$@"
+
     for pkgname in "\$@"
     do
         webinstall "\$pkgname"
