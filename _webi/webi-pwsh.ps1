@@ -74,6 +74,32 @@ if (!$has_local_bin)
 # {{ baseurl }}
 # {{ version }}
 
+## show help if no params given or help flags are used
+if ($exename -eq $null -or $exename -eq "-h" -or $exename -eq "--help" -or $exename -eq "/?") {
+    Write-Host "webi " -ForegroundColor Green -NoNewline; Write-Host "v1.x " -ForegroundColor Red -NoNewline; Write-Host "Copyright 2020+ AJ ONeal"
+    Write-Host "  https://webinstall.dev/webi" -ForegroundColor blue
+    echo ""
+    echo "Webi is the best way to install the modern developer tools you love."
+    echo "It's fast, easy-to-remember, and conflict free."
+    echo ""
+    echo "Usage:"
+    echo ""
+    echo "  To install things:"
+    echo "    webi <thing1>[@version] [thing2] ..."
+    echo ""
+    echo "  To uninstall things:"
+    echo "    rm -rf ~/.local/opt/<thing1>"
+    echo "      (see, for example, https://webinstall.dev/<thing1> for any special notes on uninstalling)"
+    echo ""
+    echo "FAQ:"
+    echo ""
+    Write-Host "  See " -NoNewline; Write-Host "https://webinstall.dev/faq" -ForegroundColor blue
+    echo ""
+    echo "And always remember:"
+    echo "    Friends don't let friends use brew for simple, modern tools that don't need it."
+    exit 0
+}
+
 # Fetch <whatever>.ps1
 # TODO detect formats
 $PKG_URL = "$Env:WEBI_HOST/api/installers/$exename.ps1?formats=zip,exe,tar"
