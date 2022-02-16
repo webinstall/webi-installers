@@ -1,10 +1,4 @@
 #!/bin/bash
-# title: iterm-utils (iterm2-utils alias)
-# homepage: https://webinstall.dev/iterm2-utils
-# tagline: Alias for https://webinstall.dev/iterm2-utils
-# alias: iterm2-utils
-# description: |
-#   See https://webinstall.dev/iterm2-utils
 
 function __redirect_alias_iterm2_utils() {
     echo "'iterm-utils@${WEBI_TAG:-stable}' is an alias for 'iterm2-utils@${WEBI_VERSION:-}'"

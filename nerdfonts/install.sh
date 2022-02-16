@@ -1,10 +1,4 @@
 #!/bin/bash
-# title: nerd-fonts (nerdfont alias)
-# homepage: https://webinstall.dev/nerdfont
-# tagline: Alias for https://webinstall.dev/nerdfont
-# alias: nerdfont
-# description: |
-#   See https://webinstall.dev/nerdfont
 
 function __todo_nerdfonts() {
     echo "The full Nerd Fonts patcher is not yet available."

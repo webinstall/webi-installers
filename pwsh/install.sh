@@ -1,10 +1,4 @@
 #!/bin/bash
-# title: PowerShell (pwsh alias)
-# homepage: https://webinstall.dev/powershell
-# tagline: Alias for https://webinstall.dev/powershell
-# alias: powershell
-# description: |
-#   See https://webinstall.dev/powershell
 
 function __redirect_alias_powershell() {
     echo "'pwsh@${WEBI_TAG:-stable}' is an alias for 'powershell@${WEBI_VERSION:-}'"

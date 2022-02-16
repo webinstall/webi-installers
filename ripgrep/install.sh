@@ -1,10 +1,4 @@
 #!/bin/bash
-# title: Ripgrep (alias)
-# homepage: https://webinstall.dev/rg
-# tagline: `ripgrep` (project) is an alias for `rg` (command)
-# alias: rg
-# description: |
-#   See https://webinstall.dev/rg
 
 function __redirect_alias_rg() {
     echo "'ripgrep@${WEBI_TAG:-}' (project) is an alias for 'rg@${WEBI_VERSION:-}' (command)"

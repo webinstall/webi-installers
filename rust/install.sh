@@ -1,10 +1,4 @@
 #!/bin/bash
-# title: Rust (rustlang alias)
-# homepage: https://webinstall.dev/rustlang
-# tagline: Alias for https://webinstall.dev/rustlang
-# alias: rustlang
-# description: |
-#   See https://webinstall.dev/rustlang
 
 function __redirect_alias_rustlang() {
     echo "'rust' is an alias for 'rustlang'"
