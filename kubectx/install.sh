@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
-{
-    set -e
-    set -u
+function __init_kubectx() {
 
     ###################
     # Install kubectx #
@@ -34,3 +34,5 @@
     }
 
 }
+
+__init_kubectx

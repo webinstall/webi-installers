@@ -27,18 +27,20 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"))
 IF (!(Test-Path -Path "$pkg_src_cmd"))
 {
     echo "Installing shfmt"
-    pushfmtd .local\tmp
+    
+    # TODO: create package-specific temp directory
+    # Enter tmp
+    pushd .local\tmp
 
-        Remove-Item -Path ".\shfmt-v*" -Recurse -ErrorAction Ignore
-        Remove-Item -Path ".\shfmt.exe" -Recurse -ErrorAction Ignore
+        # Move single binary into root of temporary folder
+        & move "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE" "shfmt.exe"
 
-        echo "Unpacking $pkg_download"
-        & tar xf "$pkg_download"
-
+        # Settle unpacked archive into place
         echo "Install Location: $pkg_src_cmd"
         New-Item "$pkg_src_bin" -ItemType Directory -Force | out-null
-        Move-Item -Path ".\shfmt-*\shfmt.exe" -Destination "$pkg_src_bin"
+        Move-Item -Path "shfmt.exe" -Destination "$pkg_src_bin"
 
+    # Exit tmp
     popd
 }
 

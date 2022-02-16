@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
-{
-    set -e
-    set -u
+function __init_comrak() {
 
     ##################
     # Install comrak #
@@ -34,3 +34,5 @@
         "$pkg_src_cmd" --version > /dev/null
     }
 }
+
+__init_comrak

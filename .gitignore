@@ -4,3 +4,4 @@ install-*.sh
 install-*.bat
 install-*.ps1
 .*.sw*
+*.bak

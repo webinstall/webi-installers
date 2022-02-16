@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
-{
-    set -e
-    set -u
+function __init_xz() {
 
     ##############
     # Install xz #
@@ -45,3 +45,5 @@
         echo $(xz --version 2> /dev/null | head -n 1 | cut -d ' ' -f 4)
     }
 }
+
+__init_xz

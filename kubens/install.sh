@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
-{
-    set -e
-    set -u
+function __init_kubens() {
 
     ###################
     # Install kubens #
@@ -34,3 +34,5 @@
     }
 
 }
+
+__init_kubens

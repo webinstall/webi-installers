@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
-{
-    set -e
-    set -u
+function __init_jq() {
 
     ##############
     # Install jq #
@@ -18,3 +18,5 @@
         echo $(jq --version 2> /dev/null | head -n 1 | sed 's:^jq-::')
     }
 }
+
+__init_jq

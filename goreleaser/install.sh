@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
-{
-    set -e
-    set -u
+function __init_goreleaser() {
 
     ######################
     # Install goreleaser #
@@ -37,3 +37,5 @@
     }
 
 }
+
+__init_goreleaser

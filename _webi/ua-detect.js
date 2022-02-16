@@ -1,5 +1,7 @@
 'use strict';
 
+var uaDetect = module.exports;
+
 function getRequest(req) {
   var ua = req.headers['user-agent'] || '';
   var os = req.query.os;
@@ -82,7 +84,6 @@ function getArch(ua) {
   }
 }
 
-var uaDetect = module.exports;
 uaDetect.os = getOs;
 uaDetect.arch = getArch;
 uaDetect.request = getRequest;

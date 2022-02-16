@@ -1,6 +1,8 @@
-{
-    set -e
-    set -u
+#!/bin/bash
+set -e
+set -u
+
+function __init_arc() {
 
     ####################
     # Install archiver #
@@ -34,3 +36,5 @@
         echo "$(arc version 2> /dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
     }
 }
+
+__init_arc

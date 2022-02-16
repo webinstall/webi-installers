@@ -22,6 +22,17 @@ let g:shfmt_extra_args = '-i 4 -sr -ci -s'
 let g:shfmt_fmt_on_save = 1
 ```
 
+### Files
+
+```txt
+~/.config/envman/PATH.env
+~/.vimrc
+~/.vim/pack/plugins/start/shfmt
+~/.vim/plugins/shfmt.vim
+~/.local/bin/shfmt
+~/.local/bin/shellcheck
+```
+
 ### How to install and configure manually
 
 1. Clone `vim-shfmt` into your `~/.vim/pack/plugins/start`:

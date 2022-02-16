@@ -28,26 +28,37 @@ formats.forEach(function (name) {
 // evaluation order matters
 // (i.e. otherwise x86 and x64 can cross match)
 var arches = [
-  'amd64', // first and most likely match
+  // arm 7 cannot be confused with arm64
+  'armv7l',
+  // amd64 is more likely than arm64
+  'amd64',
+  // arm6 has the same prefix as arm64
+  'armv6l',
+  // arm64 is more likely than arm6, and should be the default
   'arm64',
   'x86',
   'ppc64le',
   'ppc64',
-  'armv7l',
-  'armv6l',
   's390x'
 ];
+// Used for detecting system arch from package download url, for example:
+//
+// https://git.com/org/foo/releases/v0.7.9/foo-aarch64-linux-musl.tar.gz
+// https://git.com/org/foo/releases/v0.7.9/foo-arm-linux-musleabihf.tar.gz
+// https://git.com/org/foo/releases/v0.7.9/foo-armv7-linux-musleabihf.tar.gz
+// https://git.com/org/foo/releases/v0.7.9/foo-x86_64-linux-musl.tar.gz
+//
 var archMap = {
+  armv7l: /(\b|_)(armv?7l?)/i,
   //amd64: /(amd.?64|x64|[_\-]64)/i,
   amd64:
     /(\b|_|amd|(dar)?win(dows)?|mac(os)?|linux|osx|x)64([_\-]?bit)?(\b|_)/i,
   //x86: /(86)(\b|_)/i,
+  armv6l: /(\b|_)(aarch32|armv?6l?)(\b|_)/i,
+  arm64: /(\b|_)((aarch|arm)64|arm)/i,
   x86: /(\b|_|amd|(dar)?win(dows)?|mac(os)?|linux|osx|x)(86|32)([_\-]?bit)(\b|_)/i,
   ppc64le: /(\b|_)(ppc64le)/i,
   ppc64: /(\b|_)(ppc64)(\b|_)/i,
-  arm64: /(\b|_)((aarch|arm)64|arm)/i,
-  armv7l: /(\b|_)(armv?7l)/i,
-  armv6l: /(\b|_)(aarch32|armv?6l)/i,
   s390x: /(\b|_)(s390x)/i
 };
 arches.forEach(function (name) {
@@ -71,6 +82,13 @@ function normalize(all) {
         Object.keys(osMap).find(function (regKey) {
           return osMap[regKey].test(rel.name || rel.download);
         }) || 'unknown';
+    }
+    // Hacky-doo for musl
+    // TODO some sort of glibc vs musl tag?
+    if (!rel._musl) {
+      if (/(\b|\.|_|-)(musl)(\b|\.|_|-)/.test(rel.download)) {
+        rel._musl = true;
+      }
     }
     supported.oses[rel.os] = true;
 
@@ -104,7 +122,7 @@ function normalize(all) {
       if ('tar' === exts[1]) {
         rel.ext = exts.reverse().join('.');
         tarExt = 'tar';
-      } else if ('tgz' == exts[0]) {
+      } else if ('tgz' === exts[0]) {
         rel.ext = 'tar.gz';
         tarExt = 'tar';
       } else {

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# shellcheck disable=SC2034
+# "'pkg_cmd_name' appears unused. Verify it or export it."
+
 function __init_foobar() {
     set -e
     set -u
@@ -21,10 +24,10 @@ function __init_foobar() {
     # pkg_install must be defined by every package
     pkg_install() {
         # ~/.local/opt/foobar-v0.99.9/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "${pkg_src_cmd}")"
 
         # mv ./foobar-*/foo ~/.local/opt/foobar-v0.99.9/bin/foo
-        mv ./foobar-*/foo "$pkg_src_cmd"
+        mv ./foobar-*/foo "${pkg_src_cmd}"
     }
 
     # pkg_get_current_version is recommended, but not required

@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
-{
-    set -e
-    set -u
+function __init_curlie() {
 
     ##################
     # Install curlie #
@@ -31,3 +31,5 @@
         chmod a+x "$pkg_src_cmd"
     }
 }
+
+__init_curlie

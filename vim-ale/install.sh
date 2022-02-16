@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#shellcheck disable=SC1003
+
 function __init_vim_ale() {
     set -e
     set -u
@@ -31,6 +33,15 @@ function __init_vim_ale() {
 
     echo ""
     echo "vim-ale enabled with reasonable defaults"
+    echo ""
+    echo "note: don't forget to install the relevant linters and formatters, such as:"
+    echo ''
+    echo '    webi \'
+    echo '        jshint \'
+    echo '        prettier \'
+    echo '        shellcheck \'
+    echo '        shfmt \'
+    echo ''
 
 }
 

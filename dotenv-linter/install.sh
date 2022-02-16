@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
-{
-    set -e
-    set -u
+function __init_dotenv_linter() {
 
     #########################
     # Install dotenv-linter #
@@ -37,3 +37,5 @@
     }
 
 }
+
+__init_dotenv_linter

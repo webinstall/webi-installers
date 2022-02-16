@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+set -u
 
-{
-    set -e
-    set -u
+function __init_powershell() {
 
     pkg_cmd_name="pwsh"
     # no ./bin prefix
@@ -40,3 +40,5 @@
         echo "Installed 'pwsh' at $pkg_dst"
     }
 }
+
+__init_powershell

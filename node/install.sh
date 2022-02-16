@@ -12,7 +12,7 @@ set -u
 pkg_cmd_name="node"
 #WEBI_SINGLE=""
 
-pkg_get_current_version() {
+function pkg_get_current_version() {
     # 'node --version' has output in this format:
     #       v12.8.0
     # This trims it down to just the version number:
@@ -23,7 +23,7 @@ pkg_get_current_version() {
         sed 's:^v::'
 }
 
-pkg_install() {
+function pkg_install() {
     # mkdir -p $HOME/.local/opt
     mkdir -p "$(dirname $pkg_src)"
 
@@ -31,7 +31,7 @@ pkg_install() {
     mv ./"$pkg_cmd_name"* "$pkg_src"
 }
 
-pkg_link() {
+function pkg_link() {
     # rm -f "$HOME/.local/opt/node"
     rm -f "$pkg_dst"
 
@@ -42,6 +42,6 @@ pkg_link() {
     "$pkg_src"/bin/node "$pkg_src"/bin/npm config set scripts-prepend-node-path=true
 }
 
-pkg_done_message() {
+function pkg_done_message() {
     echo "Installed 'node' and 'npm' at $pkg_dst"
 }

@@ -33,7 +33,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
 
         echo "Install Location: $pkg_src_cmd"
         New-Item "$pkg_src_bin" -ItemType Directory -Force | out-null
-        Move-Item -Path ".\yq.exe" -Destination "$pkg_src_bin"
+        Move-Item -Path ".\yq*.exe" -Destination "$pkg_src_cmd"
 
     popd
 }

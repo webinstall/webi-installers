@@ -139,6 +139,7 @@ function __bootstrap_webi() {
 
     # detect if file is downloaded, and how to download it
     webi_download() {
+        # determine the url to download
         if [ -n "${1:-}" ]; then
             my_url="$1"
         else
@@ -154,6 +155,8 @@ function __bootstrap_webi() {
             fi
             my_url="$WEBI_PKG_URL"
         fi
+
+        # determine the location to download to
         if [ -n "${2:-}" ]; then
             my_dl="$2"
         else

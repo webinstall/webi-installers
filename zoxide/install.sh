@@ -33,7 +33,7 @@ function __init_zoxide() {
         #       zoxide v0.5.0-31-g8452961
         # This trims it down to just the version number:
         #       0.5.0
-        zoxide --version 2>/dev/null | head -n 1 | cut -d '-' -f 1 | cut -b '9-'
+        zoxide --version 2> /dev/null | head -n 1 | cut -d '-' -f 1 | cut -b '9-'
     }
 
     # shellcheck disable=SC2016

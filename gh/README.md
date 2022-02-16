@@ -15,8 +15,10 @@ To update or switch versions, run `webi gh@stable` (or `@v1`, `@beta`, etc).
 
 Installation:
 
-- For macOS and Windows [macOS/Windows](https://github.com/cli/cli/blob/trunk/README.md)
-- For linux Installation on specific distribution [linux](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
+- For macOS and Windows
+  [macOS/Windows](https://github.com/cli/cli/blob/trunk/README.md)
+- For linux Installation on specific distribution
+  [linux](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
 
 ### Authentication
 
@@ -37,10 +39,10 @@ gh pr create -t <title> -b <body>
 Check out pull requests locally.
 
 ```bash
-gh pr checkout
+gh pr checkout <pr#>
 ```
 
-Check the status of yout pull requests.
+Check the status of your pull requests.
 
 ```bash
 gh pr status
@@ -68,6 +70,28 @@ Create a new release.
 gh release create 0.1
 ```
 
+### Actions
+
+How to see the status of recent jobs
+
+```bash
+gh run list
+```
+
+_Note_: The **Job ID** is the third from the right column.
+
+How to view failure details
+
+```bash
+gh run view <job-id>
+```
+
+How to rerun a failed job
+
+```bash
+gh run rerun <job-id>
+```
+
 ### Repo
 
 View repository READMEs.
@@ -78,7 +102,7 @@ gh repo view
 
 ### Create Shortcut
 
-Create Shortcut for a gh command.
+Create Shortcut for a `gh` command.
 
 ```bash
 gh alias set bugs 'issue list --label="bugs"'

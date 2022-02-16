@@ -23,12 +23,21 @@ It includes many of the vim plugins available on webinstall.dev such as:
 - [vim-viminfo](/vim-viminfo)
 - [vim-lastplace](/vim-lastplace)
 - [vim-spell](/vim-spell)
+- [vim-shfmt](/vim-shfmt)
+  - [shellcheck](/shellcheck)
+  - [shfmt](/shfmt)
 - [vim-ale](/vim-ale)
 - [vim-prettier](/vim-prettier)
+  - [prettier](/prettier)
 - [vim-whitespace](/vim-whitespace)
 
 It **DOES NOT** include these, which you may also want:
 
-- [vim-gui](/vim-gui) (mouse and clipboard support)
-- [vim-nerdtree](/vim-nerdtree)
-- [vim-devicons](/vim-devicons)
+- Vim Utilities
+  - [**vim-gui**](/vim-gui) (mouse and clipboard support)
+  - [vim-nerdtree](/vim-nerdtree) (`space + n` for dir tree, `o` to open file)
+  - [vim-devicons](/vim-devicons) (nerdfont icons in vim)
+- Language Tooling
+  - [jshint](/jshint) (JavaScript Linter)
+  - [vim-go](/vim-go) (golang support)
+  - [vim-rust](/vim-rust) (rustlang support)

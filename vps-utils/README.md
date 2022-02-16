@@ -8,16 +8,16 @@ tagline: |
 ## Cheat Sheet
 
 > VPS Utils includes shortcut commands for some common tasks, including
-> `cap-net-bind`, 'vps-addswap', and 'myip'
+> `setcap-netbind`, 'vps-addswap', and 'myip'
 
-**cap-net-bind**:
+**setcap-netbind**:
 
-`cap-net-bind` will give the specified program the ability to listen on
+`setcap-netbind` will give the specified program the ability to listen on
 privileged ports, such as 80 (http) and 443 (https) without `root` privileges or
 `sudo`.
 
 ```bash
-sudo cap-net-bind node
+sudo setcap-netbind node
 ```
 
 This is the same as running the full command:

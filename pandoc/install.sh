@@ -1,6 +1,8 @@
-{
-    set -e
-    set -u
+#!/bin/bash
+set -e
+set -u
+
+function __init_pandoc() {
 
     ###################
     # Install pandoc #
@@ -41,3 +43,5 @@
         echo $(pandoc --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
     }
 }
+
+__init_pandoc

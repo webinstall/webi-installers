@@ -1,7 +1,8 @@
+#!/bin/bash
 set -e
 set -u
 
-{
+function __init_sudo() {
 
     if [ -z "$(command -v sudo)" ]; then
         echo >&2 "Error: on Linux and BSD you should install sudo via the native package manager"
@@ -12,3 +13,5 @@ set -u
     fi
 
 }
+
+__init_sudo

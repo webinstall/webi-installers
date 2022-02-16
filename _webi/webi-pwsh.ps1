@@ -59,7 +59,17 @@ if (!(Test-Path -Path .local\bin\pathman.exe))
 
 # Run pathman to set up the folder
 # (using unix style path because... cmd vs powershell vs whatever)
-& "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/bin
+$has_local_bin = echo "$Env:PATH" | Select-String -Pattern '\.local.bin'
+if (!$has_local_bin)
+{
+    Write-Host ''
+    Write-Host '**********************************' -ForegroundColor red -BackgroundColor white
+    Write-Host '*      IMPORTANT -- READ ME      *' -ForegroundColor red -BackgroundColor white
+    Write-Host '*  (run the PATH command below)  *' -ForegroundColor red -BackgroundColor white
+    Write-Host '**********************************' -ForegroundColor red -BackgroundColor white
+    Write-Host ''
+    & "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/bin
+}
 
 # {{ baseurl }}
 # {{ version }}
