@@ -36,10 +36,10 @@ distribute across many otherwise underpowered server instances.
 However, when you need to use Python, R, etc to process large batches of data
 sequentially - such as the multi-gigabyte datasets common in Machine Learning,
 Artificial Intelligience, Data Mining, etc - or when you need a very rare burst
-of RAM for a very short-lived task - such as an `npm run bild`, swap can be a
+of RAM for a very short-lived task - such as an `npm run build`, swap can be a
 big cost saver.
 
-The good news is that quite often you can also have your cake and eat it to:
+The good news is that quite often you can also have your cake and eat it too:
 most language runtimes (i.e. Node.js, Go, Java, etc) allow you to tune
 parameters that limit the amount of RAM they are allowed to allocate
 dynamically, which means that you can take advantage of large swap space for
@@ -56,7 +56,7 @@ sudo chmod 0600 /var/swapfile
 sudo mkswap /var/swapfile
 ```
 
-This method is preferrably to `truncate` and `dd` for SSDs as it will NOT
+This method is preferrable to `truncate` and `dd` for SSDs as it will NOT
 actually write the file to its full size, and therefore will be instant.
 
 On an HDD (rotational drive), `dd` may be a better choice, as you need to
