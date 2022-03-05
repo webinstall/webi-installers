@@ -5,8 +5,7 @@ tagline: |
   A simple CLI and API client for One-Time Secret
 ---
 
-To update or switch versions, run `webi ots@stable` (or `@v2`, `@beta`,
-etc).
+To update or switch versions, run `webi ots@stable` (or `@v2`, `@beta`, etc).
 
 ### Files
 
@@ -34,6 +33,7 @@ ots share -s hellosecret -t 300 -p hello
 ```
 
 ### Share secret from file
+
 ```bash
 cat <<EOF | ots share -f -
 secret: hello
@@ -46,19 +46,25 @@ echo "hellosecret" | ots share -f
 ```
 
 ### Burn secrets
+
 ```bash
 ots burn METADATA_KEY
 ```
 
 ### Get secret value
+
 ```bash
 ots get secret SECRET_KEY
 ```
+
 ### Get secret metadata
+
 ```bash
 ots get meta METADATA_KEY
 ```
+
 ### Get recent secrets (requires auth)
+
 ```bash
 ots get recent
 ```
