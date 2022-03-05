@@ -11,7 +11,7 @@ tagline: |
 webi webi
 ```
 
-Since `webi` is just a small helper script, it's always update on each use.
+Since `webi` is just a small helper script, it always updates on each use.
 
 ## Cheat Sheet
 
