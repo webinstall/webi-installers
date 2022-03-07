@@ -7,3 +7,5 @@ alias: powershell
 description: |
   See https://webinstall.dev/powershell
 ---
+
+Alias for https://webinstall.dev/powershell

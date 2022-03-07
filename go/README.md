@@ -7,3 +7,5 @@ alias: golang
 description: |
   See https://webinstall.dev/golang
 ---
+
+Alias for https://webinstall.dev/golang

@@ -7,3 +7,5 @@ alias: iterm2-themes
 description: |
   See https://webinstall.dev/iterm2-themes
 ---
+
+Alias for https://webinstall.dev/iterm2-themes

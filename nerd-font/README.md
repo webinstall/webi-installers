@@ -7,3 +7,5 @@ alias: nerdfont
 description: |
   See https://webinstall.dev/nerdfont
 ---
+
+Alias for https://webinstall.dev/nerdfont

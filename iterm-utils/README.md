@@ -7,3 +7,5 @@ alias: iterm2-utils
 description: |
   See https://webinstall.dev/iterm2-utils
 ---
+
+Alias for https://webinstall.dev/iterm2-utils

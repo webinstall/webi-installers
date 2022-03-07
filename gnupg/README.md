@@ -7,3 +7,5 @@ alias: gpg
 description: |
   See https://webinstall.dev/gpg
 ---
+
+Alias for https://webinstall.dev/gpg

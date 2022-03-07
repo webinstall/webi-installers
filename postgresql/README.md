@@ -7,3 +7,5 @@ alias: postgres
 description: |
   See https://webinstall.dev/postgres
 ---
+
+Alias for https://webinstall.dev/postgres

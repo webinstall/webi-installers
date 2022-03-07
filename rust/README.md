@@ -7,3 +7,5 @@ alias: rustlang
 description: |
   See https://webinstall.dev/rustlang
 ---
+
+Alias for https://webinstall.dev/rustlang

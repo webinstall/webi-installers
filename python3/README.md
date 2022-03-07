@@ -7,3 +7,5 @@ alias: python
 description: |
   See https://webinstall.dev/python
 ---
+
+Alias for https://webinstall.dev/python

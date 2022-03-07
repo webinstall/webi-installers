@@ -7,3 +7,5 @@ alias: arc
 description: |
   See https://webinstall.dev/arc
 ---
+
+Alias for https://webinstall.dev/arc

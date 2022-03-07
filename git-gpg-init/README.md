@@ -7,3 +7,5 @@ alias: git-config-gpg
 description: |
   See https://webinstall.dev/git-config-gpg
 ---
+
+Alias for https://webinstall.dev/git-config-gpg
