@@ -74,29 +74,41 @@ if (!$has_local_bin)
 # {{ baseurl }}
 # {{ version }}
 
+$my_version = 'v1.1.15'
+
 ## show help if no params given or help flags are used
-if ($exename -eq $null -or $exename -eq "-h" -or $exename -eq "--help" -or $exename -eq "/?") {
-    Write-Host "webi " -ForegroundColor Green -NoNewline; Write-Host "v1.x " -ForegroundColor Red -NoNewline; Write-Host "Copyright 2020+ AJ ONeal"
+if ($exename -eq $null -or $exename -eq "-h" -or $exename -eq "--help" -or $exename -eq "help" -or $exename -eq "/?") {
+    Write-Host "webi " -ForegroundColor Green -NoNewline; Write-Host "$my_version " -ForegroundColor Red -NoNewline; Write-Host "Copyright 2020+ AJ ONeal"
     Write-Host "  https://webinstall.dev/webi" -ForegroundColor blue
     echo ""
-    echo "Webi is the best way to install the modern developer tools you love."
-    echo "It's fast, easy-to-remember, and conflict free."
+    echo "SUMMARY"
+    echo "    Webi is the best way to install the modern developer tools you love."
+    echo "    It's fast, easy-to-remember, and conflict free."
     echo ""
-    echo "Usage:"
-    echo ""
-    echo "  To install things:"
+    echo "USAGE"
     echo "    webi <thing1>[@version] [thing2] ..."
     echo ""
-    echo "  To uninstall things:"
-    echo "    rm -rf ~/.local/opt/<thing1>"
-    echo "      (see, for example, https://webinstall.dev/<thing1> for any special notes on uninstalling)"
+    echo "UNINSTALL"
+    echo "    Almost everything that is installed with webi is scoped to"
+    echo "    ~/.local/opt/<thing1>, so you can remove it like so:"
     echo ""
-    echo "FAQ:"
+    echo "    rmdir /s %USERPROFILE%\.local\opt\<thing1>"
+    echo "    del %USERPROFILE%\.local\bin\<thing1>"
     echo ""
-    Write-Host "  See " -NoNewline; Write-Host "https://webinstall.dev/faq" -ForegroundColor blue
+    echo "    Some packages have special uninstall instructions, check"
+    echo "    https://webinstall.dev/<thing1> to be sure."
     echo ""
-    echo "And always remember:"
+    echo "FAQ"
+    Write-Host "    See " -NoNewline; Write-Host "https://webinstall.dev/faq" -ForegroundColor blue
+    echo ""
+    echo "ALWAYS REMEMBER"
     echo "    Friends don't let friends use brew for simple, modern tools that don't need it."
+    exit 0
+}
+
+if ($exename -eq "-V" -or $exename -eq "--version" -or $exename -eq "version" -or $exename -eq "/v") {
+    Write-Host "webi " -ForegroundColor Green -NoNewline; Write-Host "$my_version " -ForegroundColor Red -NoNewline; Write-Host "Copyright 2020+ AJ ONeal"
+    Write-Host "  https://webinstall.dev/webi" -ForegroundColor blue
     exit 0
 }
 

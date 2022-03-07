@@ -145,36 +145,53 @@ function __webi_main () {
 
     }
 
-    usage() {
-
-        ## show help if no params given or help flags are used
-        if [ \$# -eq 0 ] || [[ "\$1" =~ ^(-h|--help)$ ]]; then
-            printf "\e[31mwebi\e[32m v1.x\e[0m Copyright 2020+ AJ ONeal\n"
-            printf "    \e[34mhttps://webinstall.dev/webi\e[0m\n"
-            echo ""
-            echo "Webi is the best way to install the modern developer tools you love."
-            echo "It's fast, easy-to-remember, and conflict free."
-            echo ""
-            echo "Usage:"
-            echo ""
-            echo "To install things:"
-            echo "    webi <thing1>[@version] [thing2] ..."
-            echo ""
-            echo "To uninstall things:"
-            echo "    rm -rf ~/.local/opt/<thing1>"
-            echo "(see, for example, https://webinstall.dev/<thing1> for any special notes on uninstalling)"
-            echo ""
-            echo "FAQ:"
-            printf "    See \e[34mhttps://webinstall.dev/faq\e[0m\n"
-            echo ""
-            echo "And always remember:"
-            echo "    Friends don't let friends use brew for simple, modern tools that don't need it."
-            exit 0
-        fi
-
+    function version() {
+        my_version=v1.1.15
+        printf "\\e[31mwebi\\e[32m %s\\e[0m Copyright 2020+ AJ ONeal\\n" "\${my_version}"
+        printf "    \\e[34mhttps://webinstall.dev/webi\\e[0m\\n"
     }
 
-    usage "\$@"
+    # show help if no params given or help flags are used
+    function usage() {
+        echo ""
+        version
+        echo ""
+
+        printf "\\e[1mSUMMARY\\e[0m\\n"
+        echo "    Webi is the best way to install the modern developer tools you love."
+        echo "    It's fast, easy-to-remember, and conflict free."
+        echo ""
+        printf "\\e[1mUSAGE\\e[0m\\n"
+        echo "    webi <thing1>[@version] [thing2] ..."
+        echo ""
+        printf "\\e[1mUNINSTALL\\e[0m\\n"
+        echo "    Almost everything that is installed with webi is scoped to"
+        echo "    ~/.local/opt/<thing1>, so you can remove it like so:"
+        echo ""
+        echo "    rm -rf ~/.local/opt/<thing1>"
+        echo "    rm -f ~/.local/bin/<thing1>"
+        echo ""
+        echo "    Some packages have special uninstall instructions, check"
+        echo "    https://webinstall.dev/<thing1> to be sure."
+        echo ""
+        printf "\\e[1mFAQ\\e[0m\\n"
+        printf "    See \\e[34mhttps://webinstall.dev/faq\\e[0m\\n"
+        echo ""
+        printf "\\e[1mALWAYS REMEMBER\\e[0m\\n"
+        echo "    Friends don't let friends use brew for simple, modern tools that don't need it."
+        echo "    (and certainly not apt either **shudder**)"
+        echo ""
+    }
+
+    if [[ \$# -eq 0 ]] || [[ "\$1" =~ ^(-V|--version|version)$ ]]; then
+        version
+        exit 0
+    fi
+
+    if [[ "\$1" =~ ^(-h|--help|help)$ ]]; then
+        usage "\$@"
+        exit 0
+    fi
 
     for pkgname in "\$@"
     do
@@ -191,7 +208,7 @@ EOF
 
     chmod a+x "$HOME/.local/bin/webi"
 
-    if [ -n "${WEBI_PKG:-}" ]; then
+    if [[ -n ${WEBI_PKG:-} ]]; then
         "$HOME/.local/bin/webi" "${WEBI_PKG}"
     else
         echo ""
