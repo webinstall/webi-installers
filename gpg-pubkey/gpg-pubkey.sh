@@ -80,7 +80,7 @@ function _create_gpg_key() {
          Passphrase: ${REPLY}
          Expire-Date: 0
          %commit
-        " --batch --generate-key > gpg
+        " | gpg --batch --generate-key
     fi
     echo >&2 "Done"
 }
