@@ -9,19 +9,19 @@ function __init_rg() {
     ###################
 
     # Every package should define these 6 variables
-    pkg_cmd_name="rg"
+    export pkg_cmd_name="rg"
 
-    pkg_dst_cmd="$HOME/.local/bin/rg"
-    pkg_dst="$pkg_dst_cmd"
+    export pkg_dst_cmd="$HOME/.local/bin/rg"
+    export pkg_dst="$pkg_dst_cmd"
 
-    pkg_src_cmd="$HOME/.local/opt/rg-v$WEBI_VERSION/bin/rg"
-    pkg_src_dir="$HOME/.local/opt/rg-v$WEBI_VERSION"
-    pkg_src="$pkg_src_cmd"
+    export pkg_src_cmd="$HOME/.local/opt/rg-v$WEBI_VERSION/bin/rg"
+    export pkg_src_dir="$HOME/.local/opt/rg-v$WEBI_VERSION"
+    export pkg_src="$pkg_src_cmd"
 
     # pkg_install must be defined by every package
     pkg_install() {
         # ~/.local/opt/rg-v12.1.1/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./ripgrep-*/rg ~/.local/opt/rg-v12.1.1/bin/rg
         mv ./ripgrep-*/rg "$pkg_src_cmd"
@@ -35,7 +35,7 @@ function __init_rg() {
         #       +SIMD -AVX (runtime)
         # This trims it down to just the version number:
         #       12.1.1
-        echo $(rg --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
+        rg --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2
     }
 }
 

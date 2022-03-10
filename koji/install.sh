@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2154
 
 set -e
 set -u
@@ -6,14 +7,14 @@ set -u
 pkg_cmd_name="koji"
 
 # IMPORTANT: this let's other functions know to expect this to be a single file
-WEBI_SINGLE=true
+export WEBI_SINGLE=true
 
 function pkg_get_current_version() {
     # 'koji version' has output in this format:
     #       koji 1.3.4
     # This trims it down to just the version number:
     #       1.3.4
-    echo "$(koji --version 2> /dev/null | cut -c6-)"
+    koji --version 2> /dev/null | cut -c6-
 }
 
 function pkg_install() {

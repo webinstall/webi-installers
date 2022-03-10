@@ -1,22 +1,24 @@
 #!/bin/bash
+# shellcheck disable=SC2154
+
+set -e
+set -u
 
 function __init_serviceman() {
-    set -e
-    set -u
 
     ######################
     # Install serviceman #
     ######################
 
     # Every package should define these 6 variables
-    pkg_cmd_name="serviceman"
+    export pkg_cmd_name="serviceman"
 
-    pkg_dst_cmd="$HOME/.local/bin/serviceman"
-    pkg_dst="$pkg_dst_cmd"
+    export pkg_dst_cmd="$HOME/.local/bin/serviceman"
+    export pkg_dst="$pkg_dst_cmd"
 
-    pkg_src_cmd="$HOME/.local/opt/serviceman-v$WEBI_VERSION/bin/serviceman"
-    pkg_src_dir="$HOME/.local/opt/serviceman-v$WEBI_VERSION"
-    pkg_src="$pkg_src_cmd"
+    export pkg_src_cmd="$HOME/.local/opt/serviceman-v$WEBI_VERSION/bin/serviceman"
+    export pkg_src_dir="$HOME/.local/opt/serviceman-v$WEBI_VERSION"
+    export pkg_src="$pkg_src_cmd"
 
     pkg_install() {
         # $HOME/.local/opt/serviceman-v0.8.0/bin
@@ -34,7 +36,7 @@ function __init_serviceman() {
         #       serviceman v0.8.0 (f3ab547) 2020-12-02T16:19:10-07:00
         # This trims it down to just the version number:
         #       0.8.0
-        echo "$(serviceman --version 2> /dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
+        serviceman --version 2> /dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::'
     }
 
 }

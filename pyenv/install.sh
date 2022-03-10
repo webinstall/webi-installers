@@ -1,8 +1,10 @@
 #!/bin/bash
+# shellcheck disable=SC2016,SC2129,SC2143
+
+set -e
+set -u
 
 function __init_pyenv() {
-    set -e
-    set -u
 
     curl -fsSL https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 

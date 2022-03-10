@@ -9,19 +9,19 @@ function __init_kubectx() {
     ###################
 
     # Every package should define these 6 variables
-    pkg_cmd_name="kubectx"
+    export pkg_cmd_name="kubectx"
 
-    pkg_dst_cmd="$HOME/.local/bin/kubectx"
-    pkg_dst="$pkg_dst_cmd"
+    export pkg_dst_cmd="$HOME/.local/bin/kubectx"
+    export pkg_dst="$pkg_dst_cmd"
 
-    pkg_src_cmd="$HOME/.local/opt/kubectx-v$WEBI_VERSION/bin/kubectx"
-    pkg_src_dir="$HOME/.local/opt/kubectx-v$WEBI_VERSION"
-    pkg_src="$pkg_src_cmd"
+    export pkg_src_cmd="$HOME/.local/opt/kubectx-v$WEBI_VERSION/bin/kubectx"
+    export pkg_src_dir="$HOME/.local/opt/kubectx-v$WEBI_VERSION"
+    export pkg_src="$pkg_src_cmd"
 
     # pkg_install must be defined by every package
     pkg_install() {
         # e.g. ~/.local/opt/kubectx-v0.99.9/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./kubectx-*/kubectx ~/.local/opt/kubectx-v0.99.9/bin/kubectx
         mv kubectx "$pkg_src_cmd"

@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2154
 
 # The custom functions for Deno are here.
 # For the generic functions - version checks, download, extract, etc:
@@ -10,7 +11,7 @@ set -u
 pkg_cmd_name="deno"
 
 # IMPORTANT: this let's other functions know to expect this to be a single file
-WEBI_SINGLE=true
+export WEBI_SINGLE=true
 
 function pkg_get_current_version() {
     # 'deno --version' has output in this format:
@@ -19,7 +20,7 @@ function pkg_get_current_version() {
     #       typescript 3.9.2
     # This trims it down to just the version number:
     #       1.1.1
-    echo "$(deno --version 2> /dev/null | head -n 1 | cut -d' ' -f2)"
+    deno --version 2> /dev/null | head -n 1 | cut -d' ' -f2
 }
 
 function pkg_install() {

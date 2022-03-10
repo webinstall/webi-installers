@@ -8,18 +8,18 @@ function __init_mutagen() {
     # Install mutagen #
     ###################
 
-    pkg_cmd_name="mutagen"
+    export pkg_cmd_name="mutagen"
 
-    pkg_dst_cmd="$HOME/.local/bin/mutagen"
-    pkg_dst="$pkg_dst_cmd"
+    export pkg_dst_cmd="$HOME/.local/bin/mutagen"
+    export pkg_dst="$pkg_dst_cmd"
 
-    pkg_src_cmd="$HOME/.local/opt/mutagen-v$WEBI_VERSION/mutagen"
-    pkg_src_dir="$HOME/.local/opt/mutagen-v$WEBI_VERSION"
-    pkg_src="$pkg_src_cmd"
+    export pkg_src_cmd="$HOME/.local/opt/mutagen-v$WEBI_VERSION/mutagen"
+    export pkg_src_dir="$HOME/.local/opt/mutagen-v$WEBI_VERSION"
+    export pkg_src="$pkg_src_cmd"
 
     pkg_install() {
         # $HOME/.local/opt/mutagen-v0.11.8/
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./* "$HOME/.local/opt/mutagen-v0.11.8/"
         mv ./* "$pkg_src_dir"
@@ -33,7 +33,7 @@ function __init_mutagen() {
         #       0.11.8
         # This trims it down to just the version number:
         #       0.11.8
-        echo $(mutagen version 2> /dev/null | head -n 1 | cut -d ' ' -f1)
+        mutagen version 2> /dev/null | head -n 1 | cut -d ' ' -f1
     }
 
 }

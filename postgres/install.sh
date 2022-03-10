@@ -1,10 +1,10 @@
 #!/bin/bash
+# shellcheck disable=SC2154
 
 set -e
 set -u
 
-pkg_cmd_name="postgres"
-#WEBI_SINGLE=""
+export pkg_cmd_name="postgres"
 
 POSTGRES_DATA_DIR=$HOME/.local/share/postgres/var
 
@@ -13,12 +13,12 @@ function pkg_get_current_version() {
     #       postgres (PostgreSQL) 10.13
     # This trims it down to just the version number:
     #       10.13
-    echo "$(postgres --version 2> /dev/null | head -n 1 | cut -d' ' -f3)"
+    postgres --version 2> /dev/null | head -n 1 | cut -d' ' -f3
 }
 
 function pkg_install() {
     # mkdir -p $HOME/.local/opt
-    mkdir -p "$(dirname $pkg_src)"
+    mkdir -p "$(dirname "$pkg_src")"
 
     # mv ./pgqsl* "$HOME/.local/opt/postgres-v10.13"
     mv ./"p"* "$pkg_src"

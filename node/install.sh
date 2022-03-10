@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2154
 
 # "This is too simple" you say! "Where is the magic!?" you ask.
 # There is no magic!
@@ -25,7 +26,7 @@ function pkg_get_current_version() {
 
 function pkg_install() {
     # mkdir -p $HOME/.local/opt
-    mkdir -p "$(dirname $pkg_src)"
+    mkdir -p "$(dirname "$pkg_src")"
 
     # mv ./node* "$HOME/.local/opt/node-v14.4.0"
     mv ./"$pkg_cmd_name"* "$pkg_src"

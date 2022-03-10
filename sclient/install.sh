@@ -1,22 +1,24 @@
 #!/bin/bash
+# shellcheck disable=SC2154
+
+set -e
+set -u
 
 function __init_sclient() {
-    set -e
-    set -u
 
     ###################
     # Install sclient #
     ###################
 
     # Every package should define these 6 variables
-    pkg_cmd_name="sclient"
+    export pkg_cmd_name="sclient"
 
-    pkg_dst_cmd="$HOME/.local/bin/sclient"
-    pkg_dst="$pkg_dst_cmd"
+    export pkg_dst_cmd="$HOME/.local/bin/sclient"
+    export pkg_dst="$pkg_dst_cmd"
 
-    pkg_src_cmd="$HOME/.local/opt/sclient-v$WEBI_VERSION/bin/sclient"
-    pkg_src_dir="$HOME/.local/opt/sclient-v$WEBI_VERSION"
-    pkg_src="$pkg_src_cmd"
+    export pkg_src_cmd="$HOME/.local/opt/sclient-v$WEBI_VERSION/bin/sclient"
+    export pkg_src_dir="$HOME/.local/opt/sclient-v$WEBI_VERSION"
+    export pkg_src="$pkg_src_cmd"
 
     pkg_install() {
         # $HOME/.local/opt/sclient-v1.3.3/bin
@@ -34,7 +36,7 @@ function __init_sclient() {
         #       sclient 1.3.3 (455db50) 2020-12-02T22:05:35Z
         # This trims it down to just the version number:
         #       1.3.3
-        echo "$(sclient --version 2> /dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
+        sclient --version 2> /dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::'
     }
 
 }

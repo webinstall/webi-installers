@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2154
 
 function __init_gitdeploy() {
     set -e
@@ -9,14 +10,14 @@ function __init_gitdeploy() {
     #####################
 
     # Every package should define these 6 variables
-    pkg_cmd_name="gitdeploy"
+    export pkg_cmd_name="gitdeploy"
 
-    pkg_dst_cmd="$HOME/.local/bin/gitdeploy"
-    pkg_dst="$pkg_dst_cmd"
+    export pkg_dst_cmd="$HOME/.local/bin/gitdeploy"
+    export pkg_dst="$pkg_dst_cmd"
 
-    pkg_src_cmd="$HOME/.local/opt/gitdeploy-v$WEBI_VERSION/bin/gitdeploy"
-    pkg_src_dir="$HOME/.local/opt/gitdeploy-v$WEBI_VERSION"
-    pkg_src="$pkg_src_cmd"
+    export pkg_src_cmd="$HOME/.local/opt/gitdeploy-v$WEBI_VERSION/bin/gitdeploy"
+    export pkg_src_dir="$HOME/.local/opt/gitdeploy-v$WEBI_VERSION"
+    export pkg_src="$pkg_src_cmd"
 
     pkg_install() {
         # $HOME/.local/opt/gitdeploy-v0.7.1/bin
@@ -34,7 +35,7 @@ function __init_gitdeploy() {
         #       gitdeploy v0.7.1 (be68fec) 2020-10-20T22:27:47Z)
         # This trims it down to just the version number:
         #       0.7.1
-        echo "$(gitdeploy --version 2> /dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
+        gitdeploy --version 2> /dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::'
     }
 
 }

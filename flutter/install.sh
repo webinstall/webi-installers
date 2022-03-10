@@ -11,15 +11,15 @@ set -u
 # Their defaults are defined in _webi/template.sh at https://github.com/webinstall/packages
 
 # Every package should define these 6 variables
-pkg_cmd_name="flutter"
+export pkg_cmd_name="flutter"
 
-pkg_dst_cmd="$HOME/.local/opt/flutter/bin/flutter"
-pkg_dst_dir="$HOME/.local/opt/flutter"
-pkg_dst="$pkg_dst_dir"
+export pkg_dst_cmd="$HOME/.local/opt/flutter/bin/flutter"
+export pkg_dst_dir="$HOME/.local/opt/flutter"
+export pkg_dst="$pkg_dst_dir"
 
-pkg_src_cmd="$HOME/.local/opt/flutter-v$WEBI_VERSION/bin/flutter"
-pkg_src_dir="$HOME/.local/opt/flutter-v$WEBI_VERSION"
-pkg_src="$pkg_src_dir"
+export pkg_src_cmd="$HOME/.local/opt/flutter-v$WEBI_VERSION/bin/flutter"
+export pkg_src_dir="$HOME/.local/opt/flutter-v$WEBI_VERSION"
+export pkg_src="$pkg_src_dir"
 
 function pkg_get_current_version() {
     # 'flutter --version' outputs a lot of information:
@@ -29,7 +29,7 @@ function pkg_get_current_version() {
     #       Tools • Dart 2.9.0 (build 2.9.0-14.1.beta)
     # This trims it down to just the version number:
     #       1.19.0-4.1.pre
-    echo "$(flutter --version 2> /dev/null | head -n 1 | cut -d' ' -f2)"
+    flutter --version 2> /dev/null | head -n 1 | cut -d' ' -f2
 }
 
 function pkg_format_cmd_version() {

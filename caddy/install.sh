@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2154
 
 # "This is too simple" you say! "Where is the magic!?" you ask.
 # There is no magic!
@@ -12,14 +13,14 @@ set -u
 pkg_cmd_name="caddy"
 
 # IMPORTANT: this let's other functions know to expect this to be a single file
-WEBI_SINGLE=true
+export WEBI_SINGLE=true
 
 function pkg_get_current_version() {
     # 'caddy version' has output in this format:
     #       v2.1.0 h1:pQSaIJGFluFvu8KDGDODV8u4/QRED/OPyIR+MWYYse8=
     # This trims it down to just the version number:
     #       2.1.0
-    echo "$(caddy version 2> /dev/null | head -n 1 | cut -d' ' -f1 | sed 's:^v::')"
+    caddy version 2> /dev/null | head -n 1 | cut -d' ' -f1 | sed 's:^v::'
 }
 
 function pkg_install() {

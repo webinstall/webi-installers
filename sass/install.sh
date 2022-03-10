@@ -8,15 +8,15 @@ function __init_sass() {
     # Install sass #
     ##################
 
-    pkg_cmd_name="sass"
+    export pkg_cmd_name="sass"
 
-    pkg_dst_cmd="$HOME/.local/bin/sass"
-    pkg_dst="$pkg_dst_cmd"
+    export pkg_dst_cmd="$HOME/.local/bin/sass"
+    export pkg_dst="$pkg_dst_cmd"
 
     # no ./bin dir here because of how the macOS version is packaged
-    pkg_src_cmd="$HOME/.local/opt/dart-sass-v$WEBI_VERSION/sass"
-    pkg_src_dir="$HOME/.local/opt/dart-sass-v$WEBI_VERSION"
-    pkg_src="$pkg_src_cmd"
+    export pkg_src_cmd="$HOME/.local/opt/dart-sass-v$WEBI_VERSION/sass"
+    export pkg_src_dir="$HOME/.local/opt/dart-sass-v$WEBI_VERSION"
+    export pkg_src="$pkg_src_cmd"
 
     # pkg_install must be defined by every package
     pkg_install() {
@@ -26,7 +26,7 @@ function __init_sass() {
     }
 
     pkg_get_current_version() {
-        echo $(sass --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
+        sass --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2
     }
 
 }

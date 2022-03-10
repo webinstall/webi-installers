@@ -1,4 +1,6 @@
 #!/bin/bash
+# shellcheck disable=SC2016
+
 set -e
 set -u
 
@@ -9,7 +11,7 @@ function __init_vps_addswap() {
 
     if [ "0" != "$EUID" ] && [ "0" != "$UID" ]; then
         echo Usage:
-        echo '        sudo env PATH="$PATH" vps-addswap' $my_size
+        echo '        sudo env PATH="$PATH" vps-addswap' "$my_size"
         exit 1
     fi
 
