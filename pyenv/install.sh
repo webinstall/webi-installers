@@ -29,8 +29,8 @@ function __init_pyenv() {
         if [ -z "$(grep 'pyenv init' ~/.config/fish/config.fish)" ]; then
             echo '' >> ~/.config/fish/config.fish
             echo '# added by Webi for pyenv' >> ~/.config/fish/config.fish
-            echo 'pyenv init - | source' >> ~/.config/fish/config.fish
-            echo 'pyenv virtualenv-init - | source' >> ~/.config/fish/config.fish
+            echo 'status is-login; and pyenv init --path | source' >> ~/.config/fish/config.fish
+            echo 'status is-interactive; and pyenv init - | source' >> ~/.config/fish/config.fish
         fi
     fi
 
