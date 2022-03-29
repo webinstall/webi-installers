@@ -32,7 +32,7 @@ More technically:
    - common release APIs are in `_common/` (i.e. `_common/github.js`)
 2. `_webi/bootstrap.sh` is a template that exchanges system information for a
    correct installer
-   - contructs a user agent with os, cpu, and utility info (i.e. `macos`,
+   - constructs a user agent with os, cpu, and utility info (i.e. `macos`,
      `amd64`, can unpack `tar,zip,xz`)
 3. `_webi/template.sh` is the base installer template with common functions for
    - checking versions
@@ -185,7 +185,7 @@ pkg_get_current_version() {
 }
 ```
 
-For the rest of the functions you can like copy/paste from the examples:
+For the rest of the functions you can copy/paste from the examples:
 
 ```bash
 pkg_format_cmd_version() {}         # Override, pretty prints version

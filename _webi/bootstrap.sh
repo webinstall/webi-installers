@@ -130,14 +130,13 @@ function __webi_main () {
             if [ -f "\$_webi_tmp/.PATH.env" ]; then
                 my_paths=\$(cat "\$_webi_tmp/.PATH.env" | sort -u)
                 if [ -n "\$my_paths" ]; then
-                    echo "IMPORTANT: You must update you PATH to use the installed program(s)"
-                    echo ""
-                    echo "You can either"
-                    echo "A) can CLOSE and REOPEN Terminal or"
-                    echo "B) RUN these exports:"
-                    echo ""
-                    echo "\$my_paths"
-                    echo ""
+                    printf 'PATH.env updated with:\\n'
+                    printf "%s\\n" "\$my_paths"
+                    printf '\\n'
+                    printf "\\e[31mTO FINISH\\e[0m: copy, paste & run the following command:\\n"
+                    printf "\\n"
+                    printf "        \\e[34msource ~/.config/envman/PATH.env\\e[0m\\n"
+                    printf "        (newly opened terminal windows will update automatically)\\n"
                 fi
                 rm -f "\$_webi_tmp/.PATH.env"
             fi

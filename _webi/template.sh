@@ -244,8 +244,12 @@ function __bootstrap_webi() {
 
         # in case pathman was recently installed and the PATH not updated
         mkdir -p "$_webi_tmp"
-        # prevent "too few arguments" output on bash when there are 0 lines of stdout
-        "$HOME/.local/bin/pathman" add "$1" | grep "export" 2> /dev/null >> "$_webi_tmp/.PATH.env" || true
+        # 'true' to prevent "too few arguments" output on bash
+        # when there are 0 lines of stdout
+        "$HOME/.local/bin/pathman" add "$1" |
+            grep "export" 2> /dev/null \
+                >> "$_webi_tmp/.PATH.env" ||
+            true
     }
 
     # group common pre-install tasks as default
@@ -404,10 +408,16 @@ function __bootstrap_webi() {
     webi_path_add "$HOME/.local/bin"
     if [[ -z ${_WEBI_CHILD:-} ]] && [[ -f "$_webi_tmp/.PATH.env" ]]; then
         if [[ -n $(cat "$_webi_tmp/.PATH.env") ]]; then
-            echo "You need to update your PATH to use $PKG_NAME:"
-            echo ""
+            printf 'PATH.env updated with:\n'
             sort -u "$_webi_tmp/.PATH.env"
+            printf "\n"
+
             rm -f "$_webi_tmp/.PATH.env"
+
+            printf "\e[31mTO FINISH\e[0m: copy, paste & run the following command:\n"
+            printf "\n"
+            printf "        \e[34msource ~/.config/envman/PATH.env\e[0m\n"
+            printf "        (newly opened terminal windows will update automatically)\n"
         fi
     fi
 
