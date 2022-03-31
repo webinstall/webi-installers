@@ -53,6 +53,7 @@ function __rmrf_local() {
             nerd-font \
             nerdfont \
             node \
+            nvim \
             ots \
             pandoc \
             pathman \
@@ -145,6 +146,7 @@ function __rmrf_local() {
             nerd-font \
             nerdfont \
             node \
+            nvim \
             ots \
             pandoc \
             pathman \
@@ -241,6 +243,7 @@ function __test() {
         nerd-font \
         nerdfont \
         node \
+        nvim \
         ots \
         pandoc \
         pathman \
