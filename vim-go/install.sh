@@ -16,44 +16,44 @@ function __init_vim_go() {
 
     # Official Golang Tooling
     echo -n "golint: "
-    go get golang.org/x/lint/golint@latest > /dev/null #2>/dev/null
+    go install golang.org/x/lint/golint@latest > /dev/null #2>/dev/null
     echo -n "gopls: "
-    go get golang.org/x/tools/gopls@latest > /dev/null #2>/dev/null
+    go install golang.org/x/tools/gopls@latest > /dev/null #2>/dev/null
     echo -n "guru: "
-    go get golang.org/x/tools/cmd/guru@latest > /dev/null #2>/dev/null
+    go install golang.org/x/tools/cmd/guru@latest > /dev/null #2>/dev/null
     echo -n "goimports: "
-    go get golang.org/x/tools/cmd/goimports@latest > /dev/null #2>/dev/null
+    go install golang.org/x/tools/cmd/goimports@latest > /dev/null #2>/dev/null
     echo -n "gorename: "
-    go get golang.org/x/tools/cmd/gorename@latest > /dev/null #2>/dev/null
+    go install golang.org/x/tools/cmd/gorename@latest > /dev/null #2>/dev/null
     echo -n "gotype: "
-    go get golang.org/x/tools/cmd/gotype@latest > /dev/null #2>/dev/null
+    go install golang.org/x/tools/cmd/gotype@latest > /dev/null #2>/dev/null
 
     echo -n "golangci-lint: "
-    go get github.com/golangci/golangci-lint/cmd/golangci-lint@latest > /dev/null #2>/dev/null
+    go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest > /dev/null #2>/dev/null
 
     # Community Tooling
     echo -n "fillstruct: "
-    go get github.com/davidrjenni/reftools/cmd/fillstruct@master > /dev/null #2>/dev/null
+    go install github.com/davidrjenni/reftools/cmd/fillstruct@master > /dev/null #2>/dev/null
     echo -n "godef: "
-    go get github.com/rogpeppe/godef@master > /dev/null #2>/dev/null
+    go install github.com/rogpeppe/godef@master > /dev/null #2>/dev/null
     echo -n "motion: "
-    go get github.com/fatih/motion@master > /dev/null #2>/dev/null
+    go install github.com/fatih/motion@master > /dev/null #2>/dev/null
     echo -n "errcheck: "
-    go get github.com/kisielk/errcheck > /dev/null #2>/dev/null
+    go install github.com/kisielk/errcheck > /dev/null #2>/dev/null
     echo -n "dlv: "
-    go get github.com/go-delve/delve/cmd/dlv@master > /dev/null #2>/dev/null
+    go install github.com/go-delve/delve/cmd/dlv@master > /dev/null #2>/dev/null
     echo -n "iferr: "
-    go get github.com/koron/iferr@master > /dev/null #2>/dev/null
+    go install github.com/koron/iferr@master > /dev/null #2>/dev/null
     echo -n "impl: "
-    go get github.com/josharian/impl@master > /dev/null #2>/dev/null
+    go install github.com/josharian/impl@master > /dev/null #2>/dev/null
     echo -n "keyify: "
-    go get honnef.co/go/tools/cmd/keyify@master > /dev/null #2>/dev/null
+    go install honnef.co/go/tools/cmd/keyify@master > /dev/null #2>/dev/null
     echo -n "gomodifytags: "
-    go get github.com/fatih/gomodifytags@master > /dev/null #2>/dev/null
+    go install github.com/fatih/gomodifytags@master > /dev/null #2>/dev/null
     echo -n "asmfmt: "
-    go get github.com/klauspost/asmfmt/cmd/asmfmt@master > /dev/null #2>/dev/null
+    go install github.com/klauspost/asmfmt/cmd/asmfmt@master > /dev/null #2>/dev/null
     echo -n "gotags: "
-    go get github.com/jstemmer/gotags > /dev/null #2>/dev/null
+    go install github.com/jstemmer/gotags > /dev/null #2>/dev/null
 
     if [ -f "$HOME/.vimrc" ]; then
         set +e
