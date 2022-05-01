@@ -1,36 +1,36 @@
-#!/bin/bash
+#!/bin/sh
+# shellcheck disable=SC2034
 
 set -e
 set -u
 
-pkg_cmd_name="koji"
+__init_koji() {
+    pkg_cmd_name="koji"
 
-# IMPORTANT: this let's other functions know to expect this to be a single file
-WEBI_SINGLE=true
+    pkg_src_dir="$HOME/.local/opt/koji-v$WEBI_VERSION"
+    pkg_src_cmd="$pkg_src_dir/bin/koji"
+    pkg_src="$pkg_src_cmd"
 
-function pkg_get_current_version() {
-    # 'koji version' has output in this format:
-    #       koji 1.3.4
-    # This trims it down to just the version number:
-    #       1.3.4
-    echo "$(koji --version 2> /dev/null | cut -c6-)"
+    pkg_dst_cmd="$HOME/.local/bin/koji"
+    pkg_dst="$pkg_dst_cmd"
+
+    # pkg_install must be defined by every package
+    pkg_install() {
+        # ~/.local/opt/koji-v1.5.0/bin
+        mkdir -p "$(dirname "$pkg_src_cmd")"
+
+        # mv ./koji-*/koji ~/.local/opt/koji-v1.5.0/bin/koji
+        mv ./koji-*/koji "$pkg_src_cmd"
+    }
+
+    # pkg_get_current_version is recommended, but (soon) not required
+    pkg_get_current_version() {
+        # 'koji version' has output in this format:
+        #       koji 1.5.0
+        # This trims it down to just the version number:
+        #       1.5.0
+        koji --version 2> /dev/null | cut -c6-
+    }
 }
 
-function pkg_install() {
-    # $HOME/.local/opt/koji-1.3.4/bin
-    mkdir -p "$pkg_src_bin"
-
-    # mv ./koji* "$HOME/.local/opt/koji-1.3.4/bin/koji"
-    mv ./"$pkg_cmd_name"* "$pkg_src_cmd"
-
-    # chmod a+x "$HOME/.local/opt/koji-1.3.4/bin/koji"
-    chmod a+x "$pkg_src_cmd"
-}
-
-function pkg_link() {
-    # rm -f "$HOME/.local/bin/koji"
-    rm -f "$pkg_dst_cmd"
-
-    # ln -s "$HOME/.local/opt/koji-1.3.4/bin/koji" "$HOME/.local/bin/koji"
-    ln -s "$pkg_src_cmd" "$pkg_dst_cmd"
-}
+__init_koji
