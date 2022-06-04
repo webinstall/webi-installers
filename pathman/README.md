@@ -33,7 +33,7 @@ pathman add ~/.local/bin
 pathman remove ~/.local/bin
 ```
 
-Note: Even on Windows 10 it is best to use Unix-style `/` paths and `~` for
+Note: Even on Windows it is best to use Unix-style `/` paths and `~` for
 `%USERPROFILE%`.
 
 ```bash

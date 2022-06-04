@@ -85,7 +85,7 @@ It may be that your computer does not support virtualization because:
 
 - it lacks hardware support in the CPU for VTx
 - VTx is disabled in the BIOS or EFI
-- Virtualization has disabled in Windows 10
+- Virtualization has disabled in Windows
 
 You should switch back to WSL 1 until you solve this problem:
 

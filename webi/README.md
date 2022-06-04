@@ -61,7 +61,7 @@ These are the files that are installed when you use [webinstall.dev](/):
 ~/.local/bin/pathman
 ~/.local/opt/pathman-*
 
-# Windows 10
+# Windows
 ~/.local/bin/webi.cmd
 ~/.local/bin/webi-pwsh.ps1
 ~/.local/bin/pathman.exe

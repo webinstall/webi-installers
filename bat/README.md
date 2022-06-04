@@ -12,9 +12,9 @@ To update or switch versions, run `webi bat@stable` (or `@v0.18`, `@beta`, etc).
 > `bat` is pretty much what `cat` would be if it were developed today's in the
 > world of Markdown, git, etc.
 
-### How to run on Windows 10
+### How to run on Windows
 
-On Windows 10 you'll get an error like this:
+On Windows you'll get an error like this:
 
 > execution cannot proceed run because vcruntime140.dll was not found
 

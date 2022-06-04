@@ -21,7 +21,7 @@ Here's the things we find most useful:
 - Running as a system service on
   - Linux
   - MacOS
-  - Windows 10
+  - Windows
 
 ### How to serve a directory
 
@@ -173,7 +173,7 @@ powershell.exe -WindowStyle Hidden -Command $r = Get-NetFirewallRule -DisplayNam
 **Startup Registry**
 
 You can use [Serviceman](https://webinstall.dev/serviceman) to create and start
-the appropriate service launcher for Windows 10.
+the appropriate service launcher for Windows.
 
 Install Serviceman with Webi:
 

@@ -23,7 +23,7 @@ Mac & Linux:
 curl -fsS https://webinstall.dev/node | bash
 ```
 
-Windows 10 (includes `curl.exe` and PowerShell by default):
+Windows (includes `curl.exe` and PowerShell by default):
 
 ```bash
 curl.exe -fsSA "MS" https://webinstall.dev/node | powershell

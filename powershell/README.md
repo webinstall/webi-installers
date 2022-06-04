@@ -6,10 +6,10 @@ tagline: |
 ---
 
 > The core benefit of running `pwsh` on Mac or Linux is that you get a way to
-> debug Windows 10 scripts without having to boot up Windows 10.
+> debug Windows scripts without having to boot up Windows.
 
 For example, if you want to create a `curl.exe -A "windows" | powershell` script
-for Windows 10 (as we do), it's helpful to be able to do some level of debugging
+for Windows (as we do), it's helpful to be able to do some level of debugging
 on other platforms.
 
 <!--

@@ -270,7 +270,7 @@ webi_post_install       # Runs `webi_path_add $pkg_dst_bin`
 set WEBI_HOST=https://webinstall.dev
 ```
 
-Windows 10 has curl too!?
+Windows has curl too!?
 
 ```bat
 curl.exe -sL -A "MS" https://webinstall.dev/node | powershell

@@ -11,9 +11,9 @@ tagline: |
 
 Use the `@beta` tag for pre-releases.
 
-#### Windows 10
+#### Windows
 
-On Windows 10 you'll get an error like this:
+On Windows you'll get an error like this:
 
 > execution cannot proceed run because `vcruntime140.dll` was not found
 
