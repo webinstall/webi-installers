@@ -48,9 +48,11 @@ example.com {
 
     # turn on standard streaming compression
     encode gzip zstd
-
+    
     # reverse proxy /api to :3000
-    reverse_proxy /api/* localhost:3000
+    handle_path /api/* {
+        reverse_proxy localhost:3000
+    }
 
     # reverse proxy some "well known" APIs
     reverse_proxy /.well-known/openid-configuration localhost:3000
@@ -73,11 +75,27 @@ example.com {
 }
 ```
 
-And here's how you run caddy with it:
+### How to rewrite and reverse proxy
+
+```txt
+example.com {
+    # ...
+    
+    # reverse proxy /api/new/ to http://localhost:3100/api/
+    handle_path /api/new/* {
+        rewrite * /api{path}
+        reverse_proxy localhost:3100
+    }
+}
+```
+
+### How to run caddy
 
 ```bash
 caddy run --config ./Caddyfile
 ```
+
+Note: `run` runs in the foreground, `start` starts a service (daemon) in the background.
 
 ### How to start Caddy as a Linux service
 
