@@ -35,7 +35,7 @@ function __init_rg() {
         #       +SIMD -AVX (runtime)
         # This trims it down to just the version number:
         #       12.1.1
-        echo $(rg --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
+        rg --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2
     }
 }
 

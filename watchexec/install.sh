@@ -33,7 +33,7 @@ function __init_watchexec() {
         #       watchexec 0.99.9
         # This trims it down to just the version number:
         #       0.99.9
-        echo $(watchexec --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
+        watchexec --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2
     }
 
 }

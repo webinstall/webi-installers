@@ -37,7 +37,7 @@ function __init_shellcheck() {
 
         # This trims it down to just the version number:
         #       0.7.1
-        echo $(shellcheck --version 2> /dev/null | head -n 2 | tail -n 1 | cut -d' ' -f 2)
+        shellcheck --version 2> /dev/null | head -n 2 | tail -n 1 | cut -d' ' -f 2
     }
 
 }

@@ -24,7 +24,7 @@ function __init_shfmt() {
     }
 
     pkg_get_current_version() {
-        echo $(shfmt --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
+        shfmt --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2
     }
 
 }
