@@ -8,53 +8,6 @@ function __init_vim_go() {
     rm -rf "$HOME/.vim/pack/plugins/start/vim-go"
     git clone --depth=1 https://github.com/fatih/vim-go.git "$HOME/.vim/pack/plugins/start/vim-go"
 
-    # Install go linting tools
-    echo "Building go language tools..."
-    export GO111MODULE=on
-
-    echo ""
-
-    # Official Golang Tooling
-    echo -n "golint: "
-    go install golang.org/x/lint/golint@latest > /dev/null #2>/dev/null
-    echo -n "gopls: "
-    go install golang.org/x/tools/gopls@latest > /dev/null #2>/dev/null
-    echo -n "guru: "
-    go install golang.org/x/tools/cmd/guru@latest > /dev/null #2>/dev/null
-    echo -n "goimports: "
-    go install golang.org/x/tools/cmd/goimports@latest > /dev/null #2>/dev/null
-    echo -n "gorename: "
-    go install golang.org/x/tools/cmd/gorename@latest > /dev/null #2>/dev/null
-    echo -n "gotype: "
-    go install golang.org/x/tools/cmd/gotype@latest > /dev/null #2>/dev/null
-
-    echo -n "golangci-lint: "
-    go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest > /dev/null #2>/dev/null
-
-    # Community Tooling
-    echo -n "fillstruct: "
-    go install github.com/davidrjenni/reftools/cmd/fillstruct@master > /dev/null #2>/dev/null
-    echo -n "godef: "
-    go install github.com/rogpeppe/godef@master > /dev/null #2>/dev/null
-    echo -n "motion: "
-    go install github.com/fatih/motion@master > /dev/null #2>/dev/null
-    echo -n "errcheck: "
-    go install github.com/kisielk/errcheck > /dev/null #2>/dev/null
-    echo -n "dlv: "
-    go install github.com/go-delve/delve/cmd/dlv@master > /dev/null #2>/dev/null
-    echo -n "iferr: "
-    go install github.com/koron/iferr@master > /dev/null #2>/dev/null
-    echo -n "impl: "
-    go install github.com/josharian/impl@master > /dev/null #2>/dev/null
-    echo -n "keyify: "
-    go install honnef.co/go/tools/cmd/keyify@master > /dev/null #2>/dev/null
-    echo -n "gomodifytags: "
-    go install github.com/fatih/gomodifytags@master > /dev/null #2>/dev/null
-    echo -n "asmfmt: "
-    go install github.com/klauspost/asmfmt/cmd/asmfmt@master > /dev/null #2>/dev/null
-    echo -n "gotags: "
-    go install github.com/jstemmer/gotags > /dev/null #2>/dev/null
-
     if [ -f "$HOME/.vimrc" ]; then
         set +e
         if ! grep 'source.*go.vim' -r ~/.vimrc; then
@@ -71,7 +24,10 @@ function __init_vim_go() {
         curl -fsS -o ~/.vim/plugins/go.vim "$WEBI_HOST/packages/vim-go/go.vim"
     fi
 
+    export GO111MODULE=on
+    echo ""
     echo 'Running :GoInstallBinaries in vim ...'
+    echo '(this may take several minutes)'
     printf ':GoInstallBinaries\n:q\n' | vim -e
 }
 
