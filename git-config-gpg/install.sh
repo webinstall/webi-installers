@@ -12,7 +12,7 @@ function __install_git_gpg_init() {
 
 function __check_gpg_pubkey_exists() {
     if ! command -v gpg; then
-        webi gpg-pubkey
+        "$HOME/.local/bin/webi" gpg-pubkey
         export PATH="$HOME/.local/opt/gnupg/bin:$PATH"
         export PATH="$HOME/.local/opt/gnupg/bin/pinentry-mac.app/Contents/MacOS:$PATH"
     fi
@@ -20,7 +20,7 @@ function __check_gpg_pubkey_exists() {
 
 function __check_gpg_exists() {
     if ! command -v gpg; then
-        webi gpg
+        "$HOME/.local/bin/webi" gpg
         export PATH="$HOME/.local/opt/gnupg/bin:$PATH"
         export PATH="$HOME/.local/opt/gnupg/bin/pinentry-mac.app/Contents/MacOS:$PATH"
     fi

@@ -4,7 +4,7 @@ set -u
 
 function __init_vim_beyondcode() {
     # mostly lightweight, or essential
-    webi \
+    "$HOME/.local/bin/webi" \
         vim-leader \
         vim-shell \
         vim-sensible \
@@ -16,14 +16,14 @@ function __init_vim_beyondcode() {
         vim-whitespace
 
     # requires special hardware (mouse) or software (nerdfont)
-    webi \
+    "$HOME/.local/bin/webi" \
         vim-gui \
         vim-nerdtree \
         nerdfont \
         vim-devicons
 
     if [ -n "$(command -v go)" ]; then
-        webi vim-go
+        "$HOME/.local/bin/webi" vim-go
     fi
     # done
 }

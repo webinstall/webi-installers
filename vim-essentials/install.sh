@@ -3,7 +3,7 @@ set -e
 set -u
 
 function __init_vim_essentials() {
-    webi \
+    "$HOME/.local/bin/webi" \
         vim-leader \
         vim-shell \
         vim-sensible \

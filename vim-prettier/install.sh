@@ -10,7 +10,7 @@ function __init_vim_prettier() {
 
     if [ -z "$(command -v node)" ]; then
         export PATH="$HOME/.local/opt/node/bin:$HOME/.local/bin:${PATH}"
-        webi node
+        "$HOME/.local/bin/webi" node
     fi
     npm install -g prettier@2
 

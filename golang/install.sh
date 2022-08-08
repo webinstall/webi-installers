@@ -73,7 +73,7 @@ function pkg_post_install() {
         # TODO nix for go1.21+
         WEBI__GO_INSTALL='true'
         export WEBI__GO_INSTALL
-        webi "go-essentials@${WEBI_TAG}"
+        "$HOME/.local/bin/webi" "go-essentials@${WEBI_TAG}"
     fi
 }
 

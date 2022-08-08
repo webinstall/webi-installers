@@ -8,7 +8,7 @@ function __git_gpg_init() {
 
     # TODO check for public key without gpg-pubkey?
     if ! command -v gpg-pubkey; then
-        webi gpg-pubkey
+        "$HOME/.local/bin/webi" gpg-pubkey
     else
         gpg-pubkey
     fi

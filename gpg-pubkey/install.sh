@@ -21,7 +21,7 @@ function __install_gpg_pubkey_id() {
 
 function __check_gpg_exists() {
     if ! command -v gpg; then
-        webi gpg
+        "$HOME/.local/bin/webi" gpg
         export PATH="$HOME/.local/opt/gnupg/bin:$PATH"
         export PATH="$HOME/.local/opt/gnupg/bin/pinentry-mac.app/Contents/MacOS:$PATH"
     fi

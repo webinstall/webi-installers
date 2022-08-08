@@ -6,7 +6,7 @@ __run_go_essentials() {
     WEBI__GO_ESSENTIALS='true'
     export WEBI__GO_ESSENTIALS
     if [ -z "${WEBI__GO_INSTALL:-}" ]; then
-        webi "golang@${WEBI_TAG}"
+        "$HOME/.local/bin/webi" "golang@${WEBI_TAG}"
     fi
 
     export PATH="$HOME/.local/opt/go/bin:$PATH"
