@@ -27,7 +27,7 @@ function padScript(txt) {
 Releases.renderBash = function (
   pkgdir,
   rel,
-  { baseurl, pkg, tag, ver, os, arch, formats }
+  { baseurl, pkg, tag, ver, os = '', arch = '', formats }
 ) {
   if (!Array.isArray(formats)) {
     formats = [];
@@ -53,19 +53,18 @@ Releases.renderBash = function (
       return fs.promises
         .readFile(path.join(__dirname, 'template.sh'), 'utf8')
         .then(function (tplTxt) {
+          // ex: 'node@lts' or 'node'
+          var webiPkg = pkg;
+          if (ver) {
+            webiPkg += `@${ver}`;
+          }
           return (
             tplTxt
-              .replace(
-                /^\s*#?WEBI_PKG=.*/m,
-                "WEBI_PKG='" + pkg + '@' + ver + "'"
-              )
-              .replace(/^\s*#?WEBI_HOST=.*/m, "WEBI_HOST='" + baseurl + "'")
-              .replace(/^\s*#?WEBI_OS=.*/m, "WEBI_OS='" + (os || '') + "'")
-              .replace(
-                /^\s*#?WEBI_ARCH=.*/m,
-                "WEBI_ARCH='" + (arch || '') + "'"
-              )
-              .replace(/^\s*#?WEBI_TAG=.*/m, "WEBI_TAG='" + tag + "'")
+              .replace(/^\s*#?WEBI_PKG=.*/m, `WEBI_PKG='${webiPkg}'`)
+              .replace(/^\s*#?WEBI_HOST=.*/m, `WEBI_HOST='${baseurl}'`)
+              .replace(/^\s*#?WEBI_OS=.*/m, `WEBI_OS='${os}'`)
+              .replace(/^\s*#?WEBI_ARCH=.*/m, `WEBI_ARCH='${arch}'`)
+              .replace(/^\s*#?WEBI_TAG=.*/m, `WEBI_TAG='${tag}'`)
               .replace(
                 /^\s*#?WEBI_RELEASES=.*/m,
                 "WEBI_RELEASES='" +
