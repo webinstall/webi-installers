@@ -17,6 +17,15 @@ if (!(Get-Command "git.exe" -ErrorAction SilentlyContinue))
     $Env:PATH = "$Env:USERPROFILE\.local\opt\git\cmd;$Env:PATH"
 }
 
+Write-Host '' -ForegroundColor red -BackgroundColor white
+Write-Host '*********************' -ForegroundColor red -BackgroundColor white
+Write-Host '*  BREAKING CHANGE  *' -ForegroundColor red -BackgroundColor white
+Write-Host '*********************' -ForegroundColor red -BackgroundColor white
+Write-Host ''  -ForegroundColor red -BackgroundColor white
+Write-Host '    ''webi golang'' will NOT install go tooling starting with go1.21+' -ForegroundColor red -BackgroundColor white
+Write-Host '    use ''webi go-essentials'' to preserve the previous behavior' -ForegroundColor red -BackgroundColor white
+Write-Host ''  -ForegroundColor red -BackgroundColor white
+
 # Fetch archive
 IF (!(Test-Path -Path "$pkg_download"))
 {
@@ -59,21 +68,21 @@ IF (!(Test-Path -Path go\bin)) { New-Item -Path go\bin -ItemType Directory -Forc
 # Special to go: re-run all go tooling builds
 echo "Building go language tools..."
 echo gopls
-& "$pkg_dst_cmd" get golang.org/x/tools/gopls
+& "$pkg_dst_cmd" install golang.org/x/tools/gopls
 echo golint
-& "$pkg_dst_cmd" get golang.org/x/lint/golint
+& "$pkg_dst_cmd" install golang.org/x/lint/golint
 echo errcheck
-& "$pkg_dst_cmd" get github.com/kisielk/errcheck
+& "$pkg_dst_cmd" install github.com/kisielk/errcheck
 echo gotags
-& "$pkg_dst_cmd" get github.com/jstemmer/gotags
+& "$pkg_dst_cmd" install github.com/jstemmer/gotags
 echo goimports
-& "$pkg_dst_cmd" get golang.org/x/tools/cmd/goimports
+& "$pkg_dst_cmd" install golang.org/x/tools/cmd/goimports
 echo gorename
-& "$pkg_dst_cmd" get golang.org/x/tools/cmd/gorename
+& "$pkg_dst_cmd" install golang.org/x/tools/cmd/gorename
 echo gotype
-& "$pkg_dst_cmd" get golang.org/x/tools/cmd/gotype
+& "$pkg_dst_cmd" install golang.org/x/tools/cmd/gotype
 echo stringer
-& "$pkg_dst_cmd" get golang.org/x/tools/cmd/stringer
+& "$pkg_dst_cmd" install golang.org/x/tools/cmd/stringer
 
 # Add to path
 & "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/opt/go/bin

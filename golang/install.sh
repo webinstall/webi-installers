@@ -15,6 +15,19 @@ pkg_cmd_name="go"
 #
 # Their defaults are defined in _webi/template.sh at https://github.com/webinstall/packages
 
+if [ -z "${WEBI__GO_ESSENTIALS:-}" ]; then
+    # TODO nix for go1.21+
+    echo >&2 ""
+    printf >&2 '\e[31m%s:\e[0m\n' '#####################'
+    printf >&2 '\e[31m%s:\e[0m\n' '#  BREAKING CHANGE  #'
+    printf >&2 '\e[31m%s:\e[0m\n' '#####################'
+    echo >&2 ""
+    printf >&2 "\e[31m    'webi golang' will NOT install go tooling starting with go1.21+\e[0m\n"
+    printf >&2 "\e[31m    use 'webi go-essentials' to preserve the previous behavior\e[0m\n"
+    echo >&2 ""
+    sleep 4
+fi
+
 function pkg_get_current_version() {
     # 'go version' has output in this format:
     #       go version go1.14.2 darwin/amd64
@@ -56,56 +69,12 @@ function pkg_post_install() {
     webi_path_add "$pkg_dst_bin"
     webi_path_add "$GOBIN/bin"
 
-    # Install x go
-    echo "Building go language tools..."
-    export GO111MODULE=on
-
-    # See https://pkg.go.dev/mod/golang.org/x/tools?tab=packages
-
-    my_install="install"
-    # note: we intend a lexical comparison, so this is correct
-    #shellcheck disable=SC2072
-    if [[ ${WEBI_VERSION} < "1.16" ]]; then
-        my_install="get"
+    if [ -z "${WEBI__GO_ESSENTIALS:-}" ]; then
+        # TODO nix for go1.21+
+        WEBI__GO_INSTALL='true'
+        export WEBI__GO_INSTALL
+        webi "go-essentials@${WEBI_TAG}"
     fi
-
-    echo ""
-    echo godoc
-    "$pkg_dst_cmd" "${my_install}" golang.org/x/tools/cmd/godoc@latest > /dev/null #2>/dev/null
-
-    echo ""
-    echo gopls
-    "$pkg_dst_cmd" "${my_install}" golang.org/x/tools/gopls@latest > /dev/null #2>/dev/null
-
-    echo ""
-    echo guru
-    "$pkg_dst_cmd" "${my_install}" golang.org/x/tools/cmd/guru@latest > /dev/null #2>/dev/null
-
-    echo ""
-    echo golint
-    "$pkg_dst_cmd" "${my_install}" golang.org/x/lint/golint@latest > /dev/null #2>/dev/null
-
-    echo ""
-    echo goimports
-    "$pkg_dst_cmd" "${my_install}" golang.org/x/tools/cmd/goimports@latest > /dev/null #2>/dev/null
-
-    echo ""
-    echo gomvpkg
-    "$pkg_dst_cmd" "${my_install}" golang.org/x/tools/cmd/gomvpkg@latest > /dev/null #2>/dev/null
-
-    echo ""
-    echo gorename
-    "$pkg_dst_cmd" "${my_install}" golang.org/x/tools/cmd/gorename@latest > /dev/null #2>/dev/null
-
-    echo ""
-    echo gotype
-    "$pkg_dst_cmd" "${my_install}" golang.org/x/tools/cmd/gotype@latest > /dev/null #2>/dev/null
-
-    echo ""
-    echo stringer
-    "$pkg_dst_cmd" "${my_install}" golang.org/x/tools/cmd/stringer@latest > /dev/null #2>/dev/null
-
-    echo ""
 }
 
 function pkg_done_message() {
