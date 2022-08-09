@@ -108,6 +108,18 @@ mkdir -p ./new-package/
 node _webi/test.js ./new-package/
 ```
 
+### Testing the webi in the Docker Container:
+
+```bash
+./webi-docker.sh <PATH-YOUR-LOCAL-REPO>
+```
+
+If you would like to pull into a container a current repo use command:
+
+```bash
+./webi-docker.sh <PATH-YOUR-LOCAL-REPO>
+```
+
 ### 1. Create Description
 
 Just copy the format from any of the existing packages. It's like this:
