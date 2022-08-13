@@ -29,7 +29,7 @@ function pkg_get_current_version() {
     #       Tools • Dart 2.9.0 (build 2.9.0-14.1.beta)
     # This trims it down to just the version number:
     #       1.19.0-4.1.pre
-    echo "$(flutter --version 2> /dev/null | head -n 1 | cut -d' ' -f2)"
+    flutter --version 2> /dev/null | head -n 1 | cut -d' ' -f2
 }
 
 function pkg_format_cmd_version() {

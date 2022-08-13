@@ -13,7 +13,7 @@ function pkg_get_current_version() {
     #       postgres (PostgreSQL) 10.13
     # This trims it down to just the version number:
     #       10.13
-    echo "$(postgres --version 2> /dev/null | head -n 1 | cut -d' ' -f3)"
+    postgres --version 2> /dev/null | head -n 1 | cut -d' ' -f3
 }
 
 function pkg_install() {
