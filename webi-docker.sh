@@ -1,22 +1,22 @@
-#!/bin/bash
+#!/bin/sh
 
 VersionOfUbuntuContainer="22.04"
 
-function timestamp() {
+timestamp() {
     echo "[+] $(date +'%F %T') [INFO] $*"
     echo
 }
 
-function timestampEnding() {
+timestamp_ending() {
     echo "[+] $(date +'%F %T') [INFO] $*"
 }
 
-function err() {
+err() {
     echo "[-] $(date +'%F %T') [ERROR] $*" >&2
     echo
 }
 
-function command_start() {
+command_start() {
     timestamp "Command $* has been started."
     if ! "$@"; then
         err "Command $* went wrong."
@@ -25,16 +25,18 @@ function command_start() {
     timestamp "Command $* has been ended."
 }
 
-function removeOldDockerContainers() {
-    docker stop "$(docker ps --all | grep -i Webi | awk '{print $1}')" >/dev/null
-    docker rm "$(docker ps --all | grep -i Webi | awk '{print $1}')" >/dev/null
+remove_old_docker_containers() {
+    container="$(docker ps --all | grep -i Webi | awk '{print $1}')"
+    if [ -n "$container" ]; then
+        docker stop "$container" 2>/dev/null
+        docker rm "$container" 2>/dev/null
+    fi
 }
 
-function pullAndRunUbuntuContainer() {
+pull_and_run_ubuntu_container() {
     docker pull jrei/systemd-ubuntu:$VersionOfUbuntuContainer
     docker run \
         -d \
-        --name systemd-ubuntu \
         -v "$1":/opt \
         --tmpfs /tmp \
         --tmpfs /run \
@@ -45,7 +47,7 @@ function pullAndRunUbuntuContainer() {
         jrei/systemd-ubuntu:$VersionOfUbuntuContainer
 }
 
-function updateAndInstallPackages() {
+update_and_install_packages() {
     docker exec -it Webi echo "export TMPDIR=/compose-tmp" >>"$HOME/.bashrc"
     docker exec -it Webi echo 'export PATH="/root/.local/bin:$PATH"' >>"$HOME/.bashrc"
     docker exec -it Webi mkdir -p /compose-tmp
@@ -53,28 +55,28 @@ function updateAndInstallPackages() {
     docker exec -it Webi apt install curl vim git npm -y
 }
 
-function executeWebiInContainer() {
+execute_webi_in_container() {
     docker exec -it Webi bash -c "curl https://webinstall.dev/webi | /bin/bash"
 }
 
-function ending() {
+ending() {
     if [ -z "$1" ]; then
         docker exec -it Webi mkdir -p /opt/webi
         docker exec -it Webi git clone https://github.com/webinstall/webi-installers.git /opt/webi
     else
-        timestampEnding "Your repo is located at /opt in the docker container"
+        timestamp_ending "Your repo is located at /opt in the docker container"
     fi
 
-    timestampEnding "Now, you can go inside the docker container."
-    timestampEnding "You can use command:"
-    timestampEnding "     docker exec -it Webi /bin/bash"
+    timestamp_ending "Now, you can go inside the docker container."
+    timestamp_ending "You can use command:"
+    timestamp_ending "     docker exec -it Webi /bin/bash"
 }
 
-function main() {
-    command_start removeOldDockerContainers
-    command_start pullAndRunUbuntuContainer "$@"
-    command_start updateAndInstallPackages
-    command_start executeWebiInContainer
+main() {
+    command_start remove_old_docker_containers
+    command_start pull_and_run_ubuntu_container "$@"
+    command_start update_and_install_packages
+    command_start execute_webi_in_container
     ending "$@"
 }
 
