@@ -10,6 +10,7 @@
 
 - You'll be asked to make changes if you don't run the code formatters and
   linters:
+
   - Node / JavaScript:
     - [prettier](https://webinstall.dev/prettier)
       ```sh
@@ -20,11 +21,36 @@
       npm run lint
       ```
   - Bash
+
     - [shfmt](https://webinstall.dev/shfmt)
       ```sh
       npm run shfmt
       ```
-    - [shellcheck](https://webinstall.dev/shellcheck)
+      Or
+      ```bash
+      shfmt -w -i 4 -sr -ci -s ./
+      ```
+    - [shellcheck](https://webinstall.dev/shellcheck) \
+      To check for all warnings and errors (except the ones we ignore):
+      ```bash
+      # to check all errors
+      shellcheck -s sh --exclude=SC2154,SC2034 */*.sh */*/*.sh
+      ```
+      To check for only specific warnings and errors:
+      ```bash
+      # to check specific errors
+      shellcheck -s sh --include=SC2005 */*.sh */*/*.sh
+      ```
+      Enumerated shellcheck codes:
+      <https://gist.github.com/nicerobot/53cee11ee0abbdc997661e65b348f375>
+    - Common exceptions:
+
+      ```txt
+      # We make use of `.` (source) to import without exports
+      SC2034: foo appears unused. Verify it or export it.
+      SC2154: var is referenced but not assigned.
+      ```
+
 - If you use vim, [vim-essentials](https://webinstall.dev/vim-essentials)
   includes everything you need to automatically format and lint on save.
 - If you use VS Code, the same plugins are also available in the VS Code store.

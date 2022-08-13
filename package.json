@@ -1,13 +1,14 @@
 {
   "name": "@webinstall/webi-installers",
   "private": true,
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "webinstall script repository",
   "main": "_webi/",
   "scripts": {
-    "prettier": "npx prettier@2.x -w '**/*.{js,md,html}'",
+    "fmt": "npm run prettier; npm run shfmt",
     "lint": "npx jshint@2.x -c ./.jshintrc */*.js",
-    "shfmt": "shfmt -w -i 4 -sr -s ./",
+    "prettier": "npx prettier@2.x -w '**/*.{js,md,html}'",
+    "shfmt": "shfmt -w -i 4 -sr -ci -s ./",
     "test": "node _webi/test.js ./node/"
   },
   "repository": {
