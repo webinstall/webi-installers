@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_vim_beyondcode() {
+__init_vim_beyondcode() {
     # mostly lightweight, or essential
     "$HOME/.local/bin/webi" \
         vim-leader \

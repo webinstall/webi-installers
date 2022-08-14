@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_mutagen() {
+__init_mutagen() {
     set -e
     set -u
 

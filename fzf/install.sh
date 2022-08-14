@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_fzf() {
+__init_fzf() {
 
     ###############
     # Install fzf #

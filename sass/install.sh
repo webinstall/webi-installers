@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_sass() {
+__init_sass() {
     set -e
     set -u
 

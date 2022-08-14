@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function main() {
+main() {
 
     if [ ! -d "$HOME/.ssh" ]; then
         mkdir -p "$HOME/.ssh/"

@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __install_ssh_setpass() {
+__install_ssh_setpass() {
     my_cmd="ssh-setpass"
 
     rm -f "$HOME/.local/bin/${my_cmd}"

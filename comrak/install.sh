@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_comrak() {
+__init_comrak() {
 
     ##################
     # Install comrak #

@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function main() {
+main() {
     webi_download
 
     pushd ~/Downloads/webi 2>&1 > /dev/null

@@ -3,7 +3,7 @@
 set -e
 set -u
 
-function __init_python() {
+__init_python() {
     if [[ ! -x "${HOME}/.pyenv/bin/pyenv" ]]; then
         "${HOME}/.local/bin/webi" "pyenv"
     fi

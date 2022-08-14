@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_lsd() {
+__init_lsd() {
 
     ###############
     # Install lsd #

@@ -14,7 +14,7 @@ pkg_cmd_name="awless"
 # IMPORTANT: this let's other functions know to expect this to be a single file
 WEBI_SINGLE=true
 
-function pkg_get_current_version() {
+pkg_get_current_version() {
     # 'awless version' has output in this format:
     #       v2.1.0 h1:pQSaIJGFluFvu8KDGDODV8u4/QRED/OPyIR+MWYYse8=
     # This trims it down to just the version number:
@@ -22,7 +22,7 @@ function pkg_get_current_version() {
     echo "$(awless version 2> /dev/null | head -n 1 | cut -d' ' -f1 | sed 's:^v::')"
 }
 
-function pkg_install() {
+pkg_install() {
     # $HOME/.local/opt/awless-v2.1.0/bin
     mkdir -p "$pkg_src_bin"
 
@@ -33,7 +33,7 @@ function pkg_install() {
     chmod a+x "$pkg_src_cmd"
 }
 
-function pkg_link() {
+pkg_link() {
     # rm -f "$HOME/.local/bin/awless"
     rm -f "$pkg_dst_cmd"
 

@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_shfmt() {
+__init_shfmt() {
 
     ##################
     # Install shfmt #

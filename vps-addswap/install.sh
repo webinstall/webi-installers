@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_vps_addswap() {
+__init_vps_addswap() {
 
     default_size=2G
     my_size=${1:-$default_size}

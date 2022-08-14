@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_nerdtree() {
+__init_vim_nerdtree() {
     set -e
     set -u
 

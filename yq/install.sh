@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_yq() {
+__init_yq() {
 
     pkg_cmd_name="yq"
 

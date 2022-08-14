@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_syncthing() {
+__init_syncthing() {
     set -e
     set -u
 

@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_chromedriver() {
+__init_chromedriver() {
 
     ########################
     # Install chromedriver #

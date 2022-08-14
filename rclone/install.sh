@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_rclone() {
+__init_rclone() {
     set -e
     set -u
 

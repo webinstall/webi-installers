@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_gprox() {
+__init_gprox() {
 
     ##################
     # Install gprox #

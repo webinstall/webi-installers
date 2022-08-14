@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_hexyl() {
+__init_hexyl() {
 
     ###############
     # Install hexyl #

@@ -3,7 +3,7 @@
 # shellcheck disable=SC2034
 # "'pkg_cmd_name' appears unused. Verify it or export it."
 
-function __init_ots() {
+__init_ots() {
     set -e
     set -u
 

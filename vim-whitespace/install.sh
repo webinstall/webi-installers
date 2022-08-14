@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_whitespace() {
+__init_vim_whitespace() {
     set -e
     set -u
 

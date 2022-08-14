@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_rust() {
+__init_vim_rust() {
     set -e
     set -u
 

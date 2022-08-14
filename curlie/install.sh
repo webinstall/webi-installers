@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_curlie() {
+__init_curlie() {
 
     ##################
     # Install curlie #

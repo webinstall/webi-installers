@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_dashmsg() {
+__init_dashmsg() {
     set -e
     set -u
 

@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __git_gpg_init() {
+__git_gpg_init() {
     export PATH="$HOME/.local/opt/gnupg/bin:$PATH"
     export PATH="$HOME/.local/opt/gnupg/bin/pinentry-mac.app/Contents/MacOS:$PATH"
 

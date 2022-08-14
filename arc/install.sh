@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_arc() {
+__init_arc() {
 
     ####################
     # Install archiver #

@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_powershell() {
+__init_powershell() {
 
     pkg_cmd_name="pwsh"
     # no ./bin prefix

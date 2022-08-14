@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_zoxide() {
+__init_zoxide() {
     set -e
     set -u
 

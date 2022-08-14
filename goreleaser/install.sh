@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_goreleaser() {
+__init_goreleaser() {
 
     ######################
     # Install goreleaser #

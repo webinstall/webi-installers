@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_sd() {
+__init_sd() {
 
     ##################
     # Install sd #

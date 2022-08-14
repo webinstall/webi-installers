@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function main() {
+main() {
 
     # Add User 'app'
     # Picking 'app' by common convention (what Docker & Vagrant use).

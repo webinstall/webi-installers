@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __rmrf_local() {
+__rmrf_local() {
     if [[ -d "${HOME}/.local/opt" ]]; then
         pushd "${HOME}/.local/opt" 2>&1 > /dev/null
         rm -rf \
@@ -192,7 +192,7 @@ function __rmrf_local() {
     fi
 }
 
-function __test() {
+__test() {
     webi \
         arc \
         archiver \

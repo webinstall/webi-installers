@@ -2,19 +2,19 @@
 set -e
 set -u
 
-function __get_git_email() {
+__get_git_email() {
     git config --global user.email
     # grep 'email\s*=.*@' ~/.gitconfig | tr -d '\t ' | head -n 1 | cut -d'=' -f2
 }
 
-function __get_pubkey_id() {
+__get_pubkey_id() {
     gpg --list-secret-keys --keyid-format LONG |
         grep sec |
         cut -d'/' -f2 |
         cut -d' ' -f1
 }
 
-function _create_gpg_key() {
+_create_gpg_key() {
     if [[ ! -e ~/.gitconfig ]]; then
         return 1
     fi
