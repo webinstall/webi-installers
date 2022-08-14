@@ -19,7 +19,7 @@ __init_yq() {
         #   - yq_linux_amd64
         #   - yq.1
         #   - install-man-page.sh
-        if [[ -e ./yq.1 ]]; then
+        if [ -e ./yq.1 ]; then
             mkdir -p ~/.local/share/man/man1
             mv ./yq.1 ~/.local/share/man/man1/
         fi

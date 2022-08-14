@@ -182,12 +182,12 @@ __webi_main() {
         echo ""
     }
 
-    if [[ \$# -eq 0 ]] || [[ "\$1" =~ ^(-V|--version|version)$ ]]; then
+    if [ \$# -eq 0 ] || [ "\$1" =~ ^(-V|--version|version)$ ]; then
         version
         exit 0
     fi
 
-    if [[ "\$1" =~ ^(-h|--help|help)$ ]]; then
+    if [ "\$1" =~ ^(-h|--help|help)$ ]; then
         usage "\$@"
         exit 0
     fi
@@ -207,7 +207,7 @@ EOF
 
     chmod a+x "$HOME/.local/bin/webi"
 
-    if [[ -n ${WEBI_PKG:-} ]]; then
+    if [ -n ${WEBI_PKG:-} ]; then
         "$HOME/.local/bin/webi" "${WEBI_PKG}"
     else
         echo ""

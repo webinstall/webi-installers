@@ -119,7 +119,7 @@ __bootstrap_webi() {
             if cmp -s "${pkg_src_cmd}" "${my_current_cmd}"; then
                 echo "${my_canonical_name} already installed:"
                 echo -n "    ${pkg_dst}"
-                if [[ ${pkg_src_cmd} != "${my_current_cmd}" ]]; then
+                if [ ${pkg_src_cmd} != "${my_current_cmd}" ]; then
                     echo -n " => ${pkg_src}"
                 fi
                 echo ""
@@ -181,7 +181,7 @@ __bootstrap_webi() {
             # TODO wget -c --content-disposition "$my_url"
             set +e
             my_show_progress=""
-            if [[ $- == *i* ]]; then
+            if [ $- == *i* ]; then
                 my_show_progress="--show-progress"
             fi
             if ! wget -q $my_show_progress --user-agent="wget $WEBI_UA" -c "$my_url" -O "$my_dl.part"; then
@@ -193,7 +193,7 @@ __bootstrap_webi() {
             # Neither GNU nor BSD curl have sane resume download options, hence we don't bother
             # TODO curl -fsSL --remote-name --remote-header-name --write-out "$my_url"
             my_show_progress="-#"
-            if [[ $- == *i* ]]; then
+            if [ $- == *i* ]; then
                 my_show_progress=""
             fi
             # shellcheck disable=SC2086
@@ -317,7 +317,7 @@ __bootstrap_webi() {
 
     WEBI_SINGLE=
 
-    if [[ -z ${WEBI_WELCOME:-} ]]; then
+    if [ -z ${WEBI_WELCOME:-} ]; then
         echo ""
         printf "Thanks for using webi to install '\e[32m${WEBI_PKG:-}\e[0m' on '\e[31m$(uname -s)/$(uname -m)\e[0m'.\n"
         echo "Have a problem? Experience a bug? Please let us know:"
@@ -351,14 +351,14 @@ __bootstrap_webi() {
         command -v pkg_post_install > /dev/null ||
         command -v pkg_done_message > /dev/null ||
         command -v pkg_format_cmd_version > /dev/null ||
-        [[ -n ${WEBI_SINGLE:-} ]] ||
-        [[ -n ${pkg_cmd_name:-} ]] ||
-        [[ -n ${pkg_dst_cmd:-} ]] ||
-        [[ -n ${pkg_dst_dir:-} ]] ||
-        [[ -n ${pkg_dst:-} ]] ||
-        [[ -n ${pkg_src_cmd:-} ]] ||
-        [[ -n ${pkg_src_dir:-} ]] ||
-        [[ -n ${pkg_src:-} ]]; then
+        [ -n ${WEBI_SINGLE:-} ] ||
+        [ -n ${pkg_cmd_name:-} ] ||
+        [ -n ${pkg_dst_cmd:-} ] ||
+        [ -n ${pkg_dst_dir:-} ] ||
+        [ -n ${pkg_dst:-} ] ||
+        [ -n ${pkg_src_cmd:-} ] ||
+        [ -n ${pkg_src_dir:-} ] ||
+        [ -n ${pkg_src:-} ]; then
 
         pkg_cmd_name="${pkg_cmd_name:-$PKG_NAME}"
 
@@ -382,11 +382,11 @@ __bootstrap_webi() {
         # shellcheck disable=SC2034
         pkg_dst_bin="$(dirname "$pkg_dst_cmd")"
 
-        if [[ -n "$(command -v pkg_pre_install)" ]]; then pkg_pre_install; else webi_pre_install; fi
+        if [ -n "$(command -v pkg_pre_install)" ]; then pkg_pre_install; else webi_pre_install; fi
 
         pushd "$WEBI_TMP" > /dev/null 2>&1
         echo "Installing to $pkg_src_cmd"
-        if [[ -n "$(command -v pkg_install)" ]]; then pkg_install; else webi_install; fi
+        if [ -n "$(command -v pkg_install)" ]; then pkg_install; else webi_install; fi
         chmod a+x "$pkg_src"
         chmod a+x "$pkg_src_cmd"
         popd > /dev/null 2>&1
@@ -395,19 +395,19 @@ __bootstrap_webi() {
 
         _webi_enable_exec
         pushd "$WEBI_TMP" > /dev/null 2>&1
-        if [[ -n "$(command -v pkg_post_install)" ]]; then pkg_post_install; else webi_post_install; fi
+        if [ -n "$(command -v pkg_post_install)" ]; then pkg_post_install; else webi_post_install; fi
         popd > /dev/null 2>&1
 
         pushd "$WEBI_TMP" > /dev/null 2>&1
-        if [[ -n "$(command -v pkg_done_message)" ]]; then pkg_done_message; else _webi_done_message; fi
+        if [ -n "$(command -v pkg_done_message)" ]; then pkg_done_message; else _webi_done_message; fi
         popd > /dev/null 2>&1
 
         echo ""
     fi
 
     webi_path_add "$HOME/.local/bin"
-    if [[ -z ${_WEBI_CHILD:-} ]] && [[ -f "$_webi_tmp/.PATH.env" ]]; then
-        if [[ -n $(cat "$_webi_tmp/.PATH.env") ]]; then
+    if [ -z ${_WEBI_CHILD:-} ] && [ -f "$_webi_tmp/.PATH.env" ]; then
+        if [ -n $(cat "$_webi_tmp/.PATH.env") ]; then
             printf 'PATH.env updated with:\n'
             sort -u "$_webi_tmp/.PATH.env"
             printf "\n"

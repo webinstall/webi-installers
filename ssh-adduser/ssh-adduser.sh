@@ -10,12 +10,12 @@ main() {
     #my_existing_user="${2:-"root"}"
 
     # TODO would $EUID be better?
-    if [[ "root" != "$(whoami)" ]]; then
+    if [ "root" != "$(whoami)" ]; then
         echo "webi adduser: running user is already a non-root user"
         exit 0
     fi
 
-    if [[ ! -e ~/.ssh/authorized_keys ]] || ! grep -v '#' ~/.ssh/authorized_keys; then
+    if [ ! -e ~/.ssh/authorized_keys ] || ! grep -v '#' ~/.ssh/authorized_keys; then
         echo ""
         echo "Error:"
         echo "    You must add a key to ~/.ssh/authorized_keys before adding a new ssh user."
@@ -56,20 +56,20 @@ main() {
     # TODO ensure that ssh-password login is off
     my_pass="$(grep 'PasswordAuthentication yes' /etc/ssh/sshd_config)"
     my_pam=""
-    if [[ "Darwin" = "$(uname -s)" ]]; then
+    if [ "Darwin" = "$(uname -s)" ]; then
         # Turn off PAM for macOS or it will allow password login
         my_pam="$(grep 'UsePAM yes' /etc/ssh/sshd_config)"
     fi
-    if [[ -n ${my_pass} ]] || [[ -n ${my_pam} ]]; then
+    if [ -n ${my_pass} ] || [ -n ${my_pam} ]; then
         echo "######################################################################"
         echo "#                                                                    #"
         echo "#                             WARNING                                #"
         echo "#                                                                    #"
         echo "# Found /etc/ssh/sshd_config:                                        #"
-        if [[ -n ${my_pass} ]]; then
+        if [ -n ${my_pass} ]; then
             echo "#     PasswordAuthentication yes                                     #"
         fi
-        if [[ -n ${my_pam} ]]; then
+        if [ -n ${my_pam} ]; then
             echo "#     UsePAM yes                                                     #"
         fi
         echo "#                                                                    #"

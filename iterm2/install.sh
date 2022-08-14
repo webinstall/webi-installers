@@ -5,7 +5,7 @@ set -u
 
 _install_iterm2() {
     # only for macOS
-    if [[ "Darwin" != "$(uname -s)" ]]; then
+    if [ "Darwin" != "$(uname -s)" ]; then
         echo ""
         echo "iTerm2 is only for macOS"
         echo ""
@@ -19,13 +19,13 @@ _install_iterm2() {
     webi_download
     webi_extract
 
-    if [[ ! -d "${WEBI_TMP}/iTerm.app" ]]; then
+    if [ ! -d "${WEBI_TMP}/iTerm.app" ]; then
         echo "error unpacking iTerm2:"
         ls -lAF "${WEBI_TMP}"
         exit 1
     fi
 
-    if [[ -d ~/Applications/iTerm.app ]]; then
+    if [ -d ~/Applications/iTerm.app ]; then
         mv ~/Applications/iTerm.app "${WEBI_TMP}/iTerm.app-webi.bak"
     fi
     mkdir -p ~/Applications/

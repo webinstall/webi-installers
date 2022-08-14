@@ -26,7 +26,7 @@ _install_gpg() {
     hdiutil detach -quiet /Volumes/GnuPG*
 
     # Move to ~/.local/opt/gnugp (where it belongs!)
-    if [[ ! -e ~/.local/opt/gnupg-"${WEBI_VERSION}" ]]; then
+    if [ ! -e ~/.local/opt/gnupg-"${WEBI_VERSION}" ]; then
         mv ~/Downloads/webi/GnuPG-"${WEBI_VERSION}".d/GnuPG.pkg/Payload/ ~/.local/opt/gnupg-"${WEBI_VERSION}"
     fi
 
@@ -41,7 +41,7 @@ _install_gpg() {
     # Prep for first use
     mkdir -p ~/.gnupg/
     chmod 0700 ~/.gnupg/
-    if [[ ! -e ~/.gnupg/gpg-agent.conf ]] || ! grep 'pinentry-program' ~/.gnupg/gpg-agent.conf; then
+    if [ ! -e ~/.gnupg/gpg-agent.conf ] || ! grep 'pinentry-program' ~/.gnupg/gpg-agent.conf; then
         echo "pinentry-program $HOME/.local/opt/gnupg/bin/pinentry-mac.app/Contents/MacOS/pinentry-mac" >> ~/.gnupg/gpg-agent.conf
     fi
 
@@ -91,19 +91,19 @@ _install_gpg() {
 }
 
 _create_gpg_key() {
-    if [[ ! -e ~/.gitconfig ]]; then
+    if [ ! -e ~/.gitconfig ]; then
         return 0
     fi
 
     #grep 'name\s*=' ~/.gitconfig | head -n 1 | cut -d'=' -f2 | sed -e 's/^[\t ]*//'
     MY_NAME="$(git config --global user.name)"
-    if [[ -z ${MY_NAME} ]]; then
+    if [ -z ${MY_NAME} ]; then
         return 0
     fi
 
     # grep 'email\s*=.*@' ~/.gitconfig | tr -d '\t ' | head -n 1 | cut -d'=' -f2
     MY_EMAIL="$(git config --global user.email)"
-    if [[ -z ${MY_EMAIL} ]]; then
+    if [ -z ${MY_EMAIL} ]; then
         return 0
     fi
 

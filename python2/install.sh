@@ -4,7 +4,7 @@ set -e
 set -u
 
 __init_python2() {
-    if [[ ! -x "${HOME}/.pyenv/bin/pyenv" ]]; then
+    if [ ! -x "${HOME}/.pyenv/bin/pyenv" ]; then
         "${HOME}/.local/bin/webi" "pyenv"
     fi
     export PATH="${HOME}/.pyenv/bin:${PATH}"
