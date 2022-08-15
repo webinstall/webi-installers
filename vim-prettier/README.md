@@ -18,7 +18,7 @@ You'll also need to install [`ALE`](https://webinstall.dev/vim-ale) (part of
 
 ### How to install by hand
 
-```bash
+```sh
 git clone --depth=1 https://github.com/prettier/vim-prettier ~/.vim/pack/plugins/start/vim-prettier
 ```
 
@@ -49,12 +49,12 @@ autocmd BufWritePre .babelrc,.eslintrc,.jshintrc,*.js,*.jsx,*.mjs,*.ts,*.tsx,*.c
 
 With `webi`:
 
-```bash
+```sh
 webi prettier
 ```
 
 With `node`:
 
-```bash
+```sh
 npm install -g prettier@2
 ```

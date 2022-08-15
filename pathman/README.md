@@ -7,7 +7,7 @@ tagline: |
 
 ## Updating `pathman`
 
-```bash
+```sh
 webi pathman
 ```
 
@@ -19,24 +19,24 @@ Manages PATH on various OSes and shells
 - Bash, Zsh, Fish
 - Command, Powershell
 
-```bash
+```sh
 pathman help
 ```
 
 ### Usage
 
-```bash
+```sh
 pathman add ~/.local/bin
 ```
 
-```bash
+```sh
 pathman remove ~/.local/bin
 ```
 
 Note: Even on Windows it is best to use Unix-style `/` paths and `~` for
 `%USERPROFILE%`.
 
-```bash
+```sh
 pathman list
 ```
 

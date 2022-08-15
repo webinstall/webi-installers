@@ -42,13 +42,13 @@ fragmentation.
 
 Example:
 
-```bash
+```sh
 rclone sync -vP --transfers=1 --order-by name --check-first ~/ /Volumes/Backup/home
 ```
 
 Example, excluding common temporary directories:
 
-```bash
+```sh
 rclone sync -vP --transfers=1 --order-by name --check-first \
   --exclude 'node_modules/**' --exclude '.Spotlight-*/**' --exclude '.cache*/**' \
   ~/ /Volumes/Backup/home

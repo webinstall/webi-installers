@@ -11,7 +11,7 @@ Effortlessly install developer tools with easy-to-remember URLs.
 
 ## Install webi via npm:
 
-```bash
+```sh
 npm install -g webi
 ```
 
@@ -19,13 +19,13 @@ npm install -g webi
 
 Mac & Linux:
 
-```bash
+```sh
 curl -fsS https://webinstall.dev/node | bash
 ```
 
 Windows (includes `curl.exe` and PowerShell by default):
 
-```bash
+```sh
 curl.exe -fsSA "MS" https://webinstall.dev/node | powershell
 ```
 
@@ -34,7 +34,7 @@ curl.exe -fsSA "MS" https://webinstall.dev/node | powershell
 Once `webi` is installed, you can then install commands or switch versions with
 webi itself:
 
-```bash
+```sh
 webi node@stable
 webi node@lts
 webi node@v10

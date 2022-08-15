@@ -14,7 +14,7 @@ To update or switch versions, run `webi lf@stable` (or `@v2`, `@beta`, etc).
 
 To start the application in the current directory:
 
-```bash
+```sh
 lf
 ```
 
@@ -35,12 +35,12 @@ lf
 
 ### For command line options:
 
-```bash
+```sh
 lf --help
 ```
 
 ### For documentation
 
-```bash
+```sh
 lf --doc
 ```

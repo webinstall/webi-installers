@@ -24,7 +24,7 @@ Installation:
 
 Authenticate with your Github account.
 
-```bash
+```sh
 gh auth login
 ```
 
@@ -32,25 +32,25 @@ gh auth login
 
 Create a pull request.
 
-```bash
+```sh
 gh pr create -t <title> -b <body>
 ```
 
 Check out pull requests locally.
 
-```bash
+```sh
 gh pr checkout <pr#>
 ```
 
 Check the status of your pull requests.
 
-```bash
+```sh
 gh pr status
 ```
 
 View Your pull requests' checks.
 
-```bash
+```sh
 gh pr check
 ```
 
@@ -58,7 +58,7 @@ gh pr check
 
 View and filter a repository's open issues.
 
-```bash
+```sh
 gh issue list
 ```
 
@@ -66,7 +66,7 @@ gh issue list
 
 Create a new release.
 
-```bash
+```sh
 gh release create 0.1
 ```
 
@@ -74,7 +74,7 @@ gh release create 0.1
 
 How to see the status of recent jobs
 
-```bash
+```sh
 gh run list
 ```
 
@@ -82,13 +82,13 @@ _Note_: The **Job ID** is the third from the right column.
 
 How to view failure details
 
-```bash
+```sh
 gh run view <job-id>
 ```
 
 How to rerun a failed job
 
-```bash
+```sh
 gh run rerun <job-id>
 ```
 
@@ -96,7 +96,7 @@ gh run rerun <job-id>
 
 View repository READMEs.
 
-```bash
+```sh
 gh repo view
 ```
 
@@ -104,6 +104,6 @@ gh repo view
 
 Create Shortcut for a `gh` command.
 
-```bash
+```sh
 gh alias set bugs 'issue list --label="bugs"'
 ```

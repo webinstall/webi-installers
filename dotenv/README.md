@@ -13,7 +13,7 @@ To update or switch versions, run `webi dotenv@stable`.
 > variables) from a .env file. It works cross platform, and with any programming
 > environment (Node.js, Go, Rust, Ruby, Python, etc)
 
-```bash
+```sh
 # Usage: dotenv [-f .env.alt] -- <command> [arguments]
 
 # Example:

@@ -16,7 +16,7 @@ To update or switch versions, run `webi fd@stable` (or `@v8.2`, `@beta`, etc).
 
 ### Colorized Recursive List
 
-```bash
+```sh
 fd
 ```
 
@@ -24,7 +24,7 @@ fd
 
 Anytime you use only lowercase letters, it's case-insensitive by default.
 
-```bash
+```sh
 fd foo
 ```
 
@@ -32,7 +32,7 @@ fd foo
 
 All `.` files and folders, and anything in `.gitignore` are ignored by default.
 
-```bash
+```sh
 fd -s -I -H foo
 ```
 
@@ -40,7 +40,7 @@ fd -s -I -H foo
 
 Use `-e` as many times as there are extensions that you want to match.
 
-```bash
+```sh
 fd -e md -e mkdn -e js -e mjs
 ```
 
@@ -48,6 +48,6 @@ fd -e md -e mkdn -e js -e mjs
 
 For options see:
 
-```bash
+```sh
 hexyl --help
 ```

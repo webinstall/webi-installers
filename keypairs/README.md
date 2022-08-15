@@ -17,32 +17,32 @@ To update or switch versions, run `webi keypairs@stable`.
 
 ### How to generate JSON Web Keys (JWKs)
 
-```bash
+```sh
 # keypairs gen -key <key.format> -pub <pub.format>
 keypairs gen -key key.jwk.json -pub pub.jwk.json
 ```
 
 JWK is the default format, for which you can use stdout (key) and stderr (pub)
 
-```bash
+```sh
 keypairs gen > key.jwk.json 2> pub.jwk.json
 ```
 
 ### How to generate PEM (PKCS) keys
 
-```bash
+```sh
 keypairs gen -key key.pem -pub pub.pem
 ```
 
 Or DER
 
-```bash
+```sh
 keypairs gen -key key.der -pub pub.der
 ```
 
 ### How to sign a payload
 
-```bash
+```sh
 # keypairs sign --exp 1h <priv key> <data or file> > token.jwt 2> sig.jws
 keypairs sign --exp 1h key.jwk.json '{ "sub": "me@example.com" }' > token.jwt 2> sig.jws
 ```
@@ -78,14 +78,14 @@ rather than the `kid` thumbprint.
 
 ### How to verify a signature
 
-```bash
+```sh
 # keypairs verify <pub key> <signed file or data>
 keypairs verify pub.jwk.json token.jwt
 ```
 
 You can use files or strings.
 
-```bash
+```sh
 keypairs verify \
   '{ "crv": "P-256", "kty": "EC", "x": "5K5ALgtWw37KsZOrBdwCyGOGKCFd27u-t61dmUiieJY", "y": "wr3BNL-CeqkGtiRVqo3yizKxUA0bwS1MNZeqytdwICA" }' \
   eyJhbGciOiJFUzI1NiIsImtpZCI6ImpkeHhZY1NCZUJfeUdoZWlCVW14NjF0eHExZGFjR1hIX191bEJuWlZHMEUiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjIxNDczODU3MTIsInN1YiI6Im1lQGV4YW1wbGUuY29tIn0.oh8-PUMdrbQU6seRXjo68wPWAKbA-V9LMnd_wZEkPHc3C8A5xJzV7mDDMNOLEy4VcuNGxced_yjYulzcMa5FLQ

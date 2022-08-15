@@ -21,13 +21,13 @@ common command line arguments from k9s (https://github.com/derailed/k9s).
 K9s uses 256 colors terminal mode. On `Nix system make sure TERM is set
 accordingly.
 
-```bash
+```sh
 export TERM=xterm-256color
 ```
 
 To run k9s:
 
-```bash
+```sh
 k9s
 ```
 
@@ -35,30 +35,30 @@ k9s
 
 List all available CLI options
 
-```bash
+```sh
 k9s help
 ```
 
 To get info about K9s runtime (logs, configs, etc..)
 
-```bash
+```sh
 k9s info
 ```
 
 To run K9s in a given namespace
 
-```bash
+```sh
 k9s -n mycoolns
 ```
 
 Start K9s in an existing KubeConfig context
 
-```bash
+```sh
 k9s --context coolCtx
 ```
 
 Start K9s in readonly mode - with all cluster modification commands disabled
 
-```bash
+```sh
 k9s --readonly
 ```

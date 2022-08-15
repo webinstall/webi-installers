@@ -17,13 +17,13 @@ Usage: `yq e '<selector>' <filepath>`
 
 Works with YAML:
 
-```bash
+```sh
 echo 'name: John' | yq  e '.name' -
 ```
 
 Works with JSON:
 
-```bash
+```sh
 echo '[ { "name": "John" }, { "name": "Jane" } ]' | yq e '.[].name' -
 ```
 

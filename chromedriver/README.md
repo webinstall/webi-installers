@@ -24,7 +24,7 @@ Also, **Chrome must be installed first** in order for ChromeDriver to work.
 On Debian (and Ubuntu) Linux you should be able to install Chrome with `dpkg`
 and `apt`:
 
-```bash
+```sh
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb
 sudo apt install -y google-chrome-stable
@@ -39,7 +39,7 @@ chromedriver: error while loading shared libraries: libnss3.so: cannot open shar
 
 If so, try installing `chromium-browser`:
 
-```bash
+```sh
 sudo apt install -y chromium-browser
 sudo apt --fix-broken install -y
 ```

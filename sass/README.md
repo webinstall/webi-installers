@@ -14,13 +14,13 @@ To update or switch versions, run `webi sass@stable` (or `@v2`, `@beta`, etc).
 
 ### Command format:
 
-```bash
+```sh
 sass <input.scss> [output.css]
 ```
 
 or
 
-```bash
+```sh
 sass <input.scss>:<output.css> <input/>:<output/> <dir/>
 ```
 

@@ -22,49 +22,49 @@ install:
 
 ### Share a generated secret
 
-```bash
+```sh
 ots share -g
 ```
 
 ### Share custom secret with ttl and passphrase
 
-```bash
+```sh
 ots share -s hellosecret -t 300 -p hello
 ```
 
 ### Share secret from file
 
-```bash
+```sh
 cat <<EOF | ots share -f -
 secret: hello
 seret: secret
 EOF
 ```
 
-```bash
+```sh
 echo "hellosecret" | ots share -f
 ```
 
 ### Burn secrets
 
-```bash
+```sh
 ots burn METADATA_KEY
 ```
 
 ### Get secret value
 
-```bash
+```sh
 ots get secret SECRET_KEY
 ```
 
 ### Get secret metadata
 
-```bash
+```sh
 ots get meta METADATA_KEY
 ```
 
 ### Get recent secrets (requires auth)
 
-```bash
+```sh
 ots get recent
 ```

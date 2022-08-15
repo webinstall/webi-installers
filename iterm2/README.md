@@ -107,6 +107,6 @@ Grape
 If you're using [fish](https://webinstall.dev/fish) (as you should be!), be sure
 to set your shell color theme to the same or similar:
 
-```bash
+```sh
 fish_config colors
 ```

@@ -19,11 +19,11 @@ You'll also need to install [`ALE`](https://webinstall.dev/vim-ale) (part of
 ### How to install and configure by hand
 
 1. Remove the previous version of rust.vim, if any:
-   ```bash
+   ```sh
    rm -rf ~/.vim/pack/plugins/start/rust.vim
    ```
 2. Install `rust.vim` as a Vim8 package with `git`:
-   ```bash
+   ```sh
    mkdir -p ~/.vim/pack/plugins/start/
    git clone --depth=1 \
        https://github.com/rust-lang/rust.vim \

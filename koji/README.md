@@ -35,7 +35,7 @@ Here's the shortlist of options we've found most useful:
 
 These are the files that are created and/or modified with this installer:
 
-```bash
+```sh
 ~/.config/envman/PATH.env
 ~/.local/bin/koji
 ~/.local/opt/koji-VERSION/bin/koji
@@ -45,7 +45,7 @@ These are the files that are created and/or modified with this installer:
 
 In this case, `koji` acts as a wrapper around `git commit`:
 
-```bash
+```sh
 git add example.env
 
 # same as `git commit`, but interactive
@@ -56,7 +56,7 @@ koji
 
 Just add `koji --hook` to your project's `.git/hooks/prepare-commit-msg`:
 
-```bash
+```sh
 echo >> ./.git/hooks/prepare-commit-msg << "EOF"
 #!/bin/bash
 koji --hook
@@ -65,7 +65,7 @@ EOF
 chmod a+x ./.git/hooks/prepare-commit-msg
 ```
 
-```bash
+```sh
 # will run koji by way of prepare-commit-msg
 git commit
 ```
@@ -75,7 +75,7 @@ git commit
 You can use `-e` (or `--emoji`) to prepend your commit message with the relevant
 emoji for the commit type:
 
-```bash
+```sh
 koji -e
 ```
 
@@ -83,7 +83,7 @@ As a git hook:
 
 `.git/hooks/prepare-commit-msg`:
 
-```bash
+```sh
 #!/bin/bash
 koji --emoji --hook
 ```

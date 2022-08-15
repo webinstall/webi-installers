@@ -11,7 +11,7 @@ To update or switch versions, run `pyenv install -v 3` (or `3.10`, etc).
 
 Make sure that you already have Xcode tools installed:
 
-```bash
+```sh
 xcode-select --install
 ```
 
@@ -21,7 +21,7 @@ You may also need to install Xcode proper from the App Store.
 
 Make sure that you already have the necessary build tools installed:
 
-```bash
+```sh
 # required
 sudo apt update
 sudo apt install -y build-essential zlib1g-dev libssl-dev
@@ -60,7 +60,7 @@ system utilities (which is why we love it so much).
 However, in the rare event that you need to switch your user profile's python
 back to the system version, you can do so:
 
-```bash
+```sh
 pyenv global system
 ```
 
@@ -68,7 +68,7 @@ pyenv global system
 
 Go into the root of your project repository and run this, for example:
 
-```bash
+```sh
 pyenv local -v 3.10.0
 ```
 

@@ -25,7 +25,7 @@ Here's the things we find most useful:
 
 ### How to serve a directory
 
-```bash
+```sh
 caddy file-server --browse --listen :4040
 ```
 
@@ -91,7 +91,7 @@ example.com {
 
 ### How to run caddy
 
-```bash
+```sh
 caddy run --config ./Caddyfile
 ```
 
@@ -112,7 +112,7 @@ Using a user named `app` to run your services is common industry convention.
 
 You can use `setcap` to allow Caddy to use privileged ports.
 
-```bash
+```sh
 sudo setcap cap_net_bind_service=+ep $(readlink -f $(command -v caddy))
 ```
 
@@ -123,13 +123,13 @@ start the appropriate systemd launcher for Linux.
 
 Install Serviceman with Webi:
 
-```bash
+```sh
 webi serviceman
 ```
 
 Use Serviceman to create a _systemd_ config file.
 
-```bash
+```sh
 sudo env PATH="$PATH" \
     serviceman add --system --username $(whoami) --name caddy -- \
         caddy run --config ./Caddyfile
@@ -138,7 +138,7 @@ sudo env PATH="$PATH" \
 This will create `/etc/systemd/system/caddy.service`, which can be managed with
 `systemctl`. For example:
 
-```bash
+```sh
 sudo systemctl restart caddy
 ```
 
@@ -155,13 +155,13 @@ start the appropriate service launcher file for MacOS.
 
 Install Serviceman with Webi:
 
-```bash
+```sh
 webi serviceman
 ```
 
 Use Serviceman to create a _launchd_ plist file.
 
-```bash
+```sh
 serviceman add --username $(whoami) --name caddy -- \
     caddy run --config ./Caddyfile
 ```
@@ -169,7 +169,7 @@ serviceman add --username $(whoami) --name caddy -- \
 This will create `~//Library/LaunchAgents/caddy.plist`, which can be managed
 with `launchctl`. For example:
 
-```bash
+```sh
 launchctl unload -w "$HOME/Library/LaunchAgents/caddy.plist"
 launchctl load -w "$HOME/Library/LaunchAgents/caddy.plist"
 ```
@@ -195,20 +195,20 @@ the appropriate service launcher for Windows.
 
 Install Serviceman with Webi:
 
-```bash
+```sh
 webi.bat serviceman
 ```
 
 Use Serviceman to create a Startup entry in the Windows Registry:
 
-```bash
+```sh
 serviceman.exe add --name caddy -- \
     caddy run --config ./Caddyfile
 ```
 
 You can manage the service directly with Serviceman. For example:
 
-```bash
+```sh
 serviceman stop caddy
 serviceman start caddy
 ```

@@ -7,7 +7,7 @@ tagline: |
 
 ## Updating rustlang
 
-```bash
+```sh
 rustup update
 ```
 
@@ -27,17 +27,17 @@ You can `rustup use x.y.z` for a specific version or toolchain.
 
 ### Install rust from rust.rs
 
-```bash
+```sh
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
 ### Hello World
 
-```bash
+```sh
 cargo install ripgrep
 ```
 
-```bash
+```sh
 cargo new hello --bin
 pushd ./hello/
 cargo build --release

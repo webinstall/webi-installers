@@ -27,19 +27,19 @@ You need to download and install the
 
 By default, `dotenv-linter` checks all `.env` files in the current directory:
 
-```bash
+```sh
 dotenv-linter
 ```
 
 This is the same as the default behavior:
 
-```bash
+```sh
 dotenv-linter .env .env.*
 ```
 
 To lint .env files recursively, use `-r`:
 
-```bash
+```sh
 dotenv-linter -r
 ```
 
@@ -50,7 +50,7 @@ For the complete usage, see the official
 
 Use the `--fix` flag.
 
-```bash
+```sh
 dotenv-linter --fix
 ```
 
@@ -61,7 +61,7 @@ can use `--no-backup` to skip this.
 
 You can turn off certain linter checks with `--skip` options, for example:
 
-```bash
+```sh
 dotenv-linter --skip QuoteCharacter --skip UnorderedKey
 ```
 

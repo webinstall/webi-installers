@@ -29,20 +29,20 @@ Here's the shortlist of options we've found most useful:
 
 ### How to "Unzip"
 
-```bash
+```sh
 unxz -k example.xz
 ```
 
-```bash
+```sh
 tar xvf example.tar.xz
 ```
 
 ### How to "Zip"
 
-```bash
+```sh
 xz -k ./example
 ```
 
-```bash
+```sh
 tar cvf example.tar.xz ./example
 ```

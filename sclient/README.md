@@ -17,13 +17,13 @@ To update or switch versions, run `webi sclient@stable`.
 
 You can _literally_ use this on example.com:
 
-```bash
+```sh
 sclient example.com:443 localhost:3000
 ```
 
 To use it with an http client, just set the Host header to the original domain:
 
-```bash
+```sh
 curl -H "Host: example.com" http://localhost:3000
 ```
 
@@ -44,7 +44,7 @@ curl -H "Host: example.com" http://localhost:3000
 
 SSH can be tunneled within HTTPS, TLS, SSL, WebSockets, etc.
 
-```bash
+```sh
 ssh -o ProxyCommand="sclient %h" jon.telebit.io
 ```
 
@@ -54,21 +54,21 @@ ssh connections through a single host.
 
 ### How to unwrap TLS for Telnet (HTTP/HTTPS)
 
-```bash
+```sh
 sclient example.com:443 localhost:3000
 ```
 
-```bash
+```sh
 telnet localhost 3000
 ```
 
 ### How to unwrap TLS for SMTP/SMTPS/STARTTLS
 
-```bash
+```sh
 sclient smtp.gmail.com:465 localhost:2525
 ```
 
-```bash
+```sh
 telnet localhost 2525
 
 Trying 127.0.0.1...
@@ -79,7 +79,7 @@ Escape character is '^]'.
 
 ### How to use with stdin / stdout
 
-```bash
+```sh
 sclient whatever.com -
 ```
 
@@ -94,7 +94,7 @@ Use just like netcat or telnet. A manual HTTP request, for example:
 
 ### How to pipe connections
 
-```bash
+```sh
 printf "GET / HTTP/1.1\r\nHost: telebit.cloud\r\n\r\n" | sclient telebit.cloud
 ```
 
@@ -106,14 +106,14 @@ attacks, such as Domain Fronting.
 The literal domains `example.net` and `example.com` are _actually_ vulnerable to
 SNI spoofing:
 
-```bash
+```sh
 sclient --servername example.net example.com:443 localhost:3000
 curl -H "example.com" http://localhost:3000
 ```
 
 Most domains, however, are not:
 
-```bash
+```sh
 sclient --servername google.net google.com:443 localhost:3000
 curl -H "google.com" http://localhost:3000
 ```

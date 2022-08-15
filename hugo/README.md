@@ -15,17 +15,17 @@ etc).
 
 ### Create a new site
 
-```bash
+```sh
 # create a new site
 hugo new site ./blog.example.com
 ```
 
-```bash
+```sh
 # compile a site
 hugo
 ```
 
-```bash
+```sh
 # serve a site in dev mode
 hugo server -D
 ```

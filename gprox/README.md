@@ -21,7 +21,7 @@ given to an interpreter you dont know much about if you're using `webi`.
 
 The fastest way to get started is just by running:
 
-```bash
+```sh
 gprox
 # example output
 # 9:12PM INF Running proxy! from=https://localhost:9001 to=http://localhost:9000
@@ -33,20 +33,20 @@ That is... if you're app happens to be running on port `9000`. If not, no
 worries! Simply pass the target port option `-t, --target` and specify the port
 your app _is_ running on.
 
-```bash
+```sh
 gprox -t 8080
 ```
 
 Feeling like you should save this magic built-in cert so you can inspect it for
 anything?
 
-```bash
+```sh
 gprox --dropcert
 ```
 
 Want to use your own cert/key?
 
-```bash
+```sh
 gprox -c testcert.crt -k testkey.key
 ```
 

@@ -22,7 +22,7 @@ linux: true
 
 How to create a new user named 'app':
 
-```bash
+```sh
 # --disable-password prevents a password prompt
 # --gecos "" skips the useless questions
 adduser --disabled-password --gecos "" app
@@ -30,7 +30,7 @@ adduser --disabled-password --gecos "" app
 
 How to create a and set a random password:
 
-```bash
+```sh
 # sets 'my_password' to 32 random hex characters (16 bytes)
 my_password=$(openssl rand -hex 16)
 
@@ -40,19 +40,19 @@ printf "$my_password"'\n'"$my_password" | passwd app
 
 How to make the user 'app' a "sudo"er (an admin):
 
-```bash
+```sh
 adduser app sudo
 ```
 
 How to allow 'app' to run sudo commands without a password:
 
-```bash
+```sh
 echo "app ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/app
 ```
 
 How to copy allowed keys from root to the new user:
 
-```bash
+```sh
 mkdir -p /home/app/.ssh/
 chmod 0700 /home/app/.ssh/
 

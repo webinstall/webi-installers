@@ -11,7 +11,7 @@ To update run `pyenv update`.
 
 Make sure that you already have Xcode tools installed:
 
-```bash
+```sh
 xcode-select --install
 ```
 
@@ -19,7 +19,7 @@ xcode-select --install
 
 Make sure that you already have the necessary build tools installed:
 
-```bash
+```sh
 # required
 sudo apt update
 sudo apt install -y build-essential zlib1g-dev libssl-dev
@@ -39,21 +39,21 @@ pre-requisites above).
 
 Here's how you can check for the latest version:
 
-```bash
+```sh
 pyenv install --list | grep -v -- - | tail -n 1
 #>   3.9.1
 ```
 
 And install it:
 
-```bash
+```sh
 pyenv install -v 3.9.1
 #> Installed Python-3.9.1 to ~/.pyenv/versions/3.9.1
 ```
 
 And use it:
 
-```bash
+```sh
 pyenv global 3.9.1
 python --version
 #> Python 3.9.1
@@ -61,13 +61,13 @@ python --version
 
 Revert back to your system python:
 
-```bash
+```sh
 pyenv global system
 ```
 
 ### List all available python version
 
-```bash
+```sh
 pyenv install --list
 ```
 
@@ -87,7 +87,7 @@ pyenv install --list
 
 ### Install Python versions
 
-```bash
+```sh
 pyenv install <version>
 pyenv rehash
 ```
@@ -96,7 +96,7 @@ pyenv rehash
 
 List installed versions:
 
-```bash
+```sh
 pyenv versions
 ```
 
@@ -104,13 +104,13 @@ pyenv versions
 
 Pin an application to a specific Python version:
 
-```bash
+```sh
 pyenv local 2.7.6
 ```
 
 Unset the local version:
 
-```bash
+```sh
 pyenv local --unset
 ```
 
@@ -118,7 +118,7 @@ pyenv local --unset
 
 ### List existing virtualenvs
 
-```bash
+```sh
 pyenv virtualenvs
 ```
 
@@ -126,26 +126,26 @@ pyenv virtualenvs
 
 From current version with name "venv35":
 
-```bash
+```sh
 pyenv virtualenv venv35
 ```
 
 From version 2.7.10 with name "venv27":
 
-```bash
+```sh
 pyenv virtualenv 2.7.10
 venv27
 ```
 
 ### Activate/deactivate
 
-```bash
+```sh
 pyenv activate <name>
 pyenv deactivate
 ```
 
 ### Delete existing virtualenv
 
-```bash
+```sh
 pyenv uninstall venv27
 ```

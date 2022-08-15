@@ -18,13 +18,13 @@ etc).
 
 Run just once (for development):
 
-```bash
+```sh
 postgres -D $HOME/.local/share/postgres/var -p 5432
 ```
 
 Run as a system service on Linux:
 
-```bash
+```sh
 sudo env PATH="$PATH" \
     serviceman add --system --username "$(whoami)" --name postgres -- \
     postgres -D "$HOME/.local/share/postgres/var" -p 5432
@@ -35,13 +35,13 @@ sudo systemctl restart systemd-journald
 
 ### Connect with the psql client
 
-```bash
+```sh
 psql 'postgres://postgres:postgres@localhost:5432/postgres'
 ```
 
 ### Initialize a database with a password
 
-```bash
+```sh
 echo "postgres" > /tmp/pwfile
 mkdir -p $HOME/.local/share/postgres/var/
 
@@ -55,12 +55,12 @@ rm /tmp/pwfile
 ### Add and secure remote users
 
 1. Set your server name or IP address
-   ```bash
+   ```sh
    PG_HOST=pg-1.example.com
    ```
 2. Generate a 10-year self-signed TLS certificate
 
-   ```bash
+   ```sh
    openssl req -new -x509 -days 3650 -nodes -text \
        -out server.crt \
        -keyout server.key \
@@ -71,7 +71,7 @@ rm /tmp/pwfile
    ```
 
 3. Enable SSL (TLS)
-   ```bash
+   ```sh
    vim ~/.local/share/postgres/var/postgresql.conf
    ```
    ```ini
@@ -81,7 +81,7 @@ rm /tmp/pwfile
    ```
 4. Generate a user with a random token password
 
-   ```bash
+   ```sh
    MY_USER='my_user'
    MY_PASSWORD="$(xxd -l16 -ps /dev/urandom)"
 
@@ -90,23 +90,23 @@ rm /tmp/pwfile
    ```
 
 5. Show the token password and save it somewhere
-   ```bash
+   ```sh
    echo "$MY_PASSWORD"
    ```
 6. Allow the user to connect via IPv4 and IPv6
-   ```bash
+   ```sh
    echo "# Allow $MY_USER to connect remotely over the internet
    hostssl all             $MY_USER        0.0.0.0/0               scram-sha-256
    hostssl all             $MY_USER        ::0/0                   scram-sha-256" \
        >> ~/.local/share/postgres/var/pg_hba.conf
    ```
 7. Restart postgres
-   ```bash
+   ```sh
    sudo systemctl restart postgres
    ```
 8. Test the connection from a remote system
 
-   ```bash
+   ```sh
    PG_HOST="pg-1.example.com"
    PG_USER="my_user"
 
@@ -119,7 +119,7 @@ rm /tmp/pwfile
 
 ### Add or update a user's password
 
-```bash
+```sh
 MY_USER='my_user'
 MY_NEW_PASSWORD="$(xxd -l16 -ps /dev/urandom)"
 

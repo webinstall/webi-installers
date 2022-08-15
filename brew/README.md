@@ -9,7 +9,7 @@ tagline: |
 
 `brew` has its own built-in upgrade management.
 
-```bash
+```sh
 brew update
 brew upgrade
 ```
@@ -26,27 +26,27 @@ way, report it to brew.
 
 ### How to install CLI packages
 
-```bash
+```sh
 brew update
 brew install node
 ```
 
 ### How to install GUI packages
 
-```bash
+```sh
 brew update
 brew cask install docker
 ```
 
 ### Where are things installed?
 
-```bash
+```sh
 ~/.local/opt/brew/
 ```
 
 For reference, traditional `brew` installs here:
 
-```bash
+```sh
 /usr/local/Cellar/
 /opt/homebrew-cask/Caskroom/
 ```
@@ -58,7 +58,7 @@ like `brew upgrade` or `brew update python`, and your whole system gets borked.
 
 If you need to _uninstall_ and _reinstall_ local brew:
 
-```bash
+```sh
 rm -rf ~/.local/opt/brew
 webi brew
 ```
@@ -67,12 +67,12 @@ If you need to _uninstall_ global brew:
 
 For _Mojave_, _Catalina_, _Big Sur_, and above:
 
-```bash
+```sh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)"
 ```
 
 For _High Sierra_ and below:
 
-```bash
+```sh
 /bin/bash -c ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
 ```

@@ -20,50 +20,50 @@ etc).
 Create a synchronization session named "web-app-code" between the local path
 ~/project and an SSH-accessible endpoint.
 
-```bash
+```sh
 mutagen sync create --name=web-app-code ~/project user@example.org:~/project
 ```
 
 OR Create a forwarding session named "web-app" between port 8080 on localhost
 and port 1313 inside a Docker container.
 
-```bash
+```sh
 mutagen forward create --name=web-app tcp:localhost:8080 docker://devcontainer:tcp:localhost:1313
 ```
 
 ### Listing sessions
 
-```bash
+```sh
 mutagen sync list
 ```
 
 OR
 
-```bash
+```sh
 mutagen forward list
 ```
 
 ### Monitoring a session
 
-```bash
+```sh
 mutagen sync monitor web-app-code
 ```
 
 OR
 
-```bash
+```sh
 mutagen forward monitor web-app
 ```
 
 ### Pausing/resuming sessions
 
-```bash
+```sh
 mutagen sync pause web-app-code
 ```
 
 OR
 
-```bash
+```sh
 mutagen forward pause web-app
 ```
 
@@ -71,30 +71,30 @@ To resume replace `pause` with `resume` in the above commands
 
 ### Resetting session
 
-```bash
+```sh
 mutagen sync reset web-app-code
 ```
 
 ### Terminating session
 
-```bash
+```sh
 mutagen sync terminate web-app-code
 ```
 
 OR
 
-```bash
+```sh
 mutagen forward terminate web-app
 ```
 
 For general help
 
-```bash
+```sh
 mutagen --help
 ```
 
 For specific command help
 
-```bash
+```sh
 mutagen <command> --help
 ```

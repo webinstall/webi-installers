@@ -16,25 +16,25 @@ User Guide - Quick Start: https://kind.sigs.k8s.io/docs/user/quick-start
 
 To create a cluster with default name
 
-```bash
+```sh
 kind create cluster
 ```
 
 Create a cluster with a specific name
 
-```bash
+```sh
 kind create cluster --name foo
 ```
 
 List clusters
 
-```bash
+```sh
 kind get clusters
 ```
 
 Specify Kubernetes version
 
-```bash
+```sh
 kind create cluster --image "kindest/node:$favoriteTag"
 ```
 
@@ -43,24 +43,24 @@ kind create cluster --image "kindest/node:$favoriteTag"
 
 Export all logs from a cluster
 
-```bash
+```sh
 kind exports logs $HOME/somedir
 ```
 
 To delete a cluster with default name
 
-```bash
+```sh
 kind delete cluster
 ```
 
 To delete a cluster with specific name
 
-```bash
+```sh
 kind delete cluster --name foo
 ```
 
 Get the kubeconfig of a cluster
 
-```bash
+```sh
 kind get kubeconfig --name foo
 ```

@@ -11,6 +11,6 @@ linux: true
 > `ssh-setpass` will ask you for your old passphrase and then for the new one to
 > reset it with.
 
-```bash
+```sh
 ssh-setpass
 ```

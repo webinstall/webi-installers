@@ -22,18 +22,18 @@ Files are updated about every 30 seconds.
 
 You can test that syncthing was installed correctly by checking it's version:
 
-```bash
+```sh
 syncthing --version
 ```
 
 If that works, you'll want to set your system launcher to run it on login. You
 can install and use [serviceman](/serviceman) to do this:
 
-```bash
+```sh
 webi serviceman
 ```
 
-```bash
+```sh
 mkdir -p ~/.config/syncthing/
 env PATH="$PATH" serviceman add --user --name syncthing -- \
   syncthing --home ~/.config/syncthing/
@@ -84,6 +84,6 @@ Otherwise, yes, forward both UDP and TCP ports 22000.
 It can be useful for debugging and testing configuration to run syncthing from
 your Terminal. Just run `syncthing` pointing to the config directory:
 
-```bash
+```sh
 syncthing --home ~/.config/syncthing/
 ```

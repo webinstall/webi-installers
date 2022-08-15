@@ -43,13 +43,13 @@ used.
 
 To list files being formatted and write directly to file
 
-```bash
+```sh
 shfmt -l -w <filepath>
 ```
 
 To show differences between shfmt formatting and original file formatting
 
-```bash
+```sh
 shfmt -d <filepath>
 ```
 

@@ -14,13 +14,13 @@ etc).
 
 To run kubectx:
 
-```bash
+```sh
 kubectx
 ```
 
 ### Command line arguments
 
-```bash
+```sh
 USAGE:
   kubectx                   : list the contexts
   kubectx <NAME>            : switch to context <NAME>

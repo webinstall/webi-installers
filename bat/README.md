@@ -25,14 +25,14 @@ You need to download and install the
 
 Update your `.bashrc`, `.zshrc`, or `.profile`
 
-```bash
+```sh
 alias cat="bat --style=plain"
 ```
 
 For situations in which you must use `cat` exactly, remember that you can escape
 the alias:
 
-```bash
+```sh
 \cat foo
 ```
 
@@ -40,13 +40,13 @@ the alias:
 
 Take a look at the config options:
 
-```bash
+```sh
 bat --help
 ```
 
 Check to see where your config file is:
 
-```bash
+```sh
 echo 'N' | bat --generate-config-file
 ```
 

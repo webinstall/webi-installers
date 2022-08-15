@@ -20,13 +20,13 @@ update the font in your Terminal for `lsd` to show icons.
 
 Run `lsd` exactly as you would `ls`:
 
-```bash
+```sh
 lsd
 ```
 
 But wait, there's more, you can `tree` as well:
 
-```bash
+```sh
 lsd --tree
 ```
 
@@ -35,13 +35,13 @@ lsd --tree
 If you just want the benefits of a cross-platform `ls` without having to install
 nerdfont or needing a modern terminal, you've got options:
 
-```bash
+```sh
 lsd --icon=never --color=never
 ```
 
 Since that can be a little awkward to type over and over, you can use an alias:
 
-```bash
+```sh
 alias lsd=lsd --icon=never --color=never
 lsd
 ```
@@ -50,7 +50,7 @@ lsd
 
 Update your `.bashrc`, `.zshrc`, or `.profile`
 
-```bash
+```sh
 alias ls="lsd -F"
 alias la="lsd -AF"
 alias ll="lsd -lAF"
@@ -60,7 +60,7 @@ alias lg="lsd -F --group-dirs=first"
 For situations in which you must use `ls` exactly, remember that you can escape
 the alias:
 
-```bash
+```sh
 \ls -lAF
 ```
 
@@ -68,12 +68,12 @@ the alias:
 
 Update your `.bashrc`, `.zshrc`, or `.profile`
 
-```bash
+```sh
 alias tree="lsd -AF --tree"
 ```
 
 And when you want to use GNU `tree`, just escape the alias:
 
-```bash
+```sh
 \tree
 ```

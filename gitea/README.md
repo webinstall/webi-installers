@@ -19,7 +19,7 @@ etc).
 
 ### How to run `gitea`
 
-```bash
+```sh
 gitea web --config ~/.local/opt/gitea/custom/conf/app.ini
 ```
 

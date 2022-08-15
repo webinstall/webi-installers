@@ -50,7 +50,7 @@ sequential processing tasks without causing your apps to be slow.
 Typically you should place swap files in `/var`, which is the volume that will
 be optimized for fast writes (on servers that do so).
 
-```bash
+```sh
 sudo fallocate -l 2G /var/swapfile
 sudo chmod 0600 /var/swapfile
 sudo mkswap /var/swapfile
@@ -62,7 +62,7 @@ actually write the file to its full size, and therefore will be instant.
 On an HDD (rotational drive), `dd` may be a better choice, as you need to
 allocate contiguous space all at once.
 
-```bash
+```sh
 sudo dd if=/dev/zero of=/var/swapfile bs=2G count=1
 ```
 
@@ -77,7 +77,7 @@ space in RAM/swap than as a file on disk.
 
 ### How to activate swap space?
 
-```bash
+```sh
 sudo swapon /var/swapfile
 ```
 

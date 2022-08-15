@@ -26,7 +26,7 @@ If there are some important key bindings, use a table like this:
 
 1. Place EXAMPLE into your `~/.vim/pack/plugins/start`:
 
-   ```bash
+   ```sh
    mkdir -p ~/.vim/pack/plugins/start/
    git clone --depth=1 https://github.com/CHANGEME/EXAMPLE.git ~/.vim/pack/plugins/start/example
    ```

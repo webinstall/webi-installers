@@ -138,7 +138,7 @@ Find `Terminal` in the top Mac menu, then...
 
 **Mac**:
 
-```bash
+```sh
 ~/Library/Fonts/
 ```
 
@@ -154,6 +154,6 @@ HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\Fonts
 
 **Linux**:
 
-```bash
+```sh
 ~/.local/share/fonts/
 ```

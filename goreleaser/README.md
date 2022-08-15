@@ -29,7 +29,7 @@ found the most useful for the majority of projects:
 
 To create an example `.goreleaser.yaml` file, and test the configuration:
 
-```bash
+```sh
 goreleaser init
 goreleaser --snapshot --skip-publish --rm-dist
 ```
@@ -70,13 +70,13 @@ You can get one at <https://github.com/settings/tokens/new>.
 
 You can export the environment variable:
 
-```bash
+```sh
 export GITHUB_TOKEN="YOUR_GITHUB_TOKEN"
 ```
 
 Or place the token in the default config location:
 
-```bash
+```sh
 ~/.config/goreleaser/github_token
 ```
 
@@ -91,14 +91,14 @@ Running GoReleaser without `--snapshot` must use the latest
 [Git tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging) of your repository.
 Create a tag and push it to Git:
 
-```bash
+```sh
 git tag -a v1.0.0 -m "First release"
 git push origin v1.0.0
 ```
 
 Running GoReleaser without `--skip-publish` will publish the builds:
 
-```bash
+```sh
 goreleaser --rm-dist
 ```
 
@@ -209,14 +209,14 @@ From macOS you can easily cross-compile cgo for Windows and Linux.
 
 Install [brew](https://webinstall.dev/brew), if needed:
 
-```bash
+```sh
 curl -sS https://webinstall.dev/brew | bash
 ```
 
 Install mingw and musl-cross: \
 (this may take hours if pre-built binaries are not available)
 
-```bash
+```sh
 brew install mingw-w64
 brew install FiloSottile/musl-cross/musl-cross --with-aarch64 --with-arm # --with-mips --with-486
 ```
@@ -224,7 +224,7 @@ brew install FiloSottile/musl-cross/musl-cross --with-aarch64 --with-arm # --wit
 You may want to manually test compiling for multiple platforms before automating
 it:
 
-```bash
+```sh
 GOARCH=amd64 GOOS=darwin                              go build -o unarr_darwin cmd/unarr/unarr.go
 GOARCH=amd64 GOOS=windows CC=x86_64-w64-mingw32-gcc   go build -o unarr.exe cmd/unarr/unarr.go
 GOARCH=amd64 GOOS=linux   CC=x86_64-linux-musl-gcc    go build -o unarr_linux_amd64 cmd/unarr/unarr.go
@@ -296,7 +296,7 @@ You'll need to manually create a different `builds` item for each unique `id`:
 If you compile without `-static`, you will need the `musl` libraries to run on
 (non-Alpine) Linuxes:
 
-```bash
+```sh
 sudo apt-get install -y musl
 ```
 

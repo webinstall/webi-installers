@@ -13,13 +13,13 @@ etc).
 > Pandoc is a Haskell library for converting from one markup format to another,
 > and a command-line tool that uses this library.
 
-```bash
+```sh
 pandoc -o output.html input.txt
 ```
 
 Specifying formats
 
-```bash
+```sh
 pandoc -f markdown -t latex hello.txt
 ```
 

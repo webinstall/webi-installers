@@ -7,7 +7,7 @@ tagline: |
 
 ## Updating `vim-syntastic`
 
-```bash
+```sh
 webi vim-syntastic
 ```
 
@@ -19,7 +19,7 @@ webi vim-syntastic
 
 ### How to install manually
 
-```bash
+```sh
 git clone --depth=1 https://github.com/vim-syntastic/syntastic.git ~/.vim/pack/plugins/start/vim-syntastic
 ```
 

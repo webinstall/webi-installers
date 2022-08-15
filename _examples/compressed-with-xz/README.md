@@ -16,7 +16,7 @@ Each example has four files that need to be modified, just slightly:
 
 See [./gitea/](/gitea/) as an example.
 
-```bash
+```sh
 rsync -av ./keypairs/ ./my-project/
 ```
 

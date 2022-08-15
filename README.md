@@ -9,7 +9,7 @@
 - no messing with system permissions
 - in short: no nonsense
 
-```bash
+```sh
 curl https://webinstall.dev/webi | bash
 ```
 
@@ -97,13 +97,13 @@ You just fill in the blanks.
 
 Just create an empty directory and run the tests until you get a good result.
 
-```bash
+```sh
 git clone git@github.com:webinstall/packages.git
 pushd packages
 npm install
 ```
 
-```bash
+```sh
 mkdir -p ./new-package/
 node _webi/test.js ./new-package/
 ```
@@ -124,7 +124,7 @@ description: |
   Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine
 ---
 
-```bash
+```sh
 node -e 'console.log("Hello, World!")'
 > Hello, World!
 ```
@@ -161,7 +161,7 @@ module.exports = function (request) {
 
 (optional, if needed) Bash variables that you _may_ define:
 
-```bash
+```sh
 # Define this if the package name is different from the command name (i.e. golang => go)
 pkg_cmd_name="foobar"
 
@@ -178,7 +178,7 @@ pkg_src_cmd="$HOME/.local/opt/foobar-v$WEBI_VERSION/bin/foobar"
 
 (required) A version check function that strips all non-version junk
 
-```bash
+```sh
 pkg_get_current_version() {
     # foobar-v1.1.7 => 1.1.7
     echo "$(foobar --version | head -n 1 | sed 's:foobar-v::')"
@@ -187,7 +187,7 @@ pkg_get_current_version() {
 
 For the rest of the functions you can copy/paste from the examples:
 
-```bash
+```sh
 pkg_format_cmd_version() {}         # Override, pretty prints version
 
 pkg_link                            # Override, replaces webi_link()
@@ -214,7 +214,7 @@ See `webi/template.sh`
 
 These variables will be set by the server:
 
-```bash
+```sh
 WEBI_PKG=example@v1
 WEBI_TAG=v1
 WEBI_HOST=https://webinstall.dev
@@ -231,19 +231,19 @@ WEBI_PKG_URL=https://cdn.example.com/example-macos-amd64.tar.gz
 WEBI_PKG_FILE=example-macos-amd64.tar.gz
 ```
 
-```bash
+```sh
 PKG_NAME=example
 PKG_OSES=macos,linux,windows
 PKG_ARCHES=amd64,arm64,x86
 PKG_FORMATS=zip,xz
 ```
 
-```bash
+```sh
 WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-foobar.XXXXXXXX)"}
 WEBI_SINGLE=""
 ```
 
-```bash
+```sh
 webi_check              # Checks to see if the selected version is already installed (and re-links if so)
 webi_download           # Downloads the selected release to $HOME/Downloads/webi/<package-name>.tar.gz
 webi_extract            # Extracts the download to /tmp/<package-name>-<random>/

@@ -12,16 +12,16 @@
   linters:
   - Node / JavaScript:
     - [prettier](https://webinstall.dev/prettier)
-      ```bash
+      ```sh
       npm run prettier
       ```
     - [jshint](https://webinstall.dev/jshint)
-      ```bash
+      ```sh
       npm run lint
       ```
   - Bash
     - [shfmt](https://webinstall.dev/shfmt)
-      ```bash
+      ```sh
       npm run shfmt
       ```
     - [shellcheck](https://webinstall.dev/shellcheck)
@@ -42,7 +42,7 @@ Please **enable gpg-signing**.
 You can do this **in about 30 seconds**:
 
 1. Run [`git-config-gpg`](https://webinstall.dev/git-config-gpg) from Webi:
-   ```bash
+   ```sh
    # On Mac & Linux
    curl https://webinstall.dev/git-config-gpg | bash
    ```

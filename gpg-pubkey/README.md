@@ -21,7 +21,7 @@ This installs two commands.
 
 The easiest way to get your GnuPG Public Key:
 
-```bash
+```sh
 curl https://webinstall.dev/gpg-pubkey | bash
 ```
 
@@ -69,7 +69,7 @@ install:
 Run `gpg-pubkey-id` to get your GnuPG Public Key ID and then update your
 `~/.gitconfig` to sign with it by default:
 
-```bash
+```sh
 #!/bin/bash
 
 MY_KEY_ID="$(
@@ -83,7 +83,7 @@ git config --global log.showSignature true
 
 Or, for Windows users:
 
-```bash
+```sh
 #!/usr/bin/env pwsh
 
 $my_key_id = gpg-pubkey-id
@@ -106,7 +106,7 @@ All _Secret Keys_ have _Public IDs_ (and corresponding _Public Keys_).
 Here's a command to list your secret key(s) and get the Public ID (of the first
 one, if you have many):
 
-```bash
+```sh
 #!/bin/bash
 
 MY_KEY_ID="$(
@@ -139,7 +139,7 @@ Let's break that down, for good measure:
 All secret keys have a Public Key and a Public ID, which can be viewed in _LONG_
 format:
 
-```bash
+```sh
 gpg --list-secret-keys --keyid-format LONG
 ```
 
@@ -169,13 +169,13 @@ example), not just keys that you own.
 
 Here's how to copy your Public Key into your Downloads folder:
 
-```bash
+```sh
 gpg --armor --export "${MY_KEY_ID}" > ~/Downloads/"${MY_EMAIL}".gpg.asc
 ```
 
 Or, if you just want to print it to your console, run this:
 
-```bash
+```sh
 gpg --armor --export "${MY_KEY_ID}"
 ```
 
@@ -187,7 +187,7 @@ Generally speaking you'll want to use the same name and email for `git` and
 Here's how you can automate creating a key using the same info as what's in your
 `~/.gitconfig`:
 
-```bash
+```sh
 #!/bin/bash
 
 MY_NAME="$( git config --global user.name )"
@@ -210,7 +210,7 @@ EOF
 
 Or, for the Windows folk...
 
-```bash
+```sh
 #!/usr/bin/env pwsh
 
 $my_name = git config --global user.name

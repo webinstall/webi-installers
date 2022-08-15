@@ -18,7 +18,7 @@ is a good place to get started if you're new to git.
 
 ### How to commit files
 
-```bash
+```sh
 git add ./path/to/file1
 git add ./path/to/file2
 git commit -m "my summary for this commit"
@@ -40,13 +40,13 @@ ignore
 
 This will branch from the branch you're currently on.
 
-```bash
+```sh
 git checkout -b my-branch-name
 ```
 
 ### How to rebase by default
 
-```bash
+```sh
 git config --global pull.rebase true
 ```
 
@@ -57,13 +57,13 @@ git config --global pull.rebase true
 
 Rebase when fetching new updates
 
-```bash
+```sh
 git pull --rebase origin master
 ```
 
 Rebase a feature branch from master before a merge
 
-```bash
+```sh
 # update master
 git fetch
 git checkout master
@@ -88,7 +88,7 @@ Abbreviated from
 First, update `.gitconfig` to handle each type of git URL (git, ssh, and http)
 as https:
 
-```bash
+```sh
 git config --global url."https://api@github.com/".insteadOf "https://github.com/"
 git config --global url."https://ssh@github.com/".insteadOf "ssh://git@github.com/"
 git config --global url."https://git@github.com/".insteadOf "git@github.com:"
@@ -96,14 +96,14 @@ git config --global url."https://git@github.com/".insteadOf "git@github.com:"
 
 Next, create a `.git-askpass`:
 
-```bash
+```sh
 echo 'echo $MY_GIT_TOKEN' > $HOME/.git-askpass
 chmod +x $HOME/.git-askpass
 ```
 
 Finally, add the following ENVs to your deployment environment:
 
-```bash
+```sh
 GIT_ASKPASS=$HOME/.git-askpass
 
 # Relpace xxxx... with your deploy token

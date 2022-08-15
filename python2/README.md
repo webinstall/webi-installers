@@ -11,7 +11,7 @@ To update or switch versions, run `pyenv install -v 2` (or `2.6`, etc).
 
 Make sure that you already have Xcode tools installed:
 
-```bash
+```sh
 xcode-select --install
 ```
 
@@ -21,7 +21,7 @@ You may also need to install Xcode proper from the App Store.
 
 Make sure that you already have the necessary build tools installed:
 
-```bash
+```sh
 # required
 sudo apt update
 sudo apt install -y build-essential zlib1g-dev libssl-dev

@@ -15,7 +15,7 @@ tagline: |
 `ssh-pubkey` will make sure you have an SSH key, and then print it to the screen
 and place it in `~/Downloads`.
 
-```bash
+```sh
 ssh-pubkey
 ```
 

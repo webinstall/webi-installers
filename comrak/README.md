@@ -14,7 +14,7 @@ etc).
 > Flavored Markdown Spec: Tables, Task list items, Strikethrough, Autolinks, &
 > Disallowed Raw HTML
 
-```bash
+```sh
 comrak --gfm index.md > index.html
 ```
 
@@ -28,7 +28,7 @@ Here you'll learn how to:
 
 ## How to Convert Markdown to HTML
 
-```bash
+```sh
 comrak --gfm --header-ids '' README.md > README.html
 ```
 
@@ -39,7 +39,7 @@ defaults to always include your favorite options.
 
 Here's what I suggest:
 
-```bash
+```sh
 echo "--gfm --header-ids ''" > ~/.config/comrak/config
 ```
 
@@ -62,7 +62,7 @@ Example:
 Then, to sanitize `<script>` and `<iframe>` tags you must add `-e tagfilter`
 (which the `--gfm` option also enables).
 
-```bash
+```sh
 comrak --unsafe --gfm --header-ids '' README.md
 ```
 
@@ -75,7 +75,7 @@ The `--unsafe` option
 If you want Github-Flavored Markdown with trusted scripts, you'll need to enable
 its extensions by hand:
 
-```bash
+```sh
 echo "
 # WARNING: allows <script>, <iframe>
 # and <a href=javascript:alert('')>
@@ -100,7 +100,7 @@ echo "
 " > ~/.config/comrak/allow-scripts
 ```
 
-```bash
+```sh
 comrak --config ~/.config/comrak/allow-scripts README.md
 ```
 
@@ -110,6 +110,6 @@ You can disable all options with `--config-file none`.
 
 Example:
 
-```bash
+```sh
 comrak --config-file none -e table README.md
 ```

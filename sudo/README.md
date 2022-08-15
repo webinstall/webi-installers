@@ -13,7 +13,7 @@ tagline: |
 
 ### Example: Enabling WSL
 
-```bash
+```sh
 sudo.cmd dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 ```
 

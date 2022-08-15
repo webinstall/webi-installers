@@ -16,13 +16,13 @@ tagline: |
 privileged ports, such as 80 (http) and 443 (https) without `root` privileges or
 `sudo`.
 
-```bash
+```sh
 sudo setcap-netbind node
 ```
 
 This is the same as running the full command:
 
-```bash
+```sh
 setcap 'cap_net_bind_service=+ep' $(readlink -f $(which node))
 ```
 
@@ -31,7 +31,7 @@ setcap 'cap_net_bind_service=+ep' $(readlink -f $(which node))
 Will output externally detected IPv4 and IPv6 addresses. See
 <https://webinstall.dev/vps-myip>.
 
-```bash
+```sh
 myip
 ```
 
@@ -45,6 +45,6 @@ IPv6 (AAAA): 2605:a601:a919:9800:f8be:f2c4:9ad7:9763
 Adds and activates permanent swap in `/var/swapfile`. See
 <https://webinstall.dev/vps-addswap>.
 
-```bash
+```sh
 vps-addswap
 ```

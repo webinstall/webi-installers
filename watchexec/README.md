@@ -38,7 +38,7 @@ Here's the shortlist of options we've found most useful:
 
 Example: List the directory when any files change.
 
-```bash
+```sh
 watchexec -c -- ls -lah
 ```
 
@@ -46,7 +46,7 @@ watchexec -c -- ls -lah
 
 Here's a "kitchen sink" example.
 
-```bash
+```sh
 watchexec -c -r -s SIGKILL -d 2000 -W --verbose \
     -w ./src -w ./server.js \
     -e js,css,html \
@@ -59,7 +59,7 @@ watchexec -c -r -s SIGKILL -d 2000 -W --verbose \
 These examples show how you might use this for builds, servers, and publishing
 or deploying.
 
-```bash
+```sh
 # Node / npm
 watchexec -W -- npm run build
 watchexec -r -- npm start

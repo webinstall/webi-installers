@@ -23,7 +23,7 @@ You can also [try online](https://jqplay.org/).
 
 ### How to select a single a property from an object
 
-```bash
+```sh
 echo '{ "name": "foo" }' | jq '.name'
 ```
 
@@ -35,7 +35,7 @@ echo '{ "name": "foo" }' | jq '.name'
 
 The `-r` or `--raw-output` flag unwraps strings:
 
-```bash
+```sh
 echo '{ "name": "foo" }' | jq -r '.name'
 ```
 
@@ -45,7 +45,7 @@ foo
 
 ### How to select a whole object
 
-```bash
+```sh
 echo '{ "name": "foo" }' | jq '.'
 ```
 
@@ -57,7 +57,7 @@ echo '{ "name": "foo" }' | jq '.'
 
 ### How to select an element from an array
 
-```bash
+```sh
 echo '[ { "name": "foo" } ]' | jq '.[0]'
 ```
 
@@ -69,7 +69,7 @@ echo '[ { "name": "foo" } ]' | jq '.[0]'
 
 ### How to select a single property from an array element
 
-```bash
+```sh
 echo '[ { "name": "foo" } ]' | jq -r '.[0].name'
 ```
 
@@ -79,7 +79,7 @@ foo
 
 ### How to select some properties from multiple elements
 
-```bash
+```sh
 echo '[ { "name": "foo" }, { "name": "bar" } ]' \
     | jq -r '.[].name'
 ```
@@ -101,7 +101,7 @@ Be sure to checkout the
 [official tutorial](https://stedolan.github.io/jq/tutorial/) and
 [jq manual](https://stedolan.github.io/jq/manual/) for more info.
 
-```bash
+```sh
 echo '[ { "name": "foo", "age": 0 }, { "name": "bar", "age": 2 } ]' \
     | jq '{ names: [.[] | .name], ages: [.[] | .age] }'
 ```

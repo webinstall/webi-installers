@@ -16,6 +16,6 @@ etc).
 Many simple conversions can be auto-detected by file extension and the options
 that produce the most similar quality by default.
 
-```bash
+```sh
 ffmpeg -i input.m4a output.mp3
 ```

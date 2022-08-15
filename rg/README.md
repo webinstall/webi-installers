@@ -14,15 +14,15 @@ To update or switch versions, run `webi rg@stable` (or `@v13.0`, `@beta`, etc).
 > (colors, numbers, etc) turned on by default, is written in Rust, and typically
 > outperforms grep in many use cases.
 
-```bash
+```sh
 rg <search-term> # searches recursively, ignoring .git, node_modules, etc
 ```
 
-```bash
+```sh
 rg 'function doStuff'
 ```
 
-```bash
+```sh
 rg 'doStuff\(.*\)'
 ```
 
@@ -30,7 +30,7 @@ rg 'doStuff\(.*\)'
 
 Use `-v` to filter out all matches so that only non-matches are left.
 
-```bash
+```sh
 rg 'bar' | rg -v 'foobar'
 ```
 
@@ -41,6 +41,6 @@ ignores many types of hidden files, dot files, etc.
 
 You can use `-uu` to set all of the `--no-ignore-*` options and others.
 
-```bash
+```sh
 rg -uu 'SECRET='
 ```

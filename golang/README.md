@@ -24,17 +24,17 @@ You may also want to install the Go IDE tooling:
 ### Hello World
 
 1. Make and enter your project directory
-   ```bash
+   ```sh
    mkdir -p ./hello/cmd/hello
    pushd ./hello/
    ```
 2. Initialize your `go.mod` to your _git repository_ url:
-   ```bash
+   ```sh
    go mod init github.com/example/hello
    ```
 3. Create a `hello.go`
 
-   ```bash
+   ```sh
    cat << EOF >> ./cmd/hello/hello.go
    package main
 
@@ -49,7 +49,7 @@ You may also want to install the Go IDE tooling:
    ```
 
 4. Format, build, and run your `./hello`
-   ```bash
+   ```sh
    go fmt ./...
    go build -o hello ./cmd/hello/
    ./hello
@@ -63,12 +63,12 @@ You may also want to install the Go IDE tooling:
 
 On Linux:
 
-```bash
+```sh
 # Install serviceman (compatible with systemd)
 webi serviceman
 ```
 
-```bash
+```sh
 # go into your programs 'opt' directory
 pushd ./hello/
 

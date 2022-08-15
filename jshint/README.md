@@ -59,7 +59,7 @@ projects.
 You can copy our recommended settings into your project directory by running
 this command:
 
-```bash
+```sh
 # convert from JSON5 (with comments) to JSON and copy into current directory
 sed -e 's://.*::g' \
     ~/.jshintrc.webi.json5 \
@@ -125,7 +125,7 @@ The list of JSHint's default options can be found here:
 
 Give `jshint` a list of files and/or directories to check `.js` files:
 
-```bash
+```sh
 jshint ./
 ```
 
@@ -133,7 +133,7 @@ jshint ./
 
 Create a `.jshintignore` to tell JSHint which files to ignore every time
 
-```bash
+```sh
 echo "dist/" >> .jshintignore
 ```
 

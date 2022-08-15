@@ -17,13 +17,13 @@ To update or switch versions, run `webi fzf@stable` (or `@v0.23`, `@beta`, etc).
 
 ### Live filter search results
 
-```bash
+```sh
 find . | fzf
 ```
 
 ### Live filter logs
 
-```bash
+```sh
 sudo journalctl -u my-app-name  --since '2020-01-01' | fzf
 ```
 

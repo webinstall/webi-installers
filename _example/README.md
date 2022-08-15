@@ -33,7 +33,7 @@ install:
 
 To run foo:
 
-```bash
+```sh
 foo
 ```
 
@@ -41,6 +41,6 @@ foo
 
 To run foo with both bar and baz highlighting turned on:
 
-```bash
+```sh
 foo --bar=baz
 ```

@@ -21,7 +21,7 @@ Works with
 
 To get set up, you'll want to copy the example scripts and dotenv:
 
-```bash
+```sh
 # The example scripts are a good starting point
 rsync -av examples/ scripts/
 
@@ -29,14 +29,14 @@ rsync -av examples/ scripts/
 mv scripts/dotenv .env
 ```
 
-```bash
+```sh
 gitdeploy run --listen :4483 --github-secret xxxxx --exec scripts/
 ```
 
 When gitdeploy receives a webhook it runs `scripts/deploy.sh` with the following
 environment variables set:
 
-```bash
+```sh
 GIT_REPO_ID=github.com/my-org/my-project
 
 GIT_CLONE_URL=https://github.com/my-org/my-project.git
@@ -64,12 +64,12 @@ scripts/github.com/YOUR_ORG/YOUR_PROJECT/deploy.sh
 ```
 
 1. Create a directory that matches the `GIT_REPO_ID`:
-   ```bash
+   ```sh
    mkdir -p scripts/github.com/YOUR_ORG/YOUR_PROJECT
    ```
 2. Create a `deploy.sh` that builds and deploys your project:
 
-   ```bash
+   ```sh
    #!/bin/bash
 
    # Put bash in strict mode or bad things will happen.
@@ -106,7 +106,7 @@ scripts/github.com/YOUR_ORG/YOUR_PROJECT/deploy.sh
 ### How to set up a webhook
 
 1. Generate a 128-bit random string:
-   ```bash
+   ```sh
    xxd -l16 -ps /dev/urandom
    ```
 2. Create a new Web Hook on your git platform:
@@ -118,7 +118,7 @@ scripts/github.com/YOUR_ORG/YOUR_PROJECT/deploy.sh
 3. Set the content type to JSON.
 4. Add the Webhook URL:
 
-   ```bash
+   ```sh
    # Github
    https://YOUR_DOMAIN/api/webhooks/github
 
@@ -134,7 +134,7 @@ scripts/github.com/YOUR_ORG/YOUR_PROJECT/deploy.sh
 Most of the flags, such as `--port` and `--github-secret` can also be set as
 ENVs. You can create a `.env` like this, for example:
 
-```bash
+```sh
 PORT=4483
 
 GITHUB_SECRET=xxxxxxxxxxx

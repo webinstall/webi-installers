@@ -15,6 +15,6 @@ etc).
 
 ### How to create a new app
 
-```bash
+```sh
 flutter create my_app
 ```

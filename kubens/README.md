@@ -14,6 +14,6 @@ etc).
 
 To run kubens:
 
-```bash
+```sh
 kubens
 ```

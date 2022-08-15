@@ -18,18 +18,18 @@ To update or switch versions, run `webi dashmsg@stable`.
 
 ### How to generate a new Private Key (WIF)
 
-```bash
+```sh
 # dashmsg gen <key>
 dashmsg gen priv.wif
 ```
 
-```bash
+```sh
 dashmsg gen > pirv.wif
 ```
 
 ### How to sign a message
 
-```bash
+```sh
 # dashmsg sign <priv key> <data or file>
 dashmsg sign ./priv.wif 'vote2022-alice|bob|charlie'
 ```
@@ -40,7 +40,7 @@ H2Opy9NX72iPZRcDVEHrFn2qmVwWMgc+DKILdVxl1yfmcL2qcpu9esw9wcD7RH0/dJHnIISe5j39EYah
 
 ### How to verify a signature
 
-```bash
+```sh
 # dashmsg verify <payment address> <message> <signature>
 dashmsg verify 'Xn4A2vv5fb7LvmiiXPPMexYbSbiQ29rzDu' \
     'vote2022-alice|bob|charly' \
@@ -72,7 +72,7 @@ Address   (b58c): Xn4A2vv5fb7LvmiiXPPMexYbSbiQ29rzDu
 
 #### How to inspect a signature
 
-```bash
+```sh
 dashmsg inspect 'IFLv0JVRM70bTZCTmzMfNX3NVkSULmnAR/3PSWpgC5GXBD7rRi5g4QsK968ITE3dfKdzhX7fAIXwhpnsP0WvQOc='
 ```
 
@@ -84,7 +84,7 @@ S (33-64): 043eeb462e60e10b0af7af084c4ddd7ca773857edf0085f08699ec3f45af40e7
 
 #### How to inspect a payment address
 
-```bash
+```sh
 dashmsg inspect 'Xn4A2vv5fb7LvmiiXPPMexYbSbiQ29rzDu'
 ```
 

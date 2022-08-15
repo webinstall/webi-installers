@@ -7,7 +7,7 @@ tagline: |
 
 ## Updating `myip`
 
-```bash
+```sh
 webi myip
 ```
 
@@ -46,19 +46,19 @@ You likely have an IPv4 or A address as well as an IPv6 or AAAA address.
 
 To find out your IPv4 or A address:
 
-```bash
+```sh
 curl -s https://api.ipify.org
 ```
 
 To find out your IPv6 or AAAA address:
 
-```bash
+```sh
 curl -s https://api6.ipify.org
 ```
 
 To find out either address:
 
-```bash
+```sh
 curl -s https://api46.ipify.org
 ```
 

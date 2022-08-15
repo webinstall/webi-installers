@@ -27,7 +27,7 @@ add the `--dryrun` option.
 
 ### Example: Bash
 
-```bash
+```sh
 sudo env PATH="$PATH" serviceman add bash ./backup.sh /mnt/data
 ```
 
@@ -35,7 +35,7 @@ sudo env PATH="$PATH" serviceman add bash ./backup.sh /mnt/data
 
 **Development Server**
 
-```bash
+```sh
 pushd ./my-node-app/
 
 sudo env PATH="$PATH" \
@@ -45,7 +45,7 @@ sudo env PATH="$PATH" \
 
 **Production Server**
 
-```bash
+```sh
 pushd ./my-node-app/
 
 sudo env PATH="$PATH" \
@@ -55,7 +55,7 @@ sudo env PATH="$PATH" \
 
 ### Example: Golang
 
-```bash
+```sh
 pushd ./my-go-package/
 
 sudo env PATH="$PATH" \
@@ -63,7 +63,7 @@ sudo env PATH="$PATH" \
     go run -mod=vendor cmd/my-service/*.go --port 3000
 ```
 
-```bash
+```sh
 pushd ./my-go-package/
 go build -mod=vendor cmd/my-service
 
@@ -74,7 +74,7 @@ sudo env PATH="$PATH" \
 
 ### How to see all services
 
-```bash
+```sh
 serviceman list --system
 serviceman list --user
 ```
@@ -90,7 +90,7 @@ serviceman-managed services:
 You can either `add` the service again (which will update any changed options),
 or you can `stop` and then `start` any service by its name:
 
-```bash
+```sh
 sudo env PATH="$PATH" serviceman stop example-service
 sudo env PATH="$PATH" serviceman start example-service
 ```
@@ -158,7 +158,7 @@ WantedBy=multi-user.target
 
 ### Use `--dryrun` to see the generated launcher config:
 
-```bash
+```sh
 sudo env PATH="$PATH" \
     serviceman add --system --dryrun \
     bash ./backup.sh /mnt/data
@@ -168,12 +168,12 @@ sudo env PATH="$PATH" \
 
 The main help, showing all subcommands:
 
-```bash
+```sh
 serviceman --help
 ```
 
 Sub-command specific help:
 
-```bash
+```sh
 serviceman add --help
 ```

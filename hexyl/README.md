@@ -21,14 +21,14 @@ etc).
 If you know that you need a _hex viewer_, then you probably already know enough
 to see why this is particularly useful, and can figure out how to use it.
 
-```bash
+```sh
 echo "hello" > foo.bin
 hexyl foo.bin
 ```
 
 For options, such as `--length`, `--skip`, and `--offset`, see:
 
-```bash
+```sh
 hexyl --help
 ```
 
@@ -37,7 +37,7 @@ hexyl --help
 If you have some hex (say from some server logs) that you'd like to encode back
 to binary to view in hexyl, you can convert it with `xxd`:
 
-```bash
+```sh
 echo '48656c6c6f210a' > foo.hex
 xxd -r -p foo.hex foo.bin
 ```

@@ -18,7 +18,7 @@ You'll also need to install [`ALE`](https://webinstall.dev/vim-ale) (part of
 
 ### How to install by hand
 
-```bash
+```sh
 git clone --depth=1 https://github.com/fatih/vim-go.git ~/.vim/pack/plugins/start/vim-go
 ```
 
@@ -56,13 +56,13 @@ let g:go_highlight_build_constraints = 1
 
 via `vim` with `:GoInstallBinaries`:
 
-```bash
+```sh
 printf ':GoInstallBinaries\n:q\n' | vim -e
 ```
 
 via `bash`:
 
-```bash
+```sh
 # gopls
 go install golang.org/x/tools/gopls
 

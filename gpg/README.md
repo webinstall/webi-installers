@@ -46,7 +46,7 @@ See the [Cheat Sheet](./gpg-pubkey) at [gpg-pubkey](./gpg-pubkey).
 
 ### How to List GPG Key(s)
 
-```bash
+```sh
 gpg --list-secret-keys --keyid-format LONG
 ```
 
@@ -65,7 +65,7 @@ GPG is the OG "blockchain", as it were.
 If you'd like to publish your (public) key(s) to the public Key Servers for time
 and all eternity, you can:
 
-```bash
+```sh
 gpg --send-keys "${MY_KEY_ID}"
 ```
 
@@ -114,7 +114,7 @@ You need to use `gpg-connect-agent` instead.
 
 And then start it with launchctl:
 
-```bash
+```sh
 launchctl load -w ~/Library/LaunchAgents/gpg-agent.plist
 ```
 
@@ -130,7 +130,7 @@ fatal: failed to write commit object
 
 Try to load the `gpg-agent`, set `GPG_TTY`, and then run a clearsign test.
 
-```bash
+```sh
 gpg-connect-agent /bye
 export GPG_TTY=$(tty)
 echo "test" | gpg --clearsign
@@ -139,7 +139,7 @@ echo "test" | gpg --clearsign
 If that works, update your `~/.bashrc`, `~/.zshrc`, and/or
 `~/.config/fish/config.fish` to include the following:
 
-```bash
+```sh
 gpg-connect-agent /bye
 export GPG_TTY=$(tty)
 ```

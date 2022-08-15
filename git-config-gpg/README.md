@@ -23,7 +23,7 @@ Here we'll cover
 
 Usage:
 
-```bash
+```sh
 git-config-gpg
 ```
 
@@ -83,7 +83,7 @@ max-cache-ttl 34560000
 You'll need to reload `gpg-agent` for this to take effect, or just logout and
 login again.
 
-```bash
+```sh
 # kill gpg-agent dead
 killall gpg-agent
 gpgconf killall gpg-agent
@@ -109,7 +109,7 @@ See:
 Run [gpg-pubkey-id](./gpg-pubkey) to get your GnuPG Public Key ID and then
 update your `~/.gitconfig` to sign with it by default:
 
-```bash
+```sh
 #!/bin/bash
 
 MY_KEY_ID="$(
@@ -123,7 +123,7 @@ git config --global log.showSignature true
 
 Or, for Windows users:
 
-```bash
+```sh
 #!/usr/bin/env pwsh
 
 $my_key_id = gpg-pubkey-id
@@ -149,7 +149,7 @@ Or, if you prefer to edit the text file directly:
 In some cases you may also want to prevent conflicts between different installed
 versions of gpg, like so:
 
-```bash
+```sh
 git config --global gpg.program ~/.local/opt/gnupg/bin/gpg
 ```
 
@@ -170,7 +170,7 @@ fatal: failed to write commit object
 
 Try to load the `gpg-agent`, set `GPG_TTY`, and then run a clearsign test.
 
-```bash
+```sh
 gpg-connect-agent /bye
 export GPG_TTY=$(tty)
 echo "test" | gpg --clearsign
@@ -179,7 +179,7 @@ echo "test" | gpg --clearsign
 If that works, update your `~/.bashrc`, `~/.zshrc`, and/or
 `~/.config/fish/config.fish` to include the following:
 
-```bash
+```sh
 gpg-connect-agent /bye
 export GPG_TTY=$(tty)
 ```

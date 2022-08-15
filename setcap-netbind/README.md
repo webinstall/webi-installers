@@ -37,11 +37,11 @@ command.
 
 These two commands are equivalent:
 
-```bash
+```sh
 sudo setcap-netbind node
 ```
 
-```bash
+```sh
 sudo setcap 'cap_net_bind_service=+ep' "$(readlink -f "$(command -v node)")"
 ```
 

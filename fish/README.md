@@ -40,7 +40,7 @@ This also covers how to
 A bash script should have a "bash shebang" (`#!/bin/bash`) as the first line of
 the file:
 
-```bash
+```sh
 #!/bin/bash
 
 echo "Who am I? I'm $(whoami)."
@@ -48,7 +48,7 @@ echo "Who am I? I'm $(whoami)."
 
 You can also run bash explicitly:
 
-```bash
+```sh
 bash ./some-script.sh
 ```
 
@@ -57,7 +57,7 @@ bash ./some-script.sh
 You may like to have your `fish` theme match your Terminal or iTerm2 theme (such
 as _Solarized_, _Dracula_, or _Tomorrow Night_).
 
-```bash
+```sh
 fish_config colors
 ```
 
@@ -78,14 +78,14 @@ use the Terminal-specific methods.
 
 First, `fish` must be installed and in the `PATH`.
 
-```bash
+```sh
 # if you don't see a file path as output, fish is not in the path
 which fish
 ```
 
 Second, fish must be in the system-approved list of shells in `/etc/shells`:
 
-```bash
+```sh
 #!/bin/bash
 
 if ! grep $(which fish) /etc/shells > /dev/null; then
@@ -96,7 +96,7 @@ fi
 
 You should use `chsh` to change your shell:
 
-```bash
+```sh
 #!/bin/bash
 
 sudo chsh -s "$(which fish)" "$(whoami)"
@@ -115,7 +115,7 @@ You can also set is as the default for a particular Terminal, or for your user.
 
 Find out where `fish` is:
 
-```bash
+```sh
 which fish
 ```
 
@@ -130,7 +130,7 @@ Terminal > Preferences > General > Shells open with:
 
 Or, you can quit Terminal and change the preferences from the command line:
 
-```bash
+```sh
 #!/bin/bash
 
 defaults write com.apple.Terminal "Shell" -string "$HOME/.local/bin/fish"
@@ -140,7 +140,7 @@ defaults write com.apple.Terminal "Shell" -string "$HOME/.local/bin/fish"
 
 Find out where `fish` is:
 
-```bash
+```sh
 which fish
 ```
 
@@ -155,7 +155,7 @@ Custom Shell: /Users/YOUR_USER/.local/bin/fish
 
 Or, you can quit iTerm2 and change the preferences from the command line:
 
-```bash
+```sh
 #!/bin/bash
 
 /usr/libexec/PlistBuddy -c "SET ':New Bookmarks:0:Custom Command' 'Custom Shell'" \
@@ -193,7 +193,7 @@ shell:
 
 If you don't yet have an alacritty config, this will do:
 
-```bash
+```sh
 #!/bin/bash
 
 mkdir -p ~/.config/alacritty
@@ -213,13 +213,13 @@ The default `alacritty.yml` is included as an _asset_ with each
 
 Fish will be installed to the standard user location:
 
-```bash
+```sh
 ~/.local/opt/fish/
 ```
 
 It's config will also go in the standard user location:
 
-```bash
+```sh
 ~/.config/fish/config.fish
 ```
 

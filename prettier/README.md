@@ -26,13 +26,13 @@ install:
 
 Prettify all web files in a project, recursively:
 
-```bash
+```sh
 prettier --write '**/*{.md,.js,.html,.css}'
 ```
 
 Tell Prettier which files to ignore every time
 
-```bash
+```sh
 echo "dist/" >> .prettierignore
 ```
 
@@ -41,7 +41,7 @@ necessary!
 
 **`.prettierrc.json`**:
 
-```bash
+```sh
 {
   "trailingComma": "none",
   "tabWidth": 2,

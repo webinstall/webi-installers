@@ -10,7 +10,7 @@ To update, just run `webi iterm2-utils` again.
 Note: On first use you'll need to source the new config, or login and login
 again.
 
-```bash
+```sh
 source ~/.iterm2_shell_integration.bash
 ```
 

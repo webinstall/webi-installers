@@ -56,14 +56,14 @@ Philosophy:
 You can use
 [Zig as a drop-in C compiler](https://andrewkelley.me/post/zig-cc-powerful-drop-in-replacement-gcc-clang.html).
 
-```bash
+```sh
 zig cc -o ./hello main.c
 zig c++ -o ./hello++ main.cpp
 ```
 
 And you can cross-compile effortlessly:
 
-```bash
+```sh
 zig cc -o ./hello.exe main.c -target x86_64-windows-gnu
 zig c++ -o ./hello.exe main.cpp -target x86_64-windows-gnu
 ```
@@ -71,16 +71,16 @@ zig c++ -o ./hello.exe main.cpp -target x86_64-windows-gnu
 ### How to create and compile Zig programs
 
 1. Create a new project directory:
-   ```bash
+   ```sh
    mkdir -p ./zig-hello/
    pushd ./zig-hello/
    ```
 2. Initialize the project with a new `build.zig`
-   ```bash
+   ```sh
    zig init-exe
    ```
 3. Build `hello.exe` for Windows from MacOS or Linux
-   ```bash
+   ```sh
    zig build-exe src/main.zig --name hello -target x86_64-windows-gnu
    zig build-exe src/main.zig --name hello -target x86_64-linux-musl
    zig build-exe src/main.zig --name hello-arm -target aarch64-linux-musl
@@ -90,7 +90,7 @@ zig c++ -o ./hello.exe main.cpp -target x86_64-windows-gnu
 
 ### How to list and use Zig's cross-compile targets
 
-```bash
+```sh
 zig targets | jq -r '.libc[]'
 ```
 
@@ -111,7 +111,7 @@ x86_64-macos-gnu
 
 1. Create a `zig-cc-{ARCH-OS}` and `zig-cpp-{ARCH-OS}` wrappers:
 
-   ```bash
+   ```sh
    cat << EOF >> ~/.local/bin/zig-cc-x86_64-windows-gnu
    #!/bin/sh
    set -e
@@ -122,7 +122,7 @@ x86_64-macos-gnu
    chmod a+x ~/.local/bin/zig-cc
    ```
 
-   ```bash
+   ```sh
    cat << EOF >> ~/.local/bin/zig-cpp-x86_64-windows-gnu
    #!/bin/sh
    set -e
@@ -134,13 +134,13 @@ x86_64-macos-gnu
    ```
 
 2. Set the `CC`, `CPP` and `ZIGTARGET` ENVs. For example:
-   ```bash
+   ```sh
    #export ZIGTARGET="x86_64-windows-gnu"
    export CC="zig-cc-x86_64-windows-gnu"
    export CPP="zig-cpp-x86_64-windows-gnu"
    ```
 3. Install the correpsonding Rust toolchains:
-   ```bash
+   ```sh
    rustup target install x86_64-apple-darwin
    rustup target install x86_64-unknown-linux-musl
    rustup target install aarch64-unknown-linux-musl
@@ -149,7 +149,7 @@ x86_64-macos-gnu
 4. You may need to also specifically set the linker. For example, with Rust's
    `~/.cargo/config.toml`:
 
-   ```bash
+   ```sh
    [target.x86_64-apple-darwin]
    linker = "zig-cc-x86_64-macos-gnu"
 
@@ -165,7 +165,7 @@ x86_64-macos-gnu
 
 `~/.local/bin/zig-create-crossies`:
 
-```bash
+```sh
 #!/bin/bash
 set -e
 set -u

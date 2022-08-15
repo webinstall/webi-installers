@@ -16,7 +16,7 @@ Each example has four files that need to be modified, just slightly:
 
 See [./keypairs/](/keypairs/) as an example.
 
-```bash
+```sh
 rsync -av ./keypairs/ ./my-project/
 ```
 
@@ -26,7 +26,7 @@ Keypairs is packaged for Mac and Linux as `.tar.gz`, and as `.zip` for Windows.
 
 See [./arc/](/arc/) as an example.
 
-```bash
+```sh
 rsync -av ./arc/ ./my-project/
 ```
 

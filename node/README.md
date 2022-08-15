@@ -27,7 +27,7 @@ Installing node via webi will:
 
 ### Hello World
 
-```bash
+```sh
 node -e 'console.log("Hello, World!")'
 > Hello, World!
 ```
@@ -36,7 +36,7 @@ node -e 'console.log("Hello, World!")'
 
 `server.js`:
 
-```bash
+```sh
 var http = require('http');
 var app = function (req, res) {
   res.end('Hello, World!');
@@ -46,7 +46,7 @@ http.createServer(app).listen(8080, function () {
 });
 ```
 
-```bash
+```sh
 node server.js
 ```
 
@@ -54,20 +54,20 @@ node server.js
 
 This generates a hex-encoded 128-bit random key.
 
-```bash
+```sh
 node -p 'crypto.randomBytes(16).toString("hex")'
 ```
 
 This generates a url-safe base64 256-bit random key.
 
-```bash
+```sh
 node -p 'crypto.randomBytes(32).toString("base64")
             .replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "")'
 ```
 
 ### An Express App
 
-```bash
+```sh
 mkdir my-server
 pushd my-server/
 npm init
@@ -102,6 +102,6 @@ http.createServer(app).listen(8080, function () {
 });
 ```
 
-```bash
+```sh
 npm start
 ```

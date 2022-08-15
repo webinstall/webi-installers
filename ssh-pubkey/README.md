@@ -19,7 +19,7 @@ tagline: |
 
 The easiest way to get your SSH Public Key:
 
-```bash
+```sh
 curl https://webinstall.dev/ssh-pubkey | bash
 ```
 
@@ -31,13 +31,13 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDTOhRnzDJNBNBXVCgkxkEaDM4IAp81MtE8fuqeQuFv
 
 The standard location for your SSH Public Key:
 
-```bash
+```sh
 ~/.ssh/id_rsa.pub
 ```
 
 How to create an SSH Keypair if it doesn't already exist:
 
-```bash
+```sh
 if [ -f "$HOME/.ssh/id_rsa" ];then
     ssh-keygen -b 2048 -t rsa -f "$HOME/.ssh/id_rsa" -q -N ""
 fi
@@ -46,13 +46,13 @@ fi
 How to copy your SSH Public Key to from its hidden folder to your `Downloads`
 folder:
 
-```bash
+```sh
 rsync -av "$HOME/.ssh/id_rsa.pub" \
     "$HOME/Downloads/id_rsa.$(whoami).pub"
 ```
 
 How to print your public key to the Terminal:
 
-```bash
+```sh
 cat "$HOME/Downloads/id_rsa.pub"
 ```

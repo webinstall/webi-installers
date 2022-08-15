@@ -17,25 +17,25 @@ etc).
 
 The obligatory Hello World
 
-```bash
+```sh
 deno run https://deno.land/std/examples/welcome.ts
 ```
 
 Run a local file
 
-```bash
+```sh
 deno run ./hello.ts
 ```
 
 Enable [permissions](https://deno.land/manual/getting_started/permissions)
 
-```bash
+```sh
 deno run --allow-read=./data,./public --allow-write=./data \
   --allow-net=example.com,example.net ./hello.ts
 ```
 
 Format source code, recursively
 
-```bash
+```sh
 deno fmt ./my-project
 ```

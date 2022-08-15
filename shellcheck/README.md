@@ -17,7 +17,7 @@ Also recommended by Google's
 
 ### How to run shellcheck from the CLI
 
-```bash
+```sh
 shellcheck ./script.sh
 ```
 
@@ -50,11 +50,11 @@ check-scripts:
 You can ignore an error by putting a comment with the `SCXXXX` error code above
 it:
 
-```bash
+```sh
 # shellcheck disable=<code>
 ```
 
-```bash
+```sh
 # shellcheck disable=SC1004
 NOT_AN_ERROR='Look, a literal \
 inside of a string!'

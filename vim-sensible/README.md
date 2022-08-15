@@ -7,7 +7,7 @@ tagline: |
 
 ## Updating `vim-sensible`
 
-```bash
+```sh
 webi vim-sensible
 ```
 

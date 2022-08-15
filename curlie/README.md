@@ -22,19 +22,19 @@ etc).
 
 ### Simple GET
 
-```bash
+```sh
 curlie -v example.com
 ```
 
 ### POST simple JSON with headers
 
-```bash
+```sh
 curlie -v POST httpbin.org/status/201 "Authorization: Bearer xxxx" "name=John Doe"
 ```
 
 ### POST large JSON
 
-```bash
+```sh
 curlie -v POST httpbin.org/status/201 "Authorization: Bearer xxxx" -d '
 [
     {
@@ -49,7 +49,7 @@ curlie -v POST httpbin.org/status/201 "Authorization: Bearer xxxx" -d '
 The `--resolve` option is for when you need to test a local service as if it had
 a remote hostname and TLS SNI (or when you want to break things 😈).
 
-```bash
+```sh
 curlie https://foo.example.com:8443 "Host: foo.example.com" \
     --resolve foo.example.com:8443:127.0.0.1
 ```

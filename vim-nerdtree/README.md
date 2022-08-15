@@ -42,7 +42,7 @@ README:
 
 Place NerdTree into your `~/.vim/pack/plugins/start`:
 
-```bash
+```sh
 mkdir -p ~/.vim/pack/plugins/start/
 git clone --depth=1 https://github.com/preservim/nerdtree.git ~/.vim/pack/plugins/start/nerdtree
 ```

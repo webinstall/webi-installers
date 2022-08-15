@@ -37,7 +37,7 @@ let g:shfmt_fmt_on_save = 1
 
 1. Clone `vim-shfmt` into your `~/.vim/pack/plugins/start`:
 
-   ```bash
+   ```sh
    mkdir -p ~/.vim/pack/plugins/start/
    git clone --depth=1 https://github.com/CHANGEME/EXAMPLE.git ~/.vim/pack/plugins/start/shfmt
    ```

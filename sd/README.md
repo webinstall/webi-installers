@@ -17,20 +17,20 @@ To update or switch versions, run `webi sd@stable` (or `@v0.7`, `@beta`, etc).
 
 ### Replacing Text in a File
 
-```bash
+```sh
 sd 'original word' 'final word' ./file_to_be_changed
 ```
 
 ### Taking out word inside slashes from a given string
 
-```bash
+```sh
 echo "string output shown /word inside slashes/" | sd '.*(/.*/)' '$1'
   /word inside slashes/
 ```
 
 ### Using the string mode (-s)
 
-```bash
+```sh
  cat exm.txt
   here is an @example
 

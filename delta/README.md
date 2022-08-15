@@ -43,7 +43,7 @@ Delta uses `~/.gitconfig` for most of its options.
 
 Set `delta.syntax-theme` to change the color scheme:
 
-```bash
+```sh
 git config --global delta.syntax-theme 'Coldark-Dark'
 ```
 
@@ -52,19 +52,19 @@ git config --global delta.syntax-theme 'Coldark-Dark'
 You can list all available themes with `--list-syntax-themes`, or see each color
 schemes in action with `--show-syntax-themes`:
 
-```bash
+```sh
 delta --list-syntax-themes --dark
 delta --show-syntax-themes --dark
 ```
 
 You can also show only light or dark themes:
 
-```bash
+```sh
 delta --list-syntax-themes --light
 delta --show-syntax-themes --light
 ```
 
-```bash
+```sh
 delta --list-syntax-themes --dark
 delta --show-syntax-themes --dark
 ```
@@ -110,7 +110,7 @@ gruvbox-light
 You can use `git config --global` to get or set any arbitrary option of
 `~/.gitconfig`.
 
-```bash
+```sh
 git config --global page.diff delta
 git config --global page.show delta
 git config --global page.log delta
