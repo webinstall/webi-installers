@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_lsd() {
+__init_lsd() {
 
     ###############
     # Install lsd #
@@ -33,7 +33,7 @@ function __init_lsd() {
         #       lsd 0.17.0
         # This trims it down to just the version number:
         #       0.17.0
-        lsd --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2
+        lsd --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2
     }
 
 }

@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_shfmt() {
+__init_shfmt() {
 
     ##################
     # Install shfmt #
@@ -24,7 +24,7 @@ function __init_shfmt() {
     }
 
     pkg_get_current_version() {
-        shfmt --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2
+        shfmt --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2
     }
 
 }

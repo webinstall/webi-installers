@@ -3,7 +3,7 @@
 set -e
 set -u
 
-function _install_iterm2() {
+_install_iterm2() {
     # only for macOS
     if [[ "Darwin" != "$(uname -s)" ]]; then
         echo ""

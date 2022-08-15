@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_gitdeploy() {
+__init_gitdeploy() {
     set -e
     set -u
 
@@ -34,7 +34,7 @@ function __init_gitdeploy() {
         #       gitdeploy v0.7.1 (be68fec) 2020-10-20T22:27:47Z)
         # This trims it down to just the version number:
         #       0.7.1
-        echo "$(gitdeploy --version 2> /dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
+        echo "$(gitdeploy --version 2>/dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
     }
 
 }

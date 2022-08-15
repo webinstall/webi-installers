@@ -2,10 +2,10 @@
 set -e
 set -u
 
-function main() {
+main() {
     webi_download
 
-    pushd ~/Downloads/webi 2>&1 > /dev/null
+    pushd ~/Downloads/webi 2>&1 >/dev/null
 
     if [ "Darwin" == "$(uname -s)" ]; then
         curl -fsSL 'https://gist.githubusercontent.com/coolaj86/8c36d132250163011c83bad8284975ee/raw/5a291955813743c20c12ca2d35c7b1bb34f8aecc/create-bootable-installer-for-os-x-el-capitan.sh' -o create-bootable-installer-for-os-x-el-capitan.sh
@@ -28,7 +28,7 @@ function main() {
     echo "Created ~/Downloads/el-capitan.iso"
     echo ""
 
-    popd 2>&1 > /dev/null
+    popd 2>&1 >/dev/null
 }
 
 main

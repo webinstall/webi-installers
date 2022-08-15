@@ -4,7 +4,7 @@
 # because I prefer to use sed rather than bash replace
 # (there's too little space in my head to learn both syntaxes)
 
-function __bootstrap_webi() {
+__bootstrap_webi() {
 
     set -e
     set -u
@@ -127,7 +127,7 @@ function __bootstrap_webi() {
             fi
             if [ -x "$pkg_src_cmd" ]; then
                 # shellcheck disable=2119
-                # this function takes no args
+                # this  takes no args
                 webi_link
                 echo "switched to $my_canonical_name:"
                 echo "    ${pkg_dst} => ${pkg_src}"
@@ -208,25 +208,25 @@ function __bootstrap_webi() {
 
     # detect which archives can be used
     webi_extract() {
-        pushd "$WEBI_TMP" > /dev/null 2>&1
+        pushd "$WEBI_TMP" >/dev/null 2>&1
         if [ "tar" == "$WEBI_EXT" ]; then
             echo "Extracting ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
             tar xf "${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
         elif [ "zip" == "$WEBI_EXT" ]; then
             echo "Extracting ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
-            unzip "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" > __unzip__.log
+            unzip "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" >__unzip__.log
         elif [ "exe" == "$WEBI_EXT" ]; then
             echo "Moving ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
             mv "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" .
         elif [ "xz" == "$WEBI_EXT" ]; then
             echo "Inflating ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
-            unxz -c "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" > "$(basename "$WEBI_PKG_FILE")"
+            unxz -c "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" >"$(basename "$WEBI_PKG_FILE")"
         else
             # do nothing
             echo "Failed to extract ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
             exit 1
         fi
-        popd > /dev/null 2>&1
+        popd >/dev/null 2>&1
     }
 
     # use 'pathman' to update $HOME/.config/envman/PATH.env
@@ -237,7 +237,7 @@ function __bootstrap_webi() {
 
         # install pathman if not already installed
         if [ -z "$(command -v pathman)" ]; then
-            "$HOME/.local/bin/webi" pathman > /dev/null
+            "$HOME/.local/bin/webi" pathman >/dev/null
         fi
 
         export PATH="$my_path"
@@ -247,8 +247,8 @@ function __bootstrap_webi() {
         # 'true' to prevent "too few arguments" output on bash
         # when there are 0 lines of stdout
         "$HOME/.local/bin/pathman" add "$1" |
-            grep "export" 2> /dev/null \
-                >> "$_webi_tmp/.PATH.env" ||
+            grep "export" 2>/dev/null \
+                >>"$_webi_tmp/.PATH.env" ||
             true
     }
 
@@ -272,7 +272,7 @@ function __bootstrap_webi() {
         fi
     }
 
-    # run post-install functions - just updating PATH by default
+    # run post-install s - just updating PATH by default
     webi_post_install() {
         webi_path_add "$(dirname "$pkg_dst_cmd")"
     }
@@ -311,7 +311,7 @@ function __bootstrap_webi() {
 
     ##
     ##
-    ## BEGIN custom override functions from <package>/install.sh
+    ## BEGIN custom override s from <package>/install.sh
     ##
     ##
 
@@ -328,7 +328,7 @@ function __bootstrap_webi() {
         echo ""
     fi
 
-    function __init_installer() {
+    __init_installer() {
 
         # do nothing - to satisfy parser prior to templating
         echo -n ""
@@ -341,16 +341,16 @@ function __bootstrap_webi() {
 
     ##
     ##
-    ## END custom override functions
+    ## END custom override s
     ##
     ##
 
     # run everything with defaults or overrides as needed
-    if command -v pkg_install > /dev/null ||
-        command -v pkg_link > /dev/null ||
-        command -v pkg_post_install > /dev/null ||
-        command -v pkg_done_message > /dev/null ||
-        command -v pkg_format_cmd_version > /dev/null ||
+    if command -v pkg_install >/dev/null ||
+        command -v pkg_link >/dev/null ||
+        command -v pkg_post_install >/dev/null ||
+        command -v pkg_done_message >/dev/null ||
+        command -v pkg_format_cmd_version >/dev/null ||
         [[ -n ${WEBI_SINGLE:-} ]] ||
         [[ -n ${pkg_cmd_name:-} ]] ||
         [[ -n ${pkg_dst_cmd:-} ]] ||
@@ -384,23 +384,23 @@ function __bootstrap_webi() {
 
         if [[ -n "$(command -v pkg_pre_install)" ]]; then pkg_pre_install; else webi_pre_install; fi
 
-        pushd "$WEBI_TMP" > /dev/null 2>&1
+        pushd "$WEBI_TMP" >/dev/null 2>&1
         echo "Installing to $pkg_src_cmd"
         if [[ -n "$(command -v pkg_install)" ]]; then pkg_install; else webi_install; fi
         chmod a+x "$pkg_src"
         chmod a+x "$pkg_src_cmd"
-        popd > /dev/null 2>&1
+        popd >/dev/null 2>&1
 
         webi_link
 
         _webi_enable_exec
-        pushd "$WEBI_TMP" > /dev/null 2>&1
+        pushd "$WEBI_TMP" >/dev/null 2>&1
         if [[ -n "$(command -v pkg_post_install)" ]]; then pkg_post_install; else webi_post_install; fi
-        popd > /dev/null 2>&1
+        popd >/dev/null 2>&1
 
-        pushd "$WEBI_TMP" > /dev/null 2>&1
+        pushd "$WEBI_TMP" >/dev/null 2>&1
         if [[ -n "$(command -v pkg_done_message)" ]]; then pkg_done_message; else _webi_done_message; fi
-        popd > /dev/null 2>&1
+        popd >/dev/null 2>&1
 
         echo ""
     fi

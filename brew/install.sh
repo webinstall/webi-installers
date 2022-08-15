@@ -3,12 +3,12 @@
 set -e
 set -u
 
-function _install_brew() {
+_install_brew() {
     # Straight from https://brew.sh
     #/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
     if [[ -n "$(uname -a | grep -i darwin)" ]]; then
-        needs_xcode="$(/usr/bin/xcode-select -p > /dev/null 2> /dev/null || echo "true")"
+        needs_xcode="$(/usr/bin/xcode-select -p >/dev/null 2>/dev/null || echo "true")"
         if [[ -n ${needs_xcode} ]]; then
             echo ""
             echo ""

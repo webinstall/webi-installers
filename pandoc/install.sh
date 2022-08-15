@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_pandoc() {
+__init_pandoc() {
 
     ###################
     # Install pandoc #
@@ -40,7 +40,7 @@ function __init_pandoc() {
         # for a particular purpose.
         # This trims it down to just the version number:
         #       2.10.1
-        pandoc --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2
+        pandoc --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2
     }
 }
 

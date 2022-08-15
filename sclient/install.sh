@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_sclient() {
+__init_sclient() {
     set -e
     set -u
 
@@ -34,7 +34,7 @@ function __init_sclient() {
         #       sclient 1.3.3 (455db50) 2020-12-02T22:05:35Z
         # This trims it down to just the version number:
         #       1.3.3
-        echo "$(sclient --version 2> /dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
+        echo "$(sclient --version 2>/dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
     }
 
 }

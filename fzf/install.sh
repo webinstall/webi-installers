@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_fzf() {
+__init_fzf() {
 
     ###############
     # Install fzf #
@@ -15,7 +15,7 @@ function __init_fzf() {
         #       0.21.1 (334a4fa)
         # This trims it down to just the version number:
         #       0.21.1
-        fzf --version 2> /dev/null | head -n 1 | cut -d' ' -f 1
+        fzf --version 2>/dev/null | head -n 1 | cut -d' ' -f 1
     }
 
     pkg_install() {

@@ -5,26 +5,26 @@
 //     sed -e 's://.*::g' ~/.jshintrc.webi.json5 > .jshintrc
 
 {
-  "browser": true,
-  "node": true,
-  "esversion": 11,
-  "curly": true,
-  "sub": true,
+  browser: true,
+  node: true,
+  esversion: 11,
+  curly: true,
+  sub: true,
 
   // More strict
-  "bitwise": true,
-  "eqeqeq": true,
-  "forin": true,
-  "freeze": true,
-  "immed": true,
-  "latedef": "nofunc",
-  "nonbsp": true,
-  "nonew": true,
-  "plusplus": true,
-  "undef": true,
-  "unused": "vars",
-  "strict": true,
-  "maxdepth": 4,
-  "maxstatements": 100,
-  "maxcomplexity": 20
+  bitwise: true,
+  eqeqeq: true,
+  forin: true,
+  freeze: true,
+  immed: true,
+  latedef: 'nofunc',
+  nonbsp: true,
+  nonew: true,
+  plusplus: true,
+  undef: true,
+  unused: 'vars',
+  strict: true,
+  maxdepth: 4,
+  maxstatements: 100,
+  maxcomplexity: 20
 }

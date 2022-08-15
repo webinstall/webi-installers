@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_shfmt() {
+__init_vim_shfmt() {
     set -e
     set -u
 
@@ -26,11 +26,11 @@ function __init_vim_shfmt() {
         curl -fsSL -o ~/.vim/plugins/shfmt.vim "$WEBI_HOST/packages/vim-shfmt/shfmt.vim"
     fi
 
-    if ! grep 'source.*plugins.shfmt.vim' -r ~/.vimrc > /dev/null 2> /dev/null; then
+    if ! grep 'source.*plugins.shfmt.vim' -r ~/.vimrc >/dev/null 2>/dev/null; then
         set +e
         mkdir -p ~/.vim/plugins
-        printf '\n" shfmt: reasonable defaults from webinstall.dev/vim-shfmt\n' >> ~/.vimrc
-        printf 'source ~/.vim/plugins/shfmt.vim\n' >> ~/.vimrc
+        printf '\n" shfmt: reasonable defaults from webinstall.dev/vim-shfmt\n' >>~/.vimrc
+        printf 'source ~/.vim/plugins/shfmt.vim\n' >>~/.vimrc
         set -e
         echo ""
         echo "add ~/.vim/plugins/shfmt.vim"

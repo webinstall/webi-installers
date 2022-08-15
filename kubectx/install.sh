@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_kubectx() {
+__init_kubectx() {
 
     ###################
     # Install kubectx #

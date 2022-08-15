@@ -2,7 +2,7 @@
 
 #set -x
 
-function __install_webi() {
+__install_webi() {
 
     #WEBI_PKG=
     #WEBI_HOST=https://webinstall.dev
@@ -25,14 +25,14 @@ function __install_webi() {
 
     mkdir -p "$HOME/.local/bin"
 
-    cat << EOF > "$HOME/.local/bin/webi"
+    cat <<EOF >"$HOME/.local/bin/webi"
 #!/bin/bash
 
 set -e
 set -u
 #set -x
 
-function __webi_main () {
+ __webi_main () {
 
     export WEBI_TIMESTAMP=\$(date +%F_%H-%M-%S)
     export _webi_tmp="\${_webi_tmp:-\$(mktemp -d -t webi-\$WEBI_TIMESTAMP.XXXXXXXX)}"
@@ -90,7 +90,7 @@ function __webi_main () {
     export WEBI_UA="\$(uname -a)"
 
 
-    function webinstall() {
+     webinstall() {
 
         my_package="\${1:-}"
         if [ -z "\$my_package" ]; then
@@ -144,14 +144,14 @@ function __webi_main () {
 
     }
 
-    function version() {
+     version() {
         my_version=v1.1.15
         printf "\\e[31mwebi\\e[32m %s\\e[0m Copyright 2020+ AJ ONeal\\n" "\${my_version}"
         printf "    \\e[34mhttps://webinstall.dev/webi\\e[0m\\n"
     }
 
     # show help if no params given or help flags are used
-    function usage() {
+     usage() {
         echo ""
         version
         echo ""

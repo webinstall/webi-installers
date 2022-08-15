@@ -2,19 +2,19 @@
 set -e
 set -u
 
-function __get_git_email() {
+__get_git_email() {
     git config --global user.email
     # grep 'email\s*=.*@' ~/.gitconfig | tr -d '\t ' | head -n 1 | cut -d'=' -f2
 }
 
-function __get_pubkey_id() {
+__get_pubkey_id() {
     gpg --list-secret-keys --keyid-format LONG |
         grep sec |
         cut -d'/' -f2 |
         cut -d' ' -f1
 }
 
-function _create_gpg_key() {
+_create_gpg_key() {
     if [[ ! -e ~/.gitconfig ]]; then
         return 1
     fi
@@ -53,7 +53,7 @@ function _create_gpg_key() {
      Expire-Date: 0
      %commit
     "
-    if ! echo "$gpg_opts" | gpg --batch --generate-key 2> /dev/null; then
+    if ! echo "$gpg_opts" | gpg --batch --generate-key 2>/dev/null; then
         echo >&2 ""
         echo >&2 ""
         echo >&2 ""
@@ -114,7 +114,7 @@ MY_EMAIL="$(
 MY_ASC_RELPATH="Downloads/${MY_EMAIL}.${MY_KEY_ID}.gpg.asc"
 mkdir -p ~/Downloads/
 rm -f ~/"${MY_ASC_RELPATH}"
-gpg --armor --export "${MY_KEY_ID}" > ~/"${MY_ASC_RELPATH}"
+gpg --armor --export "${MY_KEY_ID}" >~/"${MY_ASC_RELPATH}"
 
 echo >&2 ""
 echo >&2 "GnuPG Public Key ID: ${MY_KEY_ID}"

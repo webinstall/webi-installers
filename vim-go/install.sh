@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_go() {
+__init_vim_go() {
     set -e
     set -u
 
@@ -12,8 +12,8 @@ function __init_vim_go() {
         set +e
         if ! grep 'source.*go.vim' -r ~/.vimrc; then
             mkdir -p ~/.vim/plugins
-            printf '\n" Golang: reasonable defaults from webinstall.dev/vim-go\n' >> ~/.vimrc
-            printf 'source ~/.vim/plugins/go.vim\n' >> ~/.vimrc
+            printf '\n" Golang: reasonable defaults from webinstall.dev/vim-go\n' >>~/.vimrc
+            printf 'source ~/.vim/plugins/go.vim\n' >>~/.vimrc
         fi
         set -e
     fi

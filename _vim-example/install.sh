@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_example() {
+__init_vim_example() {
     set -e
     set -u
 
@@ -18,11 +18,11 @@ function __init_vim_example() {
         curl -fsSL -o ~/.vim/plugins/example.vim "$WEBI_HOST/packages/vim-example/example.vim"
     fi
 
-    if ! grep 'source.*plugins.example.vim' -r ~/.vimrc > /dev/null 2> /dev/null; then
+    if ! grep 'source.*plugins.example.vim' -r ~/.vimrc >/dev/null 2>/dev/null; then
         set +e
         mkdir -p ~/.vim/plugins
-        printf '\n" example: reasonable defaults from webinstall.dev/vim-example\n' >> ~/.vimrc
-        printf 'source ~/.vim/plugins/example.vim\n' >> ~/.vimrc
+        printf '\n" example: reasonable defaults from webinstall.dev/vim-example\n' >>~/.vimrc
+        printf 'source ~/.vim/plugins/example.vim\n' >>~/.vimrc
         set -e
         echo ""
         echo "add ~/.vim/plugins/example.vim"

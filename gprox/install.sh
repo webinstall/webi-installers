@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_gprox() {
+__init_gprox() {
 
     ##################
     # Install gprox #
@@ -26,7 +26,7 @@ function __init_gprox() {
         #       gprox 0.99.9 (rev abcdef0123)
         # This trims it down to just the version number:
         #       0.99.9
-        gprox --version 2> /dev/null |
+        gprox --version 2>/dev/null |
             head -n 1 |
             cut -d ' ' -f 2
     }

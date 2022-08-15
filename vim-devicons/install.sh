@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_devicons() {
+__init_vim_devicons() {
     set -e
     set -u
 
@@ -18,11 +18,11 @@ function __init_vim_devicons() {
         curl -fsSL -o ~/.vim/plugins/devicons.vim "$WEBI_HOST/packages/vim-devicons/devicons.vim"
     fi
 
-    if ! grep 'source.*plugins.devicons.vim' -r ~/.vimrc > /dev/null 2> /dev/null; then
+    if ! grep 'source.*plugins.devicons.vim' -r ~/.vimrc >/dev/null 2>/dev/null; then
         set +e
         mkdir -p ~/.vim/plugins
-        printf '\n" devicons: reasonable defaults from webinstall.dev/vim-devicons\n' >> ~/.vimrc
-        printf 'source ~/.vim/plugins/devicons.vim\n' >> ~/.vimrc
+        printf '\n" devicons: reasonable defaults from webinstall.dev/vim-devicons\n' >>~/.vimrc
+        printf 'source ~/.vim/plugins/devicons.vim\n' >>~/.vimrc
         set -e
         echo ""
         echo "add ~/.vim/plugins/devicons.vim"

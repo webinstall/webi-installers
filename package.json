@@ -14,7 +14,12 @@
     "type": "git",
     "url": "git+https://github.com/webinstall/webi-installers.git"
   },
-  "keywords": ["webinstall", "brew", "apt", "chocolately"],
+  "keywords": [
+    "webinstall",
+    "brew",
+    "apt",
+    "chocolately"
+  ],
   "author": "AJ ONeal <coolaj86@gmail.com> (https://coolaj86.com/)",
   "license": "MPL-2.0",
   "bugs": {

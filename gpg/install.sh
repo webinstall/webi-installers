@@ -3,8 +3,8 @@
 set -e
 set -u
 
-function _install_gpg() {
-    if ! (uname -a | grep -i "darwin" > /dev/null); then
+_install_gpg() {
+    if ! (uname -a | grep -i "darwin" >/dev/null); then
         echo "No gpg installer for Linux yet. Try this instead:"
         echo "    sudo apt install -y gpg gnupg"
         exit 1
@@ -16,7 +16,7 @@ function _install_gpg() {
     chmod a-w "${WEBI_PKG_DOWNLOAD}"
 
     # Mount the DMG in /Volumes
-    hdiutil detach -quiet /Volumes/GnuPG* 2> /dev/null || true
+    hdiutil detach -quiet /Volumes/GnuPG* 2>/dev/null || true
     hdiutil attach -quiet -readonly "${WEBI_PKG_DOWNLOAD}"
 
     # Extract (completely) to ~/Downloads/webi/GnuGP-VERSION.d
@@ -42,12 +42,12 @@ function _install_gpg() {
     mkdir -p ~/.gnupg/
     chmod 0700 ~/.gnupg/
     if [[ ! -e ~/.gnupg/gpg-agent.conf ]] || ! grep 'pinentry-program' ~/.gnupg/gpg-agent.conf; then
-        echo "pinentry-program $HOME/.local/opt/gnupg/bin/pinentry-mac.app/Contents/MacOS/pinentry-mac" >> ~/.gnupg/gpg-agent.conf
+        echo "pinentry-program $HOME/.local/opt/gnupg/bin/pinentry-mac.app/Contents/MacOS/pinentry-mac" >>~/.gnupg/gpg-agent.conf
     fi
 
     # Start with launchd
     mkdir -p ~/Library/LaunchAgents/
-    launchctl unload -w ~/Library/LaunchAgents/gpg-agent.plist 2> /dev/null || true
+    launchctl unload -w ~/Library/LaunchAgents/gpg-agent.plist 2>/dev/null || true
     # TODO download and use sed to replace
     echo '<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -76,7 +76,7 @@ function _install_gpg() {
 	<key>StandardOutPath</key>
 	<string>'"${HOME}"'/.local/share/gpg-agent/var/log/gpg-agent.log</string>
 </dict>
-</plist>' > ~/Library/LaunchAgents/gpg-agent.plist
+</plist>' >~/Library/LaunchAgents/gpg-agent.plist
     launchctl load -w ~/Library/LaunchAgents/gpg-agent.plist
     sleep 3
     ~/.local/opt/gnupg/bin/gpg-connect-agent \
@@ -90,7 +90,7 @@ function _install_gpg() {
     fi
 }
 
-function _create_gpg_key() {
+_create_gpg_key() {
     if [[ ! -e ~/.gitconfig ]]; then
         return 0
     fi
@@ -113,7 +113,7 @@ function _create_gpg_key() {
     #gpg --batch --generate-key --pinentry=loopback --passphrase=''
 
     # With passphrase via macOS Keychain
-    gpg --batch --yes --generate-key << EOF
+    gpg --batch --yes --generate-key <<EOF
      %echo Generating RSA 3072 key
      Key-Type: RSA
      Key-Length: 3072

@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_vim_essentials() {
+__init_vim_essentials() {
     "$HOME/.local/bin/webi" \
         vim-leader \
         vim-shell \

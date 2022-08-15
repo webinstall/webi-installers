@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_git() {
+__init_git() {
 
     if [ -z "$(command -v git)" ]; then
         if [[ -n "$(uname -a | grep -i darwin)" ]]; then

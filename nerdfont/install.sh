@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_nerdfont() {
+__init_nerdfont() {
     set -e
     set -u
 

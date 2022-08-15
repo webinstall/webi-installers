@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# The custom functions for Deno are here.
-# For the generic functions - version checks, download, extract, etc:
+# The custom s for Deno are here.
+# For the generic s - version checks, download, extract, etc:
 # See https://github.com/webinstall/packages/branches/master/_webi/template.sh
 
 set -e
@@ -9,20 +9,20 @@ set -u
 
 pkg_cmd_name="deno"
 
-# IMPORTANT: this let's other functions know to expect this to be a single file
+# IMPORTANT: this let's other s know to expect this to be a single file
 WEBI_SINGLE=true
 
-function pkg_get_current_version() {
+pkg_get_current_version() {
     # 'deno --version' has output in this format:
     #       deno 1.1.0
     #       v8 8.4.300
     #       typescript 3.9.2
     # This trims it down to just the version number:
     #       1.1.1
-    echo "$(deno --version 2> /dev/null | head -n 1 | cut -d' ' -f2)"
+    echo "$(deno --version 2>/dev/null | head -n 1 | cut -d' ' -f2)"
 }
 
-function pkg_install() {
+pkg_install() {
     # $HOME/.local/xbin
     mkdir -p "$pkg_src_bin"
 
@@ -33,7 +33,7 @@ function pkg_install() {
     chmod a+x "$pkg_src_cmd"
 }
 
-function pkg_link() {
+pkg_link() {
     # rm -f "$HOME/.local/bin/deno"
     rm -f "$pkg_dst_cmd"
 

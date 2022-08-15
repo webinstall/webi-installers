@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_curlie() {
+__init_curlie() {
 
     ##################
     # Install curlie #
@@ -15,7 +15,7 @@ function __init_curlie() {
         #       curlie 1.6.9 (2022-04-04T15:04:20Z)
         # This trims it down to just the version number:
         #       1.6.9
-        curlie version 2> /dev/null | head -n 1 | cut -d' ' -f 2
+        curlie version 2>/dev/null | head -n 1 | cut -d' ' -f 2
     }
 
     pkg_install() {

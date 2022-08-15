@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_xz() {
+__init_xz() {
 
     ##############
     # Install xz #
@@ -42,7 +42,7 @@ function __init_xz() {
         #       liblzma 5.2.5
         # This trims it down to just the version number:
         #       5.2.5
-        xz --version 2> /dev/null | head -n 1 | cut -d ' ' -f 4
+        xz --version 2>/dev/null | head -n 1 | cut -d ' ' -f 4
     }
 }
 

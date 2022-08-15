@@ -3,7 +3,7 @@
 # shellcheck disable=SC2034
 # "'pkg_cmd_name' appears unused. Verify it or export it."
 
-function __init_foobar() {
+__init_foobar() {
     set -e
     set -u
 
@@ -36,7 +36,7 @@ function __init_foobar() {
         #       foobar 0.99.9 (rev abcdef0123)
         # This trims it down to just the version number:
         #       0.99.9
-        foo --version 2> /dev/null |
+        foo --version 2>/dev/null |
             head -n 1 |
             cut -d ' ' -f 2
     }

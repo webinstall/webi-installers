@@ -2,10 +2,10 @@
 set -e
 set -u
 
-function __init_jshint() {
+__init_jshint() {
     OLD_PATH="${PATH}"
     PATH="${HOME}/.local/opt/node/bin:${PATH}"
-    if [ -z "$(npm --version 2> /dev/null)" ]; then
+    if [ -z "$(npm --version 2>/dev/null)" ]; then
         export PATH="${OLD_PATH}"
         "$HOME/.local/bin/webi" node
         export PATH="${HOME}/.local/opt/node/bin:${PATH}"

@@ -3,7 +3,7 @@
 # shellcheck disable=SC2034
 # "'pkg_cmd_name' appears unused. Verify it or export it."
 
-function __init_ziglang() {
+__init_ziglang() {
     set -e
     set -u
 
@@ -33,7 +33,7 @@ function __init_ziglang() {
         # 'zig version' has output in this format:
         #       0.9.1
         # We're just doing a little future-proofing to keep it that way
-        zig version 2> /dev/null |
+        zig version 2>/dev/null |
             head -n 1 |
             cut -d ' ' -f 1
     }

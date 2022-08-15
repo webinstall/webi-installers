@@ -1,25 +1,25 @@
 #!/bin/bash
 
-function __init_pyenv() {
+__init_pyenv() {
     set -e
     set -u
 
     curl -fsSL https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 
     if [ ! -f ~/.bashrc ] || [ -z "$(grep 'pyenv init' ~/.bashrc)" ]; then
-        echo '' >> ~/.bashrc
-        echo '# added by Webi for pyenv' >> ~/.bashrc
-        echo 'eval "$(pyenv init -)"' >> ~/.bashrc
-        echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
+        echo '' >>~/.bashrc
+        echo '# added by Webi for pyenv' >>~/.bashrc
+        echo 'eval "$(pyenv init -)"' >>~/.bashrc
+        echo 'eval "$(pyenv virtualenv-init -)"' >>~/.bashrc
     fi
 
     if [ -n "$(command -v zsh)" ]; then
         touch ~/.zshrc
         if [ -z "$(grep 'pyenv init' ~/.zshrc)" ]; then
-            echo '' >> ~/.zshrc
-            echo '# added by Webi for pyenv' >> ~/.zshrc
-            echo 'eval "$(pyenv init -)"' >> ~/.zshrc
-            echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.zshrc
+            echo '' >>~/.zshrc
+            echo '# added by Webi for pyenv' >>~/.zshrc
+            echo 'eval "$(pyenv init -)"' >>~/.zshrc
+            echo 'eval "$(pyenv virtualenv-init -)"' >>~/.zshrc
         fi
     fi
 
@@ -27,10 +27,10 @@ function __init_pyenv() {
         mkdir -p ~/.config/fish
         touch ~/.config/fish/config.fish
         if [ -z "$(grep 'pyenv init' ~/.config/fish/config.fish)" ]; then
-            echo '' >> ~/.config/fish/config.fish
-            echo '# added by Webi for pyenv' >> ~/.config/fish/config.fish
-            echo 'status is-login; and pyenv init --path | source' >> ~/.config/fish/config.fish
-            echo 'status is-interactive; and pyenv init - | source' >> ~/.config/fish/config.fish
+            echo '' >>~/.config/fish/config.fish
+            echo '# added by Webi for pyenv' >>~/.config/fish/config.fish
+            echo 'status is-login; and pyenv init --path | source' >>~/.config/fish/config.fish
+            echo 'status is-interactive; and pyenv init - | source' >>~/.config/fish/config.fish
         fi
     fi
 

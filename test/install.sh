@@ -2,9 +2,9 @@
 set -e
 set -u
 
-function __rmrf_local() {
+__rmrf_local() {
     if [[ -d "${HOME}/.local/opt" ]]; then
-        pushd "${HOME}/.local/opt" 2>&1 > /dev/null
+        pushd "${HOME}/.local/opt" 2>&1 >/dev/null
         rm -rf \
             arc \
             archiver \
@@ -95,8 +95,8 @@ function __rmrf_local() {
         # exceptions (may lose data)
         #postgres \
         #postgresql \
-        popd 2>&1 > /dev/null
-        pushd "${HOME}/.local/bin" 2>&1 > /dev/null
+        popd 2>&1 >/dev/null
+        pushd "${HOME}/.local/bin" 2>&1 >/dev/null
         rm -f \
             arc \
             archiver \
@@ -188,11 +188,11 @@ function __rmrf_local() {
         # exceptions (may lose data)
         #postgres \
         #postgresql \
-        popd 2>&1 > /dev/null
+        popd 2>&1 >/dev/null
     fi
 }
 
-function __test() {
+__test() {
     webi \
         arc \
         archiver \

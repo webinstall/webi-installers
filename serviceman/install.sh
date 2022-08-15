@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_serviceman() {
+__init_serviceman() {
     set -e
     set -u
 
@@ -34,7 +34,7 @@ function __init_serviceman() {
         #       serviceman v0.8.0 (f3ab547) 2020-12-02T16:19:10-07:00
         # This trims it down to just the version number:
         #       0.8.0
-        echo "$(serviceman --version 2> /dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
+        echo "$(serviceman --version 2>/dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
     }
 
 }

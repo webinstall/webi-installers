@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __install_gpg_pubkey() {
+__install_gpg_pubkey() {
     MY_CMD="gpg-pubkey"
 
     rm -f "$HOME/.local/bin/$MY_CMD"
@@ -10,7 +10,7 @@ function __install_gpg_pubkey() {
     chmod a+x "$HOME/.local/bin/$MY_CMD"
 }
 
-function __install_gpg_pubkey_id() {
+__install_gpg_pubkey_id() {
     MY_CMD="gpg-pubkey"
     MY_SUBCMD="gpg-pubkey-id"
 
@@ -19,7 +19,7 @@ function __install_gpg_pubkey_id() {
     chmod a+x "$HOME/.local/bin/$MY_SUBCMD"
 }
 
-function __check_gpg_exists() {
+__check_gpg_exists() {
     if ! command -v gpg; then
         "$HOME/.local/bin/webi" gpg
         export PATH="$HOME/.local/opt/gnupg/bin:$PATH"

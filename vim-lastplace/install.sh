@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_lastplace() {
+__init_vim_lastplace() {
     set -e
     set -u
 
@@ -18,11 +18,11 @@ function __init_vim_lastplace() {
         curl -fsSL -o ~/.vim/plugins/lastplace.vim "$WEBI_HOST/packages/vim-lastplace/lastplace.vim"
     fi
 
-    if ! grep 'source.*plugins.lastplace.vim' -r ~/.vimrc > /dev/null 2> /dev/null; then
+    if ! grep 'source.*plugins.lastplace.vim' -r ~/.vimrc >/dev/null 2>/dev/null; then
         set +e
         mkdir -p ~/.vim/plugins
-        printf '\n" lastplace: explicit defaults from webinstall.dev/vim-lastplace\n' >> ~/.vimrc
-        printf 'source ~/.vim/plugins/lastplace.vim\n' >> ~/.vimrc
+        printf '\n" lastplace: explicit defaults from webinstall.dev/vim-lastplace\n' >>~/.vimrc
+        printf 'source ~/.vim/plugins/lastplace.vim\n' >>~/.vimrc
         set -e
         echo ""
         echo "add ~/.vim/plugins/lastplace.vim"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_gh() {
+__init_gh() {
     set -e
     set -u
 
@@ -33,7 +33,7 @@ function __init_gh() {
         #       gh 0.99.9 (rev abcdef0123)
         # This trims it down to just the version number:
         #       0.99.9
-        gh --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2
+        gh --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2
     }
 
 }

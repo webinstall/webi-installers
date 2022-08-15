@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_k9s() {
+__init_k9s() {
 
     ##################
     # Install k9s #
@@ -37,7 +37,7 @@ function __init_k9s() {
 
         # This trims it down to just the version number:
         # 0.24.2
-        k9s version 2> /dev/null | grep Version: | cut -d 'v' -f 2
+        k9s version 2>/dev/null | grep Version: | cut -d 'v' -f 2
     }
 
 }

@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_hexyl() {
+__init_hexyl() {
 
     ###############
     # Install hexyl #
@@ -15,7 +15,7 @@ function __init_hexyl() {
         #       hexyl 0.8.0
         # This trims it down to just the version number:
         #       0.8.0
-        hexyl --version 2> /dev/null | head -n 1 | cut -d' ' -f 2
+        hexyl --version 2>/dev/null | head -n 1 | cut -d' ' -f 2
     }
 
     pkg_install() {

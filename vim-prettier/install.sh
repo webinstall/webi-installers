@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_prettier() {
+__init_vim_prettier() {
     set -e
     set -u
 
@@ -24,11 +24,11 @@ function __init_vim_prettier() {
         curl -fsSL -o ~/.vim/plugins/prettier.vim "$WEBI_HOST/packages/vim-prettier/prettier.vim"
     fi
 
-    if ! grep 'source.*plugins.prettier.vim' -r ~/.vimrc > /dev/null 2> /dev/null; then
+    if ! grep 'source.*plugins.prettier.vim' -r ~/.vimrc >/dev/null 2>/dev/null; then
         set +e
         mkdir -p ~/.vim/plugins
-        printf '\n" Prettier: reasonable defaults from webinstall.dev/vim-prettier\n' >> ~/.vimrc
-        printf 'source ~/.vim/plugins/prettier.vim\n' >> ~/.vimrc
+        printf '\n" Prettier: reasonable defaults from webinstall.dev/vim-prettier\n' >>~/.vimrc
+        printf 'source ~/.vim/plugins/prettier.vim\n' >>~/.vimrc
         set -e
         echo ""
         echo "add ~/.vim/plugins/prettier.vim"

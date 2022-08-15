@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_kind() {
+__init_kind() {
     set -e
     set -u
 
@@ -20,7 +20,7 @@ function __init_kind() {
     WEBI_SINGLE=true
 
     pkg_get_current_version() {
-        kind --version 2> /dev/null |
+        kind --version 2>/dev/null |
             head -n 1 |
             cut -d ' ' -f 2
     }

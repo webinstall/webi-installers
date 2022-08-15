@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_rust() {
+__init_vim_rust() {
     set -e
     set -u
 
@@ -12,8 +12,8 @@ function __init_vim_rust() {
         set +e
         if ! grep 'source.*rust.vim' -r ~/.vimrc; then
             mkdir -p ~/.vim/plugins
-            printf '\n" Rust: reasonable defaults from webinstall.dev/vim-rust\n' >> ~/.vimrc
-            printf 'source ~/.vim/plugins/rust.vim\n' >> ~/.vimrc
+            printf '\n" Rust: reasonable defaults from webinstall.dev/vim-rust\n' >>~/.vimrc
+            printf 'source ~/.vim/plugins/rust.vim\n' >>~/.vimrc
         fi
         set -e
     fi

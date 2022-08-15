@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_sd() {
+__init_sd() {
 
     ##################
     # Install sd #
@@ -32,7 +32,7 @@ function __init_sd() {
         #       sd 0.99.9 (rev abcdef0123)
         # This trims it down to just the version number:
         #       0.99.9
-        sd --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2
+        sd --version 2>/dev/null | head -n 1 | cut -d ' ' -f 2
     }
 
 }

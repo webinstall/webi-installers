@@ -5,7 +5,7 @@ set -u
 # shellcheck disable=SC2034
 # "'pkg_cmd_name' appears unused. Verify it or export it."
 
-function __init_delta() {
+__init_delta() {
 
     #################
     # Install delta #
@@ -44,7 +44,7 @@ function __init_delta() {
         #       delta 0.9.2
         # This trims it down to just the version number:
         #       0.9.2
-        delta --version 2> /dev/null |
+        delta --version 2>/dev/null |
             head -n 1 |
             cut -d ' ' -f 2
     }

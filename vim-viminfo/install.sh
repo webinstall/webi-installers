@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_viminfo() {
+__init_vim_viminfo() {
     set -e
     set -u
 
@@ -19,11 +19,11 @@ function __init_vim_viminfo() {
         curl -fsS -o ~/.vim/plugins/viminfo.vim "$WEBI_HOST/packages/vim-viminfo/viminfo.vim"
     fi
 
-    if ! grep 'source.*plugins.viminfo.vim' -r ~/.vimrc > /dev/null 2> /dev/null; then
+    if ! grep 'source.*plugins.viminfo.vim' -r ~/.vimrc >/dev/null 2>/dev/null; then
         set +e
         mkdir -p ~/.vim/plugins
-        printf '\n" Vim Info: reasonable defaults (buffers, history, etc) from webinstall.dev/vim-viminfo\n' >> ~/.vimrc
-        printf 'source ~/.vim/plugins/viminfo.vim\n' >> ~/.vimrc
+        printf '\n" Vim Info: reasonable defaults (buffers, history, etc) from webinstall.dev/vim-viminfo\n' >>~/.vimrc
+        printf 'source ~/.vim/plugins/viminfo.vim\n' >>~/.vimrc
         set -e
 
         echo "added ~/.vim/plugins/viminfo.vim"

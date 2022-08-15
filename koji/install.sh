@@ -29,7 +29,7 @@ __init_koji() {
         #       koji 1.5.0
         # This trims it down to just the version number:
         #       1.5.0
-        koji --version 2> /dev/null | cut -c6-
+        koji --version 2>/dev/null | cut -c6-
     }
 }
 

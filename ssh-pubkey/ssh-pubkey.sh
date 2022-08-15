@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function main() {
+main() {
 
     if [ ! -d "$HOME/.ssh" ]; then
         mkdir -p "$HOME/.ssh/"
@@ -26,7 +26,7 @@ function main() {
     fi
 
     if [ ! -f "$HOME/.ssh/id_rsa.pub" ]; then
-        ssh-keygen -y -f "$HOME/.ssh/id_rsa" > "$HOME/.ssh/id_rsa.pub"
+        ssh-keygen -y -f "$HOME/.ssh/id_rsa" >"$HOME/.ssh/id_rsa.pub"
         echo >&2 ""
     fi
 

@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_yq() {
+__init_yq() {
 
     pkg_cmd_name="yq"
 
@@ -28,7 +28,7 @@ function __init_yq() {
     }
 
     pkg_get_current_version() {
-        yq --version 2> /dev/null |
+        yq --version 2>/dev/null |
             head -n 1 |
             cut -d ' ' -f 2
     }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_whitespace() {
+__init_vim_whitespace() {
     set -e
     set -u
 
@@ -19,11 +19,11 @@ function __init_vim_whitespace() {
         curl -fsS -o ~/.vim/plugins/whitespace.vim "$WEBI_HOST/packages/vim-whitespace/whitespace.vim"
     fi
 
-    if ! grep 'source.*plugins.whitespace.vim' -r ~/.vimrc > /dev/null 2> /dev/null; then
+    if ! grep 'source.*plugins.whitespace.vim' -r ~/.vimrc >/dev/null 2>/dev/null; then
         set +e
         mkdir -p ~/.vim/plugins
-        printf '\n" Tab & Whitespace: reasonable defaults from webinstall.dev/vim-whitespace\n' >> ~/.vimrc
-        printf 'source ~/.vim/plugins/whitespace.vim\n' >> ~/.vimrc
+        printf '\n" Tab & Whitespace: reasonable defaults from webinstall.dev/vim-whitespace\n' >>~/.vimrc
+        printf 'source ~/.vim/plugins/whitespace.vim\n' >>~/.vimrc
         set -e
         echo "added ~/.vim/plugins/whitespace.vim"
         echo "updated ~/.vimrc with 'source ~/.vim/plugins/whitespace.vim'"

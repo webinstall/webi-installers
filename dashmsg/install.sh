@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_dashmsg() {
+__init_dashmsg() {
     set -e
     set -u
 
@@ -34,7 +34,7 @@ function __init_dashmsg() {
         #       dashmsg v0.9.0 (6d73209) 2022-03-12T09:07:43Z
         # This trims it down to just the version number:
         #       0.9.0
-        echo "$(dashmsg --version 2> /dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
+        echo "$(dashmsg --version 2>/dev/null | head -n 1 | cut -d' ' -f2 | sed 's:^v::')"
     }
 
 }

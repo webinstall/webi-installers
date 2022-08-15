@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_fd() {
+__init_fd() {
 
     ###############
     # Install fd #
@@ -15,7 +15,7 @@ function __init_fd() {
         #       fd 8.1.1
         # This trims it down to just the version number:
         #       8.1.1
-        fd --version 2> /dev/null | head -n 1 | cut -d' ' -f 2
+        fd --version 2>/dev/null | head -n 1 | cut -d' ' -f 2
     }
 
     pkg_install() {

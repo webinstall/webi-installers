@@ -40,39 +40,39 @@ __run_go_essentials() {
 
     echo ""
     echo godoc
-    go "${my_install}" golang.org/x/tools/cmd/godoc@latest > /dev/null #2>/dev/null
+    go "${my_install}" golang.org/x/tools/cmd/godoc@latest >/dev/null #2>/dev/null
 
     echo ""
     echo gopls
-    go "${my_install}" golang.org/x/tools/gopls@latest > /dev/null #2>/dev/null
+    go "${my_install}" golang.org/x/tools/gopls@latest >/dev/null #2>/dev/null
 
     echo ""
     echo guru
-    go "${my_install}" golang.org/x/tools/cmd/guru@latest > /dev/null #2>/dev/null
+    go "${my_install}" golang.org/x/tools/cmd/guru@latest >/dev/null #2>/dev/null
 
     echo ""
     echo golint
-    go "${my_install}" golang.org/x/lint/golint@latest > /dev/null #2>/dev/null
+    go "${my_install}" golang.org/x/lint/golint@latest >/dev/null #2>/dev/null
 
     echo ""
     echo goimports
-    go "${my_install}" golang.org/x/tools/cmd/goimports@latest > /dev/null #2>/dev/null
+    go "${my_install}" golang.org/x/tools/cmd/goimports@latest >/dev/null #2>/dev/null
 
     echo ""
     echo gomvpkg
-    go "${my_install}" golang.org/x/tools/cmd/gomvpkg@latest > /dev/null #2>/dev/null
+    go "${my_install}" golang.org/x/tools/cmd/gomvpkg@latest >/dev/null #2>/dev/null
 
     echo ""
     echo gorename
-    go "${my_install}" golang.org/x/tools/cmd/gorename@latest > /dev/null #2>/dev/null
+    go "${my_install}" golang.org/x/tools/cmd/gorename@latest >/dev/null #2>/dev/null
 
     echo ""
     echo gotype
-    go "${my_install}" golang.org/x/tools/cmd/gotype@latest > /dev/null #2>/dev/null
+    go "${my_install}" golang.org/x/tools/cmd/gotype@latest >/dev/null #2>/dev/null
 
     echo ""
     echo stringer
-    go "${my_install}" golang.org/x/tools/cmd/stringer@latest > /dev/null #2>/dev/null
+    go "${my_install}" golang.org/x/tools/cmd/stringer@latest >/dev/null #2>/dev/null
 
     echo ""
 

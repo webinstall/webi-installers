@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_lf() {
+__init_lf() {
     set -e
     set -u
 
@@ -34,7 +34,7 @@ function __init_lf() {
         #       r21
         # This treats it as a minor version number:
         #       0.21.0
-        echo "0.$(lf --version 2> /dev/null | head -n 1 | cut -d' ' -f1 | sed 's:^r::').0"
+        echo "0.$(lf --version 2>/dev/null | head -n 1 | cut -d' ' -f1 | sed 's:^r::').0"
     }
 
 }
