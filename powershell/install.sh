@@ -23,9 +23,9 @@ __init_powershell() {
         mv ./* "$pkg_src"
 
         # symlink powershell to pwsh
-        pushd "$pkg_src" > /dev/null
+        cd "$pkg_src" > /dev/null
         ln -s pwsh powershell
-        popd > /dev/null
+        cd > /dev/null
     }
 
     pkg_link() {

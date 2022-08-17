@@ -1,7 +1,7 @@
 #!/bin/bash
 # For installing from the extracted package tmp directory
 pkg_install() {
-    pushd "$WEBI_TMP" 2>&1 > /dev/null
+    cd "$WEBI_TMP" 2>&1 > /dev/null
 
     if [ -n "$(command -v rsync 2> /dev/null | grep rsync)" ]; then
         rsync -Krl ./xmpl*/ "$pkg_src/" 2> /dev/null
@@ -11,5 +11,5 @@ pkg_install() {
     fi
     rm -rf ./xmpl*
 
-    popd 2>&1 > /dev/null
+    cd 2>&1 > /dev/null
 }

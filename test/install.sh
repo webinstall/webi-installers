@@ -4,7 +4,7 @@ set -u
 
 __rmrf_local() {
     if [ -d "${HOME}/.local/opt" ]; then
-        pushd "${HOME}/.local/opt" 2>&1 > /dev/null
+        cd "${HOME}/.local/opt" 2>&1 > /dev/null
         rm -rf \
             arc \
             archiver \
@@ -95,8 +95,8 @@ __rmrf_local() {
         # exceptions (may lose data)
         #postgres \
         #postgresql \
-        popd 2>&1 > /dev/null
-        pushd "${HOME}/.local/bin" 2>&1 > /dev/null
+        cd 2>&1 > /dev/null
+        cd "${HOME}/.local/bin" 2>&1 > /dev/null
         rm -f \
             arc \
             archiver \
@@ -188,7 +188,7 @@ __rmrf_local() {
         # exceptions (may lose data)
         #postgres \
         #postgresql \
-        popd 2>&1 > /dev/null
+        cd 2>&1 > /dev/null
     fi
 }
 
