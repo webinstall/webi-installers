@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_kubens() {
+__init_kubens() {
 
     ###################
     # Install kubens #

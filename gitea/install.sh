@@ -6,7 +6,7 @@ pkg_cmd_name="gitea"
 pkg_src_cmd="$HOME/.local/opt/gitea-v$WEBI_VERSION/gitea"
 pkg_dst_cmd="$HOME/.local/opt/gitea/gitea"
 
-function pkg_get_current_version() {
+pkg_get_current_version() {
     # 'gitea version' has output in this format:
     #       v2.1.0 h1:pQSaIJGFluFvu8KDGDODV8u4/QRED/OPyIR+MWYYse8=
     # This trims it down to just the version number:
@@ -14,7 +14,7 @@ function pkg_get_current_version() {
     gitea --version 2> /dev/null | head -n 1 | cut -d' ' -f3
 }
 
-function pkg_link() {
+pkg_link() {
     # although gitea is a single command it must be put in its own directory
     # because it will always resolve its working path to its location,
     # regardless of where it was started, where its config file lives, etc.
@@ -25,7 +25,7 @@ function pkg_link() {
 }
 
 # For installing from the extracted package tmp directory
-function pkg_install() {
+pkg_install() {
     # remove the versioned folder, just in case it's there with junk
     rm -rf "$pkg_src_bin"
     mkdir -p "$pkg_src_bin"

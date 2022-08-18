@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_gh() {
+__init_gh() {
     set -e
     set -u
 

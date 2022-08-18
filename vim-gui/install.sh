@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_mouse() {
+__init_vim_mouse() {
     set -e
     set -u
 

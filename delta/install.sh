@@ -5,7 +5,7 @@ set -u
 # shellcheck disable=SC2034
 # "'pkg_cmd_name' appears unused. Verify it or export it."
 
-function __init_delta() {
+__init_delta() {
 
     #################
     # Install delta #

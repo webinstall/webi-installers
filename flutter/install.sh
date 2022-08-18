@@ -21,7 +21,7 @@ pkg_src_cmd="$HOME/.local/opt/flutter-v$WEBI_VERSION/bin/flutter"
 pkg_src_dir="$HOME/.local/opt/flutter-v$WEBI_VERSION"
 pkg_src="$pkg_src_dir"
 
-function pkg_get_current_version() {
+pkg_get_current_version() {
     # 'flutter --version' outputs a lot of information:
     #       Flutter 1.19.0-4.1.pre • channel beta • https://github.com/flutter/flutter.git
     #       Framework • revision f994b76974 (4 days ago) • 2020-06-09 15:53:13 -0700
@@ -32,7 +32,7 @@ function pkg_get_current_version() {
     flutter --version 2> /dev/null | head -n 1 | cut -d' ' -f2
 }
 
-function pkg_format_cmd_version() {
+pkg_format_cmd_version() {
     # 'flutter 1.19.0' is the canonical version format for flutter
     my_version="$1"
     echo "$pkg_cmd_name $my_version"

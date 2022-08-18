@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_xz() {
+__init_xz() {
 
     ##############
     # Install xz #

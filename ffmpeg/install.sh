@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_ffmpeg() {
+__init_ffmpeg() {
 
     ##################
     # Install ffmpeg #

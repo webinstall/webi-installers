@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_jq() {
+__init_jq() {
 
     ##############
     # Install jq #

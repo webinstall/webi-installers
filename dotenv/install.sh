@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_dotenv() {
+__init_dotenv() {
     set -e
     set -u
 

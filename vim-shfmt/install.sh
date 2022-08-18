@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_shfmt() {
+__init_vim_shfmt() {
     set -e
     set -u
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_serviceman() {
+__init_serviceman() {
     set -e
     set -u
 

@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_k9s() {
+__init_k9s() {
 
     ##################
     # Install k9s #

@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __install_ssh_adduser() {
+__install_ssh_adduser() {
     my_cmd="ssh-adduser"
 
     rm -f "$HOME/.local/bin/${my_cmd}"

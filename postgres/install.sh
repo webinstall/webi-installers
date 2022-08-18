@@ -8,7 +8,7 @@ pkg_cmd_name="postgres"
 
 POSTGRES_DATA_DIR=$HOME/.local/share/postgres/var
 
-function pkg_get_current_version() {
+pkg_get_current_version() {
     # 'postgres --version' has output in this format:
     #       postgres (PostgreSQL) 10.13
     # This trims it down to just the version number:
@@ -16,7 +16,7 @@ function pkg_get_current_version() {
     postgres --version 2> /dev/null | head -n 1 | cut -d' ' -f3
 }
 
-function pkg_install() {
+pkg_install() {
     # mkdir -p $HOME/.local/opt
     mkdir -p "$(dirname $pkg_src)"
 
@@ -24,7 +24,7 @@ function pkg_install() {
     mv ./"p"* "$pkg_src"
 }
 
-function pkg_link() {
+pkg_link() {
     # rm -f "$HOME/.local/opt/postgres"
     rm -f "$pkg_dst"
     rm -f "$HOME/Applications/pgAdmin"*.app || true
@@ -35,7 +35,7 @@ function pkg_link() {
     ln -s "$pkg_src/pgAdmin 4.app" "$HOME/Applications/pgAdmin 4.app" || true
 }
 
-function pkg_post_install() {
+pkg_post_install() {
     webi_path_add "$pkg_dst_bin"
 
     #echo "Initializing PostgreSQL with database at $POSTGRES_DATA_DIR/"
@@ -53,7 +53,7 @@ function pkg_post_install() {
     fi
 }
 
-function pkg_done_message() {
+pkg_done_message() {
     # TODO show with serviceman
     echo "Installed 'postgres' and 'psql' at $pkg_dst"
     echo ""

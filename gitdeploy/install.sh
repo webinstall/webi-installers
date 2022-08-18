@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_gitdeploy() {
+__init_gitdeploy() {
     set -e
     set -u
 

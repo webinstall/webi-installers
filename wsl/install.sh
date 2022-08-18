@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __pass() {
+__pass() {
     echo "WSL (Windows Subsystem for Linux) can only be installed from Windows"
     exit 0
 }

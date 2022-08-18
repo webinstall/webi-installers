@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_keypairs() {
+__init_keypairs() {
     set -e
     set -u
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_go() {
+__init_vim_go() {
     set -e
     set -u
 

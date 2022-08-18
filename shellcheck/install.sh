@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_shellcheck() {
+__init_shellcheck() {
     set -e
     set -u
 

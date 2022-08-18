@@ -28,7 +28,7 @@ pkg_src="$pkg_src_cmd"
 
 # pkg_install must be defined by every package
 
-function _macos_post_install() {
+_macos_post_install() {
     if ! [ -e "$HOME/.local/bin/fish" ]; then
         return 0
     fi
@@ -66,12 +66,12 @@ function _macos_post_install() {
 # always try to reset the default shells
 _macos_post_install
 
-function pkg_install() {
+pkg_install() {
     mv fish.app/Contents/Resources/base/usr/local "$HOME/.local/opt/fish-v${WEBI_VERSION}"
 
 }
 
-function pkg_post_install() {
+pkg_post_install() {
     # don't skip what webi would do automatically
     webi_post_install
 
@@ -80,7 +80,7 @@ function pkg_post_install() {
 }
 
 # pkg_get_current_version is recommended, but (soon) not required
-function pkg_get_current_version() {
+pkg_get_current_version() {
     # 'fish --version' has output in this format:
     #       fish, version 3.1.2
     # This trims it down to just the version number:

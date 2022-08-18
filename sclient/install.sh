@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_sclient() {
+__init_sclient() {
     set -e
     set -u
 

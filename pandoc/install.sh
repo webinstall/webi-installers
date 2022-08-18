@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_pandoc() {
+__init_pandoc() {
 
     ###################
     # Install pandoc #

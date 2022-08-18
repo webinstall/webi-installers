@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_lf() {
+__init_lf() {
     set -e
     set -u
 

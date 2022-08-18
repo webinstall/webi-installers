@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_fd() {
+__init_fd() {
 
     ###############
     # Install fd #

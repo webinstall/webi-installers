@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_prettier() {
+__init_vim_prettier() {
     set -e
     set -u
 

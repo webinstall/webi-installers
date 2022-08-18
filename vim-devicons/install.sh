@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_vim_devicons() {
+__init_vim_devicons() {
     set -e
     set -u
 

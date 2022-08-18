@@ -2,7 +2,7 @@
 set -e
 set -u
 
-function __init_dotenv_linter() {
+__init_dotenv_linter() {
 
     #########################
     # Install dotenv-linter #

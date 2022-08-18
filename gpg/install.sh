@@ -3,7 +3,7 @@
 set -e
 set -u
 
-function _install_gpg() {
+_install_gpg() {
     if ! (uname -a | grep -i "darwin" > /dev/null); then
         echo "No gpg installer for Linux yet. Try this instead:"
         echo "    sudo apt install -y gpg gnupg"
@@ -90,7 +90,7 @@ function _install_gpg() {
     fi
 }
 
-function _create_gpg_key() {
+_create_gpg_key() {
     if [[ ! -e ~/.gitconfig ]]; then
         return 0
     fi

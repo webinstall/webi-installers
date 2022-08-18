@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function __init_pyenv() {
+__init_pyenv() {
     set -e
     set -u
 

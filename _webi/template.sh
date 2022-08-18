@@ -4,7 +4,7 @@
 # because I prefer to use sed rather than bash replace
 # (there's too little space in my head to learn both syntaxes)
 
-function __bootstrap_webi() {
+__bootstrap_webi() {
 
     set -e
     set -u
@@ -328,7 +328,7 @@ function __bootstrap_webi() {
         echo ""
     fi
 
-    function __init_installer() {
+    __init_installer() {
 
         # do nothing - to satisfy parser prior to templating
         echo -n ""
