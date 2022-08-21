@@ -116,9 +116,10 @@ __webi_main() {
         fi
         set -e
 
-        pushd "\$WEBI_BOOT" 2>&1 > /dev/null
+        (
+            cd "\$WEBI_BOOT" 2>&1 > /dev/null
             bash "\$my_package-bootstrap.sh"
-        popd 2>&1 > /dev/null
+        )
 
         rm -rf "\$WEBI_BOOT"
 

@@ -222,25 +222,26 @@ __bootstrap_webi() {
 
     # detect which archives can be used
     webi_extract() {
-        cd "$WEBI_TMP" > /dev/null 2>&1
-        if [ "tar" = "$WEBI_EXT" ]; then
-            echo "Extracting ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
-            tar xf "${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
-        elif [ "zip" = "$WEBI_EXT" ]; then
-            echo "Extracting ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
-            unzip "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" > __unzip__.log
-        elif [ "exe" = "$WEBI_EXT" ]; then
-            echo "Moving ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
-            mv "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" .
-        elif [ "xz" = "$WEBI_EXT" ]; then
-            echo "Inflating ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
-            unxz -c "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" > "$(basename "$WEBI_PKG_FILE")"
-        else
-            # do nothing
-            echo "Failed to extract ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
-            exit 1
-        fi
-        cd > /dev/null 2>&1
+        (
+            cd "$WEBI_TMP" > /dev/null 2>&1
+            if [ "tar" = "$WEBI_EXT" ]; then
+                echo "Extracting ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
+                tar xf "${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
+            elif [ "zip" = "$WEBI_EXT" ]; then
+                echo "Extracting ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
+                unzip "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" > __unzip__.log
+            elif [ "exe" = "$WEBI_EXT" ]; then
+                echo "Moving ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
+                mv "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" .
+            elif [ "xz" = "$WEBI_EXT" ]; then
+                echo "Inflating ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
+                unxz -c "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" > "$(basename "$WEBI_PKG_FILE")"
+            else
+                # do nothing
+                echo "Failed to extract ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
+                exit 1
+            fi
+        )
     }
 
     # use 'pathman' to update $HOME/.config/envman/PATH.env
@@ -398,23 +399,26 @@ __bootstrap_webi() {
 
         if [ -n "$(command -v pkg_pre_install)" ]; then pkg_pre_install; else webi_pre_install; fi
 
-        cd "$WEBI_TMP" > /dev/null 2>&1
-        echo "Installing to $pkg_src_cmd"
-        if [ -n "$(command -v pkg_install)" ]; then pkg_install; else webi_install; fi
-        chmod a+x "$pkg_src"
-        chmod a+x "$pkg_src_cmd"
-        cd > /dev/null 2>&1
+        (
+            cd "$WEBI_TMP" > /dev/null 2>&1
+            echo "Installing to $pkg_src_cmd"
+            if [ -n "$(command -v pkg_install)" ]; then pkg_install; else webi_install; fi
+            chmod a+x "$pkg_src"
+            chmod a+x "$pkg_src_cmd"
+        )
 
         webi_link
 
         _webi_enable_exec
-        cd "$WEBI_TMP" > /dev/null 2>&1
-        if [ -n "$(command -v pkg_post_install)" ]; then pkg_post_install; else webi_post_install; fi
-        cd > /dev/null 2>&1
+        (
+            cd "$WEBI_TMP" > /dev/null 2>&1
+            if [ -n "$(command -v pkg_post_install)" ]; then pkg_post_install; else webi_post_install; fi
+        )
 
-        cd "$WEBI_TMP" > /dev/null 2>&1
-        if [ -n "$(command -v pkg_done_message)" ]; then pkg_done_message; else _webi_done_message; fi
-        cd > /dev/null 2>&1
+        (
+            cd "$WEBI_TMP" > /dev/null 2>&1
+            if [ -n "$(command -v pkg_done_message)" ]; then pkg_done_message; else _webi_done_message; fi
+        )
 
         echo ""
     fi
