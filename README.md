@@ -10,7 +10,7 @@
 - in short: no nonsense
 
 ```sh
-curl https://webinstall.dev/webi | bash
+curl https://webinstall.dev/webi | sh
 ```
 
 This repository contains the primary and community-submitted packages for
@@ -42,9 +42,9 @@ More technically:
 4. `<package>/install.sh` may provide functions to override `_webi/template.sh`
 5. Recap:
    - `curl https://webinstall.dev/<pkg>` => `bootstrap-<pkg>.sh`
-   - `bash bootstrap-<pkg>.sh` =>
+   - `sh bootstrap-<pkg>.sh` =>
      `https://webinstall.dev/api/installers/<pkg>@<ver>.sh?formats=zip,tar`
-   - `bash install-<pkg>.sh` => download, unpack, move, link, update PATH
+   - `sh install-<pkg>.sh` => download, unpack, move, link, update PATH
 
 # Philosophy (for package authors / maintainers publishing with webi)
 
@@ -73,7 +73,7 @@ An install consists of 5 parts in 4 files:
 my-new-package/
   - README.md (package info in frontmatter)
   - releases.js
-  - install.sh (bash)
+  - install.sh (POSIX Shell)
   - install.ps1 (PowerShell)
 ```
 
@@ -88,7 +88,7 @@ See these **examples**:
 - https://github.com/webinstall/packages/blob/master/golang/
 
 The `webinstall.dev` server uses the list of releases returned by
-`<your-package>/releases.js` to generate a bash script with most necessary
+`<your-package>/releases.js` to generate a shell script with most necessary
 variables and functions pre-defined.
 
 You just fill in the blanks.
@@ -144,8 +144,8 @@ It looks like this:
 `releases.js`:
 
 ```js
-module.exports = function (request) {
-  return github(request, owner, repo).then(function (all) {
+module.exports = function(request) {
+  return github(request, owner, repo).then(function(all) {
     // if you need to do something special, you can do it here
     // ...
     return all;

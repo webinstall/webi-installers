@@ -60,7 +60,7 @@ via `vim` with `:GoInstallBinaries`:
 printf ':GoInstallBinaries\n:q\n' | vim -e
 ```
 
-via `bash`:
+via `sh`:
 
 ```sh
 # gopls

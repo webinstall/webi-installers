@@ -131,7 +131,7 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
     console.info('Do the scripts actually work?');
     if (bashFile && bashTxt) {
       fs.writeFileSync(bashFile, bashTxt, 'utf-8');
-      console.info('\tNEEDS MANUAL TEST: bash %s', bashFile);
+      console.info('\tNEEDS MANUAL TEST: sh %s', bashFile);
     }
     if (ps1File && ps1Txt) {
       fs.writeFileSync(ps1File, ps1Txt, 'utf-8');

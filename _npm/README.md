@@ -20,7 +20,7 @@ npm install -g webi
 Mac & Linux:
 
 ```sh
-curl -fsS https://webinstall.dev/node | bash
+curl -fsS https://webinstall.dev/node | sh
 ```
 
 Windows (includes `curl.exe` and PowerShell by default):

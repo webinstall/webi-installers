@@ -80,26 +80,26 @@ First, `fish` must be installed and in the `PATH`.
 
 ```sh
 # if you don't see a file path as output, fish is not in the path
-which fish
+command -v fish
 ```
 
 Second, fish must be in the system-approved list of shells in `/etc/shells`:
 
 ```sh
-#!/bin/bash
+#!/bin/sh
 
-if ! grep $(which fish) /etc/shells > /dev/null; then
-    sudo bash -c "echo '$(which fish)' >> /etc/shells";
-    echo "added '$(which fish)' to /etc/shells"
+if ! grep $(command -v fish) /etc/shells > /dev/null; then
+    sudo sh -c "echo '$(command -v fish)' >> /etc/shells";
+    echo "added '$(command -v fish)' to /etc/shells"
 fi
 ```
 
 You should use `chsh` to change your shell:
 
 ```sh
-#!/bin/bash
+#!/bin/sh
 
-sudo chsh -s "$(which fish)" "$(whoami)"
+sudo chsh -s "$(command -v fish)" "$(whoami)"
 ```
 
 If vim uses `fish` instead of `bash`, annoying errors will happen.
@@ -116,7 +116,7 @@ You can also set is as the default for a particular Terminal, or for your user.
 Find out where `fish` is:
 
 ```sh
-which fish
+command -v fish
 ```
 
 Then update the Terminal preferences:
@@ -131,7 +131,7 @@ Terminal > Preferences > General > Shells open with:
 Or, you can quit Terminal and change the preferences from the command line:
 
 ```sh
-#!/bin/bash
+#!/bin/sh
 
 defaults write com.apple.Terminal "Shell" -string "$HOME/.local/bin/fish"
 ```
@@ -141,7 +141,7 @@ defaults write com.apple.Terminal "Shell" -string "$HOME/.local/bin/fish"
 Find out where `fish` is:
 
 ```sh
-which fish
+command -v fish
 ```
 
 Then update iTerm2 preferences:
@@ -156,7 +156,7 @@ Custom Shell: /Users/YOUR_USER/.local/bin/fish
 Or, you can quit iTerm2 and change the preferences from the command line:
 
 ```sh
-#!/bin/bash
+#!/bin/sh
 
 /usr/libexec/PlistBuddy -c "SET ':New Bookmarks:0:Custom Command' 'Custom Shell'" \
     ~/Library/Preferences/com.googlecode.iterm2.plist
@@ -194,7 +194,7 @@ shell:
 If you don't yet have an alacritty config, this will do:
 
 ```sh
-#!/bin/bash
+#!/bin/sh
 
 mkdir -p ~/.config/alacritty
 
