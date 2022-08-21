@@ -14,6 +14,14 @@ __get_pubkey_id() {
         cut -d' ' -f1
 }
 
+__shadow_read() {
+    # See https://stackoverflow.com/a/38557313
+    stty -echo
+    IFS= read -r MY_REPLY
+    stty echo
+    echo "$MY_REPLY"
+}
+
 _create_gpg_key() {
     if [ ! -e ~/.gitconfig ]; then
         return 1
@@ -63,7 +71,7 @@ _create_gpg_key() {
         echo >&2 "(the passphrase will not be shown as you type)"
         echo >&2 ""
         echo >&2 -n "Passphrase: "
-        read -r -s
+        MY_REPLY="$(__shadow_read)"
         echo >&2 ""
         echo "
          %echo Generating RSA 3072 key...
@@ -77,7 +85,7 @@ _create_gpg_key() {
          Name-Real: ${MY_NAME}
          Name-Comment: ${MY_HOST}
          Name-Email: ${MY_EMAIL}
-         Passphrase: ${REPLY}
+         Passphrase: ${MY_REPLY}
          Expire-Date: 0
          %commit
         " | gpg --batch --generate-key
