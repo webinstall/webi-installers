@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # "This is too simple" you say! "Where is the magic!?" you ask.
 # There is no magic!

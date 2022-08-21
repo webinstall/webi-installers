@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 __init_rclone() {
     set -e

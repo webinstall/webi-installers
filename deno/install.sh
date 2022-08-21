@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # The custom functions for Deno are here.
 # For the generic functions - version checks, download, extract, etc:

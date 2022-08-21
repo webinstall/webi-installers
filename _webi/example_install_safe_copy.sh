@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # For installing from the extracted package tmp directory
 pkg_install() {
     (

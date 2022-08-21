@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 __init_vim_nerdtree() {
     set -e

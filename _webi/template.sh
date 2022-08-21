@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # shellcheck disable=2001
 # because I prefer to use sed rather than bash replace

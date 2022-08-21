@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #set -x
 
@@ -26,7 +26,7 @@ __install_webi() {
     mkdir -p "$HOME/.local/bin"
 
     cat << EOF > "$HOME/.local/bin/webi"
-#!/bin/bash
+#!/bin/sh
 
 set -e
 set -u
