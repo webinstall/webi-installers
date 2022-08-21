@@ -5,7 +5,7 @@ set -u
 __init_git() {
 
     if [ -z "$(command -v git)" ]; then
-        if [ -n "$(uname -a | grep -i darwin)" ]; then
+        if uname -a | grep -q -i darwin; then
             echo >&2 "Error: 'git' not found. You may have to re-install 'git' on Mac after every major update."
             echo >&2 "       for example, try: xcode-select --install"
             # sudo xcodebuild -license accept
