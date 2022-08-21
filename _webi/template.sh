@@ -407,7 +407,7 @@ __bootstrap_webi() {
 
     webi_path_add "$HOME/.local/bin"
     if [ -z "${_WEBI_CHILD:-}" ] && [ -f "$_webi_tmp/.PATH.env" ]; then
-        if [ -n $(cat "$_webi_tmp/.PATH.env") ]; then
+        if [ -n "$(cat "$_webi_tmp/.PATH.env")" ]; then
             printf 'PATH.env updated with:\n'
             sort -u "$_webi_tmp/.PATH.env"
             printf "\n"
