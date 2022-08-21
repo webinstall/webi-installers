@@ -56,7 +56,7 @@ main() {
     # TODO ensure that ssh-password login is off
     my_pass="$(grep 'PasswordAuthentication yes' /etc/ssh/sshd_config)"
     my_pam=""
-    if [[ "Darwin" == "$(uname -s)" ]]; then
+    if [[ "Darwin" = "$(uname -s)" ]]; then
         # Turn off PAM for macOS or it will allow password login
         my_pam="$(grep 'UsePAM yes' /etc/ssh/sshd_config)"
     fi

@@ -86,7 +86,7 @@ __bootstrap_webi() {
             return 0
         fi
 
-        if [ -n "$WEBI_SINGLE" ] || [ "single" == "${1:-}" ]; then
+        if [ -n "$WEBI_SINGLE" ] || [ "single" = "${1:-}" ]; then
             rm -rf "$pkg_dst_cmd"
             ln -s "$pkg_src_cmd" "$pkg_dst_cmd"
         else
@@ -143,7 +143,7 @@ __bootstrap_webi() {
         if [ -n "${1:-}" ]; then
             my_url="$1"
         else
-            if [ "error" == "$WEBI_CHANNEL" ]; then
+            if [ "error" = "$WEBI_CHANNEL" ]; then
                 # TODO pass back requested OS / Arch / Version
                 echo >&2 "Error: no '$PKG_NAME' release for '${WEBI_OS:-}' on '$WEBI_ARCH' as one of '$WEBI_FORMATS' by the tag '${WEBI_TAG:-}'"
                 echo >&2 "       '$PKG_NAME' is available for '$PKG_OSES' on '$PKG_ARCHES' as one of '$PKG_FORMATS'"
@@ -209,16 +209,16 @@ __bootstrap_webi() {
     # detect which archives can be used
     webi_extract() {
         pushd "$WEBI_TMP" > /dev/null 2>&1
-        if [ "tar" == "$WEBI_EXT" ]; then
+        if [ "tar" = "$WEBI_EXT" ]; then
             echo "Extracting ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
             tar xf "${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
-        elif [ "zip" == "$WEBI_EXT" ]; then
+        elif [ "zip" = "$WEBI_EXT" ]; then
             echo "Extracting ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
             unzip "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" > __unzip__.log
-        elif [ "exe" == "$WEBI_EXT" ]; then
+        elif [ "exe" = "$WEBI_EXT" ]; then
             echo "Moving ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
             mv "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" .
-        elif [ "xz" == "$WEBI_EXT" ]; then
+        elif [ "xz" = "$WEBI_EXT" ]; then
             echo "Inflating ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
             unxz -c "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" > "$(basename "$WEBI_PKG_FILE")"
         else
@@ -263,7 +263,7 @@ __bootstrap_webi() {
     # shellcheck disable=2120
     # webi_install may be sourced and used elsewhere
     webi_install() {
-        if [ -n "$WEBI_SINGLE" ] || [ "single" == "${1:-}" ]; then
+        if [ -n "$WEBI_SINGLE" ] || [ "single" = "${1:-}" ]; then
             mkdir -p "$(dirname "$pkg_src_cmd")"
             mv ./"$pkg_cmd_name"* "$pkg_src_cmd"
         else
