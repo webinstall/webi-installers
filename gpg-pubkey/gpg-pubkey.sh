@@ -70,7 +70,7 @@ _create_gpg_key() {
         echo >&2 "Choose a passphrase for this GPG Key."
         echo >&2 "(the passphrase will not be shown as you type)"
         echo >&2 ""
-        echo >&2 -n "Passphrase: "
+        printf >&2 "Passphrase: "
         MY_REPLY="$(__shadow_read)"
         echo >&2 ""
         echo "

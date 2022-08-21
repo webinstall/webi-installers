@@ -17,11 +17,11 @@ __git_gpg_init() {
         gpg-pubkey-id
     )"
 
-    echo -n "Enabling automatic git commit signing...
-	    git config --global user.signingkey ${MY_KEY_ID}
+    printf "Enabling automatic git commit signing...
+	    git config --global user.signingkey %s
 	    git config --global commit.gpgsign true
 	    git config --global log.showSignature true
-	"
+	" "${MY_KEY_ID}"
 
     git config --global user.signingkey "${MY_KEY_ID}"
     git config --global commit.gpgsign true

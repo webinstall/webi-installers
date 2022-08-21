@@ -118,9 +118,9 @@ __bootstrap_webi() {
             # but that's okay, 'cmp -s' is good enough for us
             if cmp -s "${pkg_src_cmd}" "${my_current_cmd}"; then
                 echo "${my_canonical_name} already installed:"
-                echo -n "    ${pkg_dst}"
+                printf "    %s" "${pkg_dst}"
                 if [ "${pkg_src_cmd}" != "${my_current_cmd}" ]; then
-                    echo -n " => ${pkg_src}"
+                    printf " => %s" "${pkg_src}"
                 fi
                 echo ""
                 exit 0
@@ -345,7 +345,7 @@ __bootstrap_webi() {
     __init_installer() {
 
         # do nothing - to satisfy parser prior to templating
-        echo -n ""
+        printf ""
 
         # {{ installer }}
 
