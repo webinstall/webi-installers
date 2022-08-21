@@ -21,7 +21,7 @@ __init_kubens() {
     # pkg_install must be defined by every package
     pkg_install() {
         # e.g. ~/.local/opt/kubens-v0.99.9/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./kubens-*/kubens ~/.local/opt/kubens-v0.99.9/bin/kubens
         mv kubens "$pkg_src_cmd"

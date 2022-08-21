@@ -21,7 +21,7 @@ __init_ffmpeg() {
     # pkg_install must be defined by every package
     pkg_install() {
         # ~/.local/opt/ffmpeg-v4.3.1/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./linux-x86 ~/.local/opt/ffmpeg-v4.3.1/bin/ffmpeg
         mv ./*-* "$pkg_src_cmd"

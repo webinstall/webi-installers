@@ -21,7 +21,7 @@ __init_k9s() {
     # pkg_install must be defined by every package
     pkg_install() {
         # ~/.local/opt/k9s-v0.99.9/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./k9s-*/k9s ~/.local/opt/k9s-v0.99.9/bin/k9s
         mv k9s "$pkg_src_cmd"

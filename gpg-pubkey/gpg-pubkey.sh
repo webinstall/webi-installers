@@ -21,14 +21,14 @@ _create_gpg_key() {
 
     #grep 'name\s*=' ~/.gitconfig | head -n 1 | cut -d'=' -f2 | sed -e 's/^[\t ]*//'
     MY_NAME="$(git config --global user.name)"
-    if [ -z ${MY_NAME} ]; then
+    if [ -z "${MY_NAME}" ]; then
         return 1
     fi
 
     MY_EMAIL="$(
         __get_git_email
     )"
-    if [ -z ${MY_EMAIL} ]; then
+    if [ -z "${MY_EMAIL}" ]; then
         return 1
     fi
 

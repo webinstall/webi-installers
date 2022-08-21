@@ -21,7 +21,7 @@ __init_sd() {
     # pkg_install must be defined by every package
     pkg_install() {
         # ~/.local/opt/sd-v0.99.9/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
         # mv ./sd-*/sd "$pkg_src_cmd"
         mv sd-* "$pkg_src_cmd"
     }

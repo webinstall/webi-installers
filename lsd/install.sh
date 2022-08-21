@@ -21,7 +21,7 @@ __init_lsd() {
     # pkg_install must be defined by every package
     pkg_install() {
         # ~/.local/opt/lsd-v0.17.0/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./lsd-*/lsd ~/.local/opt/lsd-v0.17.0/bin/lsd
         mv ./lsd-*/lsd "$pkg_src_cmd"

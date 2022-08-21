@@ -25,7 +25,7 @@ pkg_get_current_version() {
 
 pkg_install() {
     # mkdir -p $HOME/.local/opt
-    mkdir -p "$(dirname $pkg_src)"
+    mkdir -p "$(dirname "$pkg_src")"
 
     # mv ./node* "$HOME/.local/opt/node-v14.4.0"
     mv ./"$pkg_cmd_name"* "$pkg_src"

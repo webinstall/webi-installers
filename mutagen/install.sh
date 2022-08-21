@@ -19,7 +19,7 @@ __init_mutagen() {
 
     pkg_install() {
         # $HOME/.local/opt/mutagen-v0.11.8/
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./* "$HOME/.local/opt/mutagen-v0.11.8/"
         mv ./* "$pkg_src_dir"

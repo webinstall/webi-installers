@@ -21,7 +21,7 @@ __init_pandoc() {
     # pkg_install must be defined by every package
     pkg_install() {
         # ~/.local/opt/pandoc-v2.10.1/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./pandoc-*/pandoc ~/.local/opt/pandoc-v2.10.1/bin/pandoc
         mv ./pandoc-*/bin/pandoc "$pkg_src_cmd"

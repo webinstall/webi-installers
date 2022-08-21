@@ -21,7 +21,7 @@ __init_kubectx() {
     # pkg_install must be defined by every package
     pkg_install() {
         # e.g. ~/.local/opt/kubectx-v0.99.9/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./kubectx-*/kubectx ~/.local/opt/kubectx-v0.99.9/bin/kubectx
         mv kubectx "$pkg_src_cmd"

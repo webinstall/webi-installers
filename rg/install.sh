@@ -21,7 +21,7 @@ __init_rg() {
     # pkg_install must be defined by every package
     pkg_install() {
         # ~/.local/opt/rg-v12.1.1/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./ripgrep-*/rg ~/.local/opt/rg-v12.1.1/bin/rg
         mv ./ripgrep-*/rg "$pkg_src_cmd"

@@ -21,7 +21,7 @@ __init_shellcheck() {
     # pkg_install must be defined by every package
     pkg_install() {
         # ~/.local/opt/shellcheck-v0.99.9/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./shellcheck-*/shellcheck ~/.local/opt/shellcheck-v0.99.9/bin/shellcheck
         mv ./shellcheck-*/shellcheck "$pkg_src_cmd"

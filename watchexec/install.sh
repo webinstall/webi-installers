@@ -21,7 +21,7 @@ __init_watchexec() {
     # pkg_install must be defined by every package
     pkg_install() {
         # ~/.local/opt/watchexec-v0.99.9/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./watchexec-*/watchexec ~/.local/opt/watchexec-v0.99.9/bin/watchexec
         mv ./watchexec-*/watchexec "$pkg_src_cmd"

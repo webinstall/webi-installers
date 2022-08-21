@@ -20,7 +20,7 @@ __init_dashmsg() {
 
     pkg_install() {
         # $HOME/.local/opt/dashmsg-v0.9.0/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./dashmsg* "$HOME/.local/opt/dashmsg-v0.9.0/bin/dashmsg"
         mv ./"$pkg_cmd_name"* "$pkg_src_cmd"

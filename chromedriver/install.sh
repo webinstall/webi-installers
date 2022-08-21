@@ -21,7 +21,7 @@ __init_chromedriver() {
     # pkg_install must be defined by every package
     pkg_install() {
         # ~/.local/opt/chromedriver-v88.0.4324.96/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./chromedriver-*/chromedriver ~/.local/opt/chromedriver-v88.0.4324.96/bin/chromedriver
         mv ./chromedriver* "$pkg_src_cmd"

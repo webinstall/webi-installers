@@ -9,7 +9,7 @@ __init_vps_addswap() {
 
     if [ $(id -u) -ne 0 ]; then
         echo Usage:
-        echo '        sudo env PATH="$PATH" vps-addswap' $my_size
+        echo '        sudo env PATH="$PATH" vps-addswap' "$my_size"
         exit 1
     fi
 

@@ -21,7 +21,7 @@ __init_arc() {
     # pkg_install must be defined by every package
     pkg_install() {
         # ~/.local/opt/arc-v3.2.0/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./arc_* ~/.local/opt/arc-v3.2.0/bin/arc
         mv ./arc_* "$pkg_src_cmd"

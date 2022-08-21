@@ -20,7 +20,7 @@ __init_syncthing() {
 
     pkg_install() {
         # $HOME/.local/opt/syncthing-v1.12.1/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./syncthing* "$HOME/.local/opt/syncthing-v1.12.1/bin/syncthing"
         mv ./syncthing*/"$pkg_cmd_name"* "$pkg_src_cmd"

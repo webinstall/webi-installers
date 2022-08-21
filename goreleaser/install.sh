@@ -21,7 +21,7 @@ __init_goreleaser() {
     # pkg_install must be defined by every package
     pkg_install() {
         # ~/.local/opt/goreleaser-v0.99.9/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./goreleaser-*/goreleaser ~/.local/opt/goreleaser-v0.99.9/bin/goreleaser
         mv ./goreleaser "$pkg_src_cmd"

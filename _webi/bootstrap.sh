@@ -207,7 +207,7 @@ EOF
 
     chmod a+x "$HOME/.local/bin/webi"
 
-    if [ -n ${WEBI_PKG:-} ]; then
+    if [ -n "${WEBI_PKG:-}" ]; then
         "$HOME/.local/bin/webi" "${WEBI_PKG}"
     else
         echo ""

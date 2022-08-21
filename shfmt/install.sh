@@ -19,7 +19,7 @@ __init_shfmt() {
 
     pkg_install() {
         # ~/.local/opt/shfmt-v0.99.9/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
         mv ./"$pkg_cmd_name"* "$pkg_src_cmd"
     }
 

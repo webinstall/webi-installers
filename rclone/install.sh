@@ -20,7 +20,7 @@ __init_rclone() {
 
     pkg_install() {
         # $HOME/.local/opt/rclone-v0.6.5/bin
-        mkdir -p "$(dirname $pkg_src_cmd)"
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # mv ./rclone* "$HOME/.local/opt/rclone-v0.6.5/bin/rclone"
         mv ./rclone*/rclone "$pkg_src_cmd"

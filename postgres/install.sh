@@ -18,7 +18,7 @@ pkg_get_current_version() {
 
 pkg_install() {
     # mkdir -p $HOME/.local/opt
-    mkdir -p "$(dirname $pkg_src)"
+    mkdir -p "$(dirname "$pkg_src")"
 
     # mv ./pgqsl* "$HOME/.local/opt/postgres-v10.13"
     mv ./"p"* "$pkg_src"

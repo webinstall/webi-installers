@@ -60,16 +60,16 @@ main() {
         # Turn off PAM for macOS or it will allow password login
         my_pam="$(grep 'UsePAM yes' /etc/ssh/sshd_config)"
     fi
-    if [ -n ${my_pass} ] || [ -n ${my_pam} ]; then
+    if [ -n "${my_pass}" ] || [ -n "${my_pam}" ]; then
         echo "######################################################################"
         echo "#                                                                    #"
         echo "#                             WARNING                                #"
         echo "#                                                                    #"
         echo "# Found /etc/ssh/sshd_config:                                        #"
-        if [ -n ${my_pass} ]; then
+        if [ -n "${my_pass}" ]; then
             echo "#     PasswordAuthentication yes                                     #"
         fi
-        if [ -n ${my_pam} ]; then
+        if [ -n "${my_pam}" ]; then
             echo "#     UsePAM yes                                                     #"
         fi
         echo "#                                                                    #"

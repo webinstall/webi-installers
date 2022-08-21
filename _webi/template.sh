@@ -119,7 +119,7 @@ __bootstrap_webi() {
             if cmp -s "${pkg_src_cmd}" "${my_current_cmd}"; then
                 echo "${my_canonical_name} already installed:"
                 echo -n "    ${pkg_dst}"
-                if [ ${pkg_src_cmd} != "${my_current_cmd}" ]; then
+                if [ "${pkg_src_cmd}" != "${my_current_cmd}" ]; then
                     echo -n " => ${pkg_src}"
                 fi
                 echo ""
@@ -317,7 +317,7 @@ __bootstrap_webi() {
 
     WEBI_SINGLE=
 
-    if [ -z ${WEBI_WELCOME:-} ]; then
+    if [ -z "${WEBI_WELCOME:-}" ]; then
         echo ""
         printf "Thanks for using webi to install '\e[32m${WEBI_PKG:-}\e[0m' on '\e[31m$(uname -s)/$(uname -m)\e[0m'.\n"
         echo "Have a problem? Experience a bug? Please let us know:"
@@ -351,14 +351,14 @@ __bootstrap_webi() {
         command -v pkg_post_install > /dev/null ||
         command -v pkg_done_message > /dev/null ||
         command -v pkg_format_cmd_version > /dev/null ||
-        [ -n ${WEBI_SINGLE:-} ] ||
-        [ -n ${pkg_cmd_name:-} ] ||
-        [ -n ${pkg_dst_cmd:-} ] ||
-        [ -n ${pkg_dst_dir:-} ] ||
-        [ -n ${pkg_dst:-} ] ||
-        [ -n ${pkg_src_cmd:-} ] ||
-        [ -n ${pkg_src_dir:-} ] ||
-        [ -n ${pkg_src:-} ]; then
+        [ -n "${WEBI_SINGLE:-}" ] ||
+        [ -n "${pkg_cmd_name:-}" ] ||
+        [ -n "${pkg_dst_cmd:-}" ] ||
+        [ -n "${pkg_dst_dir:-}" ] ||
+        [ -n "${pkg_dst:-}" ] ||
+        [ -n "${pkg_src_cmd:-}" ] ||
+        [ -n "${pkg_src_dir:-}" ] ||
+        [ -n "${pkg_src:-}" ]; then
 
         pkg_cmd_name="${pkg_cmd_name:-$PKG_NAME}"
 
@@ -406,7 +406,7 @@ __bootstrap_webi() {
     fi
 
     webi_path_add "$HOME/.local/bin"
-    if [ -z ${_WEBI_CHILD:-} ] && [ -f "$_webi_tmp/.PATH.env" ]; then
+    if [ -z "${_WEBI_CHILD:-}" ] && [ -f "$_webi_tmp/.PATH.env" ]; then
         if [ -n $(cat "$_webi_tmp/.PATH.env") ]; then
             printf 'PATH.env updated with:\n'
             sort -u "$_webi_tmp/.PATH.env"

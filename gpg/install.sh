@@ -97,13 +97,13 @@ _create_gpg_key() {
 
     #grep 'name\s*=' ~/.gitconfig | head -n 1 | cut -d'=' -f2 | sed -e 's/^[\t ]*//'
     MY_NAME="$(git config --global user.name)"
-    if [ -z ${MY_NAME} ]; then
+    if [ -z "${MY_NAME}" ]; then
         return 0
     fi
 
     # grep 'email\s*=.*@' ~/.gitconfig | tr -d '\t ' | head -n 1 | cut -d'=' -f2
     MY_EMAIL="$(git config --global user.email)"
-    if [ -z ${MY_EMAIL} ]; then
+    if [ -z "${MY_EMAIL}" ]; then
         return 0
     fi
 
