@@ -181,7 +181,7 @@ __bootstrap_webi() {
             # TODO wget -c --content-disposition "$my_url"
             set +e
             my_show_progress=""
-            if [ $- == *i* ]; then
+            if [[ $- == *i* ]]; then
                 my_show_progress="--show-progress"
             fi
             if ! wget -q $my_show_progress --user-agent="wget $WEBI_UA" -c "$my_url" -O "$my_dl.part"; then
@@ -193,7 +193,7 @@ __bootstrap_webi() {
             # Neither GNU nor BSD curl have sane resume download options, hence we don't bother
             # TODO curl -fsSL --remote-name --remote-header-name --write-out "$my_url"
             my_show_progress="-#"
-            if [ $- == *i* ]; then
+            if [[ $- == *i* ]]; then
                 my_show_progress=""
             fi
             # shellcheck disable=SC2086
