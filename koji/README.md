@@ -58,7 +58,7 @@ Just add `koji --hook` to your project's `.git/hooks/prepare-commit-msg`:
 
 ```sh
 echo >> ./.git/hooks/prepare-commit-msg << "EOF"
-#!/bin/bash
+#!/bin/sh
 koji --hook
 EOF
 
@@ -84,7 +84,7 @@ As a git hook:
 `.git/hooks/prepare-commit-msg`:
 
 ```sh
-#!/bin/bash
+#!/bin/sh
 koji --emoji --hook
 ```
 

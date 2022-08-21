@@ -22,7 +22,7 @@ if (/^win/i.test(os.platform())) {
 }
 
 exec(
-  'curl -fsS https://webinstall.dev/webi | bash',
+  'curl -fsS https://webinstall.dev/webi | sh',
   function (err, stdout, stderr) {
     if (err) {
       console.error(err);

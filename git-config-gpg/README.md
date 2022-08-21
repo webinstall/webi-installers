@@ -110,7 +110,7 @@ Run [gpg-pubkey-id](./gpg-pubkey) to get your GnuPG Public Key ID and then
 update your `~/.gitconfig` to sign with it by default:
 
 ```sh
-#!/bin/bash
+#!/bin/sh
 
 MY_KEY_ID="$(
   gpg-pubkey-id

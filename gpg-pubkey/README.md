@@ -22,7 +22,7 @@ This installs two commands.
 The easiest way to get your GnuPG Public Key:
 
 ```sh
-curl https://webinstall.dev/gpg-pubkey | bash
+curl https://webinstall.dev/gpg-pubkey | sh
 ```
 
 This is what the output of `gpg-pubkey` looks like (except much longer):
@@ -70,7 +70,7 @@ Run `gpg-pubkey-id` to get your GnuPG Public Key ID and then update your
 `~/.gitconfig` to sign with it by default:
 
 ```sh
-#!/bin/bash
+#!/bin/sh
 
 MY_KEY_ID="$(
   gpg-pubkey-id
@@ -107,7 +107,7 @@ Here's a command to list your secret key(s) and get the Public ID (of the first
 one, if you have many):
 
 ```sh
-#!/bin/bash
+#!/bin/sh
 
 MY_KEY_ID="$(
     gpg --list-secret-keys --keyid-format LONG |
@@ -188,7 +188,7 @@ Here's how you can automate creating a key using the same info as what's in your
 `~/.gitconfig`:
 
 ```sh
-#!/bin/bash
+#!/bin/sh
 
 MY_NAME="$( git config --global user.name )"
 MY_HOST="$( hostname )"
