@@ -1,9 +1,5 @@
 #!/bin/sh
 
-# shellcheck disable=2001
-# because I prefer to use sed rather than bash replace
-# (there's too little space in my head to learn both syntaxes)
-
 __bootstrap_webi() {
 
     set -e
@@ -259,7 +255,7 @@ __bootstrap_webi() {
 
         # in case pathman was recently installed and the PATH not updated
         mkdir -p "$_webi_tmp"
-        # 'true' to prevent "too few arguments" output on bash
+        # 'true' to prevent "too few arguments" output
         # when there are 0 lines of stdout
         "$HOME/.local/bin/pathman" add "$1" |
             grep "export" 2> /dev/null \

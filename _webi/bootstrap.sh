@@ -118,7 +118,7 @@ __webi_main() {
 
         (
             cd "\$WEBI_BOOT" 2>&1 > /dev/null
-            bash "\$my_package-bootstrap.sh"
+            sh "\$my_package-bootstrap.sh"
         )
 
         rm -rf "\$WEBI_BOOT"

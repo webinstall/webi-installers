@@ -21,7 +21,7 @@ main() {
         echo "    You must add a key to ~/.ssh/authorized_keys before adding a new ssh user."
         echo ""
         echo "To fix:"
-        echo "    Run 'curl https://webinstall.dev/ssh-pubkey | bash' on your local system, "
+        echo "    Run 'curl https://webinstall.dev/ssh-pubkey | sh' on your local system, "
         echo "    then add that key to ~/.ssh/authorized_keys on this (the remote) system.  "
         echo ""
         exit 1
@@ -45,13 +45,13 @@ main() {
     chown -R "$my_new_user":"$my_new_user" "/home/$my_new_user/.ssh/"
 
     # ensure that 'app' has an SSH Keypair
-    sudo -i -u "$my_new_user" bash -c "ssh-keygen -b 2048 -t rsa -f '/home/$my_new_user/.ssh/id_rsa' -q -N ''"
+    sudo -i -u "$my_new_user" sh -c "ssh-keygen -b 2048 -t rsa -f '/home/$my_new_user/.ssh/id_rsa' -q -N ''"
     chown -R "$my_new_user":"$my_new_user" "/home/$my_new_user/.ssh/"
 
     # Install webi for the new 'app' user
     WEBI_HOST=${WEBI_HOST:-"https://webinstall.dev"}
-    sudo -i -u "$my_new_user" bash -c "curl -fsSL '$WEBI_HOST/webi' | bash" ||
-        sudo -i -u "$my_new_user" bash -c "wget -q -O - '$WEBI_HOST/webi' | bash"
+    sudo -i -u "$my_new_user" sh -c "curl -fsSL '$WEBI_HOST/webi' | sh" ||
+        sudo -i -u "$my_new_user" sh -c "wget -q -O - '$WEBI_HOST/webi' | sh"
 
     # TODO ensure that ssh-password login is off
     my_pass="$(grep 'PasswordAuthentication yes' /etc/ssh/sshd_config)"
