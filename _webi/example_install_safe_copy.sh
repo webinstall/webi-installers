@@ -1,4 +1,7 @@
 #!/bin/sh
+set -e
+set -u
+
 # For installing from the extracted package tmp directory
 pkg_install() {
     (
