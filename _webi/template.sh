@@ -219,7 +219,7 @@ __bootstrap_webi() {
     # detect which archives can be used
     webi_extract() {
         (
-            cd "$WEBI_TMP" > /dev/null 2>&1
+            cd "$WEBI_TMP"
             if [ "tar" = "$WEBI_EXT" ]; then
                 echo "Extracting ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
                 tar xf "${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
@@ -396,7 +396,7 @@ __bootstrap_webi() {
         if [ -n "$(command -v pkg_pre_install)" ]; then pkg_pre_install; else webi_pre_install; fi
 
         (
-            cd "$WEBI_TMP" > /dev/null 2>&1
+            cd "$WEBI_TMP"
             echo "Installing to $pkg_src_cmd"
             if [ -n "$(command -v pkg_install)" ]; then pkg_install; else webi_install; fi
             chmod a+x "$pkg_src"
@@ -407,12 +407,12 @@ __bootstrap_webi() {
 
         _webi_enable_exec
         (
-            cd "$WEBI_TMP" > /dev/null 2>&1
+            cd "$WEBI_TMP"
             if [ -n "$(command -v pkg_post_install)" ]; then pkg_post_install; else webi_post_install; fi
         )
 
         (
-            cd "$WEBI_TMP" > /dev/null 2>&1
+            cd "$WEBI_TMP"
             if [ -n "$(command -v pkg_done_message)" ]; then pkg_done_message; else _webi_done_message; fi
         )
 

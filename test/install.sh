@@ -5,7 +5,7 @@ set -u
 __rmrf_local() {
     if [ -d "${HOME}/.local/opt" ]; then
         (
-            cd "${HOME}/.local/opt" 2>&1 > /dev/null
+            cd "${HOME}/.local/opt"
             rm -rf \
                 arc \
                 archiver \
@@ -98,7 +98,7 @@ __rmrf_local() {
             #postgresql \
         )
         (
-            cd "${HOME}/.local/bin" 2>&1 > /dev/null
+            cd "${HOME}/.local/bin"
             rm -f \
                 arc \
                 archiver \

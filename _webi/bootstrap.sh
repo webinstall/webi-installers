@@ -117,7 +117,7 @@ __webi_main() {
         set -e
 
         (
-            cd "\$WEBI_BOOT" > /dev/null 2>&1
+            cd "\$WEBI_BOOT"
             sh "\$my_package-bootstrap.sh"
         )
 
