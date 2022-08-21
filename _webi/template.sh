@@ -137,6 +137,20 @@ __bootstrap_webi() {
         export PATH="$my_path"
     }
 
+    is_interactive_shell() {
+        # $- shows shell flags (error,unset,interactive,etc)
+        case $- in
+            *i*)
+                # true
+                return 0
+                ;;
+            *)
+                # false
+                return 1
+                ;;
+        esac
+    }
+
     # detect if file is downloaded, and how to download it
     webi_download() {
         # determine the url to download
@@ -181,7 +195,7 @@ __bootstrap_webi() {
             # TODO wget -c --content-disposition "$my_url"
             set +e
             my_show_progress=""
-            if [[ $- == *i* ]]; then
+            if is_interactive_shell; then
                 my_show_progress="--show-progress"
             fi
             if ! wget -q $my_show_progress --user-agent="wget $WEBI_UA" -c "$my_url" -O "$my_dl.part"; then
@@ -193,7 +207,7 @@ __bootstrap_webi() {
             # Neither GNU nor BSD curl have sane resume download options, hence we don't bother
             # TODO curl -fsSL --remote-name --remote-header-name --write-out "$my_url"
             my_show_progress="-#"
-            if [[ $- == *i* ]]; then
+            if is_interactive_shell; then
                 my_show_progress=""
             fi
             # shellcheck disable=SC2086

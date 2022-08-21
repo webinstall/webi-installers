@@ -182,12 +182,12 @@ __webi_main() {
         echo ""
     }
 
-    if [ \$# -eq 0 ] || [[ "\$1" =~ ^(-V|--version|version)$ ]]; then
+    if [ \$# -eq 0 ] || echo "\$1" | grep -q -E '^(-V|--version|version)$'; then
         version
         exit 0
     fi
 
-    if [[ "\$1" =~ ^(-h|--help|help)$ ]]; then
+    if echo "\$1" | grep -q -E '^(-h|--help|help)$'; then
         usage "\$@"
         exit 0
     fi
