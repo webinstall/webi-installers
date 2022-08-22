@@ -7,7 +7,7 @@ __init_vps_addswap() {
     default_size=2G
     my_size=${1:-$default_size}
 
-    if [ $(id -u) -ne 0 ]; then
+    if [ "$(id -u)" -ne 0 ]; then
         echo Usage:
         echo '        sudo env PATH="$PATH" vps-addswap' "$my_size"
         exit 1
