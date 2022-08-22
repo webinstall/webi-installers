@@ -330,7 +330,7 @@ __bootstrap_webi() {
 
     if [ -z "${WEBI_WELCOME:-}" ]; then
         echo ""
-        printf "Thanks for using webi to install '\e[32m${WEBI_PKG:-}\e[0m' on '\e[31m$(uname -s)/$(uname -m)\e[0m'.\n"
+        printf "Thanks for using webi to install '\e[32m%s\e[0m' on '\e[31m%s/%s\e[0m'.\n" "${WEBI_PKG:-}" "$(uname -s)" "$(uname -m)"
         echo "Have a problem? Experience a bug? Please let us know:"
         echo "        https://github.com/webinstall/webi-installers/issues"
         echo ""
