@@ -37,6 +37,7 @@ _install_brew() {
         echo ""
         echo "If you prefer to have brew installed to '/usr/local' cancel now and do the following:"
         echo "        rm -rf '$HOME/.local/opt/brew'"
+        # shellcheck disable=2016
         echo '        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
         echo ""
         sleep 3
@@ -56,6 +57,7 @@ _install_brew() {
     echo ""
     echo "If you prefer to have brew installed to '/usr/local' do the following:"
     echo "        mv '$HOME/.local/opt/brew' '$HOME/.local/opt/brew.$(date '+%F_%H-%M-%S').bak'"
+    # shellcheck disable=2016
     echo '        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
     echo ""
 }

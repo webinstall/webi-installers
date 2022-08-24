@@ -9,7 +9,9 @@ __init_pyenv() {
     if [ ! -f ~/.bashrc ] || ! grep -q 'pyenv init' ~/.bashrc; then
         echo '' >> ~/.bashrc
         echo '# added by Webi for pyenv' >> ~/.bashrc
+        # shellcheck disable=2016
         echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+        # shellcheck disable=2016
         echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
     fi
 
@@ -18,7 +20,9 @@ __init_pyenv() {
         if ! grep -q 'pyenv init' ~/.zshrc; then
             echo '' >> ~/.zshrc
             echo '# added by Webi for pyenv' >> ~/.zshrc
+            # shellcheck disable=2016
             echo 'eval "$(pyenv init -)"' >> ~/.zshrc
+            # shellcheck disable=2016
             echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.zshrc
         fi
     fi
