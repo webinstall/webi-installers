@@ -9,6 +9,7 @@ __init_vps_addswap() {
 
     if [ "$(id -u)" -ne 0 ]; then
         echo Usage:
+        # shellcheck disable=2016
         echo '        sudo env PATH="$PATH" vps-addswap' "$my_size"
         exit 1
     fi

@@ -7,19 +7,23 @@ __init_pyenv() {
     curl -fsSL https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 
     if [ ! -f ~/.bashrc ] || ! grep -q 'pyenv init' ~/.bashrc; then
-        echo '' >> ~/.bashrc
-        echo '# added by Webi for pyenv' >> ~/.bashrc
-        echo 'eval "$(pyenv init -)"' >> ~/.bashrc
-        echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
+        echo '' >>~/.bashrc
+        echo '# added by Webi for pyenv' >>~/.bashrc
+        # shellcheck disable=2016
+        echo 'eval "$(pyenv init -)"' >>~/.bashrc
+        # shellcheck disable=2016
+        echo 'eval "$(pyenv virtualenv-init -)"' >>~/.bashrc
     fi
 
     if [ -n "$(command -v zsh)" ]; then
         touch ~/.zshrc
         if ! grep -q 'pyenv init' ~/.zshrc; then
-            echo '' >> ~/.zshrc
-            echo '# added by Webi for pyenv' >> ~/.zshrc
-            echo 'eval "$(pyenv init -)"' >> ~/.zshrc
-            echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.zshrc
+            echo '' >>~/.zshrc
+            echo '# added by Webi for pyenv' >>~/.zshrc
+            # shellcheck disable=2016
+            echo 'eval "$(pyenv init -)"' >>~/.zshrc
+            # shellcheck disable=2016
+            echo 'eval "$(pyenv virtualenv-init -)"' >>~/.zshrc
         fi
     fi
 
@@ -27,10 +31,10 @@ __init_pyenv() {
         mkdir -p ~/.config/fish
         touch ~/.config/fish/config.fish
         if ! grep -q 'pyenv init' ~/.config/fish/config.fish; then
-            echo '' >> ~/.config/fish/config.fish
-            echo '# added by Webi for pyenv' >> ~/.config/fish/config.fish
-            echo 'status is-login; and pyenv init --path | source' >> ~/.config/fish/config.fish
-            echo 'status is-interactive; and pyenv init - | source' >> ~/.config/fish/config.fish
+            echo '' >>~/.config/fish/config.fish
+            echo '# added by Webi for pyenv' >>~/.config/fish/config.fish
+            echo 'status is-login; and pyenv init --path | source' >>~/.config/fish/config.fish
+            echo 'status is-interactive; and pyenv init - | source' >>~/.config/fish/config.fish
         fi
     fi
 
