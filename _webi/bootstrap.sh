@@ -34,7 +34,7 @@ set -u
 
 __webi_main() {
 
-    export WEBI_TIMESTAMP=\$(date +%F_%H-%M-%S)
+    export WEBI_TIMESTAMP="\$(date +%F_%H-%M-%S)"
     export _webi_tmp="\${_webi_tmp:-\$(mktemp -d -t webi-\$WEBI_TIMESTAMP.XXXXXXXX)}"
 
     if [ -n "\${_WEBI_PARENT:-}" ]; then
