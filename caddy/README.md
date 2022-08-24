@@ -48,7 +48,7 @@ example.com {
 
     # turn on standard streaming compression
     encode gzip zstd
-    
+
     # reverse proxy /api to :3000
     handle_path /api/* {
         reverse_proxy localhost:3000
@@ -80,7 +80,7 @@ example.com {
 ```txt
 example.com {
     # ...
-    
+
     # reverse proxy /api/new/ to http://localhost:3100/api/
     handle_path /api/new/* {
         rewrite * /api{path}
@@ -95,7 +95,8 @@ example.com {
 caddy run --config ./Caddyfile
 ```
 
-Note: `run` runs in the foreground, `start` starts a service (daemon) in the background.
+Note: `run` runs in the foreground, `start` starts a service (daemon) in the
+background.
 
 ### How to start Caddy as a Linux service
 
