@@ -1,6 +1,7 @@
 #!/bin/sh
 
 VersionOfUbuntuContainer="22.04"
+WEBI_CONTAINER_FOLDER="${1:-""}"
 
 timestamp() {
     echo "[+] $(date +'%F %T') [INFO] $*"
@@ -37,7 +38,7 @@ pull_and_run_ubuntu_container() {
     docker pull jrei/systemd-ubuntu:$VersionOfUbuntuContainer
     docker run \
         -d \
-        -v "$1":/opt \
+        "$([ -z "$WEBI_CONTAINER_FOLDER" ] || echo " -v ""$WEBI_CONTAINER_FOLDER"":/opt")" \
         --tmpfs /tmp \
         --tmpfs /run \
         --tmpfs /run/lock \
@@ -60,7 +61,7 @@ execute_webi_in_container() {
 }
 
 ending() {
-    if [ -z "$1" ]; then
+    if [ "$WEBI_CONTAINER_FOLDER" = "" ]; then
         docker exec -it Webi mkdir -p /opt/webi
         docker exec -it Webi git clone https://github.com/webinstall/webi-installers.git /opt/webi
     else
@@ -74,10 +75,10 @@ ending() {
 
 main() {
     command_start remove_old_docker_containers
-    command_start pull_and_run_ubuntu_container "$@"
+    command_start pull_and_run_ubuntu_container
     command_start update_and_install_packages
     command_start execute_webi_in_container
-    ending "$@"
+    ending
 }
 
 main "$@"
