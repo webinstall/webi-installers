@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VersionOfUbuntuContainer="22.04"
+VERSION_OF_UBUNTU_CONTAINER="22.04"
 WEBI_CONTAINER_FOLDER="${1:-""}"
 
 timestamp() {
@@ -35,7 +35,7 @@ remove_old_docker_containers() {
 }
 
 pull_and_run_ubuntu_container() {
-    docker pull jrei/systemd-ubuntu:$VersionOfUbuntuContainer
+    docker pull jrei/systemd-ubuntu:$VERSION_OF_UBUNTU_CONTAINER
     docker run \
         -d \
         "$([ -z "$WEBI_CONTAINER_FOLDER" ] || echo " -v ""$WEBI_CONTAINER_FOLDER"":/opt")" \
@@ -45,7 +45,7 @@ pull_and_run_ubuntu_container() {
         --privileged \
         --name "Webi" \
         -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
-        jrei/systemd-ubuntu:$VersionOfUbuntuContainer
+        jrei/systemd-ubuntu:$VERSION_OF_UBUNTU_CONTAINER
 }
 
 update_and_install_packages() {
