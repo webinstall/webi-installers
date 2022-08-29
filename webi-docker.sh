@@ -28,7 +28,9 @@ command_start() {
 }
 
 remove_old_docker_containers() {
-    container="$(docker ps --all | grep -i Webi | awk '{print $1}')"
+    container="$(docker ps --all |
+        grep -i Webi |
+        cut -d' ' -f 1)"
     if [ -n "$container" ]; then
         docker stop "$container" 2>/dev/null
         docker rm "$container" 2>/dev/null
@@ -62,7 +64,7 @@ execute_webi_in_container() {
 }
 
 ending() {
-    if [ "$WEBI_CONTAINER_FOLDER" = "" ]; then
+    if [ -z "$WEBI_CONTAINER_FOLDER" ]; then
         docker exec -it Webi mkdir -p /opt/webi
         docker exec -it Webi git clone https://github.com/webinstall/webi-installers.git /opt/webi
     else
