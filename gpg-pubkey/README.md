@@ -22,7 +22,7 @@ This installs two commands.
 The easiest way to get your GnuPG Public Key:
 
 ```sh
-curl https://webinstall.dev/gpg-pubkey | sh
+curl https://webi.sh/gpg-pubkey | sh
 ```
 
 This is what the output of `gpg-pubkey` looks like (except much longer):

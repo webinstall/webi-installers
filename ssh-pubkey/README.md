@@ -20,7 +20,7 @@ tagline: |
 The easiest way to get your SSH Public Key:
 
 ```sh
-curl https://webinstall.dev/ssh-pubkey | sh
+curl https://webi.sh/ssh-pubkey | sh
 ```
 
 ```txt

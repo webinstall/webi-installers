@@ -14,27 +14,22 @@ if (/^win/i.test(os.platform())) {
   console.warn("This npm installer doesn't work on windows yet.");
   console.warn('Copy and paste this into cmd.exe or PowerShell instead:');
   console.warn('');
-  console.warn(
-    "    curl.exe -fsSA 'MS' https://webinstall.dev/webi | powershell"
-  );
+  console.warn('    curl.exe -fsS https://webi.ms/webi | powershell');
   console.warn('');
   return;
 }
 
-exec(
-  'curl -fsS https://webinstall.dev/webi | sh',
-  function (err, stdout, stderr) {
-    if (err) {
-      console.error(err);
-    }
-    if (stdout) {
-      console.info(stdout);
-    }
-    if (stderr) {
-      console.error(stderr);
-    }
+exec('curl -fsS https://webi.sh/webi | sh', function(err, stdout, stderr) {
+  if (err) {
+    console.error(err);
   }
-);
+  if (stdout) {
+    console.info(stdout);
+  }
+  if (stderr) {
+    console.error(stderr);
+  }
+});
 /*
   .then(function () {
     // nada

@@ -70,7 +70,7 @@ You can do this **in about 30 seconds**:
 1. Run [`git-config-gpg`](https://webinstall.dev/git-config-gpg) from Webi:
    ```sh
    # On Mac & Linux
-   curl https://webinstall.dev/git-config-gpg | sh
+   curl https://webi.sh/git-config-gpg | sh
    ```
 2. Copy the GPG public key (it will be printed to your screen)
 3. Add it to your GitHub profile: <https://github.com/settings/gpg/new>

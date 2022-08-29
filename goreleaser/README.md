@@ -210,7 +210,7 @@ From macOS you can easily cross-compile cgo for Windows and Linux.
 Install [brew](https://webinstall.dev/brew), if needed:
 
 ```sh
-curl -sS https://webinstall.dev/brew | sh
+curl -sS https://webi.sh/brew | sh
 ```
 
 Install mingw and musl-cross: \

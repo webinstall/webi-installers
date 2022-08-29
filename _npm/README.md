@@ -20,13 +20,13 @@ npm install -g webi
 Mac & Linux:
 
 ```sh
-curl -fsS https://webinstall.dev/node | sh
+curl -fsS https://webi.sh/node | sh
 ```
 
 Windows (includes `curl.exe` and PowerShell by default):
 
 ```sh
-curl.exe -fsSA "MS" https://webinstall.dev/node | powershell
+curl.exe -fsSA "MS" https://webi.ms/node | powershell
 ```
 
 ## Example: Switching node versions

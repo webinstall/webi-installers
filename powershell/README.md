@@ -17,7 +17,7 @@ For example, if you wanted to install Node.js with powershell and
 webinstall.dev, you can:
 
 ```cmd
-curl.exe -s -A "MS" https://webinstall.dev/node@lts | powershell
+curl.exe -s https://webi.ms/node@lts | powershell
 ```
 -->
 

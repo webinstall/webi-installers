@@ -10,7 +10,7 @@
 - in short: no nonsense
 
 ```sh
-curl https://webinstall.dev/webi | sh
+curl https://webi.sh/webi | sh
 ```
 
 This repository contains the primary and community-submitted packages for
@@ -41,7 +41,7 @@ More technically:
    - (re-)linking directories
 4. `<package>/install.sh` may provide functions to override `_webi/template.sh`
 5. Recap:
-   - `curl https://webinstall.dev/<pkg>` => `bootstrap-<pkg>.sh`
+   - `curl https://webi.sh/<pkg>` => `bootstrap-<pkg>.sh`
    - `sh bootstrap-<pkg>.sh` =>
      `https://webinstall.dev/api/installers/<pkg>@<ver>.sh?formats=zip,tar`
    - `sh install-<pkg>.sh` => download, unpack, move, link, update PATH
@@ -273,7 +273,7 @@ set WEBI_HOST=https://webinstall.dev
 Windows has curl too!?
 
 ```bat
-curl.exe -sL -A "MS" https://webinstall.dev/node | powershell
+curl.exe -sL https://webi.ms/node | powershell
 ```
 
 And it's easy enough to ignore the execution policy
@@ -286,11 +286,11 @@ And if we want something that looks as complicated as we expect Windows to be,
 historically, we have options:
 
 ```bat
-powershell "Invoke-Expression ( Invoke-WebRequest -UseBasicParsing https://webinstall.dev/node ).Contents"
+powershell "Invoke-Expression ( Invoke-WebRequest -UseBasicParsing https://webi.ms/node ).Contents"
 ```
 
 ```bat
-powershell ( Invoke-WebRequest -UseBasicParsing https://webinstall.dev/node ).Contents | powershell
+powershell ( Invoke-WebRequest -UseBasicParsing https://webi.ms/node ).Contents | powershell
 ```
 
 -->

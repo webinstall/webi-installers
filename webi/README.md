@@ -27,7 +27,7 @@ Since `webi` is just a small helper script, it always updates on each use.
 You can install _exactly_ what you need, from memory, via URL:
 
 ```sh
-curl https://webinstall.dev/node@lts | sh
+curl https://webi.sh/node@lts | sh
 ```
 
 Or via `webi`, the tiny `curl | sh` shortcut command that comes with each
