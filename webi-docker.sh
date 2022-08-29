@@ -1,4 +1,5 @@
 #!/bin/sh
+#shellcheck disable=SC2046
 
 VERSION_OF_UBUNTU_CONTAINER="22.04"
 WEBI_CONTAINER_FOLDER="${1:-""}"
@@ -38,7 +39,7 @@ pull_and_run_ubuntu_container() {
     docker pull jrei/systemd-ubuntu:$VERSION_OF_UBUNTU_CONTAINER
     docker run \
         -d \
-        "$([ -z "$WEBI_CONTAINER_FOLDER" ] || echo " -v ""$WEBI_CONTAINER_FOLDER"":/opt")" \
+        $([ -z "$WEBI_CONTAINER_FOLDER" ] || echo " -v ""$WEBI_CONTAINER_FOLDER"":/opt") \
         --tmpfs /tmp \
         --tmpfs /run \
         --tmpfs /run/lock \
