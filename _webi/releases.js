@@ -60,6 +60,7 @@ Releases.renderBash = function (
           }
           return (
             tplTxt
+              .replace(/CHEATSHEET_URL/g, `${baseurl}/${pkg}`)
               .replace(/^\s*#?WEBI_PKG=.*/m, `WEBI_PKG='${webiPkg}'`)
               .replace(/^\s*#?WEBI_HOST=.*/m, `WEBI_HOST='${baseurl}'`)
               .replace(/^\s*#?WEBI_OS=.*/m, `WEBI_OS='${os}'`)

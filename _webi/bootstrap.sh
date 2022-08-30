@@ -1,4 +1,10 @@
 #!/bin/sh
+#<pre>
+
+############################################################
+# <h1>Cheat Sheet at CHEATSHEET_URL</h1>
+# <meta http-equiv="refresh" content="3; URL='CHEATSHEET_URL'" />
+############################################################
 
 #set -x
 
