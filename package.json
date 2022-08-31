@@ -7,6 +7,7 @@
   "scripts": {
     "fmt": "npm run prettier && npm run shfmt",
     "lint": "npm run shellcheck && npm run jshint",
+    "prepare": "node _scripts/git-hooks-init.js",
     "test": "node _webi/test.js ./node/",
     "----": "------------------------------------",
     "jshint": "npx -p jshint@2.x -- jshint -c ./.jshintrc --exclude 'node_modules/**/*' */*.js */*/*.js",
