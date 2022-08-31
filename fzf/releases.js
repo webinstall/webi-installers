@@ -2,7 +2,7 @@
 
 var github = require('../_common/github.js');
 var owner = 'junegunn';
-var repo = 'fzf-bin';
+var repo = 'fzf';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
