@@ -17,8 +17,7 @@ __init_python2() {
 
     my_latest_python2="$(
         pyenv install --list |
-            grep -v -- - |
-            grep '2\.[0-9]\+\.[0-9]\+$' |
+            grep -E '^\s+2\.[0-9]+\.[0-9]+$' |
             tail -n 1 |
             cut -d' ' -f3
     )"

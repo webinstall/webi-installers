@@ -17,8 +17,7 @@ __init_python() {
 
     my_latest_python3="$(
         pyenv install --list |
-            grep -v -- - |
-            grep '3\.[0-9]\+\.[0-9]\+$' |
+            grep -E '^\s+3\.[0-9]+\.[0-9]+$' |
             tail -n 1 |
             cut -d' ' -f3
     )"

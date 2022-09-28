@@ -25,7 +25,7 @@ sudo apt update
 sudo apt install -y build-essential zlib1g-dev libssl-dev
 
 # recommended
-sudo apt install -y libreadline-dev libbz2-dev libsqlite3-dev
+sudo apt install -y libreadline-dev libbz2-dev libsqlite3-dev libffi-dev
 ```
 
 ## Cheat Sheet
@@ -40,23 +40,23 @@ pre-requisites above).
 Here's how you can check for the latest version:
 
 ```sh
-pyenv install --list | grep -v -- - | tail -n 1
-#>   3.9.1
+pyenv install --list | grep -E '^\s+[0-9.]+$' | tail -n 1
+#>   3.10.7
 ```
 
 And install it:
 
 ```sh
-pyenv install -v 3.9.1
-#> Installed Python-3.9.1 to ~/.pyenv/versions/3.9.1
+pyenv install -v 3.10.7
+#> Installed Python-3.10.7 to ~/.pyenv/versions/3.10.7
 ```
 
 And use it:
 
 ```sh
-pyenv global 3.9.1
+pyenv global 3.10.7
 python --version
-#> Python 3.9.1
+#> Python 3.10.7
 ```
 
 Revert back to your system python:
@@ -72,7 +72,7 @@ pyenv install --list
 ```
 
 ```txt
-  3.9.1
+  3.10.7
   activepython-3.6.0
   anaconda3-2020.11
   graalpython-20.3.0
