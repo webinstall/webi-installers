@@ -29,55 +29,112 @@ Here's the things we find most useful:
 caddy file-server --browse --listen :4040
 ```
 
+### How to serve HTTPS on localhost
+
+Caddy can be used to test with https on localhost.
+
+`Caddyfile`:
+
+```Caddyfile
+localhost {
+    handle /api/* {
+        reverse_proxy localhost:3000
+    }
+
+    handle /* {
+        root * ./public/
+        file_server
+    }
+}
+```
+
+```sh
+caddyfile run --config ./Caddyfile
+```
+
 ### How to redirect and reverse proxy
 
 Here's what a fairly basic `Caddyfile` looks like:
 
-```txt
+`Caddyfile`:
+
+```Caddyfile
 # redirect www to bare domain
 www.example.com {
     redir https://example.com{uri} permanent
 }
 
 example.com {
+    ###########
+    # Logging #
+    ###########
+
     # log to stdout, which is captured by journalctl
     log {
         output stdout
         format console
     }
 
+    ###############
+    # Compression #
+    ###############
+
     # turn on standard streaming compression
     encode gzip zstd
 
+    ####################
+    # Reverse Proxying #
+    ####################
+
     # reverse proxy /api to :3000
-    handle_path /api/* {
+    handle /api/* {
         reverse_proxy localhost:3000
     }
 
     # reverse proxy some "well known" APIs
-    reverse_proxy /.well-known/openid-configuration localhost:3000
-    reverse_proxy /.well-known/jwks.json localhost:3000
+    handle /.well-known/openid-configuration {
+        reverse_proxy localhost:3000
+    }
+    handle /.well-known/jwks.json {
+        reverse_proxy  localhost:3000
+    }
 
-    # serve static files from public folder, but not /api
-    @notApi {
-        file {
-            try_files {path} {path}/ {path}/index.html
-        }
-        not path /api/*
-        not path /.well-known/openid-configuration
-        not path /.well-known/jwks.json
+    ##################
+    # Path Rewriting #
+    ##################
+
+    # reverse proxy and rewrite path /api/oldpath/* => /api/newpath/*
+    handle_path /api/oldpath/* {
+        rewrite * /api/newpath{path}
+        reverse_proxy localhost:3000
     }
-    route {
-      rewrite @notApi {http.matchers.file.relative}
+
+    ###############
+    # File Server #
+    ###############
+
+    # serve static files
+    handle /* {
+        root * /srv/example.com/public/
+        file_server
     }
-    root * /srv/example.com/public/
-    file_server
 }
 ```
 
+```sh
+caddyfile run --config ./Caddyfile
+```
+
+- [`log`](https://caddyserver.com/docs/caddyfile/directives/log)
+- [`encode`](https://caddyserver.com/docs/caddyfile/directives/encode)
+- [`handle`](https://caddyserver.com/docs/caddyfile/directives/handle)
+- [`handle_path`](https://caddyserver.com/docs/caddyfile/directives/handle_path)
+- [`root`](https://caddyserver.com/docs/caddyfile/directives/root)
+- [`file_server`](https://caddyserver.com/docs/caddyfile/directives/file_server)
+
 ### How to rewrite and reverse proxy
 
-```txt
+```Caddyfile
 example.com {
     # ...
 
