@@ -76,6 +76,7 @@ __rmrf_local() {
                 ssh-pubkey \
                 ssh-utils \
                 syncthing \
+                terraform \
                 vim-ale \
                 vim-essentials \
                 vim-lastplace \
@@ -171,6 +172,7 @@ __rmrf_local() {
                 ssh-pubkey \
                 ssh-utils \
                 syncthing \
+                terraform \
                 vim-ale \
                 vim-essentials \
                 vim-go \
@@ -271,6 +273,7 @@ __test() {
         ssh-pubkey \
         ssh-utils \
         syncthing \
+        terraform \
         vim-ale \
         vim-essentials \
         vim-lastplace \
