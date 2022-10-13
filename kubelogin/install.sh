@@ -27,7 +27,7 @@ __init_kubelogin() {
         mkdir -p "$(dirname "${pkg_src_cmd}")"
 
         # mv ./kubelogin-*/kubelogin ~/.local/opt/kubelogin-v0.99.9/bin/kubelogin
-        mv ./bin/linux_amd64/kubelogin "${pkg_src_cmd}"
+        mv ./bin/*/kubelogin "${pkg_src_cmd}"
     }
 
     # pkg_get_current_version is recommended, but not required
