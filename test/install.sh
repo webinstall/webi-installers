@@ -46,6 +46,7 @@ __rmrf_local() {
                 kind \
                 koji \
                 kubectx \
+                kubelogin \
                 kubens \
                 lf \
                 lsd \
@@ -139,6 +140,7 @@ __rmrf_local() {
                 kind \
                 koji \
                 kubectx \
+                kubelogin \
                 kubens \
                 lf \
                 lsd \
@@ -235,6 +237,7 @@ __test() {
         kind \
         koji \
         kubectx \
+        kubelogin \
         kubens \
         lf \
         lsd \
