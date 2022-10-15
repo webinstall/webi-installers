@@ -33,7 +33,7 @@ __init_kubelogin() {
     # pkg_get_current_version is recommended, but not required
     pkg_get_current_version() {
         # 'kubelogin --version' has output in this format:
-        #       kubelogin version 
+        #       kubelogin version
         #       git hash: v0.0.20/872ed59b23e06c3a0eb950cb67e7bd2b0e9d48d7
         #       Go version: go1.18.5
         #       Build time: 2022-08-09T18:30:45Z
@@ -41,9 +41,9 @@ __init_kubelogin() {
         # This trims it down to just the version number:
         #       0.0.20
         kubelogin --version 2> /dev/null |
-            head -n 2 | 
-            tail -n 1 | 
-            cut -d ' ' -f 3 | 
+            head -n 2 |
+            tail -n 1 |
+            cut -d ' ' -f 3 |
             cut -d '/' -f 1 |
             cut -d 'v' -f 2
     }
