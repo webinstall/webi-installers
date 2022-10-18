@@ -38,10 +38,6 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
         Remove-Item -Path ".\kubelogin-v*" -Recurse -ErrorAction Ignore
         Remove-Item -Path ".\kubelogin.exe" -Recurse -ErrorAction Ignore
 
-        # NOTE: DELETE THIS COMMENT IF NOT USED
-        # Move single binary into root of temporary folder
-        #& move "$pkg_download" "kubelogin.exe"
-
         # Unpack archive file into this temporary directory
         # Windows BSD-tar handles zip. Imagine that.
         echo "Unpacking $pkg_download"
