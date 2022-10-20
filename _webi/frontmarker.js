@@ -1,7 +1,7 @@
 'use strict';
 
 var fs = require('fs');
-var marked = require('marked');
+var marked = require('marked').marked;
 
 var frontmatter = '---';
 var keyValRe = /(\w+): (.*)/;
@@ -19,11 +19,11 @@ function parseYamlish(txt) {
   }
 
   function unblock() {
-    cfg[block] = marked(cfg[block]);
+    cfg[block] = marked.parse(cfg[block]);
     block = false;
   }
 
-  lines.some(function (line, i) {
+  lines.some(function(line, i) {
     if (frontmatter === line) {
       // end of frontmatter
       end = true;
@@ -68,9 +68,9 @@ function parseYamlish(txt) {
   });
 
   if (block) {
-    cfg[block] = marked(cfg[block]);
+    cfg[block] = marked.parse(cfg[block]);
   }
-  cfg.examples = marked(lines.slice(last).join('\n'));
+  cfg.examples = marked.parse(lines.slice(last).join('\n'));
 
   return cfg;
 }

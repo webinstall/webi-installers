@@ -1,7 +1,6 @@
 'use strict';
 
 var frontmarker = require('./frontmarker.js');
-var shmatter = require('shmatter');
 var fs = require('fs');
 var path = require('path');
 
@@ -40,7 +39,6 @@ pkgs.create = function (Pkgs, basepath) {
     });
   };
   Pkgs._get = function (node) {
-    var yash = path.join(basepath, node, 'package.yash');
     var curlbash = path.join(basepath, node, 'install.sh');
     var readme = path.join(basepath, node, 'README.md');
     var winstall = path.join(basepath, node, 'install.ps1');
@@ -57,30 +55,14 @@ pkgs.create = function (Pkgs, basepath) {
             console.error(e);
           }
         }),
-      fs.promises
-        .readFile(yash, 'utf-8')
-        .then(function (txt) {
-          return shmatter.parse(txt);
-        })
-        .catch(function (e) {
-          // no yash package description
-          yash = '';
-          if ('ENOENT' !== e.code && 'ENOTDIR' !== e.code) {
-            console.error("failed to parse '" + node + "/package.yash'");
-            console.error(e);
-          }
-          return fs.promises.readFile(curlbash, 'utf-8').then(function (txt) {
-            return shmatter.parse(txt);
-          });
-        })
-        .catch(function (e) {
-          // no *nix installer
-          curlbash = '';
-          if ('ENOENT' !== e.code && 'ENOTDIR' !== e.code) {
-            console.error("failed to parse '" + node + "/install.sh'");
-            console.error(e);
-          }
-        }),
+      fs.promises.access(curlbash).catch(function (e) {
+        // no *nix installer
+        curlbash = '';
+        if ('ENOENT' !== e.code && 'ENOTDIR' !== e.code) {
+          console.error("failed to parse '" + node + "/install.sh'");
+          console.error(e);
+        }
+      }),
       fs.promises.access(winstall).catch(function (e) {
         // no winstaller
         winstall = '';
