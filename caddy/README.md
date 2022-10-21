@@ -26,8 +26,17 @@ Here's the things we find most useful:
 ### How to serve a directory
 
 ```sh
-caddy file-server --browse --listen :4040
+caddy file-server --browse --listen :443
 ```
+
+### How to serve via Caddyfile
+
+```sh
+caddy run --config ./Caddyfile
+```
+
+Note: `run` runs in the foreground, `start` starts a background service (daemon)
+in the background.
 
 ### How to serve HTTPS on localhost
 
@@ -37,20 +46,50 @@ Caddy can be used to test with https on localhost.
 
 ```Caddyfile
 localhost {
-    handle /api/* {
-        reverse_proxy localhost:3000
-    }
-
     handle /* {
         root * ./public/
         file_server
     }
+    handle /api/* {
+        reverse_proxy localhost:3000
+    }
 }
 ```
 
-```sh
-caddyfile run --config ./Caddyfile
-```
+### How to serve on Linux/VPS (systemd)
+
+1. Create a generic `Caddyfile`
+   ```sh
+   mkdir -p ~/srv/caddy
+   echo '
+   # Generically vhost all domains pointed at this server
+   https:// {
+       tls {
+           on_demand
+       }
+       handle /* {
+           file_server
+           root * /home/app/srv/www/{host}/public/
+       }
+   }
+   ' > ~/srv/caddy/Caddyfile
+   ```
+2. Install serviceman
+   ```sh
+   webi serviceman
+   source ~/.config/envman/PATH.env
+   ```
+3. Install caddy as a system service
+   ```sh
+   sudo env PATH="$PATH" \
+       serviceman add --system --username "$(whoami)" --name caddy -- \
+           caddy run --config ~/srv/caddy/Caddyfile
+   ```
+
+Note: In this example any host that points to the server and has files in
+`~/srv/www/{host}/public` can be served without additional changes.
+
+Note: More on using `systemctl` below.
 
 ### How to redirect and reverse proxy
 
@@ -146,15 +185,6 @@ example.com {
 }
 ```
 
-### How to run caddy
-
-```sh
-caddy run --config ./Caddyfile
-```
-
-Note: `run` runs in the foreground, `start` starts a service (daemon) in the
-background.
-
 ### How to start Caddy as a Linux service
 
 Here are the 3 things you need to do to start Caddy as a system service:
@@ -168,10 +198,11 @@ Using a user named `app` to run your services is common industry convention.
 
 **port-binding privileges**
 
-You can use `setcap` to allow Caddy to use privileged ports.
+You can use `setcap` or [`setcap-netbind`](/setcap-netbind) to allow Caddy to
+use privileged ports.
 
 ```sh
-sudo setcap cap_net_bind_service=+ep $(readlink -f $(command -v caddy))
+sudo setcap cap_net_bind_service=+ep "$(readlink -f "$(command -v caddy)")"
 ```
 
 **systemd config**
