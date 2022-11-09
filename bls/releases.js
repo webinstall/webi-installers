@@ -1,7 +1,7 @@
 'use strict';
 
 var github = require('../_common/github.js');
-var owner = 'therootcompany';
+var owner = 'dashhive';
 var repo = 'bls';
 
 module.exports = function (request) {

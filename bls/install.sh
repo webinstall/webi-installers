@@ -4,9 +4,9 @@ __init_bls() {
     set -e
     set -u
 
-    ####################
+    ###############
     # Install bls #
-    ####################
+    ###############
 
     # Every package should define these 6 variables
     pkg_cmd_name="bls"
