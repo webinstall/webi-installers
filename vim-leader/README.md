@@ -22,7 +22,7 @@ as aliases.
 ### How to configure manually
 
 The Leader key **_MUST_** be defined before any mappings that use it (probably
-before any plugins) - pretty the first thing in your `~/.vimrc`.
+before any plugins) - pretty much the first thing in your `~/.vimrc`.
 
 ```vim
 let mapleader = ' '
