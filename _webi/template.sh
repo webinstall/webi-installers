@@ -32,7 +32,11 @@ __bootstrap_webi() {
     #PKG_FORMATS=
     WEBI_UA="$(uname -a)"
     WEBI_PKG_DOWNLOAD=""
-    WEBI_PKG_PATH="${HOME}/Downloads/webi/${PKG_NAME:-error}/${WEBI_VERSION:-latest}"
+    WEBI_DOWNLOAD_DIR="${HOME}/Downloads"
+    if [ -n "$(command -v xdg-user-dir)" ] && [ "$(xdg-user-dir DOWNLOAD)" != "$HOME" ]; then
+        WEBI_DOWNLOAD_DIR="$(xdg-user-dir DOWNLOAD)"
+    fi
+    WEBI_PKG_PATH="${WEBI_DOWNLOAD_DIR}/webi/${PKG_NAME:-error}/${WEBI_VERSION:-latest}"
     export WEBI_HOST
 
     ##
