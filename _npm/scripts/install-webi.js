@@ -19,7 +19,7 @@ if (/^win/i.test(os.platform())) {
   return;
 }
 
-exec('curl -fsS https://webi.sh/webi | sh', function(err, stdout, stderr) {
+exec('curl -fsS https://webi.sh/webi | sh', function (err, stdout, stderr) {
   if (err) {
     console.error(err);
   }

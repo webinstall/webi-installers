@@ -23,7 +23,7 @@ function parseYamlish(txt) {
     block = false;
   }
 
-  lines.some(function(line, i) {
+  lines.some(function (line, i) {
     if (frontmatter === line) {
       // end of frontmatter
       end = true;
