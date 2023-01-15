@@ -1,7 +1,7 @@
 'use strict';
 
-var fs = require('fs');
-var path = require('path');
+var fs = require('node:fs');
+var path = require('node:path');
 var request = require('@root/request');
 var _normalize = require('../_webi/normalize.js');
 
@@ -9,22 +9,23 @@ var reInstallTpl = /\s*#?\s*{{ installer }}/;
 
 var Releases = module.exports;
 Releases.get = async function (pkgdir) {
-  var get;
+  let get;
   try {
     get = require(path.join(pkgdir, 'releases.js'));
   } catch (e) {
     throw new Error('no releases.js for', pkgdir.split(/[\/\\]+/).pop());
   }
-  return get(request).then(function (all) {
-    return _normalize(all);
-  });
+
+  let all = await get(request);
+
+  return _normalize(all);
 };
 
 function padScript(txt) {
   return txt.replace(/^/g, '        ');
 }
 
-Releases.renderBash = function (
+Releases.renderBash = async function (
   pkgdir,
   rel,
   { baseurl, pkg, tag, ver, os = '', arch = '', formats },
@@ -153,7 +154,7 @@ Releases.renderBash = function (
     });
 };
 
-Releases.renderBatch = function (
+Releases.renderBatch = async function (
   pkgdir,
   rel,
   { baseurl, pkg, tag, ver, os, arch, formats },
@@ -193,7 +194,7 @@ Releases.renderBatch = function (
     });
 };
 
-Releases.renderPowerShell = function (
+Releases.renderPowerShell = async function (
   pkgdir,
   rel,
   { baseurl, pkg, tag, ver, os, arch, formats },

@@ -64,41 +64,55 @@ function createFormatsSorter(formats) {
 async function getCachedReleases(pkg) {
   // returns { download: '<template string>', releases: [{ version, date, os, arch, lts, channel, download}] }
 
-  function putCache() {
-    cache[pkg].promise = cache[pkg].promise.then(function () {
-      var age = Date.now() - cache[pkg].updatedAt;
-      if (age < staleAge) {
-        //console.debug('NOT STALE ANYMORE - updated in previous promise');
-        return cache[pkg].all;
-      }
-      //console.debug('DOWNLOADING NEW "%s" releases', pkg);
-      var pkgdir = path.join(installerDir, pkg);
-      return Releases.get(pkgdir)
-        .then(function (all) {
-          //console.debug('DOWNLOADED NEW "%s" releases', pkg);
-          cache[pkg].updatedAt = Date.now();
-          cache[pkg].all = all;
-        })
-        .catch(function (e) {
-          console.error(
-            'Error fetching releases for "%s": %s',
-            pkg,
-            e.toString(),
-          );
-          cache[pkg].all = { download: '', releases: [] };
-        })
-        .then(function () {
-          return cache[pkg].all;
-        });
-    });
+  async function chainCachePromise(fn) {
+    cache[pkg].promise = cache[pkg].promise.then(fn);
     return cache[pkg].promise;
   }
 
-  var p;
+  async function sleep(ms) {
+    return await new Promise(function (resolve, reject) {
+      setTimeout(resolve, ms);
+    });
+  }
+
+  async function putCache() {
+    var age = Date.now() - cache[pkg].updatedAt;
+    if (age < staleAge) {
+      //console.debug('NOT STALE ANYMORE - updated in previous promise');
+      return cache[pkg].all;
+    }
+
+    //console.debug('DOWNLOADING NEW "%s" releases', pkg);
+    var pkgdir = path.join(installerDir, pkg);
+
+    // workaround for request timeout seeming to not work
+    let complete = false;
+    await Promise.race([
+      Releases.get(pkgdir).then(function (all) {
+        // Note: it is possible for slightly older data
+        // to replace slightly newer data, but this is better
+        // than being in a cycle where release updates _always_
+        // take longer than expected.
+        //console.debug('DOWNLOADED NEW "%s" releases', pkg);
+        cache[pkg].updatedAt = Date.now();
+        cache[pkg].all = all;
+        complete = true;
+      }),
+      sleep(5000).then(function () {
+        if (complete) {
+          return;
+        }
+        console.error(`request timeout waiting for '${pkg}' release info`);
+      }),
+    ]);
+
+    return cache[pkg].all;
+  }
+
   if (!cache[pkg]) {
     cache[pkg] = {
       updatedAt: 0,
-      all: null,
+      all: { download: '', releases: [] },
       promise: Promise.resolve(),
     };
   }
@@ -106,17 +120,23 @@ async function getCachedReleases(pkg) {
   var age = Date.now() - cache[pkg].updatedAt;
   if (age >= expiredAge) {
     //console.debug("EXPIRED - waiting");
-    p = putCache();
-  } else if (age >= staleAge) {
-    //console.debug("STALE - background update");
-    putCache();
-    p = Promise.resolve(cache[pkg].all);
-  } else {
-    //console.debug("FRESH");
-    p = Promise.resolve(cache[pkg].all);
+    return await Promise.race([
+      chainCachePromise(putCache),
+      new Promise(function (resolve) {
+        setTimeout(function () {
+          resolve(cache[pkg].all);
+        }, 5000);
+      }),
+    ]);
   }
 
-  return p;
+  if (age >= staleAge) {
+    //console.debug("STALE - background update");
+    chainCachePromise(putCache);
+  }
+
+  //console.debug("FRESH");
+  return await cache[pkg].all;
 }
 
 async function filterReleases(

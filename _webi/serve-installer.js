@@ -52,41 +52,41 @@ module.exports = async function serveInstaller(
   // TODO maybe move package/version/lts/channel detection into getReleases
   var myOs = uaDetect.os(ua);
   var myArch = uaDetect.arch(ua);
-  return packages.get(pkg).then(function (cfg) {
-    return getReleases({
-      pkg: cfg.alias || pkg,
-      ver,
-      os: myOs,
-      arch: myArch,
-      lts,
-      channel,
-      formats,
-      limit: 1,
-    }).then(function (rels) {
-      var rel = rels.releases[0];
-      var pkgdir = path.join(installersDir, pkg);
-      var opts = {
-        baseurl,
-        pkg: cfg.alias || pkg,
-        ver,
-        tag,
-        os: myOs,
-        arch: myArch,
-        lts,
-        channel,
-        formats,
-        limit: 1,
-      };
-      rel.oses = rels.oses;
-      rel.arches = rels.arches;
-      rel.formats = rels.formats;
-      if ('bat' === ext) {
-        return Releases.renderBatch(pkgdir, rel, opts);
-      } else if ('ps1' === ext) {
-        return Releases.renderPowerShell(pkgdir, rel, opts);
-      } else {
-        return Releases.renderBash(pkgdir, rel, opts);
-      }
-    });
+  let cfg = await packages.get(pkg);
+  let rels = await getReleases({
+    pkg: cfg.alias || pkg,
+    ver,
+    os: myOs,
+    arch: myArch,
+    lts,
+    channel,
+    formats,
+    limit: 1,
   });
+
+  var rel = rels.releases[0];
+  var pkgdir = path.join(installersDir, pkg);
+  var opts = {
+    baseurl,
+    pkg: cfg.alias || pkg,
+    ver,
+    tag,
+    os: myOs,
+    arch: myArch,
+    lts,
+    channel,
+    formats,
+    limit: 1,
+  };
+  rel.oses = rels.oses;
+  rel.arches = rels.arches;
+  rel.formats = rels.formats;
+
+  if ('bat' === ext) {
+    return Releases.renderBatch(pkgdir, rel, opts);
+  }
+  if ('ps1' === ext) {
+    return Releases.renderPowerShell(pkgdir, rel, opts);
+  }
+  return Releases.renderBash(pkgdir, rel, opts);
 };
