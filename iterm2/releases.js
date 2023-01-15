@@ -2,7 +2,7 @@
 
 function getRawReleases(request) {
   return request({ url: 'https://iterm2.com/downloads.html' }).then(function (
-    resp
+    resp,
   ) {
     var links = resp.body
       .split(/[<>]+/g)
@@ -40,10 +40,10 @@ function transformReleases(links) {
           os: 'macos',
           arch: 'amd64',
           ext: '', // let normalize run the split/test/join
-          download: link
+          download: link,
         };
       })
-      .filter(Boolean)
+      .filter(Boolean),
   };
 }
 

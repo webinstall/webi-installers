@@ -17,7 +17,7 @@ module.exports = async function () {
         os: 'linux',
         arch: 'amd64',
         ext: 'tar',
-        download: ''
+        download: '',
       },
       {
         name: 'postgresql-10.12-1-linux-binaries.tar.gz',
@@ -28,7 +28,7 @@ module.exports = async function () {
         os: 'linux',
         arch: 'x86',
         ext: 'tar',
-        download: ''
+        download: '',
       },
       {
         name: 'postgresql-10.12-1-osx-binaries.zip',
@@ -39,7 +39,7 @@ module.exports = async function () {
         os: 'macos',
         arch: 'amd64',
         ext: 'zip',
-        download: ''
+        download: '',
       },
       {
         name: 'postgresql-10.13-1-osx-binaries.zip',
@@ -50,7 +50,7 @@ module.exports = async function () {
         os: 'macos',
         arch: 'amd64',
         ext: 'zip',
-        download: ''
+        download: '',
       },
       {
         name: 'postgresql-11.8-1-osx-binaries.zip',
@@ -61,7 +61,7 @@ module.exports = async function () {
         os: 'macos',
         arch: 'amd64',
         ext: 'zip',
-        download: ''
+        download: '',
       },
       {
         name: 'postgresql-12.3-1-osx-binaries.zip',
@@ -72,8 +72,8 @@ module.exports = async function () {
         os: 'macos',
         arch: 'amd64',
         ext: 'zip',
-        download: ''
-      }
+        download: '',
+      },
     ].map(function (rel) {
       rel.download =
         'https://get.enterprisedb.com/postgresql/' +
@@ -81,7 +81,7 @@ module.exports = async function () {
         '?ls=Crossover&type=Crossover';
       return rel;
     }),
-    download: ''
+    download: '',
   };
 };
 

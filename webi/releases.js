@@ -12,7 +12,7 @@ module.exports = async function () {
         os: 'linux',
         arch: 'amd64',
         ext: 'tar',
-        download: ''
+        download: '',
       },
       {
         name: 'webi.tar',
@@ -23,7 +23,7 @@ module.exports = async function () {
         os: 'macos',
         arch: 'amd64',
         ext: 'tar',
-        download: ''
+        download: '',
       },
       {
         name: 'webi.tar',
@@ -34,10 +34,10 @@ module.exports = async function () {
         os: 'windows',
         arch: 'amd64',
         ext: 'tar',
-        download: ''
-      }
+        download: '',
+      },
     ],
     formats: [],
-    downloads: ''
+    downloads: '',
   };
 };

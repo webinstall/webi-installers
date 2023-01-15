@@ -27,7 +27,7 @@ function padScript(txt) {
 Releases.renderBash = function (
   pkgdir,
   rel,
-  { baseurl, pkg, tag, ver, os = '', arch = '', formats }
+  { baseurl, pkg, tag, ver, os = '', arch = '', formats },
 ) {
   if (!Array.isArray(formats)) {
     formats = [];
@@ -47,7 +47,7 @@ Releases.renderBash = function (
         build: vers
           .join('.')
           .replace(/[^+\-]*/, '')
-          .replace(/^-/, '')
+          .replace(/^-/, ''),
       };
       var pkgFile = rel.filename || rel.name;
       return fs.promises
@@ -81,7 +81,7 @@ Releases.renderBash = function (
                   '&formats=' +
                   formats.join(',') +
                   '&pretty=true' +
-                  "'"
+                  "'",
               )
               .replace(
                 /^\s*#?WEBI_CSV=.*/m,
@@ -97,15 +97,15 @@ Releases.renderBash = function (
                     '-',
                     rel.download,
                     rel.name,
-                    rel.comment || ''
+                    rel.comment || '',
                   ]
                     .join(',')
                     .replace(/'/g, '') +
-                  "'"
+                  "'",
               )
               .replace(
                 /^\s*#?WEBI_VERSION=.*/m,
-                'WEBI_VERSION=' + JSON.stringify(rel.version)
+                'WEBI_VERSION=' + JSON.stringify(rel.version),
               )
               .replace(/^\s*#?WEBI_MAJOR=.*/m, 'WEBI_MAJOR=' + v.major)
               .replace(/^\s*#?WEBI_MINOR=.*/m, 'WEBI_MINOR=' + v.minor)
@@ -115,33 +115,33 @@ Releases.renderBash = function (
               .replace(/^\s*#?WEBI_CHANNEL=.*/m, 'WEBI_CHANNEL=' + rel.channel)
               .replace(
                 /^\s*#?WEBI_EXT=.*/m,
-                'WEBI_EXT=' + rel.ext.replace(/tar.*/, 'tar')
+                'WEBI_EXT=' + rel.ext.replace(/tar.*/, 'tar'),
               )
               .replace(
                 /^\s*#?WEBI_FORMATS=.*/m,
-                "WEBI_FORMATS='" + formats.join(',') + "'"
+                "WEBI_FORMATS='" + formats.join(',') + "'",
               )
               .replace(
                 /^\s*#?WEBI_PKG_URL=.*/m,
-                "WEBI_PKG_URL='" + rel.download + "'"
+                "WEBI_PKG_URL='" + rel.download + "'",
               )
               .replace(
                 /^\s*#?WEBI_PKG_FILE=.*/m,
-                "WEBI_PKG_FILE='" + pkgFile + "'"
+                "WEBI_PKG_FILE='" + pkgFile + "'",
               )
               // PKG details
               .replace(/^\s*#?PKG_NAME=.*/m, "PKG_NAME='" + pkg + "'")
               .replace(
                 /^\s*#?PKG_OSES=.*/m,
-                "PKG_OSES='" + ((rel && rel.oses) || []).join(',') + "'"
+                "PKG_OSES='" + ((rel && rel.oses) || []).join(',') + "'",
               )
               .replace(
                 /^\s*#?PKG_ARCHES=.*/m,
-                "PKG_ARCHES='" + ((rel && rel.arches) || []).join(',') + "'"
+                "PKG_ARCHES='" + ((rel && rel.arches) || []).join(',') + "'",
               )
               .replace(
                 /^\s*#?PKG_FORMATS=.*/m,
-                "PKG_FORMATS='" + ((rel && rel.formats) || []).join(',') + "'"
+                "PKG_FORMATS='" + ((rel && rel.formats) || []).join(',') + "'",
               )
               // $', $0, ... $9, $`, $&, and $_ all have special meaning
               // (see https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
@@ -156,7 +156,7 @@ Releases.renderBash = function (
 Releases.renderBatch = function (
   pkgdir,
   rel,
-  { baseurl, pkg, tag, ver, os, arch, formats }
+  { baseurl, pkg, tag, ver, os, arch, formats },
 ) {
   if (!Array.isArray(formats)) {
     formats = [];
@@ -186,7 +186,7 @@ Releases.renderBatch = function (
           return tplTxt
             .replace(
               /^(REM )?WEBI_PKG=.*/im,
-              "WEBI_PKG='" + pkg + '@' + ver + "'"
+              "WEBI_PKG='" + pkg + '@' + ver + "'",
             )
             .replace(reInstallTpl, '\n' + installTxt);
         });
@@ -196,7 +196,7 @@ Releases.renderBatch = function (
 Releases.renderPowerShell = function (
   pkgdir,
   rel,
-  { baseurl, pkg, tag, ver, os, arch, formats }
+  { baseurl, pkg, tag, ver, os, arch, formats },
 ) {
   if (!Array.isArray(formats)) {
     formats = [];
@@ -227,27 +227,27 @@ Releases.renderPowerShell = function (
           return tplTxt
             .replace(
               /^(#)?\$Env:WEBI_HOST\s*=.*/im,
-              "$Env:WEBI_HOST = '" + baseurl + "'"
+              "$Env:WEBI_HOST = '" + baseurl + "'",
             )
             .replace(
               /^(#)?\$Env:WEBI_PKG\s*=.*/im,
-              "$Env:WEBI_PKG = '" + pkgver + "'"
+              "$Env:WEBI_PKG = '" + pkgver + "'",
             )
             .replace(
               /^(#)?\$Env:PKG_NAME\s*=.*/im,
-              "$Env:PKG_NAME = '" + pkg + "'"
+              "$Env:PKG_NAME = '" + pkg + "'",
             )
             .replace(
               /^(#)?\$Env:WEBI_VERSION\s*=.*/im,
-              "$Env:WEBI_VERSION = '" + rel.version + "'"
+              "$Env:WEBI_VERSION = '" + rel.version + "'",
             )
             .replace(
               /^(#)?\$Env:WEBI_PKG_URL\s*=.*/im,
-              "$Env:WEBI_PKG_URL = '" + rel.download + "'"
+              "$Env:WEBI_PKG_URL = '" + rel.download + "'",
             )
             .replace(
               /^(#)?\$Env:WEBI_PKG_FILE\s*=.*/im,
-              "$Env:WEBI_PKG_FILE = '" + rel.name + "'"
+              "$Env:WEBI_PKG_FILE = '" + rel.name + "'",
             )
             .replace(reInstallTpl, '\n' + installTxt);
         });

@@ -111,7 +111,7 @@ Engineering_ (as opposed to just _Code Monkey_-ing around):
   strict: true,
   maxdepth: 4,
   maxstatements: 100,
-  maxcomplexity: 20
+  maxcomplexity: 20,
 }
 ```
 
@@ -147,8 +147,8 @@ certain file patterns and directories.
   esversion: 11,
   overrides: {
     './browser/*.js': {
-      esversion: 7
-    }
-  }
+      esversion: 7,
+    },
+  },
 }
 ```

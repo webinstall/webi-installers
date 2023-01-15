@@ -17,7 +17,7 @@ module.exports = async function serveInstaller(
   pkg,
   tag,
   ext,
-  formats
+  formats,
 ) {
   // TODO put some of this in a middleware? or common function?
 
@@ -61,7 +61,7 @@ module.exports = async function serveInstaller(
       lts,
       channel,
       formats,
-      limit: 1
+      limit: 1,
     }).then(function (rels) {
       var rel = rels.releases[0];
       var pkgdir = path.join(installersDir, pkg);
@@ -75,7 +75,7 @@ module.exports = async function serveInstaller(
         lts,
         channel,
         formats,
-        limit: 1
+        limit: 1,
       };
       rel.oses = rels.oses;
       rel.arches = rels.arches;

@@ -6,20 +6,20 @@ var matchers = {
   metaGeneration: /.*MetaGeneration>(.*)<\/MetaGeneration.*/,
   lastModified: /.*LastModified>(.*)<\/LastModified.*/,
   etag: /.*ETag>(.*)<\/ETag.*/,
-  size: /.*Size>(.*)<\/Size.*/
+  size: /.*Size>(.*)<\/Size.*/,
 };
 var baseUrl = 'https://chromedriver.storage.googleapis.com';
 
 module.exports = function (request) {
   var all = {
     download: '',
-    releases: []
+    releases: [],
   };
 
   // XML
   return request({
     url: 'https://chromedriver.storage.googleapis.com/',
-    json: false
+    json: false,
   })
     .then(function (resp) {
       var body = resp.body;
@@ -32,7 +32,7 @@ module.exports = function (request) {
           key: group.replace(matchers.key, '$1'),
           //generation: group.replace(matchers.generation, '$1'),
           //metaGeneration: group.replace(matchers.metaGeneration, '$1'),
-          lastModified: group.replace(matchers.lastModified, '$1')
+          lastModified: group.replace(matchers.lastModified, '$1'),
           //etag: group.replace(matchers.etag, '$1'),
           //size: group.replace(matchers.size, '$1')
         };
@@ -66,7 +66,7 @@ module.exports = function (request) {
           os: osname,
           arch: arch,
           hash: '-', // not sure about including etag as hash yet
-          download: asset.key
+          download: asset.key,
         });
       });
     })

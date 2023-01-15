@@ -83,7 +83,7 @@ async function getCachedReleases(pkg) {
           console.error(
             'Error fetching releases for "%s": %s',
             pkg,
-            e.toString()
+            e.toString(),
           );
           cache[pkg].all = { download: '', releases: [] };
         })
@@ -99,7 +99,7 @@ async function getCachedReleases(pkg) {
     cache[pkg] = {
       updatedAt: 0,
       all: null,
-      promise: Promise.resolve()
+      promise: Promise.resolve(),
     };
   }
 
@@ -121,7 +121,7 @@ async function getCachedReleases(pkg) {
 
 async function filterReleases(
   all,
-  { ver, os, arch, lts, channel, formats, limit }
+  { ver, os, arch, lts, channel, formats, limit },
 ) {
   // When multiple formats are downloadable (i.e. .zip and .pkg)
   // sort the most compatible format first
@@ -163,7 +163,7 @@ module.exports = function getReleases({
   lts,
   channel,
   formats,
-  limit
+  limit,
 }) {
   if (!_count) {
     _count = 0;
@@ -176,14 +176,14 @@ module.exports = function getReleases({
       lts,
       channel,
       formats,
-      limit
+      limit,
     })
       .catch(function (err) {
         if ('MODULE_NOT_FOUND' === err.code) {
           return null;
         }
         console.error(
-          'TODO: lib/release.js: check type of error, such as MODULE_NOT_FOUND'
+          'TODO: lib/release.js: check type of error, such as MODULE_NOT_FOUND',
         );
         console.error(err);
       })
@@ -199,7 +199,7 @@ module.exports = function getReleases({
               lts,
               channel,
               formats,
-              limit
+              limit,
             });
           }
           // Raspberry Pi 3+ on Raspbian x86 (not Ubuntu arm64)
@@ -213,7 +213,7 @@ module.exports = function getReleases({
               lts,
               channel,
               formats,
-              limit
+              limit,
             });
           }
           // Raspberry Pi 3+ on Ubuntu arm64 (via Bionic?)
@@ -228,7 +228,7 @@ module.exports = function getReleases({
               lts,
               channel,
               formats,
-              limit
+              limit,
             });
           }
           // Raspberry Pi 3+ on Ubuntu arm64 (via Bionic?)
@@ -242,7 +242,7 @@ module.exports = function getReleases({
               lts,
               channel,
               formats,
-              limit
+              limit,
             });
           }
           releases = [
@@ -260,15 +260,15 @@ module.exports = function getReleases({
               comment:
                 'No matches found. Could be bad or missing version info' +
                 ',' +
-                "Check query parameters. Should be something like '/api/releases/{package}@{version}.tab?os={macos|linux|windows|-}&arch={amd64|x86|aarch64|arm64|armv7l|-}&limit=100'"
-            }
+                "Check query parameters. Should be something like '/api/releases/{package}@{version}.tab?os={macos|linux|windows|-}&arch={amd64|x86|aarch64|arm64|armv7l|-}&limit=100'",
+            },
           ];
         }
         return {
           oses: all.oses,
           arches: all.arches,
           formats: all.formats,
-          releases: releases
+          releases: releases,
         };
       });
   });
@@ -284,7 +284,7 @@ if (require.main === module) {
       lts: true,
       channel: 'stable',
       formats: ['tar', 'exe', 'zip', 'xz', 'dmg', 'pkg'],
-      limit: 10
+      limit: 10,
     })
     .then(function (all) {
       console.info(JSON.stringify(all));

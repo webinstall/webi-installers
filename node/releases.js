@@ -23,18 +23,18 @@ var map = {
   msi: 'msi',
   '7z': '7z',
   zip: 'zip',
-  tar: 'tar.gz'
+  tar: 'tar.gz',
 };
 
 function getAllReleases(request) {
   return request({
     url: 'https://nodejs.org/dist/index.json',
-    json: true
+    json: true,
   }).then(function (resp) {
     var rels = resp.body;
     var all = {
       releases: [],
-      download: '' // node's download URLs are unpredictable
+      download: '', // node's download URLs are unpredictable
     };
 
     // https://blog.risingstack.com/update-nodejs-8-end-of-life-no-support/
@@ -84,7 +84,7 @@ function getAllReleases(request) {
           // See https://nodejs.org/dist/v14.0.0/
           // usually like https://nodejs.org/dist/v14.0.0/node-{version}-{plat}-{arch}.{ext}
           download:
-            'https://nodejs.org/dist/' + rel.version + '/node-' + rel.version
+            'https://nodejs.org/dist/' + rel.version + '/node-' + rel.version,
         };
         all.releases.push(r);
 

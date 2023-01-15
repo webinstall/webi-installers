@@ -7,13 +7,13 @@ var osMap = {
   freebsd: /(\b|_)(freebsd)/i,
   windows: /(\b|_)(win|microsoft|msft)/i,
   sunos: /(\b|_)(sun)/i,
-  aix: /(\b|_)(aix)/i
+  aix: /(\b|_)(aix)/i,
 };
 
 var maps = {
   oses: {},
   arches: {},
-  formats: {}
+  formats: {},
 };
 
 Object.keys(osMap).forEach(function (name) {
@@ -39,7 +39,7 @@ var arches = [
   'x86',
   'ppc64le',
   'ppc64',
-  's390x'
+  's390x',
 ];
 // Used for detecting system arch from package download url, for example:
 //
@@ -59,7 +59,7 @@ var archMap = {
   x86: /(\b|_|amd|(dar)?win(dows)?|mac(os)?|linux|osx|x)(86|32)([_\-]?bit)(\b|_)/i,
   ppc64le: /(\b|_)(ppc64le)/i,
   ppc64: /(\b|_)(ppc64)(\b|_)/i,
-  s390x: /(\b|_)(s390x)/i
+  s390x: /(\b|_)(s390x)/i,
 };
 arches.forEach(function (name) {
   maps.arches[name] = true;
@@ -69,7 +69,7 @@ function normalize(all) {
   var supported = {
     oses: {},
     arches: {},
-    formats: {}
+    formats: {},
   };
 
   all.releases.forEach(function (rel) {

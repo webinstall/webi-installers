@@ -5,7 +5,7 @@ var map = {};
 module.exports = function (request) {
   var all = {
     download: '',
-    releases: []
+    releases: [],
   };
   return Promise.all(
     ['macos', 'linux', 'windows'].map(function (osname) {
@@ -14,7 +14,7 @@ module.exports = function (request) {
           'https://storage.googleapis.com/flutter_infra/releases/releases_' +
           osname +
           '.json',
-        json: true
+        json: true,
       }).then(function (resp) {
         var body = resp.body;
         all.download = body.base_url + '/{{ download }}';
@@ -31,11 +31,11 @@ module.exports = function (request) {
             os: osname,
             arch: 'amd64',
             hash: '-', // not sure about including hash / sha256 yet
-            download: asset.archive
+            download: asset.archive,
           });
         });
       });
-    })
+    }),
   ).then(function () {
     all.releases.sort(function (a, b) {
       if ('stable' === a.channel && a.channel !== b.channel) {

@@ -14,7 +14,7 @@ function getAllReleases(request, formula) {
   return request({
     url: 'https://formulae.brew.sh/api/formula/' + formula + '.json',
     fail: true, // https://git.coolaj86.com/coolaj86/request.js/issues/2
-    json: true
+    json: true,
   })
     .then(failOnBadStatus)
     .then(function (resp) {
@@ -26,16 +26,16 @@ function getAllReleases(request, formula) {
       return [
         {
           version: ver,
-          download: dl.replace(/{{ v }}/g, ver)
-        }
+          download: dl.replace(/{{ v }}/g, ver),
+        },
       ].concat(
         resp.body.versioned_formulae.map(function (f) {
           var ver = f.replace(/.*@/, '');
           return {
             version: ver,
-            download: dl
+            download: dl,
           };
-        })
+        }),
       );
     })
     .catch(function (err) {

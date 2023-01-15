@@ -70,7 +70,7 @@ pkgs.create = function (Pkgs, basepath) {
           console.error("failed to read '" + node + "/install.ps1'");
           console.error(e);
         }
-      })
+      }),
     ]).then(function (items) {
       var meta = items[0] || items[1];
       if (!meta) {

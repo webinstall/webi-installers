@@ -5,14 +5,14 @@ let ltsRe = /GnuPG-(2\.2\.[\d\.]+)/;
 function createRssMatcher() {
   return new RegExp(
     '<link>(https://sourceforge\\.net/projects/gpgosx/files/GnuPG-([\\d\\.]+)\\.dmg/download)</link>',
-    'g'
+    'g',
   );
 }
 
 function createUrlMatcher() {
   return new RegExp(
     'https://sourceforge\\.net/projects/gpgosx/files/(GnuPG-([\\d\\.]+)\\.dmg)/download',
-    ''
+    '',
   );
 }
 
@@ -20,7 +20,7 @@ async function getRawReleases(request) {
   let matcher = createRssMatcher();
 
   let resp = await request({
-    url: 'https://sourceforge.net/projects/gpgosx/rss?path=/'
+    url: 'https://sourceforge.net/projects/gpgosx/rss?path=/',
   });
   let links = [];
   for (;;) {
@@ -64,13 +64,13 @@ function transformReleases(links) {
         os: 'macos',
         arch: 'amd64',
         ext: 'dmg',
-        download: link
+        download: link,
       };
     })
     .filter(Boolean);
 
   return {
-    releases: releases
+    releases: releases,
   };
 }
 

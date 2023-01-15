@@ -175,8 +175,8 @@ Hyper is configured with JavaScript.
 module.exports = {
   config: {
     // ...
-    shell: process.env.HOME + '/.local/bin/fish'
-  }
+    shell: process.env.HOME + '/.local/bin/fish',
+  },
 };
 ```
 

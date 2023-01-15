@@ -15,7 +15,7 @@ function getAllReleases(
   request,
   owner,
   repo,
-  baseurl = 'https://api.github.com'
+  baseurl = 'https://api.github.com',
 ) {
   if (!owner) {
     return Promise.reject('missing owner for repo');
@@ -26,13 +26,13 @@ function getAllReleases(
 
   var req = {
     url: `${baseurl}/repos/${owner}/${repo}/releases`,
-    json: true
+    json: true,
   };
   // TODO I really don't like global config, find a way to do better
   if (process.env.GITHUB_USERNAME) {
     req.auth = {
       user: process.env.GITHUB_USERNAME,
-      pass: process.env.GITHUB_TOKEN
+      pass: process.env.GITHUB_TOKEN,
     };
   }
 
@@ -41,7 +41,7 @@ function getAllReleases(
     const all = {
       releases: [],
       // todo make this ':baseurl' + ':releasename'
-      download: ''
+      download: '',
     };
 
     gHubResp.forEach((release) => {
@@ -56,7 +56,7 @@ function getAllReleases(
           os: '', // will be guessed by download filename
           arch: '', // will be guessed by download filename
           ext: '', // will be normalized
-          download: asset['browser_download_url']
+          download: asset['browser_download_url'],
         });
       });
     });
@@ -71,6 +71,6 @@ if (module === require.main) {
   getAllReleases(require('@root/request'), 'BurntSushi', 'ripgrep').then(
     function (all) {
       console.info(JSON.stringify(all, null, 2));
-    }
+    },
   );
 }

@@ -1,10 +1,10 @@
 'use strict';
 
 var osMap = {
-  darwin: 'macos'
+  darwin: 'macos',
 };
 var archMap = {
-  386: 'x86'
+  386: 'x86',
 };
 
 function getAllReleases(request) {
@@ -28,12 +28,12 @@ function getAllReleases(request) {
   */
   return request({
     url: 'https://golang.org/dl/?mode=json&include=all',
-    json: true
+    json: true,
   }).then((resp) => {
     var goReleases = resp.body;
     var all = {
       releases: [],
-      download: 'https://dl.google.com/go/{{ download }}'
+      download: 'https://dl.google.com/go/{{ download }}',
     };
 
     goReleases.forEach((release) => {
@@ -58,7 +58,7 @@ function getAllReleases(request) {
           arch: arch,
           ext: '', // let normalize run the split/test/join
           hash: '-', // not ready to standardize this yet
-          download: filename
+          download: filename,
         });
       });
     });

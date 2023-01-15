@@ -20,7 +20,7 @@ function getRequest(req) {
     windows: 'curl.exe -fsSA "MS $Env:PROCESSOR_ARCHITECTURE" ' + url,
     ua: ua,
     os: uaDetect.os(ua),
-    arch: uaDetect.arch(ua)
+    arch: uaDetect.arch(ua),
   };
 }
 

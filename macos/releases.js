@@ -6,7 +6,7 @@ var oses = [
     version: '10.12.6',
     date: '2018-09-26',
     channel: 'beta',
-    url: 'https://support.apple.com/en-us/HT208202'
+    url: 'https://support.apple.com/en-us/HT208202',
   },
   {
     name: 'OS X El Capitan',
@@ -14,15 +14,15 @@ var oses = [
     date: '2018-07-09',
     lts: true,
     channel: 'stable',
-    url: 'https://support.apple.com/en-us/HT206886'
+    url: 'https://support.apple.com/en-us/HT206886',
   },
   {
     name: 'OS X Yosemite',
     version: '10.10.5',
     date: '2017-07-19',
     channel: 'beta',
-    url: 'https://support.apple.com/en-us/HT210717'
-  }
+    url: 'https://support.apple.com/en-us/HT210717',
+  },
 ];
 
 var headers = {
@@ -37,7 +37,7 @@ var headers = {
   'Sec-Fetch-Site': 'none',
   'Sec-Fetch-Mode': 'navigate',
   'Sec-Fetch-User': '?1',
-  'Accept-Language': 'en-US,en;q=0.9,sq;q=0.8'
+  'Accept-Language': 'en-US,en;q=0.9,sq;q=0.8',
 };
 
 module.exports = function (request) {
@@ -48,7 +48,7 @@ module.exports = function (request) {
       return request({
         method: 'GET',
         url: os.url,
-        headers: headers
+        headers: headers,
       }).then(function (resp) {
         var m = resp.body.match(/(http[^>]+Install[^>]+.dmg)/);
         var download = m && m[1];
@@ -62,11 +62,11 @@ module.exports = function (request) {
             arch: 'amd64',
             ext: 'dmg',
             hash: '-',
-            download: download
+            download: download,
           });
         });
       });
-    })
+    }),
   ).then(function () {
     all.releases.sort(function (a, b) {
       if ('10.11.6' === a.version) {

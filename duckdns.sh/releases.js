@@ -12,7 +12,7 @@ module.exports = function (request) {
     'armv7l',
     'ppc64le',
     's390x',
-    'x86'
+    'x86',
   ];
   let oses = ['freebsd', 'linux', 'macos', 'posix'];
   return githubSource(request, owner, repo, oses, arches).then(function (all) {

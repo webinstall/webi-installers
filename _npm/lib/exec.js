@@ -9,7 +9,7 @@ function spawner(args) {
   return new Promise(function (resolve, reject) {
     var bin = args.shift();
     var runner = spawn(bin, args, {
-      windowsHide: true
+      windowsHide: true,
     });
     runner.stdout.on('data', function (chunk) {
       console.info(chunk.toString('utf8'));

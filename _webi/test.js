@@ -5,7 +5,7 @@
 //
 var usage = [
   'Usage: node _webi/test.js --debug <path-to-package>',
-  'Example: node _webi/test.js --debug ./node/'
+  'Example: node _webi/test.js --debug ./node/',
 ].join('\n');
 
 var count = 3;
@@ -104,7 +104,7 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
       ver: '',
       os: osrel,
       arch,
-      formats: formats
+      formats: formats,
     }).catch(function () {}),
     Releases.renderPowerShell(pkgdir, rel, {
       baseurl: 'https://webinstall.dev',
@@ -113,8 +113,8 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
       ver: '',
       os: osrel,
       arch,
-      formats: formats
-    }).catch(function () {})
+      formats: formats,
+    }).catch(function () {}),
   ]).then(function (scripts) {
     var bashTxt = scripts[0];
     var ps1Txt = scripts[1];
@@ -125,7 +125,7 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
       bashTxt = (bashTxt || 'echo ERROR').replace(/#set -x/g, 'set -x');
       ps1Txt = (ps1Txt || 'echo ERROR').replace(
         /REM REM todo debug/g,
-        'REM todo debug'
+        'REM todo debug',
       );
     }
     console.info('Do the scripts actually work?');

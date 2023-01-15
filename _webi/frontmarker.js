@@ -57,7 +57,7 @@ function parseYamlish(txt) {
     var m = line.match(keyValRe);
     if (!m) {
       throw new Error(
-        'invalid key format for: ' + JSON.stringify(line) + ' ' + i
+        'invalid key format for: ' + JSON.stringify(line) + ' ' + i,
       );
     }
     if ('|' === m[2]) {
@@ -79,6 +79,6 @@ module.exports.parse = parseYamlish;
 
 if (require.main === module) {
   console.info(
-    parseYamlish(fs.readFileSync(__dirname + '/../node/README.md', 'utf8'))
+    parseYamlish(fs.readFileSync(__dirname + '/../node/README.md', 'utf8')),
   );
 }

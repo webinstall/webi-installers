@@ -41,8 +41,8 @@ module.exports = function (request) {
         download:
           'http://archive.mariadb.org/mariadb-{{ v }}/bintar-linux-x86_64/mariadb-{{ v }}-linux-x86_64.tar.gz'.replace(
             /{{ v }}/g,
-            ver.version
-          )
+            ver.version,
+          ),
       });
       all.releases.push({
         version: ver.version,
@@ -54,8 +54,8 @@ module.exports = function (request) {
         download:
           'http://archive.mariadb.org/mariadb-{{ v }}/bintar-linux-x86/mariadb-{{ v }}-linux-x86.tar.gz'.replace(
             /{{ v }}/g,
-            ver.version
-          )
+            ver.version,
+          ),
       });
 
       // windows
@@ -69,8 +69,8 @@ module.exports = function (request) {
         download:
           'http://archive.mariadb.org/mariadb-{{ v }}/winx64-packages/mariadb-{{ v }}-winx64.zip'.replace(
             /{{ v }}/g,
-            ver.version
-          )
+            ver.version,
+          ),
       });
       all.releases.push({
         version: ver.version,
@@ -82,8 +82,8 @@ module.exports = function (request) {
         download:
           'http://archive.mariadb.org/mariadb-{{ v }}/win32-packages/mariadb-{{ v }}-win32.zip'.replace(
             /{{ v }}/g,
-            ver.version
-          )
+            ver.version,
+          ),
       });
 
       // Note: versions are sorted most-recent first.
@@ -95,7 +95,7 @@ module.exports = function (request) {
         // 10.3 => ^10.2(\b|\.)
         var reBrewVer = new RegExp(
           '^' + brew.version.replace(/\./, '\\.') + '(\\b|\\.)',
-          'g'
+          'g',
         );
         if (!ver.version.match(reBrewVer)) {
           return;
@@ -107,7 +107,7 @@ module.exports = function (request) {
           date: ver.date,
           os: 'macos',
           arch: 'amd64',
-          download: brew.download.replace(/{{ v }}/g, ver.version)
+          download: brew.download.replace(/{{ v }}/g, ver.version),
         });
         brews.splice(i, 1); // remove
         return true;
@@ -120,7 +120,7 @@ module.exports = function (request) {
   function mariaReleases() {
     return request({
       url: 'https://downloads.mariadb.org/mariadb/+releases/',
-      fail: true // https://git.coolaj86.com/coolaj86/request.js/issues/2
+      fail: true, // https://git.coolaj86.com/coolaj86/request.js/issues/2
     })
       .then(failOnBadStatus)
       .then(function (resp) {
@@ -159,7 +159,7 @@ module.exports = function (request) {
             return {
               version: m[1],
               channel: mapChannel(m[3].toLowerCase()),
-              date: m[2]
+              date: m[2],
             };
           })
           .filter(Boolean);
@@ -203,8 +203,8 @@ if (module === require.main) {
           })
           .slice(0, 2),
         null,
-        2
-      )
+        2,
+      ),
     );
   });
 }

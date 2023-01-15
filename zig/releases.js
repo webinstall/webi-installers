@@ -3,7 +3,7 @@
 module.exports = function (request) {
   return request({
     url: 'https://ziglang.org/download/index.json',
-    json: true
+    json: true,
   }).then(function (resp) {
     let versions = resp.body;
     let releases = [];
@@ -30,7 +30,7 @@ module.exports = function (request) {
         let os = parts[1];
         if (parts.length > 2) {
           console.warn(
-            `unexpected platform name with multiple '-': ${platform}`
+            `unexpected platform name with multiple '-': ${platform}`,
           );
           return;
         }
@@ -45,7 +45,7 @@ module.exports = function (request) {
           //arch: arch,
           download: pkg.tarball,
           hash: pkg.shasum,
-          size: pkg.size
+          size: pkg.size,
           // TODO docs + release notes?
           //docs: 'https://ziglang.org/documentation/0.9.1/',
           //stdDocs: 'https://ziglang.org/documentation/0.9.1/std/',
@@ -66,7 +66,7 @@ module.exports = function (request) {
     });
 
     return {
-      releases: releases
+      releases: releases,
     };
   });
 };
