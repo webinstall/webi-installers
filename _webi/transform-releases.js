@@ -88,16 +88,27 @@ async function getCachedReleases(pkg) {
     // workaround for request timeout seeming to not work
     let complete = false;
     await Promise.race([
-      Releases.get(pkgdir).then(function (all) {
-        // Note: it is possible for slightly older data
-        // to replace slightly newer data, but this is better
-        // than being in a cycle where release updates _always_
-        // take longer than expected.
-        //console.debug('DOWNLOADED NEW "%s" releases', pkg);
-        cache[pkg].updatedAt = Date.now();
-        cache[pkg].all = all;
-        complete = true;
-      }),
+      Releases.get(pkgdir)
+        .then(function (all) {
+          // Note: it is possible for slightly older data
+          // to replace slightly newer data, but this is better
+          // than being in a cycle where release updates _always_
+          // take longer than expected.
+          //console.debug('DOWNLOADED NEW "%s" releases', pkg);
+          cache[pkg].updatedAt = Date.now();
+          cache[pkg].all = all;
+          complete = true;
+        })
+        .catch(function (err) {
+          if ('E_NO_RELEASE' === err.code) {
+            cache[pkg].updatedAt = Date.now();
+            cache[pkg].all = { download: '', releases: [] };
+            complete = true;
+            return;
+          }
+
+          throw err;
+        }),
       sleep(5000).then(function () {
         if (complete) {
           return;

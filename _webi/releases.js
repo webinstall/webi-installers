@@ -13,7 +13,9 @@ Releases.get = async function (pkgdir) {
   try {
     get = require(path.join(pkgdir, 'releases.js'));
   } catch (e) {
-    throw new Error('no releases.js for', pkgdir.split(/[\/\\]+/).pop());
+    let err = new Error('no releases.js for', pkgdir.split(/[\/\\]+/).pop());
+    err.code = 'E_NO_RELEASE';
+    throw err;
   }
 
   let all = await get(request);

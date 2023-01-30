@@ -11,14 +11,9 @@ var getReleases = require('./transform-releases.js');
 
 var installersDir = path.join(__dirname, '..');
 
-module.exports = async function serveInstaller(
-  baseurl,
-  ua,
-  pkg,
-  tag,
-  ext,
-  formats,
-) {
+serveInstaller.serveInstaller = serveInstaller;
+module.exports = serveInstaller;
+async function serveInstaller(baseurl, ua, pkg, tag, ext, formats) {
   // TODO put some of this in a middleware? or common function?
 
   var ver = tag.replace(/^v/, '');
@@ -89,4 +84,4 @@ module.exports = async function serveInstaller(
     return Releases.renderPowerShell(pkgdir, rel, opts);
   }
   return Releases.renderBash(pkgdir, rel, opts);
-};
+}
