@@ -11,23 +11,24 @@ require('dotenv').config();
  * @param {string} repo
  * @returns {PromiseLike<any> | Promise<any>}
  */
-function getAllReleases(
+async function getAllReleases(
   request,
   owner,
   repo,
   baseurl = 'https://api.github.com',
 ) {
   if (!owner) {
-    return Promise.reject('missing owner for repo');
+    throw new Error('missing owner for repo');
   }
   if (!repo) {
-    return Promise.reject('missing repo name');
+    throw new Error('missing repo name');
   }
 
   var req = {
     url: `${baseurl}/repos/${owner}/${repo}/releases`,
     json: true,
   };
+
   // TODO I really don't like global config, find a way to do better
   if (process.env.GITHUB_USERNAME) {
     req.auth = {
@@ -36,33 +37,41 @@ function getAllReleases(
     };
   }
 
-  return request(req).then((resp) => {
-    const gHubResp = resp.body;
-    const all = {
-      releases: [],
-      // todo make this ':baseurl' + ':releasename'
-      download: '',
-    };
+  let resp = await request(req);
+  const gHubResp = resp.body;
+  const all = {
+    releases: [],
+    // todo make this ':baseurl' + ':releasename'
+    download: '',
+  };
 
-    gHubResp.forEach((release) => {
-      release['assets'].forEach((asset) => {
-        const name = asset['name'];
-        all.releases.push({
-          name: name,
-          version: release['tag_name'], // TODO tags aren't always semver / sensical
-          lts: /(\b|_)(lts)(\b|_)/.test(release['tag_name']),
-          channel: !release['prerelease'] ? 'stable' : 'beta',
-          date: (release['published_at'] || '').replace(/T.*/, ''),
-          os: '', // will be guessed by download filename
-          arch: '', // will be guessed by download filename
-          ext: '', // will be normalized
-          download: asset['browser_download_url'],
-        });
+  try {
+    gHubResp.forEach(transformReleases);
+  } catch (e) {
+    console.error(e.message);
+    console.error('Headers:', resp.headers);
+    console.error('Body:', resp.body);
+    throw e;
+  }
+
+  function transformReleases(release) {
+    release['assets'].forEach(function (asset) {
+      let name = asset['name'];
+      all.releases.push({
+        name: name,
+        version: release['tag_name'], // TODO tags aren't always semver / sensical
+        lts: /(\b|_)(lts)(\b|_)/.test(release['tag_name']),
+        channel: !release['prerelease'] ? 'stable' : 'beta',
+        date: (release['published_at'] || '').replace(/T.*/, ''),
+        os: '', // will be guessed by download filename
+        arch: '', // will be guessed by download filename
+        ext: '', // will be normalized
+        download: asset['browser_download_url'],
       });
     });
+  }
 
-    return all;
-  });
+  return all;
 }
 
 module.exports = getAllReleases;
