@@ -21,30 +21,78 @@ install:
 
 ## Cheat Sheet
 
-> `aliasman` helps you love your *alias*es again! \
+> `aliasman` helps you love your *alias*es again! 🥸 \
 > Set 'em once, use 'em everywhere! \
 > (and all in just one dotfile, for an on-the-go friendly config)
 
 ```sh
-# aliasman <alias-name> <command-name> [args, pipes, redirs, etc]
-aliasman ll 'lsd -lAhF'
+aliasman <alias-name> <command-name> [args, pipes, redirs, etc]
 ```
 
-Common aliases from around webi:
+### What are Aliases?
+
+An _alias_ is just shorthand for a shell function.
+
+Take a long command like this:
+
+```sh
+git commit -m "feat: new feature"
+```
+
+And turn it into a short command, like this:
+
+```sh
+gc "feat: new feature"
+```
+
+(that would be `aliasman gc 'git commit -m'`)
+
+### Imagine the possibilities!
+
+1. What if you could quickly create a _command_, `ll`, \
+   that does the work of `ls -lAhF`!?
+2. Set an _alias_ to do just that!
+   ```sh
+   aliasman ll 'ls -lAhF'
+   ```
+3. Reload your alias config (or open a _new terminal_)
+   ```sh
+   source ~/.config/envman/alias.env
+   ```
+4. Use it!
+   ```sh
+   ll
+   ```
+   ```text
+   drwxr-xr-x aj wheel 416 B  Thu Feb  9 02:08:39 2023 📂 .git/
+   .rwxr-xr-x aj staff 6.2 KB Thu Feb  9 01:36:30 2023 💻 aliasman*
+   .rw-r--r-- aj wheel  16 KB Wed Feb  8 21:51:06 2023 🔑 LICENSE
+   .rw-r--r-- aj wheel 1.4 KB Thu Feb  9 01:47:13 2023 📄 README.md
+   ```
+
+### Common aliases
+
+Use *alias*es to make other tools you find around webi even _more_ convenient
+⚡️ (and powerful 💪).
 
 ```sh
 aliasman curl 'curlie'
 
-alias diffy='diff -y --suppress-common-lines'
+aliasman diffy 'diff -y --suppress-common-lines'
 
-alias la='lsd -AF'
-alias ll='lsd -lAhF'
-alias ls='lsd -F'
+aliasman gc 'git commit -m'
+aliasman gri 'git rebase -i'
 
-alias tree='lsd -F --tree --group-dirs=last'
+aliasman la 'lsd -AF'
+aliasman ll 'lsd -lAhF'
+aliasman ls 'lsd -F'
+
+aliasman rgi 'rg -i'
+
+aliasman tree 'lsd -F --tree --group-dirs=last'
 
 # random password generator
-alias rnd='xxd -l24 -ps /dev/urandom'
+aliasman rnd 'xxd -l24 -ps /dev/urandom'
 ```
 
 ### How to replace an alias
