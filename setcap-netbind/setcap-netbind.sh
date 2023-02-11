@@ -27,4 +27,4 @@ main() {
     "${my_sudo}" setcap 'cap_net_bind_service=+ep' "${my_bin}"
 }
 
-main "${1:-}"
+main "${1-}"

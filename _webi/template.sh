@@ -48,7 +48,7 @@ __bootstrap_webi() {
     ## Set up tmp, download, and install directories
     ##
 
-    WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-"${WEBI_PKG:-}".XXXXXXXX)"}
+    WEBI_TMP=${WEBI_TMP:-"$(mktemp -d -t webinstall-"${WEBI_PKG-}".XXXXXXXX)"}
     export _webi_tmp="${_webi_tmp:-"$HOME/.local/opt/webi-tmp.d"}"
 
     mkdir -p "${WEBI_PKG_PATH}"
@@ -91,7 +91,7 @@ __bootstrap_webi() {
             return 0
         fi
 
-        if [ -n "$WEBI_SINGLE" ] || [ "single" = "${1:-}" ]; then
+        if [ -n "$WEBI_SINGLE" ] || [ "single" = "${1-}" ]; then
             rm -rf "$pkg_dst_cmd"
             ln -s "$pkg_src_cmd" "$pkg_dst_cmd"
         else
@@ -159,12 +159,12 @@ __bootstrap_webi() {
     # detect if file is downloaded, and how to download it
     webi_download() {
         # determine the url to download
-        if [ -n "${1:-}" ]; then
+        if [ -n "${1-}" ]; then
             my_url="$1"
         else
             if [ "error" = "$WEBI_CHANNEL" ]; then
                 # TODO pass back requested OS / Arch / Version
-                echo >&2 "Error: no '$PKG_NAME' release for '${WEBI_OS:-}' on '$WEBI_ARCH' as one of '$WEBI_FORMATS' by the tag '${WEBI_TAG:-}'"
+                echo >&2 "Error: no '$PKG_NAME' release for '${WEBI_OS-}' on '$WEBI_ARCH' as one of '$WEBI_FORMATS' by the tag '${WEBI_TAG-}'"
                 echo >&2 "       '$PKG_NAME' is available for '$PKG_OSES' on '$PKG_ARCHES' as one of '$PKG_FORMATS'"
                 echo >&2 "       (check that the package name and version are correct)"
                 echo >&2 ""
@@ -176,7 +176,7 @@ __bootstrap_webi() {
         fi
 
         # determine the location to download to
-        if [ -n "${2:-}" ]; then
+        if [ -n "${2-}" ]; then
             my_dl="$2"
         else
             my_dl="${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
@@ -283,7 +283,7 @@ __bootstrap_webi() {
     # shellcheck disable=2120
     # webi_install may be sourced and used elsewhere
     webi_install() {
-        if [ -n "$WEBI_SINGLE" ] || [ "single" = "${1:-}" ]; then
+        if [ -n "$WEBI_SINGLE" ] || [ "single" = "${1-}" ]; then
             mkdir -p "$(dirname "$pkg_src_cmd")"
             mv ./"$pkg_cmd_name"* "$pkg_src_cmd"
         else
@@ -337,9 +337,9 @@ __bootstrap_webi() {
 
     WEBI_SINGLE=
 
-    if [ -z "${WEBI_WELCOME:-}" ]; then
+    if [ -z "${WEBI_WELCOME-}" ]; then
         echo ""
-        printf "Thanks for using webi to install '\e[32m%s\e[0m' on '\e[31m%s/%s\e[0m'.\n" "${WEBI_PKG:-}" "$(uname -s)" "$(uname -m)"
+        printf "Thanks for using webi to install '\e[32m%s\e[0m' on '\e[31m%s/%s\e[0m'.\n" "${WEBI_PKG-}" "$(uname -s)" "$(uname -m)"
         echo "Have a problem? Experience a bug? Please let us know:"
         echo "        https://github.com/webinstall/webi-installers/issues"
         echo ""
@@ -371,14 +371,14 @@ __bootstrap_webi() {
         command -v pkg_post_install > /dev/null ||
         command -v pkg_done_message > /dev/null ||
         command -v pkg_format_cmd_version > /dev/null ||
-        [ -n "${WEBI_SINGLE:-}" ] ||
-        [ -n "${pkg_cmd_name:-}" ] ||
-        [ -n "${pkg_dst_cmd:-}" ] ||
-        [ -n "${pkg_dst_dir:-}" ] ||
-        [ -n "${pkg_dst:-}" ] ||
-        [ -n "${pkg_src_cmd:-}" ] ||
-        [ -n "${pkg_src_dir:-}" ] ||
-        [ -n "${pkg_src:-}" ]; then
+        [ -n "${WEBI_SINGLE-}" ] ||
+        [ -n "${pkg_cmd_name-}" ] ||
+        [ -n "${pkg_dst_cmd-}" ] ||
+        [ -n "${pkg_dst_dir-}" ] ||
+        [ -n "${pkg_dst-}" ] ||
+        [ -n "${pkg_src_cmd-}" ] ||
+        [ -n "${pkg_src_dir-}" ] ||
+        [ -n "${pkg_src-}" ]; then
 
         pkg_cmd_name="${pkg_cmd_name:-$PKG_NAME}"
 
@@ -429,7 +429,7 @@ __bootstrap_webi() {
     fi
 
     webi_path_add "$HOME/.local/bin"
-    if [ -z "${_WEBI_CHILD:-}" ] && [ -f "$_webi_tmp/.PATH.env" ]; then
+    if [ -z "${_WEBI_CHILD-}" ] && [ -f "$_webi_tmp/.PATH.env" ]; then
         if [ -n "$(cat "$_webi_tmp/.PATH.env")" ]; then
             printf 'PATH.env updated with:\n'
             sort -u "$_webi_tmp/.PATH.env"

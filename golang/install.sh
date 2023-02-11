@@ -15,7 +15,7 @@ pkg_cmd_name="go"
 #
 # Their defaults are defined in _webi/template.sh at https://github.com/webinstall/packages
 
-if [ -z "${WEBI__GO_ESSENTIALS:-}" ]; then
+if [ -z "${WEBI__GO_ESSENTIALS-}" ]; then
     # TODO nix for go1.21+
     echo >&2 ""
     printf >&2 '\e[31m%s:\e[0m\n' '#####################'
@@ -69,7 +69,7 @@ pkg_post_install() {
     webi_path_add "$pkg_dst_bin"
     webi_path_add "$GOBIN/bin"
 
-    if [ -z "${WEBI__GO_ESSENTIALS:-}" ]; then
+    if [ -z "${WEBI__GO_ESSENTIALS-}" ]; then
         # TODO nix for go1.21+
         WEBI__GO_INSTALL='true'
         export WEBI__GO_INSTALL

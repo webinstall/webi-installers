@@ -7,4 +7,4 @@ main() {
     ssh-keygen -p -f "${my_key}"
 }
 
-main "${1:-}"
+main "${1-}"

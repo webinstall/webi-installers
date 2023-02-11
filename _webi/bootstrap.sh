@@ -15,7 +15,7 @@ __install_webi() {
     export WEBI_HOST
 
     echo ""
-    printf "Thanks for using webi to install '\e[32m%s\e[0m' on '\e[31m%s/%s\e[0m'.\n" "${WEBI_PKG:-}" "$(uname -s)" "$(uname -m)"
+    printf "Thanks for using webi to install '\e[32m%s\e[0m' on '\e[31m%s/%s\e[0m'.\n" "${WEBI_PKG-}" "$(uname -s)" "$(uname -m)"
     echo "Have a problem? Experience a bug? Please let us know:"
     echo "        https://github.com/webinstall/webi-installers/issues"
     echo ""
@@ -214,13 +214,13 @@ EOF
 
     chmod a+x "$HOME/.local/bin/webi"
 
-    if [ -n "${WEBI_PKG:-}" ]; then
+    if [ -n "${WEBI_PKG-}" ]; then
         "$HOME/.local/bin/webi" "${WEBI_PKG}"
     else
         echo ""
         echo "Hmm... no WEBI_PKG was specified. This is probably an error in the script."
         echo ""
-        echo "Please open an issue with this information: Package '${WEBI_PKG:-}' on '$(uname -s)/$(uname -m)'"
+        echo "Please open an issue with this information: Package '${WEBI_PKG-}' on '$(uname -s)/$(uname -m)'"
         echo "    https://github.com/webinstall/packages/issues"
         echo ""
     fi
