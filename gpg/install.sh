@@ -4,7 +4,7 @@ set -e
 set -u
 
 _install_gpg() {
-    if ! (uname -a | grep -i "darwin" > /dev/null); then
+    if [ "Darwin" != "$(uname -s)" ]; then
         echo "No gpg installer for Linux yet. Try this instead:"
         echo "    sudo apt install -y gpg gnupg"
         exit 1

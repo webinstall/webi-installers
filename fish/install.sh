@@ -2,7 +2,7 @@
 set -e
 set -u
 
-if ! (uname -a | grep -i "darwin" > /dev/null); then
+if [ "Darwin" != "$(uname -s)" ]; then
     echo "No fish installer for Linux yet. Try this instead:"
     echo "    sudo apt install -y fish"
     exit 1

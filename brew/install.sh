@@ -7,7 +7,7 @@ _install_brew() {
     # Straight from https://brew.sh
     #/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
-    if uname -a | grep -q -i darwin; then
+    if [ "Darwin" = "$(uname -s)" ]; then
         needs_xcode="$(/usr/bin/xcode-select -p > /dev/null 2> /dev/null || echo "true")"
         if [ -n "${needs_xcode}" ]; then
             echo ""

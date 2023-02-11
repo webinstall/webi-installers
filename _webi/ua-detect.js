@@ -16,7 +16,7 @@ function getRequest(req) {
   }
 
   return {
-    unix: 'curl -fsSA "$(uname -a)" ' + url,
+    unix: 'curl -fsSA "$(uname -srm)" ' + url,
     windows: 'curl.exe -fsSA "MS $Env:PROCESSOR_ARCHITECTURE" ' + url,
     ua: ua,
     os: uaDetect.os(ua),

@@ -30,7 +30,7 @@ __bootstrap_webi() {
     #PKG_OSES=
     #PKG_ARCHES=
     #PKG_FORMATS=
-    WEBI_UA="$(uname -a)"
+    WEBI_UA="$(uname -s)/$(uname -r) $(uname -m)/unknown"
     WEBI_PKG_DOWNLOAD=""
     WEBI_DOWNLOAD_DIR="${HOME}/Downloads"
     if command -v xdg-user-dir > /dev/null; then
