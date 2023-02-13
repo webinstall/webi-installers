@@ -91,6 +91,25 @@ async function getCachedReleases(pkg) {
     let complete = false;
     await Promise.race([
       Releases.get(pkgdir)
+        .catch(function (err) {
+          if ('E_NO_RELEASE' === err.code) {
+            let all = { _error: 'E_NO_RELEASE', download: '', releases: [] };
+            return all;
+          }
+
+          throw err;
+        })
+        .catch(function (err) {
+          let hasReleases = cache[pkg].all?.releases?.length > 1;
+          if (!hasReleases) {
+            throw err;
+          }
+
+          console.error(`Error: the BOOGEYMAN got us!`);
+          console.error(err.stack);
+
+          return cache[pkg].all;
+        })
         .then(function (all) {
           // Note: it is possible for slightly older data
           // to replace slightly newer data, but this is better
@@ -100,16 +119,6 @@ async function getCachedReleases(pkg) {
           cache[pkg].updatedAt = Date.now();
           cache[pkg].all = all;
           complete = true;
-        })
-        .catch(function (err) {
-          if ('E_NO_RELEASE' === err.code) {
-            cache[pkg].updatedAt = Date.now();
-            cache[pkg].all = { download: '', releases: [] };
-            complete = true;
-            return;
-          }
-
-          throw err;
         }),
       sleep(5000).then(function () {
         if (complete) {
