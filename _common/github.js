@@ -38,8 +38,14 @@ async function getAllReleases(
   }
 
   let resp = await request(req);
-  const gHubResp = resp.body;
-  const all = {
+  if (!resp.ok) {
+    console.error('Bad Resp Headers:', resp.headers);
+    console.error('Bad Resp Body:', resp.body);
+    throw new Error('the elusive releases BOOGEYMAN strikes again');
+  }
+
+  let gHubResp = resp.body;
+  let all = {
     releases: [],
     // todo make this ':baseurl' + ':releasename'
     download: '',
@@ -49,8 +55,8 @@ async function getAllReleases(
     gHubResp.forEach(transformReleases);
   } catch (e) {
     console.error(e.message);
-    console.error('Headers:', resp.headers);
-    console.error('Body:', resp.body);
+    console.error('Error Headers:', resp.headers);
+    console.error('Error Body:', resp.body);
     throw e;
   }
 
