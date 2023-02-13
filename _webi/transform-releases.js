@@ -139,26 +139,24 @@ async function getCachedReleases(pkg) {
     };
   }
 
+  var bgRenewal;
   var age = Date.now() - cache[pkg].updatedAt;
-  if (age >= expiredAge) {
-    //console.debug("EXPIRED - waiting");
-    return await Promise.race([
-      chainCachePromise(putCache),
-      new Promise(function (resolve) {
-        setTimeout(function () {
-          resolve(cache[pkg].all);
-        }, 5000);
-      }),
-    ]);
+  var fresh = age < staleAge;
+  if (!fresh) {
+    bgRenewal = chainCachePromise(putCache);
   }
 
-  if (age >= staleAge) {
-    //console.debug("STALE - background update");
-    chainCachePromise(putCache);
+  var tooStale = age > expiredAge;
+  if (!tooStale) {
+    return await cache[pkg].all;
   }
 
-  //console.debug("FRESH");
-  return await cache[pkg].all;
+  return await Promise.race([
+    bgRenewal,
+    sleep(5000).then(function () {
+      return cache[pkg].all;
+    }),
+  ]);
 }
 
 async function filterReleases(
