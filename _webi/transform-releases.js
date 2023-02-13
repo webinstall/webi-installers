@@ -3,8 +3,10 @@
 var path = require('path');
 var Releases = require('./releases.js');
 var cache = {};
-var staleAge = 5 * 1000;
-var expiredAge = 15 * 1000;
+//var staleAge = 5 * 1000;
+//var expiredAge = 15 * 1000;
+var staleAge = 5 * 60 * 1000;
+var expiredAge = 15 * 60 * 1000;
 
 let installerDir = path.join(__dirname, '..');
 
