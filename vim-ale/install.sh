@@ -6,9 +6,16 @@ __init_vim_ale() {
     set -e
     set -u
 
+    repo="https://github.com/dense-analysis/ale.git"
+    ale_folder="$HOME/.vim/pack/plugins/start/ale"
+    latest_version="$(git -c 'versionsort.suffix=-' \
+        ls-remote --tags --sort='v:refname' "$repo" |
+        tail -n1 |
+        sed 's/.*\///; s/\^{}//')"
+
     mkdir -p "$HOME/.vim/pack/plugins/start"
-    rm -rf "$HOME/.vim/pack/plugins/start/ale"
-    git clone --depth=1 https://github.com/dense-analysis/ale.git "$HOME/.vim/pack/plugins/start/ale"
+    rm -rf "$ale_folder"
+    git clone -b "$latest_version" --depth=1 "$repo" "$ale_folder"
 
     if [ ! -f "$HOME/.vimrc" ]; then
         touch "$HOME/.vimrc"
