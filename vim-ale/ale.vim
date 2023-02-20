@@ -6,10 +6,14 @@ let g:ale_lint_on_enter = 0
 " check on save
 let g:ale_lint_on_save = 1
 
-" these emojis go in the sidebar for errors and warnings
-" other considerations: '💥' '☠' '●' '.'
-let g:ale_sign_error = '☢️'
-let g:ale_sign_warning = '⚡'
+" don't spam the virtual text ('disable' to disable)
+let g:ale_virtualtext_cursor = 'current'
+
+" These emojis go in the sidebar for errors and warnings
+" other considerations: '💥' '☢️' '⚡' '☠' '●' '.'
+" Note: one- and two-byte characters are more compatible
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = '⚠️'
 
 " show error count
 function! LinterStatus() abort
