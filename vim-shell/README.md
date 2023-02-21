@@ -1,11 +1,21 @@
 ---
 title: vim-shell
-homepage: https://webinstall.dev/vim-spell
+homepage: https://webinstall.dev/vim-shell
 tagline: |
   vim shell sets the default shell for vim
 ---
 
 To update (replacing the current version) run `webi vim-shell`.
+
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```txt
+~/.vimrc
+~/.vim/plugins/shell.vim
+```
 
 ## Cheat Sheet
 
