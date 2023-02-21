@@ -7,6 +7,16 @@ tagline: |
 
 To update (replacing the current version) run `webi vim-spell`.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```txt
+~/.vimrc
+~/.vim/plugins/spell.vim
+```
+
 ## Cheat Sheet
 
 Vim has a built-in spell checker. It is turned off by default and when turned on
