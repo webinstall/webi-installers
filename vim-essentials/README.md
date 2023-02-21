@@ -7,6 +7,20 @@ tagline: |
 
 To update (replacing the current version) run `webi vim-essentials`.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```txt
+~/.config/envman/PATH.env
+~/.local/bin/
+~/.local/opt/
+~/.vimrc
+~/.vim/plugins/
+~/.vim/pack/plugins/start/
+```
+
 ## Cheat Sheet
 
 > A collection of extremely useful plugins and very simple one-line changes to
