@@ -9,6 +9,14 @@ To update or switch versions, run `webi node@<tag>`. \
 (you can use `@lts` for long-term support, `@beta` for pre-releases, or `@x.y.z`
 for a specific version)
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.local/opt/node/
+~/.npmrc
+```
+
 ## Cheat Sheet
 
 > Node is great for simple, snappy HTTP(S) servers, and for stitching APIs
