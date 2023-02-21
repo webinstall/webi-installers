@@ -9,6 +9,7 @@ __init_vim_essentials() {
         vim-sensible \
         vim-viminfo \
         vim-lastplace \
+        vim-smartcase \
         vim-spell \
         vim-ale \
         shellcheck \

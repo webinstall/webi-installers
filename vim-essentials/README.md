@@ -22,6 +22,7 @@ It includes many of the vim plugins available on webinstall.dev such as:
 - [vim-sensible](/vim-sensible)
 - [vim-viminfo](/vim-viminfo)
 - [vim-lastplace](/vim-lastplace)
+- [vim-smartcase](/vim-smartcase)
 - [vim-spell](/vim-spell)
 - [vim-shfmt](/vim-shfmt)
   - [shellcheck](/shellcheck)
