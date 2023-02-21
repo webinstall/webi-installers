@@ -8,6 +8,14 @@ tagline: |
 To update or switch versions, run `webi golang@stable` (or `@v1.19`, `@beta`,
 etc).
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.local/opt/go/
+~/go/
+```
+
 ## Cheat Sheet
 
 > Go is designed, through and through, to make Software Engineering easy. It's
