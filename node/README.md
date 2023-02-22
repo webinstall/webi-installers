@@ -11,6 +11,9 @@ for a specific version)
 
 ### Files
 
+These are the files / directories that are created and/or modified with this
+install:
+
 ```text
 ~/.config/envman/PATH.env
 ~/.local/opt/node/
