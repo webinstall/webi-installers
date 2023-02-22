@@ -25,11 +25,11 @@ _install_iterm2() {
         exit 1
     fi
 
-    if [ -d ~/Applications/iTerm.app ]; then
-        mv ~/Applications/iTerm.app "${WEBI_TMP}/iTerm.app-webi.bak"
+    if [ -d /Applications/iTerm.app ]; then
+        mv /Applications/iTerm.app "${WEBI_TMP}/iTerm.app-webi.bak"
     fi
-    mkdir -p ~/Applications/
-    mv "${WEBI_TMP}/iTerm.app" ~/Applications/
+    mkdir -p /Applications/
+    mv "${WEBI_TMP}/iTerm.app" /Applications/
 }
 
 _install_iterm2

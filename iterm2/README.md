@@ -5,6 +5,17 @@ tagline: |
   iTerm2: a terminal emulator for macOS that does amazing things.
 ---
 
+To update versions, use iTerm2's built-in software update.
+
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+/Applications/iTerm.app/
+```
+
 ## Cheat Sheet
 
 > The only bad thing about iTerm2 is that it's so seamless and intuitive that
@@ -22,7 +33,7 @@ iTerm2 supports a lot of nifty features, including:
 - GPU-accelerated
 
 **Important**: Unlike most packages, iTerm2 will be installed to
-`~/Applications`.
+`/Applications`.
 
 ### How to make the best of iTerm2
 
