@@ -28,11 +28,19 @@ pkg_link() {
     # rm -f "$HOME/.local/opt/postgres"
     rm -f "$pkg_dst"
     rm -f "$HOME/Applications/pgAdmin"*.app || true
+    rm -f "/Applications/pgAdmin"*.app || true
 
     # ln -s "$HOME/.local/opt/postgres-v10.13" "$HOME/.local/opt/postgres"
     ln -s "$pkg_src" "$pkg_dst"
-    mkdir -p ~/Applications
-    ln -s "$pkg_src/pgAdmin 4.app" "$HOME/Applications/pgAdmin 4.app" || true
+    if [ "Darwin" = "$(uname -s)" ]; then
+        mkdir -p /Applications
+        ln -s "$pkg_src/pgAdmin 4.app" "/Applications/pgAdmin 4.app" || true
+        if [ -e "$pkg_src/pgAdmin 4.app/Contents/Resources/venv/lib/libpython3.8.dylib" ]; then
+            # a simple patch to fix the bad link in the package
+            rm "$pkg_src/pgAdmin 4.app/Contents/Resources/venv/lib/libpython3.8.dylib"
+            ln -s "../../../Frameworks/Python" "$pkg_src/pgAdmin 4.app/Contents/Resources/venv/lib/libpython3.8.dylib"
+        fi
+    fi
 }
 
 pkg_post_install() {
