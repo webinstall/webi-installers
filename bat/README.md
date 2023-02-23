@@ -7,6 +7,13 @@ tagline: |
 
 To update or switch versions, run `webi bat@stable` (or `@v0.18`, `@beta`, etc).
 
+### Files
+```text
+~/.config/envman/PATH.env
+~/.config/bat/config
+~/.local/opt/bat/
+```
+
 ## Cheat Sheet
 
 > `bat` is pretty much what `cat` would be if it were developed today's in the
