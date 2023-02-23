@@ -7,6 +7,13 @@ tagline: |
 
 To update or switch versions, run `webi arc@stable` (or `@v3.5`, `@beta`, etc).
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.local/opt/archiver/
+```
+
 ## Cheat Sheet
 
 > Archiver (`arc`) is a powerful and flexible library meets an elegant CLI in
