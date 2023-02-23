@@ -23,7 +23,15 @@ You need to download and install the
 
 ### How to alias as `cat`
 
-Update your `.bashrc`, `.zshrc`, or `.profile`
+Use [aliasman](/aliasman):
+
+```sh
+aliasman cat "bat --style=plain"
+```
+
+Or place this in `~/.config/envman/alias.env` and manually update your
+`.bashrc`, `.zshrc`, `.profile`, and/or `~/.config/fish/config.fish` to source
+it.
 
 ```sh
 alias cat="bat --style=plain"
