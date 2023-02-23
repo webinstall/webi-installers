@@ -2,6 +2,14 @@
 set -e
 set -u
 
+if command -v fish > /dev/null; then
+    if [ ! -e ~/.config/fish/config.fish ]; then
+        mkdir -p ~/.config/fish
+        touch ~/.config/fish/config.fish
+        chmod 0600 ~/.config/fish/config.fish
+    fi
+fi
+
 if [ "Darwin" != "$(uname -s)" ]; then
     echo "No fish installer for Linux yet. Try this instead:"
     echo "    sudo apt install -y fish"
@@ -77,6 +85,12 @@ pkg_post_install() {
 
     # try again to update default shells, now that all files should exist
     _macos_post_install
+
+    if [ ! -e ~/.config/fish/config.fish ]; then
+        mkdir -p ~/.config/fish
+        touch ~/.config/fish/config.fish
+        chmod 0600 ~/.config/fish/config.fish
+    fi
 }
 
 # pkg_get_current_version is recommended, but (soon) not required
