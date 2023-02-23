@@ -9,6 +9,17 @@ To update or switch versions, run `webi delta` (or `@0.9.1`, `@0.9.0`, etc).
 
 **Note**: You should install [git](./git) before installing `delta`.
 
+### Files
+
+These are the files that are created and/or modified with this installer:
+
+```txt
+~/.config/envman/PATH.env
+~/.gitconfig
+~/.local/bin/delta
+~/.local/opt/delta-VERSION/bin/delta
+```
+
 ## Cheat Sheet
 
 > `delta` gives you GitHub-style diffs, with word-level diff coloring, right in
@@ -25,17 +36,6 @@ Here we'll cover:
 
 For the full set of options, be sure to check out the helpful
 [README](https://github.com/dandavison/delta).
-
-## Files
-
-These are the files that are created and/or modified with this installer:
-
-```txt
-~/.config/envman/PATH.env
-~/.gitconfig
-~/.local/bin/delta
-~/.local/opt/delta-VERSION/bin/delta
-```
 
 ## How to set delta's color scheme
 
