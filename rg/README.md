@@ -7,6 +7,15 @@ tagline: |
 
 To update or switch versions, run `webi rg@stable` (or `@v13.0`, `@beta`, etc).
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.local/opt/rg/
+~/.local/bin/rg
+~/.ripgreprc
+```
+
 ## Cheat Sheet
 
 > Ripgrep (`rg`) is smart. It's like grep if grep were built for code. It
