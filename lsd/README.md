@@ -48,7 +48,20 @@ lsd
 
 ### How to alias as `ls`, `ll`, `la`, etc
 
-Update your `.bashrc`, `.zshrc`, or `.profile`
+This will affect the interactive shell, but not scripts.
+
+Using [aliasman](/aliasman):
+
+```sh
+aliasman ls "lsd -F"
+aliasman la "lsd -AF"
+aliasman ll "lsd -lAF"
+aliasman lg "lsd -F --group-dirs=first"
+```
+
+(and follow the on-screen instructions or restart your shell)
+
+Or manually update your `.bashrc`, `.zshrc`, or `.profile`
 
 ```sh
 alias ls="lsd -F"
@@ -66,7 +79,14 @@ the alias:
 
 ### How to alias as `tree`
 
-Update your `.bashrc`, `.zshrc`, or `.profile`
+Using [aliasman](/aliasman):
+
+```sh
+aliasman tree "lsd -AF --tree"
+alias tree="lsd -AF --tree"
+```
+
+Or manually update your `.bashrc`, `.zshrc`, or `.profile`
 
 ```sh
 alias tree="lsd -AF --tree"
