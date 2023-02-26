@@ -23,7 +23,10 @@ __init_vim_essentials() {
     printf '\n'
     printf 'Suggestion: Also check out these great plugins:\n'
     printf '\n'
-    printf '    - vim-nerdtree (better than the default file browser)\n'
+    # shellcheck disable=SC2016
+    printf '    - vim-commentary (`gc` to toggle comment blocks)\n'
+    # shellcheck disable=SC2016
+    printf '    - vim-nerdtree (`space + n` for dir tree, `o` to open file)\n'
     printf '    - vim-gui      (mouse & clipboard support)\n'
     printf '    - vim-devicons (use nerdfont icons in vim)\n'
     printf '\n'

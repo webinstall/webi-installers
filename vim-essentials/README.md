@@ -49,6 +49,7 @@ It includes many of the vim plugins available on webinstall.dev such as:
 It **DOES NOT** include these, which you may also want:
 
 - Vim Utilities
+  - [**vim-commentary**](/vim-commentary) (`gc` to toggle comment blocks)
   - [**vim-gui**](/vim-gui) (mouse and clipboard support)
   - [vim-nerdtree](/vim-nerdtree) (`space + n` for dir tree, `o` to open file)
   - [vim-devicons](/vim-devicons) (nerdfont icons in vim)
