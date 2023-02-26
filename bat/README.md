@@ -8,6 +8,7 @@ tagline: |
 To update or switch versions, run `webi bat@stable` (or `@v0.18`, `@beta`, etc).
 
 ### Files
+
 ```text
 ~/.config/envman/PATH.env
 ~/.config/bat/config
@@ -33,7 +34,8 @@ You need to download and install the
 Use [aliasman](/aliasman):
 
 ```sh
-aliasman cat "bat --style=plain"
+aliasman cat 'bat --style=plain'
+alias cat='bat --style=plain'
 ```
 
 Or place this in `~/.config/envman/alias.env` and manually update your
