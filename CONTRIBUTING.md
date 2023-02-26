@@ -45,7 +45,7 @@
       <https://gist.github.com/nicerobot/53cee11ee0abbdc997661e65b348f375>
     - Common exceptions:
 
-      ```txt
+      ```text
       # We make use of `.` (source) to import without exports
       SC2034: foo appears unused. Verify it or export it.
       SC2154: var is referenced but not assigned.
@@ -94,15 +94,15 @@ The general format is `<type>(<package>): <description>`, using these _types_:
 
 Try to write your commit messages (in the present tense) like this:
 
-```txt
+```text
 fix(node): update install.sh (fix #200)
 ```
 
-```txt
+```text
 feat(delta): add cheat sheet and install.sh
 ```
 
-```txt
+```text
 docs(ssh-adduser): document that foo does bar
 ```
 

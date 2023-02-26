@@ -19,7 +19,7 @@ used.
 
 ### Frequently used flags:
 
-```txt
+```text
 -version
 	Show version and exit.
 

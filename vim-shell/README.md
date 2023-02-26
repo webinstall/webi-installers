@@ -12,7 +12,7 @@ To update (replacing the current version) run `webi vim-shell`.
 These are the files / directories that are created and/or modified with this
 install:
 
-```txt
+```text
 ~/.vimrc
 ~/.vim/plugins/shell.vim
 ```

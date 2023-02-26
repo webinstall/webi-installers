@@ -59,7 +59,7 @@ repository's URL, like this:
 The deploy scripts should exist in your `scripts/` directory, named after the
 repo's name.
 
-```txt
+```text
 scripts/github.com/YOUR_ORG/YOUR_PROJECT/deploy.sh
 ```
 

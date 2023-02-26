@@ -71,7 +71,7 @@ pyenv global system
 pyenv install --list
 ```
 
-```txt
+```text
   3.10.7
   activepython-3.6.0
   anaconda3-2020.11

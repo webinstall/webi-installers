@@ -29,7 +29,7 @@ git commit -m "my summary for this commit"
 In your project repository create a `.gitignore` file with patterns of fies to
 ignore
 
-```txt
+```text
 .env*
 *.bak
 *.tmp

@@ -85,7 +85,7 @@ sclient whatever.com -
 
 Use just like netcat or telnet. A manual HTTP request, for example:
 
-```txt
+```text
 > GET / HTTP/1.1
 > Host: whatever.com
 > Connection: close

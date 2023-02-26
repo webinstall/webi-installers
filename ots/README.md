@@ -12,7 +12,7 @@ To update or switch versions, run `webi ots@stable` (or `@v2`, `@beta`, etc).
 These are the files / directories that are created and/or modified with this
 install:
 
-```txt
+```text
 ~/.config/envman/PATH.env
 ~/.local/bin/ots
 ~/.local/opt/ots

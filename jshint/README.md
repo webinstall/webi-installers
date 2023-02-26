@@ -13,7 +13,7 @@ etc).
 These are the files / directories that are created and/or modified with this
 install:
 
-```txt
+```text
 ~/.config/envman/PATH.env
 ~/.local/opt/node
 ~/.jshintrc.defaults.json5

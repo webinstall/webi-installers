@@ -79,7 +79,7 @@ serviceman list --system
 serviceman list --user
 ```
 
-```txt
+```text
 serviceman-managed services:
 
         example-service
@@ -97,7 +97,7 @@ sudo env PATH="$PATH" serviceman start example-service
 
 ## What a typical systemd .service file looks like
 
-```txt
+```text
 [Unit]
 Description=example-service
 After=network-online.target
@@ -126,7 +126,7 @@ WantedBy=multi-user.target
 
 ## What a typical launchd .plist file looks like
 
-```txt
+```text
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated for serviceman. Edit as you wish, but leave this line. -->
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">

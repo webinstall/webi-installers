@@ -29,7 +29,7 @@ git-config-gpg
 
 Example output:
 
-```txt
+```text
 GnuPG Public Key ID: CA025BC42F00BBBE
 
 -----BEGIN PGP PUBLIC KEY BLOCK-----
@@ -55,7 +55,7 @@ How to verify signed commits on GitHub:
 These are the files / directories that are created and/or modified with this
 install:
 
-```txt
+```text
 ~/.config/envman/PATH.env
 ~/.local/bin/git-config-gpg
 ~/Downloads/YOU.KEY_ID.gpg.asc
@@ -75,7 +75,7 @@ set it to 400 days and call it good.
 
 `~/.gnupg/gpg-agent.conf`:
 
-```txt
+```text
 default-cache-ttl 34560000
 max-cache-ttl 34560000
 ```
@@ -137,7 +137,7 @@ Or, if you prefer to edit the text file directly:
 
 `~/.gitconfig`
 
-```txt
+```text
 [user]
   signingkey = CA025BC42F00BBBE
 [commit]
@@ -153,7 +153,7 @@ versions of gpg, like so:
 git config --global gpg.program ~/.local/opt/gnupg/bin/gpg
 ```
 
-```txt
+```text
 [gpg]
   program = /Users/me/.local/opt/gnupg/bin/gpg
 ```
@@ -163,7 +163,7 @@ git config --global gpg.program ~/.local/opt/gnupg/bin/gpg
 `gpg` is generally expected to be used with a Desktop client. On Linux servers
 you may get this error:
 
-```txt
+```text
 error: gpg failed to sign the data
 fatal: failed to write commit object
 ```

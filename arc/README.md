@@ -18,42 +18,42 @@ create a top-level directory if one does not exist.
 
 ### List
 
-```txt
+```text
 # arc ls <archive file>
 arc ls   example.zip
 ```
 
 ### Unarchive (whole)
 
-```txt
+```text
 # arc unarchive <archive file>
 arc unarchive   example.zip
 ```
 
 ### Extract (partial)
 
-```txt
+```text
 # arc extract <archive file> <archived path> <extracted path>
 arc extract   example.zip    example/foo     ~/Downloads/foo
 ```
 
 ### Archive (recursive)
 
-```txt
+```text
 # arc archive <archive file> <files or folders ...>
 arc archive   example.zip    ./README.md ./bin ./src
 ```
 
 ### Compress (single file)
 
-```txt
+```text
 # arc compress <single file> <format>
 arc compress   ./example.tar xz
 ```
 
 ### Decompress (single file)
 
-```txt
+```text
 # arc decompress <archive file>
 arc decompress   ./example.tar.xz
 ```

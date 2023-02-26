@@ -31,7 +31,7 @@ Here we'll cover:
 These are the files / directories that are created and/or modified with this
 install:
 
-```txt
+```text
 ~/.config/envman/PATH.env
 ~/.local/opt/gnupg/bin/gpg
 ~/.local/opt/gnupg/bin/gpg-agent
@@ -123,7 +123,7 @@ launchctl load -w ~/Library/LaunchAgents/gpg-agent.plist
 `gpg` is generally expected to be used with a Desktop client. On Linux servers
 you may get this error:
 
-```txt
+```text
 error: gpg failed to sign the data
 fatal: failed to write commit object
 ```

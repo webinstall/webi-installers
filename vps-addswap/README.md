@@ -89,6 +89,6 @@ and create the swap file again.
 
 You need to open `/etc/fstab` and add a line like this:
 
-```txt
+```text
 /var/swapfile none swap sw 0 0
 ```

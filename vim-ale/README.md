@@ -33,7 +33,7 @@ source ~/.vim/plugins/ale.vim
 
 `.vim/plugins/ale.vim`:
 
-```txt
+```text
 " turn on the syntax checker
 syntax on
 

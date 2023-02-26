@@ -27,7 +27,7 @@ curl https://webi.sh/gpg-pubkey | sh
 
 This is what the output of `gpg-pubkey` looks like (except much longer):
 
-```txt
+```text
 GnuPG Public Key ID: CA025BC42F00BBBE
 
 ~/Downloads/john@example.com.gpg.asc:
@@ -49,7 +49,7 @@ Note: Your public key is the _entire_ section starting with and including
 These are the files / directories that are created and/or modified with this
 install:
 
-```txt
+```text
 ~/.config/envman/PATH.env
 ~/.local/bin/gpg-pubkey
 ~/.local/bin/gpg-pubkey-id
@@ -143,7 +143,7 @@ format:
 gpg --list-secret-keys --keyid-format LONG
 ```
 
-```txt
+```text
 /Users/me/.gnupg/pubring.kbx
 ----------------------------
 sec   rsa3072/CA025BC42F00BBBE 2021-11-10 [SCEA]
@@ -154,7 +154,7 @@ ssb   rsa3072/674124162BF19A32 2021-11-10 [SEA]
 
 The line with the Public Key ID is the one that starts with `sec`:
 
-```txt
+```text
 sec   rsa3072/CA025BC42F00BBBE 2021-11-10 [SCEA]
 ```
 

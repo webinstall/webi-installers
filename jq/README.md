@@ -27,7 +27,7 @@ You can also [try online](https://jqplay.org/).
 echo '{ "name": "foo" }' | jq '.name'
 ```
 
-```txt
+```text
 "foo"
 ```
 
@@ -39,7 +39,7 @@ The `-r` or `--raw-output` flag unwraps strings:
 echo '{ "name": "foo" }' | jq -r '.name'
 ```
 
-```txt
+```text
 foo
 ```
 
@@ -49,7 +49,7 @@ foo
 echo '{ "name": "foo" }' | jq '.'
 ```
 
-```txt
+```text
 {
   "name": "foo"
 }
@@ -61,7 +61,7 @@ echo '{ "name": "foo" }' | jq '.'
 echo '[ { "name": "foo" } ]' | jq '.[0]'
 ```
 
-```txt
+```text
 {
   "name": "foo"
 }
@@ -73,7 +73,7 @@ echo '[ { "name": "foo" } ]' | jq '.[0]'
 echo '[ { "name": "foo" } ]' | jq -r '.[0].name'
 ```
 
-```txt
+```text
 foo
 ```
 
@@ -84,7 +84,7 @@ echo '[ { "name": "foo" }, { "name": "bar" } ]' \
     | jq -r '.[].name'
 ```
 
-```txt
+```text
 foo
 bar
 ```
@@ -106,7 +106,7 @@ echo '[ { "name": "foo", "age": 0 }, { "name": "bar", "age": 2 } ]' \
     | jq '{ names: [.[] | .name], ages: [.[] | .age] }'
 ```
 
-```txt
+```text
 {
   "names": [
     "foo",

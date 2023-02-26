@@ -29,6 +29,6 @@ sudo journalctl -u my-app-name  --since '2020-01-01' | fzf
 
 ### Use space-delimited regular expressions to search
 
-```txt
+```text
 ^README | .md$ | .txt$
 ```

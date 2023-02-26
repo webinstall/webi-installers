@@ -62,7 +62,7 @@ Edit the config file:
 
 `~/.config/bat/config`:
 
-```txt
+```text
 # no numbers or headers, just highlighting and such
 --style="plain"
 ```

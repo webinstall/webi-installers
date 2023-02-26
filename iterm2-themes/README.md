@@ -15,7 +15,7 @@ tagline: |
 
 The installer will download them to `~/Downloads/webi/iterm2-themes`
 
-```txt
+```text
 ~/Downloads/webi/iterm2-themes/Tomorrow\ Night.itermcolors
 ~/Downloads/webi/iterm2-themes/Firewatch.itermcolors
 ~/Downloads/webi/iterm2-themes/Dracula.itermcolors

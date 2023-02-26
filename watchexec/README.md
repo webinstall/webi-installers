@@ -15,7 +15,7 @@ It respects `.[git]ignore`.
 
 Here's the shortlist of options we've found most useful:
 
-```txt
+```text
 -w, --watch     ./src/      watch the given directory
 -e, --exts      js,css      watch only the given extensions
 -i, --ignore    '*.md'      do not watch the given pattern

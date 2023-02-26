@@ -13,7 +13,7 @@ To update or switch versions, run `webi duckdns.sh@stable` (or `@v1.0.3`,
 These are the files / directories that are created and/or modified with this
 install:
 
-```txt
+```text
 ~/.config/envman/PATH.env
 ~/.local/bin/duckdns.sh
 ~/.config/duckdns.sh/

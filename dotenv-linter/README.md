@@ -67,7 +67,7 @@ dotenv-linter --skip QuoteCharacter --skip UnorderedKey
 
 You can see the full list of linter rules with `dotenv-linter --show-checks`:
 
-```txt
+```text
 DuplicatedKey
 EndingBlankLine
 ExtraBlankLine

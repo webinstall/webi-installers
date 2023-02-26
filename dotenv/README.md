@@ -31,7 +31,7 @@ dotenv -f .env -- node server.js --debug
 
 ## ENV syntax
 
-```txt
+```text
 # comments and blank lines are ignored
 
 # you can use quotes of either style

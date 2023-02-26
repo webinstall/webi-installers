@@ -13,7 +13,7 @@ To update or switch versions, run `webi bun@<tag>`. \
 These are the files / directories that are created and/or modified with this
 install:
 
-```txt
+```text
 ~/.config/envman/PATH.env
 ~/.local/opt/bun/
 ~/.local/opt/bun-<VERSION>/

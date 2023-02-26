@@ -33,7 +33,7 @@ sudo apt --fix-broken install -y
 
 You may get an error like this:
 
-```txt
+```text
 chromedriver: error while loading shared libraries: libnss3.so: cannot open shared object file: No such file or directory
 ```
 

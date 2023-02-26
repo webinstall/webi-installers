@@ -25,7 +25,7 @@ You can use koji in one of two ways:
 
 Here's the shortlist of options we've found most useful:
 
-```txt
+```text
 -e, --emoji - use emoji for commit type (ex: `✨ feat:`)
 -a, --autocomplete - guess 'scope' based on commit history (slow on large projects)
 --hook - expect to be run from 'git commit', rather than wrap it

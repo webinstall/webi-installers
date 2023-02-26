@@ -7,6 +7,17 @@ tagline: |
 
 To update (replacing the current version) run `webi vim-shfmt`.
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.vimrc
+~/.vim/pack/plugins/start/shfmt
+~/.vim/plugins/shfmt.vim
+~/.local/bin/shfmt
+~/.local/bin/shellcheck
+```
+
 ## Cheat Sheet
 
 `vim-shfmt` uses [shfmt](https://webinstall.dev/shfmt) to format your `bash`
@@ -20,17 +31,6 @@ This plugin comes with reasonable defaults, which install to
 ```vim
 let g:shfmt_extra_args = '-i 4 -sr -ci -s'
 let g:shfmt_fmt_on_save = 1
-```
-
-### Files
-
-```txt
-~/.config/envman/PATH.env
-~/.vimrc
-~/.vim/pack/plugins/start/shfmt
-~/.vim/plugins/shfmt.vim
-~/.local/bin/shfmt
-~/.local/bin/shellcheck
 ```
 
 ### How to install and configure manually

@@ -14,7 +14,7 @@ To update or switch versions, run `webi xz@stable` (or `@v5.2`, `@beta`, etc).
 
 Here's the shortlist of options we've found most useful:
 
-```txt
+```text
 -z, --compress      force compression
 -d, --decompress    force decompression
 -l, --list          list information about .xz files

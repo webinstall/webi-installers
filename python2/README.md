@@ -35,7 +35,7 @@ sudo apt install -y libreadline-dev libbz2-dev libsqlite3-dev
 These are the files / directories that are created and/or modified with this
 install:
 
-```txt
+```text
 ~/.bashrc (or your shell's equivalent)
 ~/.config/envman/PATH.env
 ~/.pyenv

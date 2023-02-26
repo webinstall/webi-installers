@@ -16,7 +16,7 @@ tagline: |
 
 Gives a command permission to run on privileged ports (80, 443, etc).
 
-```txt
+```text
 Usage:
     sudo setcap-netbind <COMMAND>
 

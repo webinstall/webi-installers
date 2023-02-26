@@ -27,7 +27,7 @@ git clone --depth=1 https://github.com/vim-syntastic/syntastic.git ~/.vim/pack/p
 
 `.vimrc`:
 
-```txt
+```text
 " manually set plugin to use bash - not zsh, fish, etc
 set shell=bash
 
@@ -45,7 +45,7 @@ let g:syntastic_check_on_wq = 0
 
 ### How to configure language-specific linters
 
-```txt
+```text
 let g:syntastic_javascript_checkers = ['jshint']
 let g:syntastic_go_checkers = ['go', 'golint', 'errcheck']
 ```

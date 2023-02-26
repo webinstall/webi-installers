@@ -40,7 +40,7 @@ Note: Even on Windows it is best to use Unix-style `/` paths and `~` for
 pathman list
 ```
 
-```txt
+```text
 pathman-managed PATH entries:
 
 	$HOME/.local/bin

@@ -121,7 +121,7 @@ command -v fish
 
 Then update the Terminal preferences:
 
-```txt
+```text
 Terminal > Preferences > General > Shells open with:
 /Users/YOUR_USER/.local/bin/fish
 ```

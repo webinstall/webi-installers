@@ -12,6 +12,6 @@ tagline: |
 
 Use with Balena Etcher to burn ISO to USB, or boot with VirtualBox.
 
-```txt
+```text
 Created ~/Downloads/el-capitan.iso
 ```

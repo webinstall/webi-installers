@@ -20,7 +20,7 @@ webi myip
 
 Example output:
 
-```txt
+```text
 IPv4 (A)   : 136.36.196.101
 IPv6 (AAAA): 2605:a601:a919:9800:f8be:f2c4:9ad7:9763
 ```

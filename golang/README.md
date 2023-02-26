@@ -63,7 +63,7 @@ You may also want to install the Go IDE tooling:
    ./hello
    ```
    You should see your output:
-   ```txt
+   ```text
    > Hello, World!
    ```
 

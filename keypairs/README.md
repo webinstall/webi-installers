@@ -50,7 +50,7 @@ keypairs sign --exp 1h key.jwk.json '{ "sub": "me@example.com" }' > token.jwt 2>
 A JWT (JSON Web Token) has 3 sections (protected header, payload, and signature)
 separated by dots (`.`):
 
-```txt
+```text
 eyJhbGciOiJFUzI1NiIsImtpZCI6ImpkeHhZY1NCZUJfeUdoZWlCVW14NjF0eHExZGFjR1hIX191bEJuWlZHMEUiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjIxNDczODU3MTIsInN1YiI6Im1lQGV4YW1wbGUuY29tIn0.oh8-PUMdrbQU6seRXjo68wPWAKbA-V9LMnd_wZEkPHc3C8A5xJzV7mDDMNOLEy4VcuNGxced_yjYulzcMa5FLQ
 ```
 

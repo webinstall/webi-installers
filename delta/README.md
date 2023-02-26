@@ -13,7 +13,7 @@ To update or switch versions, run `webi delta` (or `@0.9.1`, `@0.9.0`, etc).
 
 These are the files that are created and/or modified with this installer:
 
-```txt
+```text
 ~/.config/envman/PATH.env
 ~/.gitconfig
 ~/.local/bin/delta
@@ -73,7 +73,7 @@ Here's the current list, for convenience:
 
 ### Dark Syntax Themes
 
-```txt
+```text
 1337
 Coldark-Cold
 Coldark-Dark
@@ -97,7 +97,7 @@ zenburn
 
 ### Light Syntax Themes
 
-```txt
+```text
 GitHub
 Monokai Extended Light
 OneHalfLight

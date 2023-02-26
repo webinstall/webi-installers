@@ -34,7 +34,7 @@ dashmsg gen > pirv.wif
 dashmsg sign ./priv.wif 'vote2022-alice|bob|charlie'
 ```
 
-```txt
+```text
 H2Opy9NX72iPZRcDVEHrFn2qmVwWMgc+DKILdVxl1yfmcL2qcpu9esw9wcD7RH0/dJHnIISe5j39EYahorWQM7I=
 ```
 
@@ -58,7 +58,7 @@ Addresses:
 dashmsg inspect 'XK5DHnAiSj6HQNsNcDkawd9qdp8UFMdYftdVZFuRreTMJtbJhk8i'
 ```
 
-```txt
+```text
 PrivateKey (hex): cc (coin type)
                 : e84f59fec1c8cc7feb9ce1c829849ae336f73e56437301eb5db945c8e0dd2683
                 : 01 (compressed)
@@ -76,7 +76,7 @@ Address   (b58c): Xn4A2vv5fb7LvmiiXPPMexYbSbiQ29rzDu
 dashmsg inspect 'IFLv0JVRM70bTZCTmzMfNX3NVkSULmnAR/3PSWpgC5GXBD7rRi5g4QsK968ITE3dfKdzhX7fAIXwhpnsP0WvQOc='
 ```
 
-```txt
+```text
 I     (0): 1 (quadrant)
 R  (1-32): 52efd0955133bd1b4d90939b331f357dcd5644942e69c047fdcf496a600b9197
 S (33-64): 043eeb462e60e10b0af7af084c4ddd7ca773857edf0085f08699ec3f45af40e7
@@ -88,7 +88,7 @@ S (33-64): 043eeb462e60e10b0af7af084c4ddd7ca773857edf0085f08699ec3f45af40e7
 dashmsg inspect 'Xn4A2vv5fb7LvmiiXPPMexYbSbiQ29rzDu'
 ```
 
-```txt
+```text
 Address    (hex): 4c (coin type)
                 : 7cb1500163c8d413314dc238f9268b6c723a48f0
 ```

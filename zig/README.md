@@ -12,7 +12,7 @@ To update or switch versions, run `webi zig@stable` (or `@v0.9`, `@beta`, etc).
 These are the files / directories that are created and/or modified with this
 install:
 
-```txt
+```text
 ~/.config/envman/PATH.env
 ~/.local/opt/zig
 ```
@@ -96,7 +96,7 @@ zig targets | jq -r '.libc[]'
 
 Here's a few of the common targets:
 
-```txt
+```text
 aarch64-linux-musl
 aarch64-windows-gnu
 aarch64-macos-gnu
