@@ -20,6 +20,17 @@ etc).
 
 **JSON** (`=`) is the default encoding for `key=value` pairs.
 
+### How to alias as `curl`
+
+Use [aliasman](/aliasman):
+
+```sh
+aliasman curl 'curlie'
+alias curl='curlie'
+```
+
+This will affect the interactive shell, but not scripts.
+
 ### Simple GET
 
 ```sh
