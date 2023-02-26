@@ -1,19 +1,43 @@
 #!/bin/sh
 
-__init_vim_sensible() {
+__install_vim_plugin() { (
     set -e
     set -u
 
-    mkdir -p "$HOME/.vim/pack/plugins/start"
-    rm -rf "$HOME/.vim/pack/plugins/start/sensible" "$HOME/.vim/pack/plugins/start/vim-sensible"
+    my_name="sensible"
+    my_pkg_name="vim-sensible"
+    my_repo="https://github.com/tpope/vim-sensible.git"
+    my_note="vim-sensible: installed via webinstall.dev/vim-sensible"
+    my_installed_msg="${my_pkg_name} installed, and marked as such in ~/.vimrc"
 
-    # Note: we've had resolution issues in the past, and it doesn't seem likely
-    #       that tpope will switch from using GitHub as the primary host, so we
-    #       skip the redirect and use GitHub directly.
-    #       Open to changing this back in the future.
-    #my_sensible_repo="https://tpope.io/vim/sensible.git"
-    my_sensible_repo="https://github.com/tpope/vim-sensible.git"
-    git clone --depth=1 "${my_sensible_repo}" "$HOME/.vim/pack/plugins/start/vim-sensible"
-}
+    mkdir -p ~/.vim/pack/plugins/start
+    rm -rf ~/.vim/pack/plugins/start/"${my_pkg_name}"
+    git clone --depth=1 "${my_repo}" ~/.vim/pack/plugins/start/"${my_pkg_name}"
 
-__init_vim_sensible
+    if [ ! -f ~/.vimrc ]; then
+        touch ~/.vimrc
+    fi
+
+    mkdir -p ~/.vim/plugins
+    if ! [ -f ~/.vim/plugins/"${my_name}.vim" ]; then
+        WEBI_HOST=${WEBI_HOST:-"https://webinstall.dev"}
+        curl -fsSL -o ~/.vim/plugins/"${my_name}.vim" "$WEBI_HOST/packages/${my_pkg_name}/${my_name}.vim"
+    fi
+
+    if ! grep "source.*plugins.${my_name}.vim" -r ~/.vimrc > /dev/null 2> /dev/null; then
+        set +e
+        mkdir -p ~/.vim/plugins
+        printf '\n" %s\n' "${my_note}" >> ~/.vimrc
+        printf 'source ~/.vim/plugins/%s.vim\n' "${my_name}" >> ~/.vimrc
+        set -e
+        echo ""
+        echo "add ~/.vim/plugins/${my_name}.vim"
+        echo "updated ~/.vimrc with 'source ~/.vim/plugins/${my_name}.vim'"
+    fi
+
+    echo ""
+    echo "${my_installed_msg}"
+
+); }
+
+__install_vim_plugin

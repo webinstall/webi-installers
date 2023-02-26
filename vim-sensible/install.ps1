@@ -1,13 +1,17 @@
 #!/usr/bin/env pwsh
 
+$my_name = "sensible"
+$my_pkg_name = "vim-sensible"
+$my_repo = "https://github.com/tpope/vim-sensible"
+
 IF (!(Test-Path -Path "$Env:USERPROFILE\.vim\pack\plugins\start")) {
     New-Item -Path "$Env:USERPROFILE\.vim\pack\plugins\start" -ItemType Directory -Force | out-null
 }
-Remove-Item -Path "$Env:USERPROFILE\.vim\pack\plugins\start\vim-sensible" -Recurse -ErrorAction Ignore
 
-# Note: we've had resolution issues in the past, and it doesn't seem likely that tpope
-#       will switch from using GitHub as the primary host, so we skip the redirect
-#       and use GitHub directly. Open to changing this back in the future.
-#$sensible_repo = "https://tpope.io/vim/sensible.git"
-$sensible_repo = "https://github.com/tpope/vim-sensible.git"
-& git clone --depth=1 "$sensible_repo" "$Env:USERPROFILE\.vim\pack\plugins\start\vim-sensible"
+Remove-Item -Path "$Env:USERPROFILE\.vim\pack\plugins\start\${my_name}" -Recurse -ErrorAction Ignore
+& git clone --depth=1 "$my_repo" "$Env:USERPROFILE\.vim\pack\plugins\start\$my_name.vim"
+
+IF (!(Test-Path -Path "$Env:USERPROFILE\.vim\plugin\$my_name.vim")) {
+    IF ($Env:WEBI_HOST -eq $null -or $Env:WEBI_HOST -eq "") { $Env:WEBI_HOST = "https://webinstall.dev" }
+    curl.exe -sS -o "$Env:USERPROFILE\.vim\plugin\$my_name.vim" "$Env:WEBI_HOST/packages/${my_pkg_name}/${my_name}.vim"
+}
