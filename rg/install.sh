@@ -25,6 +25,10 @@ __init_rg() {
 
         # mv ./ripgrep-*/rg ~/.local/opt/rg-v12.1.1/bin/rg
         mv ./ripgrep-*/rg "$pkg_src_cmd"
+
+        if ! [ -e ~/.ripgreprc ]; then
+            touch ~/.ripgreprc
+        fi
     }
 
     # pkg_get_current_version is recommended, but (soon) not required
