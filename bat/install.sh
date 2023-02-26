@@ -27,6 +27,11 @@ __init_bat() {
 
         # chmod a+x ~/.local/opt/bat-v0.15.4/bin/bat
         chmod a+x "$pkg_src_cmd"
+
+        if ! [ -e ~/.config/bat/config ]; then
+            mkdir -p ~/.config/bat/
+            touch ~/.config/bat/config
+        fi
     }
 }
 
