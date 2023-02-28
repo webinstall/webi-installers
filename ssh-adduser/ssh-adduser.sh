@@ -7,7 +7,8 @@ main() {
     # Add User 'app'
     # Picking 'app' by common convention (what Docker & Vagrant use).
     my_new_user="${1:-"app"}"
-    #my_existing_user="${2:-"root"}"
+    my_key_url="${2:-}"
+    my_keys=""
 
     # TODO would $EUID be better?
     if [ "root" != "$(whoami)" ]; then
@@ -15,7 +16,15 @@ main() {
         exit 0
     fi
 
-    if [ ! -e ~/.ssh/authorized_keys ] || ! grep -v '#' ~/.ssh/authorized_keys; then
+    if [ -n "${my_key_url}" ]; then
+        my_keys="$(
+            curl -fsS "${my_key_url}"
+        )"
+    elif [ -e ~/.ssh/authorized_keys ] && grep -q -v '#' ~/.ssh/authorized_keys; then
+        my_keys="$(
+            cat "${HOME}/.ssh/authorized_keys"
+        )"
+    else
         echo ""
         echo "Error:"
         echo "    You must add a key to ~/.ssh/authorized_keys before adding a new ssh user."
@@ -38,7 +47,7 @@ main() {
     # allow users who can already login as 'root' to login as 'app'
     mkdir -p "/home/$my_new_user/.ssh/"
     chmod 0700 "/home/$my_new_user/.ssh/"
-    cp -r "${HOME}/.ssh/authorized_keys" "/home/$my_new_user/.ssh/"
+    echo "${my_keys}" >> "/home/$my_new_user/.ssh/authorized_keys"
     chmod 0600 "/home/$my_new_user/.ssh/authorized_keys"
     touch "/home/$my_new_user/.ssh/config"
     chmod 0644 "/home/$my_new_user/.ssh/config"
@@ -100,4 +109,4 @@ main() {
     echo "(set a new password with 'password ${my_new_user}')"
 }
 
-main "${1:-app}"
+main "${1:-app}" "${2:-}"
