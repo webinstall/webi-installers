@@ -12,12 +12,12 @@ __init_vim_essentials() {
         vim-smartcase \
         vim-spell \
         vim-ale \
+        vim-whitespace \
+        vim-shfmt \
+        vim-prettier \
         shellcheck \
         shfmt \
-        vim-shfmt \
-        prettier \
-        vim-prettier \
-        vim-whitespace
+        prettier
     # done
 
     printf '\n'
