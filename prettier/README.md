@@ -15,8 +15,10 @@ install:
 
 ```text
 ~/.config/envman/PATH.env
-~/.local/opt/node
+~/.local/opt/node/bin/prettier
 ```
+
+If [`node`](/node) is not found, it will also be installed.
 
 ## Cheat Sheet
 

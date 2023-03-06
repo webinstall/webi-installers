@@ -5,18 +5,22 @@ tagline: |
   vim-shfmt: a vim plugin for shfmt
 ---
 
-To update (replacing the current version) run `webi vim-shfmt`.
+To update (replacing the current version) run `webi vim-shfmt`. \
+To update the config options, first remove `~/.vim/plugins/shfmt.vim`
 
 ### Files
 
+These are the files / directories that are created and/or modified with this
+install:
+
 ```text
-~/.config/envman/PATH.env
+~/.vim/pack/plugins/start/vim-shfmt/
+~/.vim/plugins/prettier.vim
 ~/.vimrc
-~/.vim/pack/plugins/start/shfmt
-~/.vim/plugins/shfmt.vim
-~/.local/bin/shfmt
-~/.local/bin/shellcheck
 ```
+
+If [`shellcheck`](/shellcheck) and [`shfmt`](/shfmt) are not found, they will
+also be installed.
 
 ## Cheat Sheet
 

@@ -8,6 +8,17 @@ tagline: |
 To update or switch versions, run `webi shellcheck@stable`, or `@vx.y.z` for a
 specific version.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/opt/shellcheck/
+~/.local/bin/shellcheck
+```
+
 ## Cheat Sheet
 
 > shellcheck catches rookie mistakes (and old-habits-die-hard mistakes) in bash

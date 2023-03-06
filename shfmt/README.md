@@ -7,6 +7,17 @@ tagline: |
 
 To update or switch versions, run `webi shfmt@stable` or `webi shfmt@beta`, etc.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/opt/shfmt/
+~/.local/bin/shfmt
+```
+
 ## Cheat Sheet
 
 > shfmt is a shell parser, formatter and interpretter that supports POSIX Shell,

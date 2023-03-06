@@ -5,7 +5,22 @@ tagline: |
   vim-prettier adds Prettier support for Vim.
 ---
 
-To update (replacing the current version) run `webi vim-prettier`.
+To update (replacing the current version) run `webi vim-prettier`. \
+To update the config options, first remove `~/.vim/plugins/prettier.vim`
+
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.vim/pack/plugins/start/vim-prettier/
+~/.vim/plugins/prettier.vim
+~/.vimrc
+```
+
+If [`node`](/node) and [`prettier`](/prettier) are not found, they will be also
+installed.
 
 ## Cheat Sheet
 
