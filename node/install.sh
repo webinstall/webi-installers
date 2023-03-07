@@ -37,9 +37,6 @@ pkg_link() {
 
     # ln -s "$HOME/.local/opt/node-v14.4.0" "$HOME/.local/opt/node"
     ln -s "$pkg_src" "$pkg_dst"
-
-    # Node bugfix: use the correct version of node, even if PATH has a conflict
-    "$pkg_src"/bin/node "$pkg_src"/bin/npm config set scripts-prepend-node-path=true
 }
 
 pkg_done_message() {
