@@ -40,8 +40,5 @@ echo "Copying into '$Env:USERPROFILE\.local\opt\$Env:PKG_NAME' from '$Env:USERPR
 Remove-Item -Path "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME" -Recurse -ErrorAction Ignore
 Copy-Item -Path "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERSION" -Destination "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME" -Recurse
 
-# make npm not act stupid about which node to use... ugh (this should be the default)
-& .\.local\opt\node\npm.cmd --scripts-prepend-node-path=true config set scripts-prepend-node-path true
-
 # Add to path
 & "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/opt/node
