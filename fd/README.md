@@ -49,5 +49,5 @@ fd -e md -e mkdn -e js -e mjs
 For options see:
 
 ```sh
-hexyl --help
+fd --help
 ```
