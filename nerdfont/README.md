@@ -91,19 +91,28 @@ console.log(list.join('\n  -'));
 Note: This will _NOT_ work in Command.exe. You must get _Windows Terminal_ from
 the Microsoft Store.
 
-Select `Settings` from the drop down and update `profiles.defaults.fontFace`:
+You can update the font in the Windows Terminal settings either for the "Defaults" profile (which applies to all profiles unless overwritten) or individually for different profiles under `Settings -> <profile_name> -> Appearance -> Font face`:
+
+![Windows Terminal Settings](windows-terminal-settings-01.png 'Opening Settings in Windows Terminal')
+![Windows Terminal Settings](windows-terminal-settings-02.png 'Setting Nerd Font in Windows Terminal Defaults profile')
+(Screenshots taken with Windows Terminal version 1.16.10262.0)
+
+Additionally, you can update `profiles.defaults.font.face` in the Windows Terminal settings.json directly:
 
 ```json
 {
-  "profiles": {
-    "defaults": {
-      "fontFace": "DroidSansMono NF"
+  "profiles": 
+  {
+    "defaults": 
+    {
+      "font": 
+      {
+        "face": "DroidSansMono NF"
+      }
     }
   }
 }
 ```
-
-![Windows Terminal Settings](https://i.imgur.com/4RgK6s9.png 'lsd using The Nerd Font in Windows Terminal')
 
 ### Nerd Fonts for iTerm2
 
