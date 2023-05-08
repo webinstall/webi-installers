@@ -57,7 +57,10 @@ function webi_add_path
 }
 
 # Run pathman to set up the folder
-& "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/bin
+if (Test-Path -Path "$Env:USERPROFILE.local\bin\pathman.exe")
+{
+    & "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/bin
+}
 
 {{ installer }}
 

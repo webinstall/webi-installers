@@ -52,9 +52,10 @@ IF($Env:WEBI_HOST -eq $null -or $Env:WEBI_HOST -eq "")
 
 if (!(Test-Path -Path .local\bin\pathman.exe))
 {
-    & curl.exe -fsSL -A "$Env:WEBI_UA" "$Env:WEBI_HOST/packages/pathman/install.ps1" -o .\.local\tmp\pathman-setup.ps1
-    powershell .\.local\tmp\pathman-setup.ps1
-    # TODO del .\.local\tmp\pathman-setup.bat
+    $PATHMAN_URL = "$Env:WEBI_HOST/api/installers/pathman.ps1?formats=zip,exe,tar"
+    # Invoke-WebRequest -UserAgent "Windows amd64" "$PATHMAN_URL" -OutFile ".\.local\tmp\pathman.install.ps1"
+    & curl.exe -fsSL -A "$Env:WEBI_UA" "$PATHMAN_URL" -o .\.local\tmp\pathman.install.ps1
+    powershell .\.local\tmp\pathman.install.ps1
 }
 
 # Run pathman to set up the folder
