@@ -52,4 +52,4 @@ echo "Linking '$pkg_dst_dir' from '$pkg_src_dir'"
 New-Item -ItemType Junction -Path "$pkg_dst_dir" -Target "$pkg_src_dir" > $null
 
 # Add to path
-& "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/opt/dart-sass
+webi_path_add ~/.local/opt/dart-sass

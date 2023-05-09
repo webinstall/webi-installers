@@ -85,11 +85,7 @@ echo stringer
 & "$pkg_dst_cmd" install golang.org/x/tools/cmd/stringer
 
 # Add to path
-& "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/opt/go/bin
-#& "$Env:USERPROFILE\.local\bin\pathman.exe" add "$Env:USERPROFILE\.local\opt\go\bin"
-#& "$Env:USERPROFILE\.local\bin\pathman.exe" add %USERPROFILE%\.local\opt\go\bin
+webi_path_add ~/.local/opt/go/bin
 
 # Special to go: add default GOBIN to PATH
-& "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/go/bin
-#& "$Env:USERPROFILE\.local\bin\pathman.exe" add "$Env:USERPROFILE\go\bin"
-#& "$Env:USERPROFILE\.local\bin\pathman.exe" add %USERPROFILE%\go\bin
+webi_path_add ~/go/bin

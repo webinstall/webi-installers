@@ -41,4 +41,4 @@ Remove-Item -Path "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME" -Recurse -ErrorAct
 Copy-Item -Path "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERSION" -Destination "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME" -Recurse
 
 # Add to path
-& "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/opt/node
+webi_path_add ~/.local/opt/node

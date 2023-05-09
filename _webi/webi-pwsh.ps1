@@ -50,28 +50,6 @@ IF($Env:WEBI_HOST -eq $null -or $Env:WEBI_HOST -eq "")
     $Env:WEBI_HOST = "https://webinstall.dev"
 }
 
-if (!(Test-Path -Path .local\bin\pathman.exe))
-{
-    $PATHMAN_URL = "$Env:WEBI_HOST/api/installers/pathman.ps1?formats=zip,exe,tar"
-    # Invoke-WebRequest -UserAgent "Windows amd64" "$PATHMAN_URL" -OutFile ".\.local\tmp\pathman.install.ps1"
-    & curl.exe -fsSL -A "$Env:WEBI_UA" "$PATHMAN_URL" -o .\.local\tmp\pathman.install.ps1
-    powershell .\.local\tmp\pathman.install.ps1
-}
-
-# Run pathman to set up the folder
-# (using unix style path because... cmd vs powershell vs whatever)
-$has_local_bin = echo "$Env:PATH" | Select-String -Pattern '\.local.bin'
-if (!$has_local_bin)
-{
-    Write-Host ''
-    Write-Host '**********************************' -ForegroundColor red -BackgroundColor white
-    Write-Host '*      IMPORTANT -- READ ME      *' -ForegroundColor red -BackgroundColor white
-    Write-Host '*  (run the PATH command below)  *' -ForegroundColor red -BackgroundColor white
-    Write-Host '**********************************' -ForegroundColor red -BackgroundColor white
-    Write-Host ''
-    & "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/bin
-}
-
 # {{ baseurl }}
 # {{ version }}
 

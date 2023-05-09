@@ -62,10 +62,8 @@ These are the files that are installed when you use [webinstall.dev](/):
 ~/.local/opt/pathman-*
 
 # Windows
-~/.local/bin/webi.cmd
+~/.local/bin/webi.bat
 ~/.local/bin/webi-pwsh.ps1
-~/.local/bin/pathman.exe
-~/.local/opt/pathman-*
 ```
 
 Assuming that you don't use `pathman` for anything else, you can safely remove

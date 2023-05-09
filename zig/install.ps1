@@ -57,4 +57,4 @@ Remove-Item -Path "$pkg_dst" -Recurse -ErrorAction Ignore | out-null
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse
 
 # Add to Windows PATH
-& "$Env:USERPROFILE\.local\bin\pathman.exe" add ~/.local/opt/zig
+webi_path_add ~/.local/opt/zig
