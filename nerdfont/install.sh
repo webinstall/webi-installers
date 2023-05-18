@@ -6,7 +6,7 @@ __init_nerdfont() {
 
     my_nerdfont="Droid Sans Mono for Powerline Nerd Font Complete.otf"
     curl -fsSLo "$my_nerdfont" \
-        'https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete.otf'
+        'https://github.com/ryanoasis/nerd-fonts/raw/v2.3.3/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete.otf'
 
     my_fontdir=""
     if [ -e "$HOME/Library/Fonts" ]; then
