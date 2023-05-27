@@ -251,25 +251,179 @@ __bootstrap_webi() {
 
     # use 'pathman' to update $HOME/.config/envman/PATH.env
     webi_path_add() {
-        # make sure that we don't recursively install pathman with webi
-        my_path="$PATH"
-        export PATH="$HOME/.local/bin:$PATH"
+        my_path="${1}"
 
-        # install pathman if not already installed
-        if [ -z "$(command -v pathman)" ]; then
-            "$HOME/.local/bin/webi" pathman > /dev/null
+        fn_envman_init
+
+        # \v was chosen as it is extremely unlikely for a filename
+        # \1 could be an even better choice, but needs more testing.
+        # (currently tested working on: linux & mac)
+        # "\0001" should also work
+        my_delim="$(
+            printf '\v'
+        )"
+
+        my_path_expanded="$(
+            echo "${my_path}" |
+                sed -e "s${my_delim}\$HOME${my_delim}$HOME${my_delim}g" \
+                    -e "s${my_delim}\${HOME}${my_delim}$HOME${my_delim}g" \
+                    -e "s${my_delim}^~/${my_delim}$HOME/${my_delim}g"
+        )"
+
+        # A gift for @adamcstephens.
+        # See https://github.com/webinstall/webi-installers/issues/322
+        case "${PATH}" in
+            # matches whether the first, a middle, the last, or the only PATH entry
+            "${my_path_expanded}":* | \
+                *:"${my_path_expanded}":* | \
+                *:"${my_path_expanded}" | \
+                "${my_path_expanded}")
+
+                if fn_is_defined_in_all_shells "${my_path}"; then
+                    return 0
+                fi
+                ;;
+            *) ;;
+        esac
+
+        my_path_export="$(
+            echo "${my_path}" |
+                sed -e "s${my_delim}${HOME}${my_delim}\$HOME${my_delim}g" \
+                    -e "s${my_delim}\${HOME}${my_delim}\$HOME${my_delim}g" \
+                    -e "s${my_delim}^~/${my_delim}\$HOME/${my_delim}g"
+        )"
+
+        my_export="export PATH=\"$my_path_export:\$PATH\""
+        if grep -q -F "${my_export}" ~/.config/envman/PATH.env; then
+            return 0
         fi
 
-        export PATH="$my_path"
+        echo "${my_export}" >> ~/.config/envman/PATH.env
 
-        # in case pathman was recently installed and the PATH not updated
         mkdir -p "$_webi_tmp"
-        # 'true' to prevent "too few arguments" output
-        # when there are 0 lines of stdout
-        "$HOME/.local/bin/pathman" add "$1" |
-            grep "export" 2> /dev/null \
-                >> "$_webi_tmp/.PATH.env" ||
-            true
+        my_path_tilde="$(
+            echo "${my_path}" |
+                sed -e "s${my_delim}${HOME}${my_delim}~${my_delim}g"
+        )"
+
+        if ! test -f "$_webi_tmp/.PATH.env" ||
+            ! grep -q -F "${my_path_tilde}" "$_webi_tmp/.PATH.env"; then
+            echo "${my_path_tilde}" >> "$_webi_tmp/.PATH.env"
+        fi
+    }
+
+    fn_envman_init() {
+        mkdir -p ~/.config/envman/
+        if ! test -e ~/.config/envman/PATH.env; then
+            touch ~/.config/envman/PATH.env
+        fi
+
+        if ! test -e ~/.config/envman/load.sh; then
+            # shellcheck disable=SC2016
+            {
+                echo '# Generated for envman. Do not edit.'
+                echo 'for x in ~/.config/envman/*.env; do'
+                echo '    my_basename="$(basename "${x}")"'
+                echo '    if [ "*.env" = "${my_basename}" ]; then'
+                echo '        continue'
+                echo '    fi'
+                echo ''
+                echo '    # shellcheck source=/dev/null'
+                echo '    . "${x}"'
+                echo 'done'
+            } > ~/.config/envman/load.sh
+        fi
+
+        if command -v sh > /dev/null; then
+            if test -e ~/.profile; then
+                if ! grep -q -F '/.config/envman/load.sh' ~/.profile; then
+                    fn_echo_load_sh >> ~/.profile
+                fi
+            fi
+        fi
+        if command -v bash > /dev/null; then
+            if test -e ~/.bashrc; then
+                if ! grep -q -F '/.config/envman/load.sh' ~/.bashrc; then
+                    fn_echo_load_sh >> ~/.bashrc
+                fi
+            fi
+        fi
+        if command -v zsh > /dev/null; then
+            if test -e ~/.zshrc; then
+                if ! grep -q -F '/.config/envman/load.sh' ~/.zshrc; then
+                    fn_echo_load_sh >> ~/.zshrc
+                fi
+            fi
+        fi
+
+        if command -v fish > /dev/null; then
+            if test ! -e ~/.config/envman/load.fish; then
+                # shellcheck disable=SC2016
+                {
+                    echo '# Generated for envman. Do not edit.'
+                    echo 'for x in ~/.config/envman/*.env'
+                    echo '	  source "$x"'
+                    echo 'end'
+                } > ~/.config/envman/load.fish
+            fi
+
+            mkdir -p ~/.config/fish
+            if test -e ~/.config/fish/config.fish; then
+                touch ~/.config/fish/config.fish
+            fi
+            if ! grep -q -F '/.config/envman/load.fish' ~/.config/fish/config.fish; then
+                fn_echo_load_fish >> ~/.config/fish/config.fish
+            fi
+        fi
+    }
+
+    fn_echo_load_fish() {
+        echo ''
+        echo '# Generated for envman. Do not edit.'
+        # shellcheck disable=SC2016
+        echo 'test -s "$HOME/.config/envman/load.fish"; and source "$HOME/.config/envman/load.fish"'
+    }
+
+    fn_echo_load_sh() {
+        echo ''
+        echo '# Generated for envman. Do not edit.'
+        # shellcheck disable=SC2016
+        echo '[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"'
+    }
+
+    fn_is_defined_in_all_shells() {
+        my_path="${1}"
+
+        my_path_expanded="$(
+            echo "${my_path}" |
+                sed -e "s${my_delim}\$HOME|${my_delim}$HOME${my_delim}g" \
+                    -e "s${my_delim}\${HOME}${my_delim}$HOME${my_delim}g" \
+                    -e "s${my_delim}^~/${my_delim}$HOME/${my_delim}g"
+        )"
+        my_paths="$(
+            echo "${my_path_expanded}"
+            # $HOME/foo
+            echo "${my_path_expanded}" |
+                sed "s${my_delim}${HOME}${my_delim}\$HOME${my_delim}g"
+            # ${HOME}/foo
+            echo "${my_path_expanded}" |
+                sed "s${my_delim}${HOME}${my_delim}\${HOME}${my_delim}g"
+            echo "${my_path}"
+        )"
+
+        my_confs="$(
+            echo "${HOME}/.profile"
+            echo "${HOME}/.bashrc"
+            echo "${HOME}/.zshrc"
+            echo "${HOME}/.config/fish/config.fish"
+        )"
+        for my_conf in $my_confs; do
+            if test -e "${my_conf}"; then
+                if ! grep -q -F "${my_paths}" "${my_conf}"; then
+                    return 1
+                fi
+            fi
+        done
     }
 
     # group common pre-install tasks as default
@@ -432,7 +586,9 @@ __bootstrap_webi() {
     if [ -z "${_WEBI_CHILD-}" ] && [ -f "$_webi_tmp/.PATH.env" ]; then
         if [ -n "$(cat "$_webi_tmp/.PATH.env")" ]; then
             printf 'PATH.env updated with:\n'
-            sort -u "$_webi_tmp/.PATH.env"
+            sort -u "$_webi_tmp/.PATH.env" | while read -r my_new_path; do
+                echo "        ${my_new_path}"
+            done
             printf "\n"
 
             rm -f "$_webi_tmp/.PATH.env"
