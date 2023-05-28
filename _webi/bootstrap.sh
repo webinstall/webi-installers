@@ -100,27 +100,27 @@ __webi_main() {
 
         my_package="\${1:-}"
         if [ -z "\$my_package" ]; then
-            >&2 echo "Usage: webi <package>@<version> ..."
-            >&2 echo "Example: webi node@lts rg"
+            echo >&2 "Usage: webi <package>@<version> ..."
+            echo >&2 "Example: webi node@lts rg"
             exit 1
         fi
 
         export WEBI_BOOT="\$(mktemp -d -t "\$my_package-bootstrap.\$WEBI_TIMESTAMP.XXXXXXXX")"
 
         my_installer_url="\$WEBI_HOST/api/installers/\$my_package.sh?formats=\$my_ext"
-        set +e
         if [ -n "\$WEBI_CURL" ]; then
-            curl -fsSL "\$my_installer_url" -H "User-Agent: curl \$WEBI_UA" \\
-                -o "\$WEBI_BOOT/\$my_package-bootstrap.sh"
+            if !  curl -fsSL "\$my_installer_url" -H "User-Agent: curl \$WEBI_UA" \\
+                -o "\$WEBI_BOOT/\$my_package-bootstrap.sh"; then
+                echo >&2 "error fetching '\$my_installer_url'"
+                exit 1
+            fi
         else
-            wget -q "\$my_installer_url" --user-agent="wget \$WEBI_UA" \\
-                -O "\$WEBI_BOOT/\$my_package-bootstrap.sh"
+            if !  wget -q "\$my_installer_url" --user-agent="wget \$WEBI_UA" \\
+                -O "\$WEBI_BOOT/\$my_package-bootstrap.sh"; then
+                echo >&2 "error fetching '\$my_installer_url'"
+                exit 1
+            fi
         fi
-        if ! [ \$? -eq 0 ]; then
-          >&2 echo "error fetching '\$my_installer_url'"
-          exit 1
-        fi
-        set -e
 
         (
             cd "\$WEBI_BOOT"
@@ -133,10 +133,10 @@ __webi_main() {
 
     show_path_updates() {
 
-        if ! [ -n "\${_WEBI_CHILD}" ]; then
-            if [ -f "\$_webi_tmp/.PATH.env" ]; then
-                my_paths=\$(cat "\$_webi_tmp/.PATH.env" | sort -u)
-                if [ -n "\$my_paths" ]; then
+        if test -z "\${_WEBI_CHILD}"; then
+            if test -f "\$_webi_tmp/.PATH.env"; then
+                my_paths=\$(sort -u < "\$_webi_tmp/.PATH.env")
+                if test -n "\$my_paths"; then
                     printf 'PATH.env updated with:\\n'
                     printf "%s\\n" "\$my_paths"
                     printf '\\n'
@@ -199,8 +199,7 @@ __webi_main() {
         exit 0
     fi
 
-    for pkgname in "\$@"
-    do
+    for pkgname in "\$@"; do
         webinstall "\$pkgname"
     done
 
