@@ -17,7 +17,17 @@ IF ($my_arch -eq $null -or $my_arch -eq "") {
   # This is the canonical CPU arch when the process is native
   $my_arch = "$Env:PROCESSOR_ARCHITECTURE"
 }
-# TODO API should know to prefer x86 for windows when arm binary is not available
+IF ($my_arch -eq "AMD64") {
+    # Because PowerShell isn't ARM yet.
+    # See https://oofhours.com/2020/02/04/powershell-on-windows-10-arm64/
+    $my_os_arch = wmic os get osarchitecture
+
+    # Using -clike because of the trailing newline
+    IF ($my_os_arch -clike "ARM 64*") {
+        $my_arch = "ARM64"
+    }
+}
+
 $Env:WEBI_UA = "Windows/10 $my_arch"
 $exename = $args[0]
 

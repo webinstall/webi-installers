@@ -229,8 +229,21 @@ module.exports = function getReleases({
       })
       .then(function (releases) {
         if (!releases.length) {
-          // Apple Silicon M1 hack-y do workaround fix
+          // Apple Silicon M1 hacky-do workaround fix
           if ('macos' === os && 'arm64' === arch) {
+            return getReleases({
+              pkg,
+              ver,
+              os,
+              arch: 'amd64',
+              lts,
+              channel,
+              formats,
+              limit,
+            });
+          }
+          // Windows ARM hacky-do workaround fix
+          if ('windows' === os && 'arm64' === arch) {
             return getReleases({
               pkg,
               ver,
