@@ -2,13 +2,26 @@
 title: vim-airline
 homepage: https://github.com/vim-airline/vim-airline
 tagline: |
-  Lean & mean status/tabline for vim that's light as air.
+  vim-airline: Lean & mean status/tabline for vim that's light as air.
 ---
+
+To update (replacing the current version) run `webi vim-airline`.
+
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.vimrc
+~/.vim/plugins/airline.vim
+~/.vim/pack/plugins/start/vim-airline/
+```
 
 ## Cheat Sheet
 
-> Lean & mean status/tabline for vim that's light as air.
+> A single-line status bar for vim.
 
 ![](https://github.com/vim-airline/vim-airline/wiki/screenshots/demo.gif)
 
-See the [vim-airline-themes](/vim-airline-themes) for additional themes.
+See [vim-airline-themes](../vim-airline-themes/) for additional themes.
