@@ -22,7 +22,7 @@ __init_vim_italics() {
     if ! grep 'source.*plugins.italics.vim' -r ~/.vimrc > /dev/null 2> /dev/null; then
         set +e
         mkdir -p ~/.vim/plugins
-        printf '\n" italics Check: reasonable defaults from webinstall.dev/vim-italics\n' >> ~/.vimrc
+        printf '\n" Vim Italics: underlines for italics from webinstall.dev/vim-italics\n' >> ~/.vimrc
         printf 'source ~/.vim/plugins/italics.vim\n' >> ~/.vimrc
         set -e
         echo "added ~/.vim/plugins/italics.vim"
@@ -30,7 +30,7 @@ __init_vim_italics() {
         echo ""
     fi
 
-    echo "vim-italics enabled with reasonable defaults"
+    echo "vim-italics enabled"
 }
 
 __init_vim_italics
