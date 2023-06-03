@@ -196,6 +196,16 @@ sudo env PATH="$PATH" \
 This will create `/etc/systemd/system/caddy.service`, which can be managed with
 `systemctl`. For example:
 
+You can also use caddy in conjunction with dotenv while creating a systemd
+service with serviceman.
+
+```sh
+sudo env PATH="$PATH" \
+   serviceman add --name caddy --path "$PATH" --system --username app -- \
+   dotenv -- \
+   caddy run
+```
+
 ```sh
 sudo systemctl restart caddy
 ```
