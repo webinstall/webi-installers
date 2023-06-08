@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+set -u
+
+# NOTE:
+#       The '-testnet' flag will always cause a './testnet3/' folder
+#       to be created under '-datadir' (it won't the 'datadir' directly)
+#
+# Example:
+#       dashd -testnet -datadir="$HOME/.dashcore/"
+#       will save to ~/.dashcore/testnet3/, NOT ~/.dashcore/
+
+dashd-hd testnet

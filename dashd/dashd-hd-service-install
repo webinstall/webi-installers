@@ -1,0 +1,170 @@
+#!/bin/sh
+set -e
+set -u
+
+fn_usage() { (
+    echo >&2 ""
+    echo >&2 "USAGE"
+    echo >&2 "        dashd-hd-service-install [datadir] ['testnet']"
+    echo >&2 ""
+    echo >&2 "EXAMPLE"
+    echo >&2 "        dashd-hd-service-install /mnt/vol_slc1_60g/dashcore/"
+    echo >&2 ""
+    echo >&2 "NOTE"
+    echo >&2 "        If a directory matching '/mnt/*/dashcore/' is found,"
+    echo >&2 "        it will be used automatically."
+    echo >&2 ""
+); }
+
+fn_datadir_help() { (
+    my_vol="${1:-}"
+    my_user="$(
+        id -n -u
+    )"
+    my_group="$(
+        id -n -g
+    )"
+
+    echo >&2 ""
+    echo >&2 "ERROR"
+    echo >&2 "        '${my_vol}' is not writable"
+    echo >&2 ""
+    echo >&2 "SOLUTION"
+    echo >&2 "        1. Mount a large (50gb+) volume"
+    echo >&2 ""
+    echo >&2 "              sudo mkdir -p /mnt/EXAMPLE"
+    echo >&2 "              sudo mount /dev/sdx1 /mnt/EXAMPLE"
+    echo >&2 ""
+    echo >&2 "        2. Create a 'dashcore' inside of it"
+    echo >&2 ""
+    echo >&2 "              sudo mkdir -p '${my_vol}'"
+    echo >&2 ""
+    echo >&2 "        3. Make it writable to this user"
+    echo >&2 ""
+    echo >&2 "              sudo chown -R '${my_user}':'${my_group}' '${my_vol}'"
+    echo >&2 ""
+    echo >&2 ""
+); }
+
+fn_srv_install() { (
+    my_vol="${1:-}"
+    my_netname="${2:-}"
+
+    my_name='dashd'
+
+    # both of these will get '/testnet3' suffixes with -testnet
+    my_datadir="${my_vol}/_data"
+    my_blocksdir="${my_vol}/_caches"
+
+    if test -n "${my_netname}"; then
+        if test "mainnet" = "${my_netname}"; then
+            my_netname=""
+        elif test "testnet" != "${my_netname}"; then
+            fn_usage
+            return 1
+        fi
+    fi
+
+    if ! test -d "${my_datadir}"; then
+        mkdir "${my_datadir}"
+        chmod 0700 "${my_datadir}"
+    fi
+    if ! test -d "${my_blocksdir}"; then
+        mkdir -p "${my_blocksdir}"
+        chmod 0700 "${my_blocksdir}"
+    fi
+
+    my_net_flag=''
+    if test -n "${my_netname}"; then
+        # ex: -testnet
+        my_net_flag="-${my_netname}"
+
+        # ex: dashd-testnet
+        my_name="dashd-${my_netname}"
+    fi
+
+    my_system_args=""
+    my_kernel="$(
+        uname -s
+    )"
+    if test "Darwin" != "${my_kernel}"; then
+        my_user="$(
+            id -u -n
+        )"
+        my_system_args="--system --username ${my_user}"
+    fi
+
+    # shellcheck disable=SC2016,SC1090
+    echo 'sudo env PATH="$PATH"' \
+        "serviceman add ${my_system_args} --path \"\$PATH\" --name \"${my_name}\" --force --" \
+        "dashd " \
+        "${my_net_flag}" \
+        -usehd \
+        '-conf="$HOME/.dashcore/dash.conf"' \
+        '-settings="$HOME/.dashcore/settings.json"' \
+        '-walletdir="$HOME/.dashcore/wallets/"' \
+        "-datadir=\"${my_datadir}\"" \
+        "-blocksdir=\"${my_blocksdir}\""
+
+    if ! command -v serviceman > /dev/null; then
+        echo ""
+        echo "Installing 'serviceman'..."
+        echo ""
+        {
+            curl -fsSL "${WEBI_HOST}/serviceman" | sh
+        } > /dev/null
+
+        # shellcheck disable=SC1090
+        . ~/.config/envman/PATH.env || true
+    fi
+
+    mkdir -p "$HOME/.dashcore/wallets/"
+    chmod 0700 "$HOME/.dashcore/wallets/"
+
+    mkdir -p "${my_datadir}"
+    chmod 0700 "${my_datadir}"
+
+    mkdir -p "${my_blocksdir}"
+    chmod 0700 "${my_blocksdir}"
+
+    cd "${my_vol}" || return 1
+    # leave options unquoted so they're interpreted separately
+    # shellcheck disable=SC2086
+    sudo env PATH="${PATH}" \
+        serviceman add ${my_system_args} --path "${PATH}" --name "${my_name}" --force -- \
+        dashd \
+        ${my_net_flag} \
+        -usehd \
+        -conf="${HOME}/.dashcore/dash.conf" \
+        -settings="${HOME}/.dashcore/settings.json" \
+        -walletdir="${HOME}/.dashcore/wallets/" \
+        -datadir="${my_datadir}" \
+        -blocksdir="${my_blocksdir}"
+
+); }
+
+main() { (
+    my_vol="${1:-}"
+    my_netname="${2:-}"
+
+    if test -z "${my_vol}"; then
+        my_vol="$(
+            ls -d /mnt/*/dashcore/ 2> /dev/null || true
+        )"
+    fi
+
+    if test -z "${my_vol}"; then
+        fn_usage
+        return 1
+    fi
+
+    if ! test -d "${my_vol}" ||
+        ! test -w "${my_vol}"; then
+        fn_datadir_help "${my_vol}"
+        return 1
+    fi
+
+    fn_srv_install "${my_vol}" "${my_netname}"
+); }
+
+main "${@:-}"

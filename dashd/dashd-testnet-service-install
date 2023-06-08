@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+set -u
+
+dashd-hd-service-install "${1:-}" "testnet"

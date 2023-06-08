@@ -1,0 +1,46 @@
+#!/bin/sh
+set -e
+set -u
+
+# Unfortunately we can't know that datadir won't be used
+# for other non-cache files, but we can at least protect
+# the ones we're aware of.
+
+my_netname="${1:-}"
+if test -n "${my_netname}"; then
+    if test "${my_netname}" != mainnet &&
+        test "${my_netname}" != testnet &&
+        test "${my_netname}" != regnet &&
+        test "${my_netname}" != devnet; then
+
+        echo ""
+        echo "ERROR"
+        echo "        '${my_netname}' is not one of 'testnet', 'regnet', 'devnet'"
+        echo ""
+        echo ""
+    fi
+    if test "${my_netname}" != mainnet; then
+        my_netname=''
+    fi
+fi
+
+my_net_arg=''
+if test -n "${my_netname}"; then
+    my_net_arg="-${my_netname}"
+fi
+
+# shellcheck disable=2086
+dashd \
+    -usehd \
+    ${my_net_arg} \
+    -conf="$HOME/.dashcore/dash.conf" \
+    -settings="$HOME/.dashcore/settings.json" \
+    -walletdir="$HOME/.dashcore/wallets/" \
+    -datadir="$HOME/.dashcore/_data/" \
+    -blocksdir="$HOME/.dashcore/_data/"
+
+#   -enablecoinjoin=1 \
+#   -coinjoinautostart=1 \
+#   -coinjoinrounds=16 \
+#   -coinjoindenomsgoal=10 \
+#   -coinjoindenomshardcap=25
