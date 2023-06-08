@@ -1,0 +1,21 @@
+#!/bin/sh
+set -e
+set -u
+
+# I don't have the gall to change the defaults (Webi values),
+# but I would *strongly* recommend that you do!
+#
+# Instance-specific data should be separate from global caches:
+#
+# -settings="$HOME/.config/dashcore/settings.json" \
+# -walletdir="$HOME/.config/dashcore/wallets/" \
+# -datadir="$HOME/.dashcore/_data/" \
+# -blocksdir="$HOME/.dashcore/_caches/" \
+
+dash-qt \
+    -usehd \
+    -enablecoinjoin=1 \
+    -coinjoinautostart=1 \
+    -coinjoinrounds=16 \
+    -coinjoindenomsgoal=10 \
+    -coinjoindenomshardcap=25
