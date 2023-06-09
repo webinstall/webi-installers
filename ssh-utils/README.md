@@ -8,7 +8,7 @@ tagline: |
 ## Cheat Sheet
 
 > SSH Utils includes shortcut commands for some common tasks, including
-> `ssh-pubkey`, `ssh-setpass`, and `ssh-adduser`
+> `ssh-pubkey`, `ssh-setpass`, `ssh-adduser`, and `sshd-prohibit-password`
 
 **ssh-pubkey**:
 
@@ -31,6 +31,22 @@ Many modern web programs (`npm` and `postgres`, for example) will not function
 correctly if run as root. `ssh-adduser` adds user `app` with the same
 **`~/.ssh/authorized_keys`** as the `root` user, with a long random password,
 and gives `app` `sudo` privileges.
+
+**sshd-prohibit-password**:
+
+Enforces security for `/etc/ssh/sshd_config`
+
+```diff
+- #PasswordAuthentication yes
++ PasswordAuthentication no
+
+- #PermitRootLogin yes
++ PermitRootLogin prohibit-password
+
+  # macOS only
+- UsePAM yes
++ UsePAM no
+```
 
 **ssh-setpass**:
 

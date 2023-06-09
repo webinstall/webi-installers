@@ -1,0 +1,182 @@
+#!/bin/sh
+set -e
+set -u
+
+# There are two important use cases:
+# 1. Run as 'root', for the 'app' (or specified) user
+# 2. Run as a sudoer, for self
+
+fn_check_as_root() { (
+    my_admin="${1:-}"
+
+    if ! command -v sudo > /dev/null; then
+        echo ""
+        echo "WARNING"
+        echo "    'sudo' is not installed."
+        echo "    '${my_admin}' MUST be able to login via the 'root' password."
+        echo ""
+    else
+        my_admin_is_sudoer=''
+        if grep -q "^${my_admin} ALL=" /etc/sudoers; then
+            my_admin_is_sudoer='true'
+        elif test -e /etc/sudoers.d; then
+            if grep -q "^${my_admin} ALL=" /etc/sudoers.d/*; then
+                my_admin_is_sudoer='true'
+            fi
+        fi
+
+        echo ""
+        echo "ERROR"
+        echo "    '${my_admin}' is NOT a sudoer"
+        echo ""
+        echo "SOLUTION"
+        echo "    mkdir -p /etc/sudoers.d"
+        echo "    chmod 0700 /etc/sudoers.d"
+        echo "    echo '${my_admin} ALL=(ALL:ALL) NOPASSWD: ALL' | "
+        echo "        tee '/etc/sudoers.d/${my_admin}'"
+        echo ""
+    fi
+); }
+
+fn_check_as_sudoer() { (
+    echo
+); }
+
+main() {
+    echo ""
+    echo "IMPORTANT"
+    echo ""
+    echo "READ CAREFULLY (or get LOCKED OUT)"
+    echo ""
+
+    my_user_id="$(id -u)"
+    if test "0" = "${my_user_id}"; then
+        fn_check_as_root ${1:-app}
+    else
+        fn_check_as_sudoer
+    fi
+
+    my_username="$(id -u -n)"
+    my_sudo_user="${1:-${my_username}}"
+
+    my_sudo_exists=''
+    my_sudo=''
+    if command -v sudo > /dev/null; then
+        my_sudo_exists='true'
+        my_sudo="sudo"
+    fi
+
+    my_root=''
+    if test "$(id -u)" = "0"; then
+        my_root='true'
+        my_sudo=''
+    fi
+
+    my_authorized_exists=''
+    echo ''
+    echo "All authorized users:"
+    if ! $my_sudo sh -c 'ls /home/*/.ssh/authorized_keys' > /devl/null 2>&1; then
+        echo "    (none)"
+    else
+        $my_sudo sh -c "grep -E '^(ssh|ec)' /home/*/.ssh/authorized_keys" |
+            cut -d' ' -f3 |
+            sort -u |
+            while read -r my_comment; do
+                echo "    ${my_comment}"
+                my_authorized_exists='true'
+            done
+    fi
+
+    my_sudoer_exists=''
+    echo ''
+    echo "All sudoers:"
+    if test -z "${my_sudo_exists}"; then
+        echo '    (sudo not installed)'
+    else
+        {
+            $my_sudo sh -c "grep -E '(sudo|wheel):' /etc/gshadow" |
+                cut -d':' -f4 |
+                tr ',' '\n'
+
+            #$my_sudo sh -c "grep '^%\?\w\+ ALL=' /etc/sudoers /etc/sudoers.d/*" |
+            $my_sudo sh -c "grep '^\w\+ ALL=' /etc/sudoers /etc/sudoers.d/*" |
+                cut -d':' -f2 |
+                cut -d' ' -f1
+        } |
+            grep -v root |
+            sort -u |
+            while read -r my_sudoer; do
+                my_sudoer_exists='true'
+                echo "    ${my_sudoer}"
+            done
+    fi
+
+    #adduser "$my_new_user" sudo || adduser "$my_new_user" wheel
+    echo "$my_new_user ALL=(ALL:ALL) NOPASSWD: ALL" | tee "/etc/sudoers.d/$my_new_user"
+
+    # allow users who can already login as 'root' to login as 'app'
+    mkdir -p "/home/$my_new_user/.ssh/"
+    chmod 0700 "/home/$my_new_user/.ssh/"
+    echo "${my_keys}" >> "/home/$my_new_user/.ssh/authorized_keys"
+    chmod 0600 "/home/$my_new_user/.ssh/authorized_keys"
+    touch "/home/$my_new_user/.ssh/config"
+    chmod 0644 "/home/$my_new_user/.ssh/config"
+    chown -R "$my_new_user":"$my_new_user" "/home/$my_new_user/.ssh/"
+
+    # ensure that 'app' has an SSH Keypair
+    sudo -i -u "$my_new_user" sh -c "ssh-keygen -b 2048 -t rsa -f '/home/$my_new_user/.ssh/id_rsa' -q -N ''"
+    chown -R "$my_new_user":"$my_new_user" "/home/$my_new_user/.ssh/"
+
+    # Install webi for the new 'app' user
+    WEBI_HOST=${WEBI_HOST:-"https://webinstall.dev"}
+    sudo -i -u "$my_new_user" sh -c "curl -fsSL '$WEBI_HOST/webi' | sh" ||
+        sudo -i -u "$my_new_user" sh -c "wget -q -O - '$WEBI_HOST/webi' | sh"
+
+    # TODO ensure that ssh-password login is off
+    my_pass="$(grep 'PasswordAuthentication yes' /etc/ssh/sshd_config)"
+    my_pam=""
+    if [ "Darwin" = "$(uname -s)" ]; then
+        # Turn off PAM for macOS or it will allow password login
+        my_pam="$(grep 'UsePAM yes' /etc/ssh/sshd_config)"
+    fi
+    if [ -n "${my_pass}" ] || [ -n "${my_pam}" ]; then
+        echo "######################################################################"
+        echo "#                                                                    #"
+        echo "#                             WARNING                                #"
+        echo "#                                                                    #"
+        echo "# Found /etc/ssh/sshd_config:                                        #"
+        if [ -n "${my_pass}" ]; then
+            echo "#     PasswordAuthentication yes                                     #"
+        fi
+        if [ -n "${my_pam}" ]; then
+            echo "#     UsePAM yes                                                     #"
+        fi
+        echo "#                                                                    #"
+        echo "# This is EXTREMELY DANGEROUS and insecure.                          #"
+        echo "# We'll attempt to fix this now...                                   #"
+        echo "#                                                                    #"
+
+        sed -i 's/#\?PasswordAuthentication \(yes\|no\)/PasswordAuthentication no/' \
+            /etc/ssh/sshd_config
+
+        sed -i 's/#\?UsePAM \(yes\|no\)/UsePAM no/' \
+            /etc/ssh/sshd_config
+
+        if grep "PasswordAuthentication yes" /etc/ssh/sshd_config; then
+            echo "# FAILED. Please check /etc/ssh/sshd_config manually.                #"
+        else
+            echo "# Fixed... HOWEVER, you'll need to manually restart ssh:             #"
+            echo "#                                                                    #"
+            echo "#   sudo systemctl restart ssh                                       #"
+            echo "#                                                                    #"
+            echo "# (you may want to make sure you can login as the new user first)    #"
+        fi
+        echo "#                                                                    #"
+        echo "######################################################################"
+    fi
+
+    echo "Created user '${my_new_user}' as sudoer with a random password."
+    echo "(set a new password with 'password ${my_new_user}')"
+}
+
+main "${1:-app}" "${2:-}"
