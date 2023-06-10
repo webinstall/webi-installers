@@ -4,12 +4,16 @@ set -u
 
 __install_ssh_utils() {
     rm -f \
+        "$HOME/.local/bin/ssh-authorize" \
         "$HOME/.local/bin/ssh-pubkey" \
         "$HOME/.local/bin/ssh-setpass" \
         "$HOME/.local/bin/ssh-adduser" \
         "$HOME/.local/bin/sshd-prohibit-password"
     # done
 
+    webi_download \
+        "$WEBI_HOST/packages/ssh-authorize/ssh-authorize" \
+        "$HOME/.local/bin/ssh-authorize"
     webi_download \
         "$WEBI_HOST/packages/ssh-pubkey/ssh-pubkey.sh" \
         "$HOME/.local/bin/ssh-pubkey"

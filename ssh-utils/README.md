@@ -48,6 +48,12 @@ Enforces security for `/etc/ssh/sshd_config`
 + UsePAM no
 ```
 
+**ssh-authorize**:
+
+Adds public ssh keys from a string, file, or url to `~/.ssh/authorized_keys` to allow the owner(s) of the keys access to the system to which they're added.
+
+Also performs various checks to prevent errors.
+
 **ssh-setpass**:
 
 `ssh-setpass` will ask you for your old passphrase (if any) and then for the new
