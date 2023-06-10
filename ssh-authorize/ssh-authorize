@@ -1,0 +1,164 @@
+#!/bin/sh
+set -e
+set -u
+
+cmd_http_get="curl ${CURL_OPTS:-} --max-time 15 --proto =https --tlsv1.2 -fsS"
+if ! command -v curl > /dev/null; then
+    cmd_http_get="wget ${WGET_OPTS:-} --secure-protocol=TLSv1_2 --secure-protocol=TLSv1_3 --timeout=15 -o /dev/null -O -"
+fi
+
+fn_init_authorized_keys() { (
+    if ! test -e ~/.ssh/; then
+        mkdir -p ~/.ssh/
+    fi
+    chmod 0700 ~/.ssh/
+
+    if ! test -e ~/.ssh/authorized_keys; then
+        touch ~/.ssh/authorized_keys
+    fi
+    chmod 0600 ~/.ssh/authorized_keys
+
+); }
+
+fn_ssh_keys() { (
+    my_key_uri="${1:-}"
+
+    # Handle keys as a URL, a file, or string
+    my_keys="${my_key_uri}"
+    case "${my_key_uri}" in
+        http:*)
+            echo "please use 'https://' for ssh public key urls"
+            return 1
+            ;;
+        https:*)
+            my_keys="$(
+                ${cmd_http_get} "${my_key_uri}"
+            )"
+            ;;
+        *)
+            if test -e "${my_key_uri}"; then
+                my_keys="$(
+                    cat "${my_key_uri}"
+                )"
+            fi
+            ;;
+    esac
+
+    # printf for proper whitespace handling
+    printf '%s' "${my_keys}"
+); }
+
+main() { (
+    my_keything="${1:-}"
+    my_comment="${2:-}"
+
+    fn_init_authorized_keys
+
+    if test -z "${my_keything:-}"; then
+        echo ""
+        echo "USAGE"
+        echo ""
+        echo "    ssh-authorize <ssh-pubkey-or-file-or-url> [comment]"
+        echo ""
+        echo "EXAMPLES"
+        echo ""
+        echo "    ssh-authorize https://github.com/you.keys 'My GH Keys'"
+        echo ""
+        echo "    ssh-authorize ./id_rsa.you@example.co.pub"
+        echo ""
+        echo "    ssh-authorize 'ssh-rsa AAAA...example.co'"
+        echo ""
+        echo "LOCAL IDENTIFY FILES"
+        echo ""
+        for my_file in ~/.ssh/*.pub; do
+            if test "${my_file}" = "$HOME/.ssh/*.pub"; then
+                echo "    (no files match ~/.ssh/*.pub)"
+                break
+            fi
+            printf '    %s\n' "${my_file}"
+        done
+        echo ""
+
+        return 1
+    fi
+
+    my_pubkeys=""
+    if test -n "${my_keything}"; then
+        my_pubkeys="$(
+            fn_ssh_keys "${my_keything}"
+        )"
+    else
+        # if ! command -v ssh-pubkey > /dev/null; then
+        #     {
+        #         echo ""
+        #         echo "ERROR"
+        #         echo "    no key string, file, or url was given,"
+        #         echo "    and 'ssh-pubkey' is not installed."
+        #         echo ""
+        #         echo "SOLUTION"
+        #         echo "    provide a valid key string, file or url,"
+        #         echo "    or 'curl https://webi.sh/ssh-pubkey | sh'"
+        #         echo "    to install 'ssh-pubkey'"
+        #         echo ""
+        #     } >&2
+        #
+        #     return 1
+        # fi
+
+        # Get the default key (for authorizing self)
+        my_pubkeys="$(
+            ssh-pubkey 2> /dev/null
+        )"
+    fi
+
+    # Clean up non-key lines, preserving comments and newlines
+    my_pubkeys_safe="$(
+        printf '%s' "${my_pubkeys}" | grep -E '^(#|\s*$|(ssh|ecdsa)-[a-zA-Z0-9-]+ AAA)'
+    )"
+    my_pubkeys_trimmed="$(
+        printf '%s' "${my_pubkeys}" | grep -E '^(ssh|ecdsa)-[a-zA-Z0-9-]+ AAA'
+    )"
+    my_pubkeys_excluded="$(
+        printf '%s' "${my_pubkeys}" | grep -v -E '^(#|\s*$|(ssh|ecdsa)-[a-zA-Z0-9-]+ AAA)' || true
+    )"
+
+    if test -z "${my_pubkeys_trimmed}"; then
+        {
+            echo ""
+            echo "ERROR"
+            echo "    not a valid key string, file, or url:"
+            echo "    '${my_keything}'"
+            echo ""
+            echo "SOLUTION"
+            echo "    inspect the file / url / string, double"
+            echo "    check that you copied correctly, etc"
+            echo ""
+        } >&2
+
+        return 1
+    fi
+
+    {
+        if test -n "${my_comment}"; then
+            printf '# %s\n' "${my_comment}"
+        fi
+        printf '%s\n' "${my_pubkeys_safe}"
+    } | tee -a ~/.ssh/authorized_keys
+
+    echo ""
+    echo "Successfully copied the above ssh keys to ~/.ssh/authorized_keys"
+
+    if test -n "${my_pubkeys_excluded}"; then
+        {
+            echo ""
+            echo "WARNING: the following (invalid) lines were excluded:"
+            echo ""
+            echo "${my_pubkeys_excluded}"
+            echo ""
+        } >&2
+    fi
+); }
+
+if test -z "${SSH_AUTHORIZE_UNIT_TEST:-}"; then
+    main "${@:-}"
+fi
