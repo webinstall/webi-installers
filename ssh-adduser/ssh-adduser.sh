@@ -10,7 +10,6 @@ main() {
     my_key_url="${2:-}"
     my_keys=""
 
-    # TODO would $EUID be better?
     if [ "root" != "$(whoami)" ]; then
         echo "webi adduser: running user is already a non-root user"
         exit 0
@@ -53,60 +52,29 @@ main() {
     chmod 0644 "/home/$my_new_user/.ssh/config"
     chown -R "$my_new_user":"$my_new_user" "/home/$my_new_user/.ssh/"
 
-    # ensure that 'app' has an SSH Keypair
-    sudo -i -u "$my_new_user" sh -c "ssh-keygen -b 2048 -t rsa -f '/home/$my_new_user/.ssh/id_rsa' -q -N ''"
     chown -R "$my_new_user":"$my_new_user" "/home/$my_new_user/.ssh/"
 
-    # Install webi for the new 'app' user
+    # ensure that 'app' has an SSH Keypair
+    # sudo -i -u "$my_new_user" sh -c \
+    #     "ssh-keygen -b 2048 -t rsa -f '/home/$my_new_user/.ssh/id_rsa' -q -N ''"
     WEBI_HOST=${WEBI_HOST:-"https://webinstall.dev"}
-    sudo -i -u "$my_new_user" sh -c "curl -fsSL '$WEBI_HOST/webi' | sh" ||
-        sudo -i -u "$my_new_user" sh -c "wget -q -O - '$WEBI_HOST/webi' | sh"
+    sudo -i -u "$my_new_user" sh -c "curl -fsSL '$WEBI_HOST/ssh-pubkey' | sh > /dev/null" ||
+        sudo -i -u "$my_new_user" sh -c "wget -q -O - '$WEBI_HOST/ssh-pubkey' | sh > /dev/null"
 
-    # TODO ensure that ssh-password login is off
-    my_pass="$(grep 'PasswordAuthentication yes' /etc/ssh/sshd_config)"
-    my_pam=""
-    if [ "Darwin" = "$(uname -s)" ]; then
-        # Turn off PAM for macOS or it will allow password login
-        my_pam="$(grep 'UsePAM yes' /etc/ssh/sshd_config)"
-    fi
-    if [ -n "${my_pass}" ] || [ -n "${my_pam}" ]; then
-        echo "######################################################################"
-        echo "#                                                                    #"
-        echo "#                             WARNING                                #"
-        echo "#                                                                    #"
-        echo "# Found /etc/ssh/sshd_config:                                        #"
-        if [ -n "${my_pass}" ]; then
-            echo "#     PasswordAuthentication yes                                     #"
-        fi
-        if [ -n "${my_pam}" ]; then
-            echo "#     UsePAM yes                                                     #"
-        fi
-        echo "#                                                                    #"
-        echo "# This is EXTREMELY DANGEROUS and insecure.                          #"
-        echo "# We'll attempt to fix this now...                                   #"
-        echo "#                                                                    #"
-
-        sed -i 's/#\?PasswordAuthentication \(yes\|no\)/PasswordAuthentication no/' \
-            /etc/ssh/sshd_config
-
-        sed -i 's/#\?UsePAM \(yes\|no\)/UsePAM no/' \
-            /etc/ssh/sshd_config
-
-        if grep "PasswordAuthentication yes" /etc/ssh/sshd_config; then
-            echo "# FAILED. Please check /etc/ssh/sshd_config manually.                #"
-        else
-            echo "# Fixed... HOWEVER, you'll need to manually restart ssh:             #"
-            echo "#                                                                    #"
-            echo "#   sudo systemctl restart ssh                                       #"
-            echo "#                                                                    #"
-            echo "# (you may want to make sure you can login as the new user first)    #"
-        fi
-        echo "#                                                                    #"
-        echo "######################################################################"
+    if test -z "${SSH_ADDUSER_AUTO}"; then
+        echo ""
+        echo "!! BREAKING CHANGE !!"
+        echo ""
+        echo "    'ssh-adduser' no longer checks or hardens /etc/ssh/sshd_config"
+        echo ""
+        echo "    Run 'sshd-probihit-password' to secure /etc/ssh/sshd_config"
+        echo ""
     fi
 
     echo "Created user '${my_new_user}' as sudoer with a random password."
     echo "(set a new password with 'password ${my_new_user}')"
+    echo ""
+    echo "note: you can add an ssh key passphrase with 'webi ssh-setpass'"
 }
 
 main "${1:-app}" "${2:-}"

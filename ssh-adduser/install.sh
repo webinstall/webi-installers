@@ -3,18 +3,26 @@ set -e
 set -u
 
 __install_ssh_adduser() {
-    my_cmd="ssh-adduser"
-
-    rm -f "$HOME/.local/bin/${my_cmd}"
-
+    # ssh-adduser
+    rm -f "$HOME/.local/bin/ssh-adduser"
     webi_download \
-        "$WEBI_HOST/packages/${my_cmd}/${my_cmd}.sh" \
-        "$HOME/.local/bin/${my_cmd}"
+        "$WEBI_HOST/packages/ssh-adduser/ssh-adduser.sh" \
+        "$HOME/.local/bin/ssh-adduser"
+    chmod a+x "$HOME/.local/bin/ssh-adduser"
 
-    chmod a+x "$HOME/.local/bin/${my_cmd}"
+    # sshd-prohibit-password
+    rm -f "$HOME/.local/bin/sshd-prohibit-password"
+    webi_download \
+        "$WEBI_HOST/packages/sshd-prohibit-password/sshd-prohibit-password" \
+        "$HOME/.local/bin/sshd-prohibit-password"
+    chmod a+x "$HOME/.local/bin/sshd-prohibit-password"
 
-    # run the command
-    "$HOME/.local/bin/${my_cmd}"
+    # run the commands
+    export SSH_ADDUSER_AUTO=true
+    "$HOME/.local/bin/ssh-adduser"
+
+    # TODO create vps-init or the like to do both
+    "$HOME/.local/bin/sshd-prohibit-password"
 }
 
 __install_ssh_adduser
