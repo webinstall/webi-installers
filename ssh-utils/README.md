@@ -2,13 +2,18 @@
 title: SSH Utils
 homepage: https://webinstall.dev/ssh-utils
 tagline: |
-  SSH Utils: Because --help takes to long.
+  SSH Utils: Because --help takes too long.
 ---
 
 ## Cheat Sheet
 
-> SSH Utils includes shortcut commands for some common tasks, including
-> `ssh-pubkey`, `ssh-setpass`, `ssh-adduser`, and `sshd-prohibit-password`
+> SSH Utils includes shortcut commands for common tasks.
+
+- [ssh-adduser](../ssh-adduser/)
+- [ssh-authorize](../ssh-authorize/)
+- [ssh-pubkey](../ssh-pubkey/)
+- [ssh-setpass](../ssh-setpass/)
+- [sshd-prohibit-password](../sshd-prohibit-password/)
 
 **ssh-pubkey**:
 
@@ -50,7 +55,8 @@ Enforces security for `/etc/ssh/sshd_config`
 
 **ssh-authorize**:
 
-Adds public ssh keys from a string, file, or url to `~/.ssh/authorized_keys` to allow the owner(s) of the keys access to the system to which they're added.
+Adds public ssh keys from a string, file, or url to `~/.ssh/authorized_keys` to
+allow the owner(s) of the keys access to the system to which they're added.
 
 Also performs various checks to prevent errors.
 
