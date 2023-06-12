@@ -1,1 +1,0 @@
-../ssh-setpass/ssh-setpass.sh

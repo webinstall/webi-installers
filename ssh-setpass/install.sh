@@ -3,20 +3,11 @@ set -e
 set -u
 
 __install_ssh_setpass() {
-    my_cmd="ssh-setpass"
-
-    rm -f "$HOME/.local/bin/${my_cmd}"
-
+    rm -f "$HOME/.local/bin/ssh-setpass"
     webi_download \
-        "$WEBI_HOST/packages/${my_cmd}/${my_cmd}.sh" \
-        "$HOME/.local/bin/${my_cmd}"
-
-    chmod a+x "$HOME/.local/bin/${my_cmd}"
-
-    # run the command
-    echo ''
-    echo 'Set passphrase for ~/.ssh/id_rsa?'
-    "$HOME/.local/bin/${my_cmd}"
+        "$WEBI_HOST/packages/ssh-setpass/ssh-setpass" \
+        "$HOME/.local/bin/ssh-setpass"
+    chmod a+x "$HOME/.local/bin/ssh-setpass"
 }
 
 __install_ssh_setpass

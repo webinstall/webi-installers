@@ -3,18 +3,14 @@ set -e
 set -u
 
 __install_ssh_pubkey() {
-    my_cmd="ssh-pubkey"
-
-    rm -f "$HOME/.local/bin/${my_cmd}"
-
+    rm -f "$HOME/.local/bin/ssh-pubkey"
     webi_download \
-        "$WEBI_HOST/packages/${my_cmd}/${my_cmd}.sh" \
-        "$HOME/.local/bin/${my_cmd}"
-
-    chmod a+x "$HOME/.local/bin/${my_cmd}"
+        "$WEBI_HOST/packages/ssh-pubkey/ssh-pubkey" \
+        "$HOME/.local/bin/ssh-pubkey"
+    chmod a+x "$HOME/.local/bin/ssh-pubkey"
 
     # run the command
-    "$HOME/.local/bin/${my_cmd}"
+    "$HOME/.local/bin/ssh-pubkey"
 }
 
 __install_ssh_pubkey

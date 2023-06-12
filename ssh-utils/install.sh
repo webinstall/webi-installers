@@ -11,19 +11,19 @@ __install_ssh_utils() {
 
     rm -rf "$HOME/.local/bin/ssh-adduser"
     webi_download \
-        "$WEBI_HOST/packages/ssh-adduser/ssh-adduser.sh" \
+        "$WEBI_HOST/packages/ssh-adduser/ssh-adduser" \
         "$HOME/.local/bin/ssh-adduser"
     chmod a+x "$HOME/.local/bin/ssh-adduser"
 
     rm -rf "$HOME/.local/bin/ssh-pubkey"
     webi_download \
-        "$WEBI_HOST/packages/ssh-pubkey/ssh-pubkey.sh" \
+        "$WEBI_HOST/packages/ssh-pubkey/ssh-pubkey" \
         "$HOME/.local/bin/ssh-pubkey"
     chmod a+x "$HOME/.local/bin/ssh-pubkey"
 
     rm -rf "$HOME/.local/bin/ssh-setpass"
     webi_download \
-        "$WEBI_HOST/packages/ssh-setpass/ssh-setpass.sh" \
+        "$WEBI_HOST/packages/ssh-setpass/ssh-setpass" \
         "$HOME/.local/bin/ssh-setpass"
     chmod a+x "$HOME/.local/bin/ssh-setpass"
 

@@ -6,7 +6,7 @@ __install_ssh_adduser() {
     # ssh-adduser
     rm -f "$HOME/.local/bin/ssh-adduser"
     webi_download \
-        "$WEBI_HOST/packages/ssh-adduser/ssh-adduser.sh" \
+        "$WEBI_HOST/packages/ssh-adduser/ssh-adduser" \
         "$HOME/.local/bin/ssh-adduser"
     chmod a+x "$HOME/.local/bin/ssh-adduser"
 
