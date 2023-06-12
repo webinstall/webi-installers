@@ -1,0 +1,47 @@
+#!/bin/sh
+set -e
+set -u
+
+main() { (
+    sed '1,/^#~\/.local\/bin\/brew-updater/d' "${0}" > ~/.local/bin/brew-update-hourly
+    chmod a+x ~/.local/bin/brew-update-hourly
+
+    env PATH="$PATH" serviceman add --user \
+        --name sh.brew.updater -- \
+        ~/.local/bin/brew-update-hourly
+); }
+
+if main; then
+    exit 0
+fi
+
+#~/.local/bin/brew-updater
+#!/bin/sh
+#set -e
+set -u
+
+if test -e ~/.config/envman/PATH.env; then
+    # shellcheck disable=SC1090
+    . ~/.config/envman/PATH.env
+fi
+
+while true; do
+    my_start="$(date '+%s')"
+
+    my_date="$(date '+%F %T')"
+    echo "[$my_date] Updating brew..."
+    brew update
+    echo ''
+
+    my_end="$(date '+%s')"
+    my_elapsed="$((my_end - my_start))"
+    my_date="$(date '+%F %T')"
+    echo "[$my_date] Updated in ${my_elapsed}s."
+
+    echo "[$my_date] Cleaning up..."
+    brew cleanup
+
+    echo "[$my_date] Waiting 24 hours..."
+    my_wait="$((24 * 60 * 60))"
+    sleep "$my_wait"
+done

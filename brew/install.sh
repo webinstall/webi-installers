@@ -7,9 +7,9 @@ _install_brew() {
     # Straight from https://brew.sh
     #/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
-    if [ "Darwin" = "$(uname -s)" ]; then
+    if test "Darwin" = "$(uname -s)"; then
         needs_xcode="$(/usr/bin/xcode-select -p > /dev/null 2> /dev/null || echo "true")"
-        if [ -n "${needs_xcode}" ]; then
+        if test -n "${needs_xcode}"; then
             echo ""
             echo ""
             echo "ERROR: Run this command to install XCode Command Line Tools first:"
@@ -20,11 +20,11 @@ _install_brew() {
             echo ""
         fi
     else
-        if [ -z "$(command -v gcc)" ]; then
+        if ! command -v gcc > /dev/null; then
             echo >&2 "Warning: to install 'gcc' et al on Linux use the built-in package manager."
             echo >&2 "       For example, try: sudo apt install -y build-essential"
         fi
-        if [ -z "$(command -v git)" ]; then
+        if ! command -v git > /dev/null; then
             echo >&2 "Error: to install 'git' on Linux use the built-in package manager."
             echo >&2 "       For example, try: sudo apt install -y git"
             exit 1
@@ -32,7 +32,7 @@ _install_brew() {
     fi
 
     # From Straight from https://brew.sh
-    if ! [ -d "$HOME/.local/opt/brew" ]; then
+    if ! test -d "$HOME/.local/opt/brew"; then
         echo "Installing to '$HOME/.local/opt/brew'"
         echo ""
         echo "If you prefer to have brew installed to '/usr/local' cancel now and do the following:"
@@ -43,6 +43,13 @@ _install_brew() {
         sleep 3
         git clone --depth=1 https://github.com/Homebrew/brew "$HOME/.local/opt/brew"
     fi
+
+    rm -rf "$HOME/.local/bin/brew-update-service-install"
+    webi_download \
+        "$WEBI_HOST/packages/brew/brew-update-service-install" \
+        "$HOME/.local/bin/brew-update-service-install" \
+        brew-update-service-install
+    chmod a+x "$HOME/.local/bin/brew-update-service-install"
 
     webi_path_add "$HOME/.local/opt/brew/bin"
     export PATH="$HOME/.local/opt/brew/bin:$PATH"
@@ -59,6 +66,10 @@ _install_brew() {
     echo "        mv '$HOME/.local/opt/brew' '$HOME/.local/opt/brew.$(date '+%F_%H-%M-%S').bak'"
     # shellcheck disable=2016
     echo '        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
+    echo ""
+
+    echo "To register 'brew update' as a hourly system service:"
+    echo "        brew-update-service-install"
     echo ""
 }
 

@@ -160,7 +160,7 @@ __bootstrap_webi() {
     webi_download() {
         # determine the url to download
         if [ -n "${1-}" ]; then
-            my_url="$1"
+            my_url="${1}"
         else
             if [ "error" = "$WEBI_CHANNEL" ]; then
                 # TODO pass back requested OS / Arch / Version
@@ -177,9 +177,15 @@ __bootstrap_webi() {
 
         # determine the location to download to
         if [ -n "${2-}" ]; then
-            my_dl="$2"
+            my_dl="${2}"
         else
             my_dl="${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
+        fi
+
+        if [ -n "${3-}" ]; then
+            my_dl_name="${3}"
+        else
+            my_dl_name="${PKG_NAME}"
         fi
 
         WEBI_PKG_DOWNLOAD="${my_dl}"
@@ -190,7 +196,7 @@ __bootstrap_webi() {
             return 0
         fi
 
-        echo "Downloading $PKG_NAME from"
+        echo "Downloading ${my_dl_name} from"
         echo "$my_url"
 
         # It's only 2020, we can't expect to have reliable CLI tools
