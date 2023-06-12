@@ -2,8 +2,53 @@
 set -e
 set -u
 
+fn_usage() { (
+    echo ""
+    echo "USAGE"
+    echo "        ssh-setpass [ssh-key-file]"
+    echo ""
+    echo "EXAMPLE"
+    echo "        ssh-setpass ~/.ssh/id_rsa"
+    echo "     OR"
+    echo "        ssh-keygen -p -f ~/.ssh/id_rsa"
+    echo ""
+); }
+
+fn_grep_keyfiles() { (
+    grep -r -- '-----BEGIN' ~/.ssh 2> /dev/null |
+        cut -d: -f1 |
+        sort -u ||
+        true |
+        while read -r my_keyfile; do
+            echo "        ${my_keyfile}"
+        done
+); }
+
 main() {
     my_key="${1:-"${HOME}/.ssh/id_rsa"}"
+
+    if test "{my_key}" = "help" ||
+        test "{my_key}" = "--help"; then
+        fn_usage
+
+        return 0
+    fi
+
+    if ! test -e "${my_key}"; then
+        {
+            echo ""
+            echo "ERROR"
+            echo "        '${my_key}' not found"
+            echo ""
+            echo "KEYS FOUND"
+            if ! fn_list_keyfiles; then
+                echo "        (none)"
+            fi
+        } >&2
+
+        return 1
+    fi
+
     ssh-keygen -p -f "${my_key}"
 }
 
