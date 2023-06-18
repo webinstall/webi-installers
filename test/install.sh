@@ -13,6 +13,7 @@ __rmrf_local() {
                 bat \
                 caddy \
                 chromedriver \
+                cmake \
                 comrak \
                 curlie \
                 delta \
@@ -106,6 +107,7 @@ __rmrf_local() {
                 bat \
                 caddy \
                 chromedriver \
+                cmake \
                 comrak \
                 curlie \
                 delta \
@@ -202,6 +204,7 @@ __test() {
         bat \
         caddy \
         chromedriver \
+        cmake \
         comrak \
         curlie \
         delta \
