@@ -79,8 +79,12 @@ dashd \
     -conf="$HOME/.dashcore/dash.conf" \
     -settings="$HOME/.dashcore/settings.json" \
     -walletdir="$HOME/.dashcore/wallets/" \
-    -datadir="/mnt/100gb/dashcore/_data/"
-    -blocksdir="/mnt/100gb/dashcore/_caches/"
+    -datadir="/mnt/100gb/dashcore/_data/" \
+    -blocksdir="/mnt/100gb/dashcore/_caches/" \
+    -addressindex=1 \
+    -timestampindex=1 \
+    -txindex=1 \
+    -spentindex=1
 ```
 
 **Warning**: killing the process with ctrl+c before the first full sync may
@@ -108,6 +112,42 @@ For **testnet**:
 - 2GB RAM
 - 1 vCPU
 - 1 hour to sync and index in ideal conditions
+
+### How to configure `dash.conf`
+
+You can set options for `main`, `test`, and `regtest`.
+
+If you intend to use the various RPCs you must enable indexes.
+
+```ini
+txindex=1
+addressindex=1
+timestampindex=1
+spentindex=1
+
+[main]
+rpcuser=alice
+rpcpassword=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+bind=127.0.0.1:9999
+rpcbind=127.0.0.1:9998
+rpcallowip=127.0.0.1/16
+zmqpubrawtx=tcp://127.0.0.1:28332
+zmqpubrawtxlock=tcp://127.0.0.1:28332
+
+[test]
+rpcuser=alice-test
+rpcpassword=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+bind=127.0.0.1:19999
+rpcbind=127.0.0.1:19998
+rpcallowip=127.0.0.1/16
+zmqpubrawtx=tcp://127.0.0.1:18009
+zmqpubrawtxlock=tcp://127.0.0.1:18009
+```
+
+See also:
+
+- [dash: examples/dash.conf](https://github.com/dashpay/dash/blob/549e347b742cb4dc63807a292729e658218d7d0f/contrib/debian/examples/dash.conf#L2)
+- [dashd: Indexing Options](https://docs.dash.org/projects/core/en/19.0.0/docs/dashcore/wallet-arguments-and-commands-dashd.html#indexing-options)
 
 ### How to Separate Caches from Data
 
