@@ -29,6 +29,8 @@ install:
 /mnt/<BLK_VOL>/dashcore/
 ```
 
+[`dashcore-utils`](../dashcore-utils/) will also be installed if not present.
+
 ## Cheat Sheet
 
 > A DASH _Full Node_ syncs and indexes the DASH blockchain and can be used to

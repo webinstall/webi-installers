@@ -38,6 +38,8 @@ install:
 ~/Library/Preferences/org.dash.Dash-Qt.plist
 ```
 
+[`dashcore-utils`](../dashcore-utils/) will also be installed if not present.
+
 ## Cheat Sheet
 
 > _DASH_ (portmanteau of _Digital Cash_) is an international currency. _Dash

@@ -8,7 +8,7 @@ fn_usage() { (
     echo >&2 "        dashd-hd-service-install [datadir] ['testnet']"
     echo >&2 ""
     echo >&2 "EXAMPLE"
-    echo >&2 "        dashd-hd-service-install /mnt/vol_slc1_60g/dashcore/"
+    echo >&2 "        dashd-hd-service-install /mnt/vol_slc1_100g/dashcore/"
     echo >&2 ""
     echo >&2 "NOTE"
     echo >&2 "        If a directory matching '/mnt/*/dashcore/' is found,"
@@ -151,6 +151,12 @@ main() { (
         my_vol="$(
             ls -d /mnt/*/dashcore/ 2> /dev/null || true
         )"
+    fi
+
+    if test "help" = "${my_vol}" ||
+        test "--help" = "${my_vol}"; then
+        fn_usage
+        return 0
     fi
 
     if test -z "${my_vol}"; then

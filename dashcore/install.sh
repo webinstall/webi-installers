@@ -53,22 +53,15 @@ __init_dashcore() {
         #     chmod 0600 "${HOME}/.dashcore/settings.json" || true
         # fi
 
+        if ! test -e "$HOME/.local/bin/dash-qt-hd" ||
+            ! test -e "$HOME/.local/bin/dash-qt-testnet"; then
+
+            "$HOME/.local/bin/webi" dashcore-utils
+        fi
+
         # Always try to correct the permissions due to
         # https://github.com/dashpay/dash/issues/5420
         chmod -R og-rwx "${HOME}/.dashcore/" || true
-
-        if ! test -e "$HOME/.local/bin/dash-qt-hd"; then
-            webi_download \
-                "$WEBI_HOST/packages/dashcore/dash-qt-hd" \
-                "$HOME/.local/bin/dash-qt-hd"
-            chmod a+x "$HOME/.local/bin/dash-qt-hd"
-        fi
-        if ! test -e "$HOME/.local/bin/dash-qt-testnet"; then
-            webi_download \
-                "$WEBI_HOST/packages/dashcore/dash-qt-testnet" \
-                "$HOME/.local/bin/dash-qt-testnet"
-            chmod a+x "$HOME/.local/bin/dash-qt-testnet"
-        fi
     }
 
     # pkg_get_current_version is recommended, but not required

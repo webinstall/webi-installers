@@ -32,52 +32,16 @@ __init_dashd() {
             mkdir -p "${HOME}/.dashcore"
             chmod 0700 "${HOME}/.dashcore"
         fi
-        if ! test -e "${HOME}/.dashcore/dash.conf"; then
-            touch "${HOME}/.dashcore/dash.conf"
-            chmod 0600 "${HOME}/.dashcore/dash.conf"
-        fi
-        if ! grep -q rpcuser "${HOME}/.dashcore/dash.conf"; then
-            my_main_pass="$(xxd -l16 -ps /dev/urandom)"
-            my_test_pass="$(xxd -l16 -ps /dev/urandom)"
-            {
-                echo '[main]'
-                echo "rpcuser=$(id -u -n)"
-                echo "rpcpassword=${my_main_pass}"
-                echo ''
-                echo '[test]'
-                echo "rpcuser=$(id -u -n)-test"
-                echo "rpcpassword=${my_test_pass}"
-                echo ''
-            } >> "${HOME}/.dashcore/dash.conf"
+
+        if ! test -e "$HOME/.local/bin/dashd-hd-service-install" ||
+            ! test -e "$HOME/.local/bin/dashd-testnet-service-install"; then
+
+            "$HOME/.local/bin/webi" dashcore-utils
         fi
 
         # Always try to correct the permissions due to
         # https://github.com/dashpay/dash/issues/5420
         chmod -R og-rwx "${HOME}/.dashcore/" || true
-
-        echo "WEBI_HOST: $WEBI_HOST"
-        if ! test -e "$HOME/.local/bin/dashd-hd"; then
-            webi_download \
-                "$WEBI_HOST/packages/dashd/dashd-hd" \
-                "$HOME/.local/bin/dashd-hd"
-            chmod a+x "$HOME/.local/bin/dashd-hd"
-        fi
-        if ! test -e "$HOME/.local/bin/dashd-testnet"; then
-            webi_download \
-                "$WEBI_HOST/packages/dashd/dashd-testnet" \
-                "$HOME/.local/bin/dashd-testnet"
-            chmod a+x "$HOME/.local/bin/dashd-testnet"
-        fi
-
-        webi_download \
-            "$WEBI_HOST/packages/dashd/dashd-hd-service-install" \
-            "$HOME/.local/bin/dashd-hd-service-install"
-        chmod a+x "$HOME/.local/bin/dashd-hd-service-install"
-
-        webi_download \
-            "$WEBI_HOST/packages/dashd/dashd-testnet-service-install" \
-            "$HOME/.local/bin/dashd-testnet-service-install"
-        chmod a+x "$HOME/.local/bin/dashd-testnet-service-install"
     }
 
     pkg_done_message() {
