@@ -10,10 +10,10 @@ etc).
 
 ### Recommended Hardware
 
-- 100GB Block Storage
+- 100GB+ Block Storage
 - 8GB RAM
 - 4 vCPUs
-- 4 hours for initial sync
+- **30 hours** for initial sync
 
 ### Files
 
@@ -97,21 +97,27 @@ corrupt the data and require starting over (see below)
 For **mainnet**:
 
 - 100GB Block Storage Volume \
-  (min 40GB as of 2022, plus 4GB/year)
+  - minimum of 40GB (blockchain) + 50GB (indexes) as of 2023
+  - plus 4-8GB per year
 - 8GB RAM \
   (min 4GB RAM + 4GB swap, otherwise it crashes during indexing)
 - 4 vCPUs \
-  (min 2x 2.0GHz vCPUs)
+  (min 2x 2.0GHz vCPUs, higher clock speed is better than more cors)
 - 100 megabit network
-- 4 hours to sync and index in ideal conditions
+- 28-30 hours to sync and index in ideal conditions
+  - minimum of 4 hours to sync
+  - approximately 28 hours to index regardless of sync time
 
 For **testnet**:
 
-- 10GB Block Storage Volume \
-  (min 4GB as of 2022, plus 400MB/year)
+- 20GB Block Storage Volume \
+  - min 4GB (blockchain) + 5 GB (indexes) as of 2022
+  - plus 0.5-1GB/year
 - 2GB RAM
 - 1 vCPU
-- 1 hour to sync and index in ideal conditions
+- 4 hours to sync and index in ideal conditions
+  - 1 hour to sync
+  - about 4 hours to index regardless of sync time
 
 ### How to configure `dash.conf`
 
@@ -130,6 +136,7 @@ rpcuser=alice
 rpcpassword=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 bind=127.0.0.1:9999
 rpcbind=127.0.0.1:9998
+rpcconnect=127.0.0.1:9998
 rpcallowip=127.0.0.1/16
 zmqpubrawtx=tcp://127.0.0.1:28332
 zmqpubrawtxlock=tcp://127.0.0.1:28332
@@ -139,6 +146,7 @@ rpcuser=alice-test
 rpcpassword=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
 bind=127.0.0.1:19999
 rpcbind=127.0.0.1:19998
+rpcconnect=127.0.0.1:19998
 rpcallowip=127.0.0.1/16
 zmqpubrawtx=tcp://127.0.0.1:18009
 zmqpubrawtxlock=tcp://127.0.0.1:18009
