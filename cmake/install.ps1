@@ -1,18 +1,18 @@
 #!/usr/bin/env pwsh
 
-##################
+#################
 # Install cmake #
-##################
+#################
 
 # Every package should define these variables
 $pkg_cmd_name = "cmake"
 
-$pkg_dst_cmd = "$Env:USERPROFILE\.local\bin\cmake.exe"
+$pkg_dst_cmd = "$Env:USERPROFILE\.local\opt\cmake\bin\cmake.exe"
+$pkg_dst_dir = "$Env:USERPROFILE\.local\opt\cmake"
 $pkg_dst = "$pkg_dst_cmd"
 
 $pkg_src_cmd = "$Env:USERPROFILE\.local\opt\cmake-v$Env:WEBI_VERSION\bin\cmake.exe"
 $pkg_src_bin = "$Env:USERPROFILE\.local\opt\cmake-v$Env:WEBI_VERSION\bin"
-$pkg_src_share = "$Env:USERPROFILE\.local\opt\cmake-v$Env:WEBI_VERSION\share"
 $pkg_src_dir = "$Env:USERPROFILE\.local\opt\cmake-v$Env:WEBI_VERSION"
 $pkg_src = "$pkg_src_cmd"
 
@@ -27,7 +27,7 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"))
     & move "$pkg_download.part" "$pkg_download"
 }
 
-IF (!(Test-Path -Path "$pkg_src_cmd"))
+IF (!(Test-Path -Path "$pkg_src_dir"))
 {
     echo "Installing cmake"
 
@@ -36,12 +36,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
     pushd .local\tmp
 
         # Remove any leftover tmp cruft
-        Remove-Item -Path ".\cmake-v*" -Recurse -ErrorAction Ignore
-        Remove-Item -Path ".\cmake.exe" -Recurse -ErrorAction Ignore
-
-        # NOTE: DELETE THIS COMMENT IF NOT USED
-        # Move single binary into root of temporary folder
-        #& move "$pkg_download" "cmake.exe"
+        Remove-Item -Path ".\cmake*" -Recurse -ErrorAction Ignore
 
         # Unpack archive file into this temporary directory
         # Windows BSD-tar handles zip. Imagine that.
@@ -50,9 +45,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
 
         # Settle unpacked archive into place
         echo "Install Location: $pkg_src_cmd"
-        New-Item "$pkg_src_bin" -ItemType Directory -Force | out-null
-        Move-Item -Path ".\cmake-*\bin\cmake.exe" -Destination "$pkg_src_bin"
-        Move-Item -Path ".\cmake-*\share" -Destination "$pkg_src_share"
+        Move-Item -Path ".\cmake*" -Destination "$pkg_src_dir"
 
     # Exit tmp
     popd
