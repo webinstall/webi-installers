@@ -1,15 +1,23 @@
 ---
 title: LSDeluxe
-homepage: https://github.com/Peltoche/lsd
+homepage: https://github.com/lsd-rs/lsd
 tagline: |
   LSDeluxe: next gen ls command
 ---
 
 To update or switch versions, run `webi lsd@stable` (or `@v0.20`, `@beta`, etc).
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.config/lsd/config.yaml
+~/.local/bin/lsd
+```
+
 ## Cheat Sheet
 
-![](https://raw.githubusercontent.com/Peltoche/lsd/assets/screen_lsd.png)
+![](https://raw.githubusercontent.com/lsd-rs/lsd/assets/screen_lsd.png)
 
 > `lsd` is a modern, cross-platform, drop-in replacement for `ls`. It does
 > everything that you expect it to, plus modern extras that you can check out
@@ -44,6 +52,16 @@ Since that can be a little awkward to type over and over, you can use an alias:
 ```sh
 alias lsd=lsd --icon=never --color=never
 lsd
+```
+
+(you may also enjoy [`aliasman`](../aliasman/))
+
+Or update the config file:
+
+`~/.config/lsd/config.yaml`
+
+```yaml
+classic: true
 ```
 
 ### How to alias as `ls`, `ll`, `la`, etc
@@ -92,8 +110,14 @@ Or manually update your `.bashrc`, `.zshrc`, or `.profile`
 alias tree="lsd -AF --tree"
 ```
 
-And when you want to use GNU `tree`, just escape the alias:
+And when you want to use GNU `tree` you can escape the alias in some shells:
 
 ```sh
 \tree
+```
+
+Or use the full path:
+
+```sh
+/bin/tree
 ```
