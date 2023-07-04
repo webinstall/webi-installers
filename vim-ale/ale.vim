@@ -10,18 +10,19 @@ let g:ale_lint_on_save = 1
 let g:ale_virtualtext_cursor = 'current'
 
 " These emojis go in the sidebar for errors and warnings
-" other considerations: '💥' '☢️' '⚡' '☠' '●' '.'
+" other considerations: '💥' '☢️' '⚡' '☠' '●' '.' '✘' '⚠️'
 " Note: one- and two-byte characters are more compatible
-let g:ale_sign_error = '✘'
-let g:ale_sign_warning = '⚠️'
+let g:ale_sign_error = 'x'
+let g:ale_sign_warning = '!'
 
 " show error count
 function! LinterStatus() abort
     let l:counts = ale#statusline#Count(bufnr(''))
     let l:all_errors = l:counts.error + l:counts.style_error
     let l:all_non_errors = l:counts.total - l:all_errors
+    " \   '%d⨉ %d⚠ ',
     return l:counts.total == 0 ? 'OK' : printf(
-        \   '%d⨉ %d⚠ ',
+        \   '%dx %d! ',
         \   all_non_errors,
         \   all_errors
         \)
