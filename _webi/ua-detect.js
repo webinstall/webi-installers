@@ -2,6 +2,10 @@
 
 var uaDetect = module.exports;
 
+const MUSL_NATIVE = 'musl-native';
+
+uaDetect.MUSL_NATIVE = MUSL_NATIVE;
+
 function getRequest(req) {
   var ua = req.headers['user-agent'] || '';
   var os = req.query.os;
@@ -56,10 +60,15 @@ function getArch(ua) {
     return '-';
   }
 
-  // quick hack for Apple Silicon M1
+  // Quick hack for Apple Silicon M1
+  //
+  // Note: we now use `uname -srm` which does not have the native arch
+  // info included with `uname -v` and `uname -a`.
+  //
   // Native:  Darwin boomer.local 20.2.0 Darwin Kernel Version 20.2.0: Wed Dec  2 20:40:21 PST 2020; root:xnu-7195.60.75~1/RELEASE_ARM64_T8101 arm64
   // Resetta: Darwin boomer.local 20.2.0 Darwin Kernel Version 20.2.0: Wed Dec  2 20:40:21 PST 2020; root:xnu-7195.60.75~1/RELEASE_ARM64_T8101 x86_64
   ua = ua.replace(/xnu-.*RELEASE_[^\s]*/, '');
+
   if (/aarch64|arm64|arm8|armv8/i.test(ua)) {
     return 'arm64';
   } else if (/aarch|arm7|armv7/i.test(ua)) {
@@ -84,6 +93,27 @@ function getArch(ua) {
   }
 }
 
+function getLibc(ua) {
+  if ('-' === ua) {
+    return '-';
+  }
+
+  // Use native 'libc' information, if provided
+  //
+  // Generally, we prefer 'musl' builds because they DO work on glibc systems (Ubuntu),
+  // but 'glibc' builds will NOT work on musl systems (Alpine / Docker).
+  //
+  // However, there are a few instances (ex: Node.js), where the 'musl' builds
+  // DO NOT work on glibc systems.
+  if (ua.match(MUSL_NATIVE)) {
+    return MUSL_NATIVE;
+  }
+
+  // TODO handle explicit invalid different
+  return '';
+}
+
 uaDetect.os = getOs;
 uaDetect.arch = getArch;
+uaDetect.libc = getLibc;
 uaDetect.request = getRequest;

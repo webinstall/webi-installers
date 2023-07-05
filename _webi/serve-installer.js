@@ -47,12 +47,14 @@ async function serveInstaller(baseurl, ua, pkg, tag, ext, formats) {
   // TODO maybe move package/version/lts/channel detection into getReleases
   var myOs = uaDetect.os(ua);
   var myArch = uaDetect.arch(ua);
+  var myLibc = uaDetect.libc(ua);
   let cfg = await packages.get(pkg);
   let rels = await getReleases({
     pkg: cfg.alias || pkg,
     ver,
     os: myOs,
     arch: myArch,
+    libc: myLibc,
     lts,
     channel,
     formats,

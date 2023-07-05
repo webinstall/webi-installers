@@ -85,9 +85,11 @@ function normalize(all) {
     }
     // Hacky-doo for musl
     // TODO some sort of glibc vs musl tag?
-    if (!rel._musl) {
-      if (/(\b|\.|_|-)(musl)(\b|\.|_|-)/.test(rel.download)) {
-        rel._musl = true;
+    if (!rel._musl_native) {
+      if (!rel._musl) {
+        if (/(\b|\.|_|-)(musl)(\b|\.|_|-)/.test(rel.download)) {
+          rel._musl = true;
+        }
       }
     }
     supported.oses[rel.os] = true;

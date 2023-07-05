@@ -6,6 +6,11 @@ __bootstrap_webi() {
     set -u
     #set -x
 
+    my_libc=''
+    if ldd /bin/ls 2> /dev/null | grep -q 'musl' 2> /dev/null; then
+        my_libc=' musl-native'
+    fi
+
     #WEBI_PKG=
     #PKG_NAME=
     # TODO should this be BASEURL instead?
@@ -30,7 +35,7 @@ __bootstrap_webi() {
     #PKG_OSES=
     #PKG_ARCHES=
     #PKG_FORMATS=
-    WEBI_UA="$(uname -s)/$(uname -r) $(uname -m)/unknown"
+    WEBI_UA="$(uname -s)/$(uname -r) $(uname -m)/unknown${my_libc}"
     WEBI_PKG_DOWNLOAD=""
     WEBI_DOWNLOAD_DIR="${HOME}/Downloads"
     if command -v xdg-user-dir > /dev/null; then
@@ -168,7 +173,11 @@ __bootstrap_webi() {
                 echo >&2 "       '$PKG_NAME' is available for '$PKG_OSES' on '$PKG_ARCHES' as one of '$PKG_FORMATS'"
                 echo >&2 "       (check that the package name and version are correct)"
                 echo >&2 ""
-                echo >&2 "       Double check at $(echo "$WEBI_RELEASES" | sed 's:\?.*::')"
+                my_release_url="$(
+                    echo "$WEBI_RELEASES" |
+                        sed 's:\?.*::'
+                )"
+                echo >&2 "       Double check at ${my_release_url}"
                 echo >&2 ""
                 exit 1
             fi

@@ -92,8 +92,13 @@ __webi_main() {
     export WEBI_WGET="\$(command -v wget)"
     set -e
 
+    my_libc=''
+    if ldd /bin/ls 2> /dev/null | grep -q 'musl' 2> /dev/null; then
+        my_libc=' musl-native'
+    fi
+
     export WEBI_HOST="\${WEBI_HOST:-https://webinstall.dev}"
-    export WEBI_UA="\$(uname -s)/\$(uname -r) \$(uname -m)/unknown"
+    export WEBI_UA="\$(uname -s)/\$(uname -r) \$(uname -m)/unknown\${my_libc}"
 
 
     webinstall() {

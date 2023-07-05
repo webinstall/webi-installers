@@ -2,6 +2,8 @@
 
 var path = require('path');
 var Releases = require('./releases.js');
+var uaDetect = require('./ua-detect.js');
+
 var cache = {};
 //var staleAge = 5 * 1000;
 //var expiredAge = 15 * 1000;
@@ -50,6 +52,14 @@ function createFormatsSorter(formats) {
     if (aExtPri < bExtPri) {
       //console.log(a.ext, aExtPri, '<', b.ext, bExtPri);
       return 1;
+    }
+
+    // Hacky-doo for musl-native: prefer non-musl
+    if (a._musl_native && !b._musl_native) {
+      return 1;
+    }
+    if (!a._musl_native && b._musl_native) {
+      return -1;
     }
 
     // Hacky-doo for linux: prefer musl
@@ -161,7 +171,7 @@ async function getCachedReleases(pkg) {
 
 async function filterReleases(
   all,
-  { ver, os, arch, lts, channel, formats, limit },
+  { ver, os, arch, libc, lts, channel, formats, limit },
 ) {
   // When multiple formats are downloadable (i.e. .zip and .pkg)
   // sort the most compatible format first
@@ -170,27 +180,62 @@ async function filterReleases(
   var sortByVerExt = createFormatsSorter(rformats);
   var reVer = new RegExp('^' + ver + '\\b');
 
-  var sortedRels = all.releases
-    .filter(function (rel) {
-      if (
-        (os && rel.os !== os) ||
-        // Hacky-doo for linux musl
-        (arch && rel.arch !== arch) ||
-        (lts && !rel.lts) ||
-        (channel && rel.channel !== channel) ||
-        // to match 'tar.gz' and 'tar.xz' with just 'tar'
-        (formats.length &&
-          !formats.some(function (ext) {
-            return rel.ext.match(ext);
-          })) ||
-        (ver && !rel.version.match(reVer))
-      ) {
+  function selectMatches(rel) {
+    if (os) {
+      if (rel.os !== os) {
         return false;
       }
-      return true;
-    })
-    .sort(sortByVerExt);
+    }
+
+    if (arch) {
+      if (rel.arch !== arch) {
+        return false;
+      }
+    }
+
+    // Hacky-doo for linux musl
+    if (libc === uaDetect.MUSL_NATIVE) {
+      if (!rel._musl && !rel._musl_native) {
+        return false;
+      }
+    } else if (rel._musl_native) {
+      return false;
+    }
+
+    if (lts) {
+      if (!rel.lts) {
+        return false;
+      }
+    }
+
+    if (channel) {
+      if (rel.channel !== channel) {
+        return false;
+      }
+    }
+
+    // to match 'tar.gz' and 'tar.xz' with just 'tar'
+    function hasExt(ext) {
+      return rel.ext.match(ext);
+    }
+    if (formats.length) {
+      if (!formats.some(hasExt)) {
+        return false;
+      }
+    }
+
+    if (ver) {
+      if (!rel.version.match(reVer)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  var sortedRels = all.releases.filter(selectMatches).sort(sortByVerExt);
   //console.log(sortedRels.slice(0, 4));
+
   return sortedRels.slice(0, limit || 1000);
 }
 
@@ -200,6 +245,7 @@ module.exports = function getReleases({
   ver,
   os,
   arch,
+  libc,
   lts,
   channel,
   formats,
@@ -213,6 +259,7 @@ module.exports = function getReleases({
       ver,
       os,
       arch,
+      libc,
       lts,
       channel,
       formats,
@@ -236,6 +283,7 @@ module.exports = function getReleases({
               ver,
               os,
               arch: 'amd64',
+              libc,
               lts,
               channel,
               formats,
@@ -249,6 +297,7 @@ module.exports = function getReleases({
               ver,
               os,
               arch: 'amd64',
+              libc,
               lts,
               channel,
               formats,
@@ -263,6 +312,7 @@ module.exports = function getReleases({
               ver,
               os,
               arch: 'arm64',
+              libc,
               lts,
               channel,
               formats,
@@ -278,6 +328,7 @@ module.exports = function getReleases({
               ver,
               os,
               arch: 'armv7l',
+              libc,
               lts,
               channel,
               formats,
@@ -292,6 +343,7 @@ module.exports = function getReleases({
               ver,
               os,
               arch: 'armv6l',
+              libc,
               lts,
               channel,
               formats,
@@ -308,6 +360,7 @@ module.exports = function getReleases({
               os: os || '-',
               arch: arch || '-',
               _musl: undefined,
+              _musl_native: undefined,
               ext: 'err',
               download: 'https://example.com/doesntexist.ext',
               comment:
@@ -335,6 +388,7 @@ if (require.main === module) {
       os: 'macos',
       arch: 'amd64',
       lts: true,
+      libc: '',
       channel: 'stable',
       formats: ['tar', 'exe', 'zip', 'xz', 'dmg', 'pkg'],
       limit: 10,
