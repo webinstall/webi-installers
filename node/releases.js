@@ -1,14 +1,22 @@
 'use strict';
 
-// Map from node conventions to webinstall conventions
-var map = {
-  // OSes
+// https://blog.risingstack.com/update-nodejs-8-end-of-life-no-support/
+// 6 mos "current" + 18 mos LTS "active" +  12 mos LTS "maintenance"
+//var endOfLife = 3 * 366 * 24 * 60 * 60 * 1000;
+// If there have been no updates in 12 months, it's almost certainly end-of-life
+const END_OF_LIFE = 366 * 24 * 60 * 60 * 1000;
+
+// OSes
+let osMap = {
   osx: 'macos',
   linux: 'linux',
   win: 'windows', // windows
   sunos: 'sunos',
   aix: 'aix',
-  // CPU architectures
+};
+
+// CPU architectures
+let archMap = {
   x64: 'amd64',
   x86: 'x86',
   ppc64: 'ppc64',
@@ -17,124 +25,146 @@ var map = {
   armv7l: 'armv7l',
   armv6l: 'armv6l',
   s390x: 's390x',
-  // file extensions
-  pkg: 'pkg',
-  exe: 'exe',
-  msi: 'msi',
-  '7z': '7z',
-  zip: 'zip',
-  tar: 'tar.gz',
 };
 
-function getAllReleases(request) {
-  return request({
-    url: 'https://nodejs.org/dist/index.json',
+// file extensions
+let pkgMap = {
+  pkg: ['pkg'],
+  //exe: ['exe'], // disable
+  '7z': ['7z'],
+  zip: ['zip'],
+  tar: ['tar.gz', 'tar.xz'],
+  // oddity - no os in download
+  msi: ['msi'],
+  // oddity - no pkg info
+  musl: ['tar.gz', 'tar.xz'],
+};
+
+async function getAllReleases(request) {
+  let all = {
+    releases: [],
+    download: '',
+  };
+
+  /*
+  [
+        {
+            "version":"v20.3.1",
+            "date":"2023-06-20",
+            "files":["headers","linux-armv6l","linux-x64-musl","linux-x64-pointer-compression"],
+            "npm":"9.6.7",
+            "v8":"11.3.244.8",
+            "uv":"1.45.0",
+            "zlib":"1.2.13.1-motley",
+            "openssl":"3.0.9+quic",
+            "modules":"115",
+            "lts":false,
+            "security":true
+        },
+  ]
+  */
+
+  // Alternate: 'https://nodejs.org/dist/index.json',
+  let baseUrl = `https://nodejs.org/download/release`;
+  let officialP = request({
+    url: `${baseUrl}/index.json`,
     json: true,
   }).then(function (resp) {
-    var rels = resp.body;
-    var all = {
-      releases: [],
-      download: '', // node's download URLs are unpredictable
-    };
+    transform(baseUrl, resp.body);
+    return;
+  });
 
-    // https://blog.risingstack.com/update-nodejs-8-end-of-life-no-support/
-    // 6 mos "current" + 18 mos LTS "active" +  12 mos LTS "maintenance"
-    //var endOfLife = 3 * 366 * 24 * 60 * 60 * 1000;
-    // If there have been no updates in 12 months, it's almost certainly end-of-life
-    var endOfLife = 366 * 24 * 60 * 60 * 1000;
+  let unofficialBaseUrl = `https://unofficial-builds.nodejs.org/download/release`;
+  let unofficialP = request({
+    url: `${unofficialBaseUrl}/index.json`,
+    json: true,
+  })
+    .then(function (resp) {
+      transform(unofficialBaseUrl, resp.body);
+      return;
+    })
+    .catch(function (err) {
+      console.error('failed to fetch unofficial-builds');
+      console.error(err);
+    });
 
-    rels.forEach(function (rel) {
-      if (Date.now() - new Date(rel.date).valueOf() > endOfLife) {
+  function transform(baseUrl, builds) {
+    builds.forEach(function (build) {
+      let buildDate = new Date(build.date).valueOf();
+      let age = Date.now() - buildDate;
+      let maintained = age < END_OF_LIFE;
+      if (!maintained) {
         return;
       }
-      rel.files.forEach(function (file) {
+
+      let lts = false !== build.lts;
+
+      // skip 'v'
+      let vparts = build.version.slice(1).split('.');
+      let major = parseInt(vparts[0], 10);
+      let channel = 'stable';
+      let isEven = 0 === major % 2;
+      if (!isEven) {
+        channel = 'beta';
+      }
+
+      build.files.forEach(function (file) {
         if ('src' === file || 'headers' === file) {
           return;
         }
-        var parts = file.split(/-/);
-        var os = map[parts[0]];
-        if (!os) {
-          console.warn('node versions: unknown os "%s"', parts[0]);
+
+        let fileParts = file.split('-');
+
+        let osPart = fileParts[0];
+        let os = osMap[osPart];
+        let archPart = fileParts[1];
+        let arch = archMap[archPart];
+        let pkgPart = fileParts[2];
+        let pkgs = pkgMap[pkgPart];
+        if (!pkgPart) {
+          pkgs = pkgMap.tar;
         }
-        var arch = map[parts[1]];
-        if (!arch) {
-          console.warn('node versions: unknown arch "%s"', parts[1]);
-        }
-        var ext = map[parts[2] || 'tar'];
-        if (!ext) {
-          console.warn('node versions: unknown ext "%s"', parts[2]);
-        }
-        if ('exe' === ext) {
-          // node exe files are not self-extracting installers
+        if (!pkgs?.length) {
           return;
         }
 
-        var even = 0 === rel.version.slice(1).split('.')[0] % 2;
-        var r = {
-          // nix leading 'v'
-          version: rel.version.slice(1),
-          date: rel.date,
-          lts: !!rel.lts,
-          // historically odd releases have been beta and even have been stable
-          channel: even ? 'stable' : 'beta',
-          os: os,
-          arch: arch,
-          ext: ext,
-          //sha1: '',
-          // See https://nodejs.org/dist/v14.0.0/
-          // usually like https://nodejs.org/dist/v14.0.0/node-{version}-{plat}-{arch}.{ext}
-          download:
-            'https://nodejs.org/dist/' + rel.version + '/node-' + rel.version,
-        };
-        all.releases.push(r);
-
-        // handle all the special cases (which there are many)
-        if ('pkg' === ext) {
-          r.download += '.pkg';
-          return;
+        let extra = '';
+        let muslNative;
+        if (fileParts[2] === 'musl') {
+          extra = '-musl';
+          muslNative = true;
         }
-        if ('msi' === ext) {
-          if ('amd64' === arch) {
-            r.download += '-x64.msi';
-          } else {
-            r.download += '-x86.msi';
+
+        pkgs.forEach(function (pkg) {
+          let filename = `node-${build.version}-${osPart}-${archPart}${extra}.${pkg}`;
+          if ('msi' === pkg) {
+            filename = `node-${build.version}-${archPart}${extra}.${pkg}`;
           }
-          return;
-        }
+          let downloadUrl = `${baseUrl}/${build.version}/${filename}`;
 
-        if ('macos' === os) {
-          r.download += '-darwin';
-        } else if ('windows' === os) {
-          r.download += '-win';
-        } else {
-          r.download += '-' + os;
-        }
+          let release = {
+            name: filename,
+            version: build.version,
+            lts: lts,
+            channel: channel,
+            date: build.date,
+            os: os,
+            arch: arch,
+            ext: pkg,
+            download: downloadUrl,
+            _musl_native: muslNative,
+          };
 
-        if ('amd64' === arch) {
-          r.download += '-x64';
-        } else {
-          r.download += '-' + arch;
-        }
-
-        if ('aix' === os) {
-          r.download += '.tar.gz';
-          return;
-        }
-
-        r.download += '.' + ext;
-
-        if ('tar.gz' === ext) {
-          r.download = r.download.replace(/\.tar\.gz$/, '.tar.xz');
-          r.ext = 'tar.xz';
-          all.releases.push(JSON.parse(JSON.stringify(r)));
-          r.download = r.download.replace(/\.tar\.xz$/, '.tar.gz');
-          r.ext = 'tar.gz';
-        }
+          all.releases.push(release);
+        });
       });
     });
+  }
 
-    return all;
-  });
+  await officialP;
+  await unofficialP;
+
+  return all;
 }
 module.exports = getAllReleases;
 
