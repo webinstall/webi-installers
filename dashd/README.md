@@ -13,7 +13,7 @@ etc).
 - 100GB+ Block Storage
 - 8GB RAM
 - 4 vCPUs
-- **30 hours** for initial sync
+- **30 hours** for initial indexing
 
 ### Files
 
@@ -49,6 +49,37 @@ you can use these convenience scripts provided by Webi:
 dashd-hd-service-install
 ```
 
+### QuickStart
+
+0. Check that you have enough Storage and RAM
+   - mainnet: 100GB+ Storage, 8GB RAM
+   - testnet: 20GB+ Storage, 2GB RAM
+1. Create a mount for your storage volume
+   ```sh
+   sudo mkdir -p /mnt/100gb-vol/
+   sudo mount /dev/vda1 /mnt/100gb-vol/
+   ```
+2. Create a correctly permissioned `dashcore` directory
+   ```sh
+   sudo mkdir -p /mnt/100g-vol/dashcore/
+   sudo chown -R "$(id -u -n):$(id -g -n)" /mnt/100gb-vol/dashcore/
+   ```
+3. Register `dashd` with the system launcher
+   ```sh
+   dashd-hd-service-install
+   ```
+4. Wait **about 30 hours** for initial sync and indexing to complete
+5. Test with the DashCore CLI
+   ```sh
+   dash-cli getaddresstxids '{
+     "addresses": ["XchrTJFPGFiror4zjXQRR7XTSN25YtLYhC"],
+     "start": 0,
+     "end":1000000000
+   }'
+   ```
+
+### How to use DashCore CLI
+
 After it completes the initial sync (about 4 hours), \
 you can query address information:
 
@@ -62,13 +93,15 @@ dash-cli getaddressutxos '{"addresses": ["XpLVjhDd6vNJamtcJXcrpQYA1sE6fmxVDa"]}'
 # TXes
 dash-cli getaddresstxids '{
     "addresses": ["XchrTJFPGFiror4zjXQRR7XTSN25YtLYhC"],
-    "start":5000,
-    "end":7500
+    "start": 0,
+    "end":1000000000
 }'
 
 # Broadcast TX
 dash-cli -testnet sendrawtransaction 01000000...0c0226b428a488ac00000000
 ```
+
+### How to Run dashd Manually
 
 To run **in the foreground**: \
 (add `-testnet` to run on testnet)
@@ -140,6 +173,8 @@ rpcconnect=127.0.0.1:9998
 rpcallowip=127.0.0.1/16
 zmqpubrawtx=tcp://127.0.0.1:28332
 zmqpubrawtxlock=tcp://127.0.0.1:28332
+zmqpubrawchainlock=tcp://127.0.0.1:28332
+zmqpubhashchainlock=tcp://127.0.0.1:28332
 
 [test]
 rpcuser=alice-test
@@ -150,6 +185,8 @@ rpcconnect=127.0.0.1:19998
 rpcallowip=127.0.0.1/16
 zmqpubrawtx=tcp://127.0.0.1:18009
 zmqpubrawtxlock=tcp://127.0.0.1:18009
+zmqpubrawchainlock=tcp://127.0.0.1:18009
+zmqpubhashchainlock=tcp://127.0.0.1:18009
 ```
 
 See also:
