@@ -8,7 +8,7 @@ const END_OF_LIFE = 366 * 24 * 60 * 60 * 1000;
 
 // OSes
 let osMap = {
-  osx: 'macos',
+  osx: 'macos', // NOTE: filename is 'darwin'
   linux: 'linux',
   win: 'windows', // windows
   sunos: 'sunos',
@@ -136,6 +136,10 @@ async function getAllReleases(request) {
         }
 
         pkgs.forEach(function (pkg) {
+          if (osPart === 'osx') {
+            osPart = 'darwin';
+          }
+
           let filename = `node-${build.version}-${osPart}-${archPart}${extra}.${pkg}`;
           if ('msi' === pkg) {
             filename = `node-${build.version}-${archPart}${extra}.${pkg}`;
