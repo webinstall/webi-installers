@@ -12,7 +12,6 @@ __init_vim_beyondcode() {
         vim-lastplace \
         vim-spell \
         vim-ale \
-        vim-prettier \
         vim-whitespace
 
     # requires special hardware (mouse) or software (nerdfont)

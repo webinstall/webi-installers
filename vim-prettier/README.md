@@ -27,9 +27,23 @@ installed.
 > `vim-prettier` is a vim plugin wrapper for prettier, pre-configured with
 > custom default prettier settings.
 
-You'll also need to install [`ALE`](https://webinstall.dev/vim-ale) (part of
-[`vim-essentials`](https://webinstall.dev/vim-essentials)) or
-[`syntastic`](https://webinstall.dev/vim-syntastic) first.
+### You may not need vim-prettier
+
+If you have [`ALE`](https://webinstall.dev/vim-ale) (part of
+[`vim-essentials`](https://webinstall.dev/vim-essentials)), you don't need
+vim-prettier.
+
+Instead just check that the built-in prettier support is enabled in one of:
+
+- `~/.vimrc`
+- `~/.vim/plugins/ale.vim`
+
+```vim
+" don't reformat on open
+let g:ale_fix_on_enter = 0
+" do reformat on save
+let g:ale_fix_on_save = 1
+```
 
 ### How to install by hand
 

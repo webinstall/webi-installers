@@ -42,7 +42,6 @@ It includes many of the vim plugins available on webinstall.dev such as:
   - [shellcheck](/shellcheck)
   - [shfmt](/shfmt)
 - [vim-ale](/vim-ale)
-- [vim-prettier](/vim-prettier)
   - [prettier](/prettier)
 - [vim-whitespace](/vim-whitespace)
 

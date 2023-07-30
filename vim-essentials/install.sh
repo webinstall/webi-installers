@@ -14,7 +14,6 @@ __init_vim_essentials() {
         vim-ale \
         vim-whitespace \
         vim-shfmt \
-        vim-prettier \
         shellcheck \
         shfmt \
         prettier

@@ -59,7 +59,6 @@ recommended.
   - [vim-smartcase](/vim-smartcase)
   - [vim-spell](/vim-spell)
   - [vim-ale](/vim-ale)
-  - [vim-prettier](/vim-prettier)
   - [vim-shfmt](/vim-shfmt)
   - [vim-whitespace](/vim-whitespace)
 - Commandline Tools

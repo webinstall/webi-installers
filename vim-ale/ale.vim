@@ -3,8 +3,10 @@ syntax on
 
 " don't check immediately on open (or quit)
 let g:ale_lint_on_enter = 0
+let g:ale_fix_on_enter = 0
 " check on save
 let g:ale_lint_on_save = 1
+let g:ale_fix_on_save = 1
 
 " don't spam the virtual text ('disable' to disable)
 let g:ale_virtualtext_cursor = 'current'
