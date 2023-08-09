@@ -3,10 +3,8 @@ set -e
 set -u
 
 __run_go_essentials() {
-    WEBI__GO_ESSENTIALS='true'
-    export WEBI__GO_ESSENTIALS
-    if [ -z "${WEBI__GO_INSTALL-}" ]; then
-        "$HOME/.local/bin/webi" "golang@${WEBI_TAG}"
+    if ! command -v go 2> /dev/null; then
+        "$HOME/.local/bin/webi" "go@${WEBI_TAG}"
     fi
 
     export PATH="$HOME/.local/opt/go/bin:$PATH"
@@ -75,6 +73,9 @@ __run_go_essentials() {
     go "${my_install}" golang.org/x/tools/cmd/stringer@latest > /dev/null #2>/dev/null
 
     echo ""
+    # literal $HOME on purpose
+    # shellcheck disable=SC2016
+    echo 'Installed go "x" tools to GOBIN=$HOME/go/bin'
 
     printf '\n'
     printf 'Suggestion: Also check out these great productivity multipliers:\n'

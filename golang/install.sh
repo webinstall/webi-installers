@@ -14,19 +14,6 @@ pkg_cmd_name="go"
 #
 # Their defaults are defined in _webi/template.sh at https://github.com/webinstall/packages
 
-if [ -z "${WEBI__GO_ESSENTIALS-}" ]; then
-    # TODO nix for go1.21+
-    echo >&2 ""
-    printf >&2 '\e[31m%s:\e[0m\n' '#####################'
-    printf >&2 '\e[31m%s:\e[0m\n' '#  BREAKING CHANGE  #'
-    printf >&2 '\e[31m%s:\e[0m\n' '#####################'
-    echo >&2 ""
-    printf >&2 "\e[31m    'webi golang' will NOT install go tooling starting with go1.21+\e[0m\n"
-    printf >&2 "\e[31m    use 'webi go-essentials' to preserve the previous behavior\e[0m\n"
-    echo >&2 ""
-    sleep 4
-fi
-
 pkg_get_current_version() {
     # 'go version' has output in this format:
     #       go version go1.14.2 darwin/amd64
@@ -67,18 +54,8 @@ pkg_post_install() {
     #       "$HOME/.local/opt/go"
     webi_path_add "$pkg_dst_bin"
     webi_path_add "$GOBIN/bin"
-
-    if [ -z "${WEBI__GO_ESSENTIALS-}" ]; then
-        # TODO nix for go1.21+
-        WEBI__GO_INSTALL='true'
-        export WEBI__GO_INSTALL
-        "$HOME/.local/bin/webi" "go-essentials@${WEBI_TAG}"
-    fi
 }
 
 pkg_done_message() {
     echo "Installed 'go v$WEBI_VERSION' to ~/.local/opt/go"
-    # note: literal $HOME on purpose
-    #shellcheck disable=SC2016
-    echo 'Installed go "x" tools to GOBIN=$HOME/go/bin'
 }
