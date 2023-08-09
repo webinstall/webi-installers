@@ -5,7 +5,6 @@ set -u
 GOBIN="${HOME}/go"
 GOBIN_REAL="${HOME}/.local/opt/go-bin-v${WEBI_VERSION}"
 
-# The package is 'golang', but the command is 'go'
 pkg_cmd_name="go"
 
 # NOTE: pkg_* variables can be defined here

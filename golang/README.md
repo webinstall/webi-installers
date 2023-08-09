@@ -3,10 +3,14 @@ title: Go
 homepage: https://golang.org
 tagline: |
   Go makes it easy to build simple, reliable, and efficient software.
+alias: go
+description: |
+  See https://webinstall.dev/go
 ---
 
-To update or switch versions, run `webi golang@stable` (or `@v1.19`, `@beta`,
-etc).
+Alias for <https://webinstall.dev/go>.
+
+To update or switch versions, run `webi go@stable` (or `@v1.21`, `@beta`, etc).
 
 ### Files
 
