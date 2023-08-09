@@ -17,15 +17,6 @@ if (!(Get-Command "git.exe" -ErrorAction SilentlyContinue))
     $Env:PATH = "$Env:USERPROFILE\.local\opt\git\cmd;$Env:PATH"
 }
 
-Write-Host '' -ForegroundColor red -BackgroundColor white
-Write-Host '*********************' -ForegroundColor red -BackgroundColor white
-Write-Host '*  BREAKING CHANGE  *' -ForegroundColor red -BackgroundColor white
-Write-Host '*********************' -ForegroundColor red -BackgroundColor white
-Write-Host ''  -ForegroundColor red -BackgroundColor white
-Write-Host '    ''webi golang'' will NOT install go tooling starting with go1.21+' -ForegroundColor red -BackgroundColor white
-Write-Host '    use ''webi go-essentials'' to preserve the previous behavior' -ForegroundColor red -BackgroundColor white
-Write-Host ''  -ForegroundColor red -BackgroundColor white
-
 # Fetch archive
 IF (!(Test-Path -Path "$pkg_download"))
 {
@@ -64,25 +55,6 @@ echo "Copying into '$pkg_dst' from '$pkg_src'"
 Remove-Item -Path "$pkg_dst" -Recurse -ErrorAction Ignore
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse
 IF (!(Test-Path -Path go\bin)) { New-Item -Path go\bin -ItemType Directory -Force | out-null }
-
-# Special to go: re-run all go tooling builds
-echo "Building go language tools..."
-echo gopls
-& "$pkg_dst_cmd" install golang.org/x/tools/gopls
-echo golint
-& "$pkg_dst_cmd" install golang.org/x/lint/golint
-echo errcheck
-& "$pkg_dst_cmd" install github.com/kisielk/errcheck
-echo gotags
-& "$pkg_dst_cmd" install github.com/jstemmer/gotags
-echo goimports
-& "$pkg_dst_cmd" install golang.org/x/tools/cmd/goimports
-echo gorename
-& "$pkg_dst_cmd" install golang.org/x/tools/cmd/gorename
-echo gotype
-& "$pkg_dst_cmd" install golang.org/x/tools/cmd/gotype
-echo stringer
-& "$pkg_dst_cmd" install golang.org/x/tools/cmd/stringer
 
 # Add to path
 webi_path_add ~/.local/opt/go/bin
