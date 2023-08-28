@@ -114,3 +114,32 @@ http.createServer(app).listen(8080, function () {
 ```sh
 npm start
 ```
+
+### How to run Node as a System Service
+
+```sh
+pushd ./my-node-project/
+
+sudo env PATH="$PATH" \
+    serviceman add --system --path "$PATH" --cap-net-bind \
+    --name my-node-project --username "$(id -u -n)" -- \
+        npm run start
+```
+
+#### ... with auto-reload in Dev
+
+```sh
+pushd ./my-node-project/
+
+sudo env PATH="$PATH" \
+    serviceman add --system --path "$PATH" --cap-net-bind \
+    --name my-node-project --username "$(id -u -n)" -- \
+        npx -p nodemon@3 -- nodemon ./server.js
+```
+
+#### View Logs & Restart
+
+```sh
+sudo journalctl -xefu my-node-project
+sudo systemctl restart my-node-project
+```
