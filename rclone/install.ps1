@@ -46,7 +46,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd"))
         # Settle unpacked archive into place
         echo "Install Location: $pkg_src_cmd"
         New-Item "$pkg_src_bin" -ItemType Directory -Force | out-null
-        Move-Item -Path ".\rclone.exe" -Destination "$pkg_src_bin"
+        Move-Item -Path ".\rclone-v*\rclone.exe" -Destination "$pkg_src_bin"
 
     # Exit tmp
     popd
