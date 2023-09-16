@@ -4,14 +4,27 @@ var github = require('../_common/github.js');
 var owner = 'gohugoio';
 var repo = 'hugo';
 
-module.exports = function (request) {
-  return github(request, owner, repo).then(function (all) {
+module.exports = async function (request) {
+  let all = await github(request, owner, repo);
+
+  all.releases = all.releases.filter(function (rel) {
+    let isExtended = rel.name.includes('_extended_');
+    if (isExtended) {
+      return false;
+    }
+
     // remove checksums and .deb
-    all.releases = all.releases.filter(function (rel) {
-      return !/(\.txt)|(\.deb)$/i.test(rel.name);
-    });
-    return all;
+    for (let ignorableExt of ['.txt', '.deb']) {
+      let isIgnorable = rel.name.endsWith(ignorableExt);
+      if (isIgnorable) {
+        return false;
+      }
+    }
+
+    return true;
   });
+
+  return all;
 };
 
 if (module === require.main) {
