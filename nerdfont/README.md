@@ -91,22 +91,23 @@ console.log(list.join('\n  -'));
 Note: This will _NOT_ work in Command.exe. You must get _Windows Terminal_ from
 the Microsoft Store.
 
-You can update the font in the Windows Terminal settings either for the "Defaults" profile (which applies to all profiles unless overwritten) or individually for different profiles under `Settings -> <profile_name> -> Appearance -> Font face`:
+You can update the font in the Windows Terminal settings either for the
+"Defaults" profile (which applies to all profiles unless overwritten) or
+individually for different profiles under
+`Settings -> <profile_name> -> Appearance -> Font face`:
 
 ![Windows Terminal Settings](windows-terminal-settings-01.png 'Opening Settings in Windows Terminal')
 ![Windows Terminal Settings](windows-terminal-settings-02.png 'Setting Nerd Font in Windows Terminal Defaults profile')
 (Screenshots taken with Windows Terminal version 1.16.10262.0)
 
-Additionally, you can update `profiles.defaults.font.face` in the Windows Terminal settings.json directly:
+Additionally, you can update `profiles.defaults.font.face` in the Windows
+Terminal settings.json directly:
 
 ```json
 {
-  "profiles": 
-  {
-    "defaults": 
-    {
-      "font": 
-      {
+  "profiles": {
+    "defaults": {
+      "font": {
         "face": "DroidSansMono NF"
       }
     }

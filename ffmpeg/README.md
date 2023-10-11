@@ -21,14 +21,14 @@ ffmpeg -i input.m4a output.mp3
 ```
 
 Important information per https://johnvansickle.com/ffmpeg/release-readme.txt
- 
-> Notes:  A limitation of statically linking `glibc` is the loss of DNS resolution. Installing `nscd` through your package manager will fix this.
 
-*This is relevant if using ffmpeg to relay to an RTMP server via domain name.*
+> Notes: A limitation of statically linking `glibc` is the loss of DNS
+> resolution. Installing `nscd` through your package manager will fix this.
+
+_This is relevant if using ffmpeg to relay to an RTMP server via domain name._
 
 ```sh
 # for example, this will not work without `nscd` installed.
 
 ffmpeg -re -stream_loop -1 -i "FooBar.m4v" -c copy -f flv rtmp://stream.example.com/foo/bar
 ```
-

@@ -11,10 +11,9 @@ To update or switch versions, run `webi sttr@stable` (or `@v0.2.16` etc).
 
 > `sttr` makes it easy to perform various operations on string.
 
-
 ## Basic Usage
 
-* After installation simply run `sttr` command.
+- After installation simply run `sttr` command.
 
 ```sh
 // For interactive menu
@@ -25,7 +24,7 @@ sttr
 // Can also press UP-Down arrows select various operations.
 ```
 
-* Working with help.
+- Working with help.
 
 ```sh
 sttr -h
@@ -35,7 +34,7 @@ sttr zeropad -h
 sttr md5 -h
 ```
 
-* Working with files input.
+- Working with files input.
 
 ```sh
 sttr {command-name} {filename}
@@ -45,19 +44,19 @@ sttr md5 file.txt
 sttr md-html Readme.md
 ```
 
-* Writing output to file.
+- Writing output to file.
 
 ```sh
 sttr yaml-json file.yaml > file-output.json
 ```
 
-* Taking input from other command.
+- Taking input from other command.
 
 ```sh
 curl https: //jsonplaceholder.typicode.com/users | sttr json-yaml
 ```
 
-* Chaining the different processor.
+- Chaining the different processor.
 
 ```sh
 sttr md5 hello | sttr base64-encode
