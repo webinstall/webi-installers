@@ -95,13 +95,14 @@ function normalize(all) {
     supported.oses[rel.os] = true;
 
     if (!rel.arch) {
-      arches.some(function (regKey) {
-        var arch = (rel.name || rel.download).match(archMap[regKey]) && regKey;
-        if (arch) {
+      for (let arch of arches) {
+        let name = rel.name || rel.download;
+        let isArch = name.match(archMap[arch]);
+        if (isArch) {
           rel.arch = arch;
-          return true;
+          break;
         }
-      });
+      }
     }
     if (!rel.arch) {
       if ('macos' === rel.os) {
