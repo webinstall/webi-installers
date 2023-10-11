@@ -75,6 +75,8 @@ function getArch(ua) {
     return 'armv7l';
   } else if (/arm6|armv6/i.test(ua)) {
     return 'armv6l';
+  } else if (/ppc64le/i.test(ua)) {
+    return 'ppc64le';
   } else if (/ppc64/i.test(ua)) {
     return 'ppc64';
   } else if (/mips64/i.test(ua)) {
