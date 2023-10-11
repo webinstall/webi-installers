@@ -23,7 +23,6 @@ install:
 >
 > 1. A drop-in cross-compiling toolchain for C and C++ (and Rust and CGo for
 >    that matter).
->
 > 2. A general purpose systems programming language, like C, but intentional,
 >    and with benefit of hindsight.
 >

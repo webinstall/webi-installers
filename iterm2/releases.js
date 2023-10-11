@@ -1,20 +1,22 @@
 'use strict';
 
 function getRawReleases(request) {
-  return request({ url: 'https://iterm2.com/downloads.html' }).then(function (
-    resp,
-  ) {
-    var links = resp.body
-      .split(/[<>]+/g)
-      .map(function (str) {
-        var m = str.match(/href="(https:\/\/iterm2\.com\/downloads\/.*\.zip)"/);
-        if (m && /iTerm2-[34]/.test(m[1])) {
-          return m[1];
-        }
-      })
-      .filter(Boolean);
-    return links;
-  });
+  return request({ url: 'https://iterm2.com/downloads.html' }).then(
+    function (resp) {
+      var links = resp.body
+        .split(/[<>]+/g)
+        .map(function (str) {
+          var m = str.match(
+            /href="(https:\/\/iterm2\.com\/downloads\/.*\.zip)"/,
+          );
+          if (m && /iTerm2-[34]/.test(m[1])) {
+            return m[1];
+          }
+        })
+        .filter(Boolean);
+      return links;
+    },
+  );
 }
 
 function transformReleases(links) {

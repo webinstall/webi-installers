@@ -15,11 +15,11 @@ function getAllReleases(request, owner, repo, baseurl) {
   if (!baseurl) {
     return Promise.reject('missing baseurl');
   }
-  return ghRelease(request, owner, repo, baseurl + '/api/v1').then(function (
-    all,
-  ) {
-    return all;
-  });
+  return ghRelease(request, owner, repo, baseurl + '/api/v1').then(
+    function (all) {
+      return all;
+    },
+  );
 }
 
 module.exports = getAllReleases;

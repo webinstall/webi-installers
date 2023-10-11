@@ -28,7 +28,7 @@ curl -H "Host: example.com" http://localhost:3000
 ```
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <body>
     <h1>Example Domain</h1>
