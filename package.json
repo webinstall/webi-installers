@@ -5,7 +5,7 @@
   "description": "webinstall script repository",
   "main": "_webi/",
   "scripts": {
-    "fmt": "npm run prettier; npm run shfmt",
+    "fmt": "npm run prettier && npm run shfmt",
     "lint": "npx jshint@2.x -c ./.jshintrc */*.js",
     "prettier": "npx -p prettier@3.x -- prettier -w '**/*.{js,md,html}'",
     "shfmt": "shfmt -w -i 4 -sr -ci -s ./",
