@@ -56,8 +56,36 @@ server and desktop deployment, respectively.
 
 To accomplish the same manually you would:
 
-1. Create `~/.dashcore/dash.conf` with reasonable defaults
+1. Create `~/.dashcore/dash.conf` with
+   [reasonable defaults](../packages/dashcore-utils/dash.example.conf)
+
    ```ini
+   txindex=1
+   addressindex=1
+   timestampindex=1
+   spentindex=1
+
+   [main]
+   rpcuser=RPCUSER_MAIN
+   rpcpassword=RPCPASS_MAIN
+   # to run on multiple interfaces, use multiple config lines
+   # ex: bind=127.0.0.1:9999 and bind=10.0.0.100:9999)
+   bind=127.0.0.1:9999
+   rpcbind=127.0.0.1:9998
+   rpcconnect=127.0.0.1:9998
+   rpcallowip=127.0.0.1/16
+   # zmq* can only be bound to a single interface
+   # See https://github.com/dashpay/dash/issues/5461
+   zmqpubrawtx=tcp://127.0.0.1:28332
+   zmqpubrawtxlock=tcp://127.0.0.1:28332
+   zmqpubrawchainlock=tcp://127.0.0.1:28332
+   zmqpubhashchainlock=tcp://127.0.0.1:28332
+
+   [test]
+   # ...
+
+   [regtest]
+   # ...
    ```
 
 Which is essentially the same as:
