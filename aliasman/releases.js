@@ -11,6 +11,7 @@ module.exports = function (request) {
     'armv6l',
     'armv7l',
     'ppc64le',
+    'ppc64',
     's390x',
     'x86',
   ];
