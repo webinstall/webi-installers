@@ -7,7 +7,7 @@
   "scripts": {
     "fmt": "npm run prettier; npm run shfmt",
     "lint": "npx jshint@2.x -c ./.jshintrc */*.js",
-    "prettier": "npx prettier@2.x -w '**/*.{js,md,html}'",
+    "prettier": "npx -p prettier@3.x -- prettier -w '**/*.{js,md,html}'",
     "shfmt": "shfmt -w -i 4 -sr -ci -s ./",
     "test": "node _webi/test.js ./node/"
   },
