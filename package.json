@@ -6,10 +6,13 @@
   "main": "_webi/",
   "scripts": {
     "fmt": "npm run prettier && npm run shfmt",
-    "lint": "npx jshint@2.x -c ./.jshintrc */*.js",
+    "lint": "npm run shellcheck && npm run jshint",
+    "test": "node _webi/test.js ./node/",
+    "----": "------------------------------------",
+    "jshint": "npx -p jshint@2.x -- jshint -c ./.jshintrc --exclude 'node_modules/**/*' */*.js */*/*.js",
     "prettier": "npx -p prettier@3.x -- prettier -w '**/*.{js,md,html}'",
-    "shfmt": "shfmt -w -i 4 -sr -ci -s ./",
-    "test": "node _webi/test.js ./node/"
+    "shellcheck": "shellcheck -s sh -S style --exclude=SC2154,SC2034 */*.sh",
+    "shfmt": "shfmt -w -i 4 -sr -ci -s ./"
   },
   "repository": {
     "type": "git",
