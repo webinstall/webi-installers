@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+set -u
+
+# Install 'shfmt 3.7.x'
+curl -fsS https://webi.sh/shfmt@3.7 | sh
+
+# Install 'shellcheck v0.9.x'
+curl -fsS https://webi.sh/shellcheck@0.9 | sh
