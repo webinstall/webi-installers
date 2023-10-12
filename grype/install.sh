@@ -3,7 +3,7 @@ set -e
 set -u
 
 __init_grype() {
-    
+
     ##################
     # Install Grype  #
     ##################
@@ -24,15 +24,15 @@ __init_grype() {
         mkdir -p "$(dirname "${pkg_src_cmd}")"
 
         # mv ./grype ~/.local/opt/grype-v0.99.9/bin/grype
-         mv ./"$pkg_cmd_name"* "$pkg_src"
+        mv ./"$pkg_cmd_name"* "$pkg_src"
     }
 
     # pkg_get_current_version is recommended, but not required
     pkg_get_current_version() {
         # 'grype --version' has output in this format:
-        #       grype 0.99.9 (rev abcdef0123)
+        #       grype 0.70.0
         # This trims it down to just the version number:
-        #       0.99.9
+        #       0.70.0
         grype --version 2> /dev/null |
             head -n 1 |
             cut -d ' ' -f 2
