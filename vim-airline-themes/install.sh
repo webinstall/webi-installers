@@ -15,10 +15,10 @@ __init_vim_airline_themes() {
     mkdir -p ~/.vim/plugins
     if [ -f "$HOME/.vim/plugins/airline.vim" ]; then
         WEBI_HOST=${WEBI_HOST:-"https://webinstall.dev"}
-        if ! grep -qF "let g:airline_theme=" $HOME/.vim/plugins/airline.vim; then
+        if ! grep -qF "let g:airline_theme=" "$HOME/.vim/plugins/airline.vim"; then
             echo ""
             echo "set theme 'simple' as default, update in $HOME/.vim/plugins/airline.vim"
-            curl -s "$WEBI_HOST/packages/vim-airline-themes/airline.vim" >> $HOME/.vim/plugins/airline.vim
+            curl -s "$WEBI_HOST/packages/vim-airline-themes/airline.vim" >> "$HOME/.vim/plugins/airline.vim"
         fi
     else
         curl -fsSL -o ~/.vim/plugins/airline.vim "$WEBI_HOST/packages/vim-airline-themes/airline.vim"
