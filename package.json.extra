@@ -1,0 +1,3 @@
+
+    "tsc": "npx -p typescript@5 -- tsc -p ./jsconfig.json"
+    "lint": "npm run jshint && npm run tsc",
