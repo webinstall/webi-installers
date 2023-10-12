@@ -26,7 +26,7 @@ module.exports = function (request) {
 
         // Ex: aarch64-macos => ['aarch64', 'macos']
         let parts = platform.split('-');
-        let arch = parts[0];
+        //let arch = parts[0];
         let os = parts[1];
         if (parts.length > 2) {
           console.warn(

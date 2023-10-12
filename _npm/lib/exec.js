@@ -1,9 +1,6 @@
 'use strict';
 
-var pkg = require('../package.json');
 var spawn = require('child_process').spawn;
-var os = require('os');
-var path = require('path');
 
 function spawner(args) {
   return new Promise(function (resolve, reject) {

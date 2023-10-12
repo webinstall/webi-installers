@@ -73,6 +73,7 @@ function normalize(all) {
   };
 
   all.releases.forEach(function (rel) {
+    /* jshint maxcomplexity:25 */
     rel.version = rel.version.replace(/^v/i, '');
     if (!rel.name) {
       rel.name = rel.download.replace(/.*\//, '');
