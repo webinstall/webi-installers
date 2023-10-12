@@ -7,13 +7,15 @@
   "scripts": {
     "fmt": "npm run prettier && npm run shfmt",
     "lint": "npm run shellcheck && npm run jshint",
-    "prepare": "node _scripts/git-hooks-init.js",
+    "prepare": "npm run tooling-init && npm run git-hooks-init",
     "test": "node _webi/test.js ./node/",
     "----": "------------------------------------",
+    "git-hooks-init": "node ./_scripts/git-hooks-init.js",
     "jshint": "npx -p jshint@2.x -- jshint -c ./.jshintrc --exclude 'node_modules/**/*' */*.js */*/*.js",
     "prettier": "npx -p prettier@3.x -- prettier -w '**/*.{js,md,html}'",
     "shellcheck": "shellcheck -s sh -S style --exclude=SC2154,SC2034 */*.sh",
-    "shfmt": "shfmt -w -i 4 -sr -ci -s ./"
+    "shfmt": "shfmt -w -i 4 -sr -ci -s ./",
+    "tooling-init": "node ./_scripts/tooling-init.js"
   },
   "repository": {
     "type": "git",

@@ -27,7 +27,7 @@ async function copyScripts() {
 
   var gitHooksDir = Path.join(gitDir, 'hooks');
 
-  var src = Path.join(scriptsDir, 'git-hooks-pre-commit');
+  var src = Path.join(scriptsDir, 'git-hooks-pre-commit.js');
   var dst = Path.join(gitHooksDir, 'pre-commit');
 
   console.info(`[git-hooks] Checking for pre-commit hooks...`);
