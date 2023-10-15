@@ -34,7 +34,7 @@ fails and you get the error _`vcruntime140.dll` was not found_, you'll need to
 > `AtomicParsley` is an alternative to `ffmpeg` and `ffprobe` for viewing and
 > changing metadata in MPEG-4 files with .3gp, .3g2, .mp4, .m4a, .m4b, .m4p,
 > .m4r, and .m4v extensions. Because it's purpose-built for MP4 containers, it
-> can do some things `ffmpeg` can't - like adding album artwork.
+> can do some things `ffmpeg` can't.
 
 ### How to Change Album Art
 
@@ -46,7 +46,7 @@ fails and you get the error _`vcruntime140.dll` was not found_, you'll need to
    ```sh
    AtomicParsley ./my-song.m4a --artwork REMOVE_ALL
    ```
-3. Add new artwork at the specified DPI (and other constraints)
+3. **(macOS ONLY)** Add new artwork at the specified DPI (and other constraints)
 
    ```sh
    export PIC_OPTIONS="DPI=72"
@@ -512,7 +512,7 @@ however lyrics and long descriptions have no limit.
         moov.udta.meta.ilst.----.name:[iTunNORM]      moov.trak[3].cprt:lang=urd
         moov.trak[2].uuid=55534d54-21d2-4fce-bb88-695cfac9c740
 ------------------------------------------------------------------------------------------------
-                   Environmental Variables (affecting picture placement)
+                   Environmental Variables (affecting picture placement) (macOS ONLY)
 
   set PIC_OPTIONS in your shell to set these flags; preferences are separated by colons (:)
 
