@@ -7,6 +7,14 @@ tagline: |
 
 To update or switch versions, run `webi awless@stable` (or `@v2`, `@beta`, etc).
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/awless
+~/.aws/credentials
+```
+
 ## Cheat Sheet
 
 awless is modeled after popular command-line tools such as Git. Most commands
