@@ -8,6 +8,14 @@ tagline: |
 To update or switch versions, run `webi flutter@stable` (or `@v2.2`, `@beta`,
 etc).
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.local/opt/flutter
+<PROJECT-DIR>/lib/main.dart
+```
+
 ## Cheat Sheet
 
 > Flutter is Google’s UI toolkit for building beautiful, natively compiled
