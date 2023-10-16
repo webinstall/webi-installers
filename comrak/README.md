@@ -8,6 +8,14 @@ tagline: |
 To update or switch versions, run `webi comrak@stable` (or `@v0.11`, `@beta`,
 etc).
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/comrak
+~/.config/comrak/config
+```
+
 ## Cheat Sheet
 
 > Comrak supports the five extensions to CommonMark defined in the GitHub
