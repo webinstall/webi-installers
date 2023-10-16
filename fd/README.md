@@ -7,6 +7,13 @@ tagline: |
 
 To update or switch versions, run `webi fd@stable` (or `@v8.2`, `@beta`, etc).
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/fd
+```
+
 ## Cheat Sheet
 
 ![](https://github.com/sharkdp/fd/raw/master/doc/screencast.svg?sanitize=true)
