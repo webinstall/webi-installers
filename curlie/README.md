@@ -8,6 +8,13 @@ tagline: |
 To update or switch versions, run `webi curlie@stable` (or `@v1.6`, `@beta`,
 etc).
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/curlie
+```
+
 ## Cheat Sheet
 
 > If you like the interface of HTTPie but miss the features of curl, curlie is
