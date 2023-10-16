@@ -8,6 +8,16 @@ tagline: |
 To update or switch versions, run `webi caddy@stable` (or `@v2.4`, `@beta`,
 etc).
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/caddy
+~/.config/caddy/autosave.json
+~/.local/share/caddy/certificates/
+<PROJECT-DIR>/Caddyfile
+```
+
 ## Cheat Sheet
 
 > Caddy makes it easy to use Let's Encrypt to handle HTTPS (TLS/SSL) and to
