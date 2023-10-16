@@ -8,6 +8,13 @@ tagline: |
 To update or switch versions, run `webi ffmpeg@stable` (or `@v4.4`, `@beta`,
 etc).
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/ffmpeg
+```
+
 ## Cheat Sheet
 
 > FFmpeg is useful for converting between various audio, video, and image
