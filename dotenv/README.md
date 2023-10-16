@@ -7,6 +7,13 @@ tagline: |
 
 To update or switch versions, run `webi dotenv@stable`.
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/dotenv
+```
+
 ## Cheat Sheet
 
 > dotenv makes it easy to run a command with a set of ENVs (environment
