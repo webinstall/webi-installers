@@ -20,6 +20,13 @@ On Windows you'll get an error like this:
 You need to download and install the
 [Microsoft Visual C++ Redistributable](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads).
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/dotenv-linter
+```
+
 ## Cheat Sheet
 
 > Dotenv Linter is a lightning-fast check for your `.env` files. It can rapidly
