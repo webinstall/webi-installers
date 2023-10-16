@@ -7,6 +7,13 @@ tagline: |
 
 To update or switch versions, run `webi fzf@stable` (or `@v0.23`, `@beta`, etc).
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/fzf
+```
+
 ## Cheat Sheet
 
 ![](https://raw.githubusercontent.com/junegunn/i/master/fzf-preview.png)
