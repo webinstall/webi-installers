@@ -1,8 +1,8 @@
 #!/usr/bin/env pwsh
 
-####################
+##################
 # Install sqlpkg #
-####################
+##################
 
 # Every package should define these variables
 $pkg_cmd_name = "sqlpkg"

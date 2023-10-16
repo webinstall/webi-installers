@@ -30,7 +30,10 @@ __init_sqlpkg() {
     }
 
     pkg_get_current_version() {
-        sqlpkg version 2> /dev/null
+        # 'sqlpkg version' has output in this format:
+        #       0.2.2
+        # This makes it resistant to future added lines or columns
+        sqlpkg version 2> /dev/null | head -n 1 | cut -f 1
     }
 
 }
