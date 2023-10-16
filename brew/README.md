@@ -14,6 +14,14 @@ brew update
 brew upgrade
 ```
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.local/opt/brew
+~/.local/bin/brew-update-service-install
+```
+
 ## Cheat Sheet
 
 > Homebrew installs the stuff you need that Apple (or your Linux system) didn’t.
