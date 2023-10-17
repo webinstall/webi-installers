@@ -7,9 +7,9 @@ __init_ffuf() {
     set -e
     set -u
 
-    ##################
+    ################
     # Install ffuf #
-    ##################
+    ################
 
     # Every package should define these 6 variables
     pkg_cmd_name="ffuf"
@@ -23,22 +23,22 @@ __init_ffuf() {
 
     # pkg_install must be defined by every package
     pkg_install() {
-        # ~/.local/opt/ffuf-v0.99.9/bin
+        # ~/.local/opt/ffuf-v2.1.0/bin
         mkdir -p "$(dirname "${pkg_src_cmd}")"
 
-        # mv ./ffuf-*/ffuf ~/.local/opt/ffuf-v0.99.9/bin/ffuf
+        # mv ./ffuf-*/ffuf ~/.local/opt/ffuf-v2.1.0/bin/ffuf
         mv ./ffuf "$pkg_src_cmd"
     }
 
     # pkg_get_current_version is recommended, but not required
     pkg_get_current_version() {
-        # 'ffuf --version' has output in this format:
-        #       ffuf 0.99.9 (rev abcdef0123)
+        # 'ffuf -V' has output in this format:
+        #       ffuf version: 2.1.0
         # This trims it down to just the version number:
-        #       0.99.9
-        ffuf --version 2> /dev/null |
+        #       2.1.0
+        ffuf -V 2> /dev/null |
             head -n 1 |
-            cut -d ' ' -f 2
+            cut -d' ' -f3
     }
 
 }
