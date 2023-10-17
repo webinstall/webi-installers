@@ -17,10 +17,10 @@ __install_webi() {
     echo ""
     printf "Thanks for using webi to install '\e[32m%s\e[0m' on '\e[33m%s/%s\e[0m'.\n" "${WEBI_PKG-}" "$(uname -s)/$(uname -r)" "$(uname -m)"
     echo "Have a problem? Experience a bug? Please let us know:"
-    echo "        https://github.com/webinstall/webi-installers/issues"
+    printf "        \e[2m\e[36mhttps://github.com/webinstall/webi-installers/issues\e[0m\n"
     echo ""
-    printf "\e[33mLovin'\e[0m it? Say thanks with a \e[34mStar on GitHub\e[0m:\n"
-    printf "        \e[32mhttps://github.com/webinstall/webi-installers\e[0m\n"
+    printf "\e[35mLovin'\e[0m it? Say thanks with a \e[1m\e[33mStar on GitHub\e[0m:\n"
+    printf "        \e[36mhttps://github.com/webinstall/webi-installers\e[0m\n"
     echo ""
 
     WEBI_WELCOME=true
@@ -145,9 +145,9 @@ __webi_main() {
                     printf 'PATH.env updated with:\\n'
                     printf "%s\\n" "\$my_paths"
                     printf '\\n'
-                    printf "\\e[33mTO FINISH\\e[0m: copy, paste & run the following command:\\n"
+                    printf "\\e[1m\\e[35mTO FINISH\\e[0m: copy, paste & run the following command:\\n"
                     printf "\\n"
-                    printf "        \\e[34msource ~/.config/envman/PATH.env\\e[0m\\n"
+                    printf "        \\e[1m\\e[32msource ~/.config/envman/PATH.env\\e[0m\\n"
                     printf "        (newly opened terminal windows will update automatically)\\n"
                 fi
                 rm -f "\$_webi_tmp/.PATH.env"
@@ -158,8 +158,8 @@ __webi_main() {
 
     version() {
         my_version=v1.1.15
-        printf "\\e[33mwebi\\e[32m %s\\e[0m Copyright 2020+ AJ ONeal\\n" "\${my_version}"
-        printf "    \\e[34mhttps://webinstall.dev/webi\\e[0m\\n"
+        printf "\\e[35mwebi\\e[32m %s\\e[0m Copyright 2020+ AJ ONeal\\n" "\${my_version}"
+        printf "    \\e[36mhttps://webinstall.dev/webi\\e[0m\\n"
     }
 
     # show help if no params given or help flags are used
