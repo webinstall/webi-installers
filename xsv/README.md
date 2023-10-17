@@ -44,7 +44,7 @@ Query the CSV data any which way:
 xsv search '^(John|Jane)$' --select 'First Name' ./address-book.csv |
     xsv select 'ID,First Name,Last Name' |
     xsv sort --select 'Last Name,First Name' |
-    xsv slice -s 0 -n 5
+    xsv slice -s 0 -n 5 |
     xsv table
 ```
 
