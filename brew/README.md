@@ -5,20 +5,23 @@ tagline: |
   Brew: The Missing Package Manager for macOS (and Linux).
 ---
 
-## Updating `brew`
-
-`brew` has its own built-in upgrade management.
+To update or switch versions, use brew's built-in upgrade management, or our
+handy update service script:
 
 ```sh
 brew update
 brew upgrade
+brew-update-service-install # Webi helper script
 ```
 
 ### Files
 
+These are the files / directories that are created and/or modified with this
+install:
+
 ```text
 ~/.config/envman/PATH.env
-~/.local/opt/brew
+~/.local/opt/brew/
 ~/.local/bin/brew-update-service-install
 ```
 
