@@ -5,20 +5,8 @@ tagline: |
   dotenv-linter: ⚡️ Lightning-fast linter for .env files. Written in Rust 🦀
 ---
 
-### Updating `dotenv-linter`
-
-`webi dotenv-linter@stable`
-
-Use the `@beta` tag for pre-releases.
-
-#### Windows
-
-On Windows you'll get an error like this:
-
-> execution cannot proceed run because `vcruntime140.dll` was not found
-
-You need to download and install the
-[Microsoft Visual C++ Redistributable](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads).
+To update or switch versions, run `webi dotenv-linter@stable` (or `@v3.3`,
+`@beta`, etc).
 
 ### Files
 
@@ -29,6 +17,17 @@ install:
 ~/.config/envman/PATH.env
 ~/.local/bin/dotenv-linter
 ```
+
+**Windows Users**
+
+```text
+\Windows\System32\vcruntime140.dll
+```
+
+This will also attempt to install the
+[Microsoft Visual C++ Redistributable](/vcruntime) via `webi vcruntime`. If it
+fails and you get the error _`vcruntime140.dll` was not found_, you'll need to
+[install it manually](https://learn.microsoft.com/en-US/cpp/windows/latest-supported-vc-redist?view=msvc-170).
 
 ## Cheat Sheet
 
@@ -75,18 +74,20 @@ You can turn off certain linter checks with `--skip` options, for example:
 dotenv-linter --skip QuoteCharacter --skip UnorderedKey
 ```
 
-You can see the full list of linter rules with `dotenv-linter --show-checks`:
+You can see the full list of linter rules with `dotenv-linter list`:
 
 ```text
 DuplicatedKey
 EndingBlankLine
 ExtraBlankLine
 IncorrectDelimiter
-LeadingCharacter
 KeyWithoutValue
+LeadingCharacter
 LowercaseKey
 QuoteCharacter
 SpaceCharacter
+SubstitutionKey
 TrailingWhitespace
 UnorderedKey
+ValueWithoutQuotes
 ```
