@@ -18,8 +18,15 @@ $pkg_src = "$pkg_src_cmd"
 New-Item "$Env:USERPROFILE\Downloads\webi" -ItemType Directory -Force | out-null
 $pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 
+# Fetch MSVC Runtime
+echo "Checking for MSVC Runtime..."
+IF (-not (Test-Path "\Windows\System32\vcruntime140.dll"))
+{
+    & "$Env:USERPROFILE\.local\bin\webi-pwsh.ps1" vcruntime
+}
+
 # Fetch archive
-IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"))
+IF (!(Test-Path -Path "$pkg_download"))
 {
     echo "Downloading dotenv-linter from $Env:WEBI_PKG_URL to $pkg_download"
     & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
