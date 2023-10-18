@@ -8,6 +8,11 @@ module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
     // remove checksums and .deb
     all.releases = all.releases.filter(function (rel) {
+      let isPreview = rel.name.includes('-preview.');
+      if (isPreview) {
+        rel.channel = 'beta';
+      }
+
       return !/(alpine)|(fxdependent)|(\.deb)|(\.pkg)|(\.rpm)$/i.test(rel.name);
     });
     return all;
