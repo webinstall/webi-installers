@@ -113,7 +113,7 @@ function webi_path_add($pathname) {
 webi_path_add ~/.local/bin
 #}
 
-{ { installer } }
+# {{ installer }}
 
 webi_path_add ~/.local/bin
 
