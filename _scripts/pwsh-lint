@@ -1,0 +1,36 @@
+#!/bin/sh
+set -e
+set -u
+
+echo "Formatting */*.ps1 ..."
+
+for my_ps1 in */*.ps1; do
+    my_dir="$(
+        dirname "${my_ps1}"
+    )"
+    if test -L "${my_ps1}" ||
+        test -L "${my_dir}" ||
+        ! test -f "${my_ps1}" ||
+        ! test -d "${my_dir}"; then
+        printf '    SKIP %s (non-regular file or parent directory)\n' "${my_ps1}"
+        continue
+    fi
+
+    printf "    %s" "${my_ps1}"
+
+    # -Settings ./PSScriptAnalyzerSettings.psd1
+    pwsh -Command "Invoke-ScriptAnalyzer -Fix -ExcludeRule PSAvoidUsingWriteHost,PSUseDeclaredVarsMoreThanAssignment -Path '$my_ps1'"
+
+    #
+    # fmt MUST happen after lint due to Byte-Order Marker (BOM) issues
+    # See https://github.com/PowerShell/PSScriptAnalyzer/issues/1743
+    #
+
+    # -Settings ./Settings/CodeFormatting.psd1
+    my_new_file="$(
+        pwsh -Command "Invoke-Formatter -ScriptDefinition (Get-Content -Path '${my_ps1}' -Raw)"
+    )"
+    printf '%s\n' "${my_new_file}" > "${my_ps1}"
+
+    printf '\n'
+done
