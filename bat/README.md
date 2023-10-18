@@ -9,25 +9,30 @@ To update or switch versions, run `webi bat@stable` (or `@v0.18`, `@beta`, etc).
 
 ### Files
 
+These are the files / directories that are created and/or modified with this
+install:
+
 ```text
 ~/.config/envman/PATH.env
 ~/.config/bat/config
 ~/.local/opt/bat/
 ```
 
+**Windows Users**
+
+```text
+\Windows\System32\vcruntime140.dll
+```
+
+This will also attempt to install the
+[Microsoft Visual C++ Redistributable](/vcruntime) via `webi vcruntime`. If it
+fails and you get the error _`vcruntime140.dll` was not found_, you'll need to
+[install it manually](https://learn.microsoft.com/en-US/cpp/windows/latest-supported-vc-redist?view=msvc-170).
+
 ## Cheat Sheet
 
 > `bat` is pretty much what `cat` would be if it were developed today's in the
 > world of Markdown, git, etc.
-
-### How to run on Windows
-
-On Windows you'll get an error like this:
-
-> execution cannot proceed run because vcruntime140.dll was not found
-
-You need to download and install the
-[Microsoft Visual C++ Redistributable](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads)
 
 ### How to alias as `cat`
 

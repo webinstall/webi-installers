@@ -10,6 +10,13 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"))
     & move "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE.part" "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 }
 
+# Fetch MSVC Runtime
+echo "Checking for MSVC Runtime..."
+IF (-not (Test-Path "\Windows\System32\vcruntime140.dll"))
+{
+    & "$Env:USERPROFILE\.local\bin\webi-pwsh.ps1" vcruntime
+}
+
 IF (!(Test-Path -Path "$Env:USERPROFILE\.local\xbin\$VERNAME"))
 {
     echo "Installing $Env:PKG_NAME"
