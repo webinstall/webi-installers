@@ -57,14 +57,22 @@ For the complete usage, see the official
 
 ### How to automatically fix errors
 
-Use the `--fix` flag.
+Use the `fix` subcommand.
 
 ```sh
-dotenv-linter --fix
+dotenv-linter fix
 ```
 
 Backup files in the format of `.env_0000000000` will be created by default. You
 can use `--no-backup` to skip this.
+
+### How to compare two files
+
+Use the `compare` subcommand
+
+```sh
+dotenv-linter compare .env1 .env2
+```
 
 ### How to toggle linter rules
 
