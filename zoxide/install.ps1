@@ -15,7 +15,7 @@ $pkg_src_bin = "$Env:USERPROFILE\.local\opt\zoxide-v$Env:WEBI_VERSION\bin"
 $pkg_src_dir = "$Env:USERPROFILE\.local\opt\zoxide-v$Env:WEBI_VERSION"
 $pkg_src = "$pkg_src_cmd"
 
-New-Item "$Env:USERPROFILE\Downloads\webi" -ItemType Directory -Force | out-null
+New-Item "$Env:USERPROFILE\Downloads\webi" -ItemType Directory -Force | Out-Null
 $pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 
 # Fetch archive

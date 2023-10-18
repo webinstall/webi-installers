@@ -7,23 +7,20 @@ echo ""
 echo "Installing 2 of 3 VirtualMachinePlatform ..."
 & dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 
-Function Test-CommandExists
-{
+Function Test-CommandExists {
     Param ($command)
     $oldPreference = $ErrorActionPreference
     $ErrorActionPreference = 'stop'
-    try {if(Get-Command $command){RETURN $true}}
-    Catch {Write-Host “$command does not exist”; RETURN $false}
-    Finally {$ErrorActionPreference=$oldPreference}
+    try { if (Get-Command $command) { RETURN $true } }
+    Catch { Write-Host “$command does not exist”; RETURN $false }
+    Finally { $ErrorActionPreference = $oldPreference }
 }
 
 echo ""
-IF(!(Test-CommandExists wsl))
-{
+IF (!(Test-CommandExists wsl)) {
     echo "Skipping 3 of 3: Microsoft Linux Kernel requires WSL 1 to be installed first ..."
 }
-ELSE
-{
+ELSE {
     echo "Installing 3 of 3 Microsoft Linux Kernel (wsl_update_x64.msi) ..."
 
     IF (!(Test-Path -Path "$Env:TEMP\wsl_update_x64.msi")) {

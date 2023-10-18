@@ -11,18 +11,16 @@ $MYPWD = (Get-Item .).FullName
 powershell -Command "Start-Process cmd -Wait -Verb RunAs -ArgumentList '/c cd /d %CD% && powershell -ExecutionPolicy Bypass $Env:TEMP\install-wsl2.ps1'"
 
 # From https://devblogs.microsoft.com/scripting/use-a-powershell-function-to-see-if-a-command-exists/
-Function Test-CommandExists
-{
+Function Test-CommandExists {
     Param ($command)
     $oldPreference = $ErrorActionPreference
     $ErrorActionPreference = 'stop'
-    try {if(Get-Command $command){RETURN $true}}
-    Catch {RETURN $false}
-    Finally {$ErrorActionPreference=$oldPreference}
+    try { if (Get-Command $command) { RETURN $true } }
+    Catch { RETURN $false }
+    Finally { $ErrorActionPreference = $oldPreference }
 }
 
-IF(!(Test-CommandExists wsl))
-{
+IF (!(Test-CommandExists wsl)) {
     echo ""
     echo ""
     echo ""

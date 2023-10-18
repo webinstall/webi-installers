@@ -16,7 +16,7 @@ $pkg_src_bin = "$Env:USERPROFILE\.local\opt\hugo-v$Env:WEBI_VERSION\bin"
 $pkg_src_dir = "$Env:USERPROFILE\.local\opt\hugo-v$Env:WEBI_VERSION"
 $pkg_src = "$pkg_src_cmd"
 
-New-Item "$Env:USERPROFILE\Downloads\webi" -ItemType Directory -Force | out-null
+New-Item "$Env:USERPROFILE\Downloads\webi" -ItemType Directory -Force | Out-Null
 $pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 
 # Fetch archive
@@ -44,7 +44,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd")) {
 
     # Settle unpacked archive into place
     echo "Install Location: $pkg_src_cmd"
-    New-Item "$pkg_src_bin" -ItemType Directory -Force | out-null
+    New-Item "$pkg_src_bin" -ItemType Directory -Force | Out-Null
     Move-Item -Path ".\hugo.exe" -Destination "$pkg_src_bin"
 
     # Exit tmp
@@ -52,6 +52,6 @@ IF (!(Test-Path -Path "$pkg_src_cmd")) {
 }
 
 echo "Copying into '$pkg_dst_cmd' from '$pkg_src_cmd'"
-Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore | out-null
-New-Item "$pkg_dst_bin" -ItemType Directory -Force | out-null
+Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore | Out-Null
+New-Item "$pkg_dst_bin" -ItemType Directory -Force | Out-Null
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse

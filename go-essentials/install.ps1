@@ -1,7 +1,6 @@
 #!/usr/bin/env pwsh
 
-if (!(Get-Command "go.exe" -ErrorAction SilentlyContinue))
-{
+if (!(Get-Command "go.exe" -ErrorAction SilentlyContinue)) {
     & "$Env:USERPROFILE\.local\bin\webi-pwsh.ps1" go
     # because we need git.exe to be available to golang immediately
     $Env:PATH = "$Env:USERPROFILE\go\bin;$Env:USERPROFILE\.local\opt\go\bin;$Env:PATH"

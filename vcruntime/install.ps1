@@ -1,8 +1,8 @@
 # This is the canonical CPU arch when the process is emulated
 $my_arch = "$Env:PROCESSOR_ARCHITEW6432"
 IF ($my_arch -eq $null -or $my_arch -eq "") {
-  # This is the canonical CPU arch when the process is native
-  $my_arch = "$Env:PROCESSOR_ARCHITECTURE"
+    # This is the canonical CPU arch when the process is native
+    $my_arch = "$Env:PROCESSOR_ARCHITECTURE"
 }
 IF ($my_arch -eq "AMD64") {
     # Because PowerShell isn't ARM yet.
@@ -19,7 +19,8 @@ IF ($my_arch -eq "AMD64") {
 if (-not (Test-Path "$Env:USERPROFILE\Downloads\webi\vcredist.exe")) {
     IF ($my_arch -eq "ARM64") {
         curl.exe -o "$Env:USERPROFILE\Downloads\webi\vcredist.exe.part" -L https://aka.ms/vs/17/release/vc_redist.arm64.exe
-    } ELSE {
+    }
+    ELSE {
         curl.exe -o "$Env:USERPROFILE\Downloads\webi\vcredist.exe.part" -L https://aka.ms/vs/17/release/vc_redist.x64.exe
     }
     & move "$Env:USERPROFILE\Downloads\webi\vcredist.exe.part" "$Env:USERPROFILE\Downloads\webi\vcredist.exe"
@@ -32,7 +33,8 @@ if (-not (Test-Path "\Windows\System32\vcruntime140.dll")) {
     echo "Installing Microsoft Visual C++ Redistributable (vcruntime140.dll)..."
     echo ""
     & "$Env:USERPROFILE\Downloads\webi\vcredist.exe" /install /quiet /passive /norestart
-} ELSE {
+}
+ELSE {
     echo ""
     echo "Found Microsoft Visual C++ Redistributable (vcruntime140.dll)"
     echo ""

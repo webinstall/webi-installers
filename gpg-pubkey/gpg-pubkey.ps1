@@ -7,8 +7,7 @@ $my_key_id = gpg --list-secret-keys --keyid-format LONG |
         $_.Line.split('/')[1].split(' ')[0]
     }
 
-if (!$my_key_id)
-{
+if (!$my_key_id) {
     $my_name = git config --global user.name
     $my_email = git config --global user.email
     $my_host = hostname

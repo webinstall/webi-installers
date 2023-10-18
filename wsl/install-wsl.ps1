@@ -7,23 +7,20 @@ echo ""
 echo "Installing 2 of 5 VirtualMachinePlatform (for WSL 2 Hyper-V) ..."
 & dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 
-Function Test-CommandExists
-{
+Function Test-CommandExists {
     Param ($command)
     $oldPreference = $ErrorActionPreference
     $ErrorActionPreference = 'stop'
-    try {if(Get-Command $command){RETURN $true}}
-    Catch {RETURN $false}
-    Finally {$ErrorActionPreference=$oldPreference}
+    try { if (Get-Command $command) { RETURN $true } }
+    Catch { RETURN $false }
+    Finally { $ErrorActionPreference = $oldPreference }
 }
 
 echo ""
-IF(!(Test-CommandExists wsl))
-{
+IF (!(Test-CommandExists wsl)) {
     echo "Skipping 3 of 5: Microsoft Linux Kernel requires WSL 1 to be installed first ..."
 }
-ELSE
-{
+ELSE {
     echo "Installing 3 of 5 Microsoft Linux Kernel (wsl_update_x64.msi for WSL 2) ..."
     IF (!(Test-Path -Path "$Env:TEMP\wsl_update_x64.msi")) {
         & curl.exe -f -o "$Env:TEMP\wsl_update_x64.msi" "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"

@@ -5,7 +5,7 @@ $my_pkg_name = "vim-commentary"
 $my_repo = "https://github.com/tpope/vim-commentary"
 
 IF (!(Test-Path -Path "$Env:USERPROFILE\.vim\pack\plugins\start")) {
-    New-Item -Path "$Env:USERPROFILE\.vim\pack\plugins\start" -ItemType Directory -Force | out-null
+    New-Item -Path "$Env:USERPROFILE\.vim\pack\plugins\start" -ItemType Directory -Force | Out-Null
 }
 
 Remove-Item -Path "$Env:USERPROFILE\.vim\pack\plugins\start\${my_name}" -Recurse -ErrorAction Ignore
