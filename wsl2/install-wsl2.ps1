@@ -1,13 +1,13 @@
 #!/usr/bin/env pwsh
 
-echo "Installing 1 of 3 Microsoft-Windows-Subsystem-Linux ..."
+Write-Output "Installing 1 of 3 Microsoft-Windows-Subsystem-Linux ..."
 & dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 
-echo ""
-echo "Installing 2 of 3 VirtualMachinePlatform ..."
+Write-Output ""
+Write-Output "Installing 2 of 3 VirtualMachinePlatform ..."
 & dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 
-Function Test-CommandExists {
+Function Test-CommandExist {
     Param ($command)
     $oldPreference = $ErrorActionPreference
     $ErrorActionPreference = 'stop'
@@ -16,26 +16,26 @@ Function Test-CommandExists {
     Finally { $ErrorActionPreference = $oldPreference }
 }
 
-echo ""
+Write-Output ""
 IF (!(Test-CommandExists wsl)) {
-    echo "Skipping 3 of 3: Microsoft Linux Kernel requires WSL 1 to be installed first ..."
+    Write-Output "Skipping 3 of 3: Microsoft Linux Kernel requires WSL 1 to be installed first ..."
 }
 ELSE {
-    echo "Installing 3 of 3 Microsoft Linux Kernel (wsl_update_x64.msi) ..."
+    Write-Output "Installing 3 of 3 Microsoft Linux Kernel (wsl_update_x64.msi) ..."
 
     IF (!(Test-Path -Path "$Env:TEMP\wsl_update_x64.msi")) {
         & curl.exe -f -o "$Env:TEMP\wsl_update_x64.msi" "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
     }
     IF (!(Test-Path -Path "C:\Temp\System32\lxss\tools\kernel")) {
         # NOTE: This WILL NOT work with TARGETDIR=$Env:TEMP!!
-        echo "Start-Process msiexec -Wait -ArgumentList '/a ""$Env:TEMP\wsl_update_x64.msi"" /quiet /qn TARGETDIR=""C:\Temp""'"
+        Write-Output "Start-Process msiexec -Wait -ArgumentList '/a ""$Env:TEMP\wsl_update_x64.msi"" /quiet /qn TARGETDIR=""C:\Temp""'"
         powershell -Command "Start-Process msiexec -Wait -ArgumentList '/a ""$Env:TEMP\wsl_update_x64.msi"" /quiet /qn TARGETDIR=""C:\Temp""'"
-        echo "Unpacked to C:\Temp\System32\lxss\tools\kernel"
+        Write-Output "Unpacked to C:\Temp\System32\lxss\tools\kernel"
     }
     Copy-Item -Path "C:\Temp\System32\lxss" -Destination "C:\System32" -Recurse -Force
-    echo "Copied to C:\System32\lxss\tools\kernel ..."
+    Write-Output "Copied to C:\System32\lxss\tools\kernel ..."
 
-    echo "Start-Process msiexec -Wait -ArgumentList '/i','$Env:TEMP\wsl_update_x64.msi','/quiet','/qn'"
+    Write-Output "Start-Process msiexec -Wait -ArgumentList '/i','$Env:TEMP\wsl_update_x64.msi','/quiet','/qn'"
     powershell -Command "Start-Process msiexec -Wait -ArgumentList '/i','$Env:TEMP\wsl_update_x64.msi','/quiet','/qn'"
 }
 

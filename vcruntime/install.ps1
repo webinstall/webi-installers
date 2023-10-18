@@ -23,19 +23,19 @@ if (-not (Test-Path "$Env:USERPROFILE\Downloads\webi\vcredist.exe")) {
     ELSE {
         curl.exe -o "$Env:USERPROFILE\Downloads\webi\vcredist.exe.part" -L https://aka.ms/vs/17/release/vc_redist.x64.exe
     }
-    & move "$Env:USERPROFILE\Downloads\webi\vcredist.exe.part" "$Env:USERPROFILE\Downloads\webi\vcredist.exe"
+    & Move-Item "$Env:USERPROFILE\Downloads\webi\vcredist.exe.part" "$Env:USERPROFILE\Downloads\webi\vcredist.exe"
 }
 
 # TODO How to use CSIDL_SYSTEM?
 # (https://learn.microsoft.com/en-us/windows/deployment/usmt/usmt-recognized-environment-variables)
 if (-not (Test-Path "\Windows\System32\vcruntime140.dll")) {
-    echo ""
-    echo "Installing Microsoft Visual C++ Redistributable (vcruntime140.dll)..."
-    echo ""
+    Write-Output ""
+    Write-Output "Installing Microsoft Visual C++ Redistributable (vcruntime140.dll)..."
+    Write-Output ""
     & "$Env:USERPROFILE\Downloads\webi\vcredist.exe" /install /quiet /passive /norestart
 }
 ELSE {
-    echo ""
-    echo "Found Microsoft Visual C++ Redistributable (vcruntime140.dll)"
-    echo ""
+    Write-Output ""
+    Write-Output "Found Microsoft Visual C++ Redistributable (vcruntime140.dll)"
+    Write-Output ""
 }

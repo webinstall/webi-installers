@@ -24,19 +24,19 @@ if (!(Test-Path -Path "$Env:USERPROFILE/.ssh/config")) {
 
 if (!(Test-Path -Path "$Env:USERPROFILE/.ssh/id_rsa")) {
     & ssh-keygen -b 2048 -t rsa -f "$Env:USERPROFILE/.ssh/id_rsa" -q -N """"
-    echo ""
+    Write-Output ""
 }
 
 if (!(Test-Path -Path "$Env:USERPROFILE/.ssh/id_rsa.pub")) {
     & ssh-keygen -y -f "$Env:USERPROFILE/.ssh/id_rsa" > "$Env:USERPROFILE/.ssh/id_rsa.pub"
-    echo ""
+    Write-Output ""
 }
 
 # TODO use the comment (if any) for the name of the file
-echo ""
-echo "~/Downloads/id_rsa.$Env:USERNAME.pub":
-echo ""
+Write-Output ""
+Write-Output "~/Downloads/id_rsa.$Env:USERNAME.pub":
+Write-Output ""
 #rm -f "$Env:USERPROFILE/Downloads/id_rsa.$Env:USERNAME.pub":
 Copy-Item -Path "$Env:USERPROFILE/.ssh/id_rsa.pub" -Destination "$Env:USERPROFILE/Downloads/id_rsa.$Env:USERNAME.pub"
-& type "$Env:USERPROFILE/Downloads/id_rsa.$Env:USERNAME.pub"
-echo ""
+& Get-Content "$Env:USERPROFILE/Downloads/id_rsa.$Env:USERNAME.pub"
+Write-Output ""

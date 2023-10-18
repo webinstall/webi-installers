@@ -19,24 +19,24 @@ New-Item "$Env:USERPROFILE\Downloads\webi" -ItemType Directory -Force | Out-Null
 $pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 
 # Fetch MSVC Runtime
-echo "Checking for MSVC Runtime..."
+Write-Output "Checking for MSVC Runtime..."
 IF (-not (Test-Path "\Windows\System32\vcruntime140.dll")) {
     & "$Env:USERPROFILE\.local\bin\webi-pwsh.ps1" vcruntime
 }
 
 # Fetch archive
 IF (!(Test-Path -Path "$pkg_download")) {
-    echo "Downloading dotenv-linter from $Env:WEBI_PKG_URL to $pkg_download"
+    Write-Output "Downloading dotenv-linter from $Env:WEBI_PKG_URL to $pkg_download"
     & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
-    & move "$pkg_download.part" "$pkg_download"
+    & Move-Item "$pkg_download.part" "$pkg_download"
 }
 
 IF (!(Test-Path -Path "$pkg_src_cmd")) {
-    echo "Installing dotenv-linter"
+    Write-Output "Installing dotenv-linter"
 
     # TODO: create package-specific temp directory
     # Enter tmp
-    pushd .local\tmp
+    Push-Location .local\tmp
 
     # Remove any leftover tmp cruft
     Remove-Item -Path ".\dotenv-linter-v*" -Recurse -ErrorAction Ignore
@@ -44,18 +44,18 @@ IF (!(Test-Path -Path "$pkg_src_cmd")) {
 
     # Unpack archive file into this temporary directory
     # Windows BSD-tar handles zip. Imagine that.
-    echo "Unpacking $pkg_download"
+    Write-Output "Unpacking $pkg_download"
     & tar xf "$pkg_download"
 
     # Settle unpacked archive into place
-    echo "Install Location: $pkg_src_cmd"
+    Write-Output "Install Location: $pkg_src_cmd"
     New-Item "$pkg_src_bin" -ItemType Directory -Force | Out-Null
     Move-Item -Path ".\dotenv-linter.exe" -Destination "$pkg_src_bin"
 
     # Exit tmp
-    popd
+    Pop-Location
 }
 
-echo "Copying into '$pkg_dst_cmd' from '$pkg_src_cmd'"
+Write-Output "Copying into '$pkg_dst_cmd' from '$pkg_src_cmd'"
 Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore | Out-Null
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse

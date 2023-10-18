@@ -32,7 +32,7 @@ $Env:WEBI_HOST = 'https://webinstall.dev'
 #$Env:WEBI_PKG_FILE = "node-v12.16.2-win-x64.zip"
 
 # Switch to userprofile
-pushd $Env:USERPROFILE
+Push-Location $Env:USERPROFILE
 
 # Make paths
 New-Item -Path Downloads -ItemType Directory -Force | Out-Null
@@ -94,16 +94,16 @@ function webi_path_add($pathname) {
         Write-Host '*  (run the PATH command below)  *' -ForegroundColor red -BackgroundColor white
         Write-Host '**********************************' -ForegroundColor red -BackgroundColor white
         Write-Host ''
-        echo ""
-        echo "Copy, paste, and run the appropriate command to update your PATH:"
-        echo "(or close and reopen the terminal, or reboot)"
-        echo ""
-        echo "cmd.exe:"
-        echo "    $my_cmd"
-        echo ""
-        echo "PowerShell:"
-        echo "    $my_pwsh"
-        echo ""
+        Write-Output ""
+        Write-Output "Copy, paste, and run the appropriate command to update your PATH:"
+        Write-Output "(or close and reopen the terminal, or reboot)"
+        Write-Output ""
+        Write-Output "cmd.exe:"
+        Write-Output "    $my_cmd"
+        Write-Output ""
+        Write-Output "PowerShell:"
+        Write-Output "    $my_pwsh"
+        Write-Output ""
     }
 }
 
@@ -118,4 +118,4 @@ webi_path_add ~/.local/bin
 webi_path_add ~/.local/bin
 
 # Done
-popd
+Pop-Location

@@ -22,35 +22,35 @@ $pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 
 # Fetch archive
 IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE")) {
-    echo "Downloading ziglang from $Env:WEBI_PKG_URL to $pkg_download"
+    Write-Output "Downloading ziglang from $Env:WEBI_PKG_URL to $pkg_download"
     & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
-    & move "$pkg_download.part" "$pkg_download"
+    & Move-Item "$pkg_download.part" "$pkg_download"
 }
 
 IF (!(Test-Path -Path "$pkg_src_cmd")) {
-    echo "Installing ziglang"
+    Write-Output "Installing ziglang"
 
     # TODO: create package-specific temp directory
     # Enter tmp
-    pushd .local\tmp
+    Push-Location .local\tmp
 
     # Remove any leftover tmp cruft
     Remove-Item -Path ".\zig-*" -Recurse -ErrorAction Ignore
 
     # Unpack archive file into this temporary directory
     # Windows BSD-tar handles zip. Imagine that.
-    echo "Unpacking $pkg_download"
+    Write-Output "Unpacking $pkg_download"
     & tar xf "$pkg_download"
 
     # Settle unpacked archive into place
-    echo "Install Location: $pkg_src_cmd"
+    Write-Output "Install Location: $pkg_src_cmd"
     Move-Item -Path ".\zig-*" -Destination "$pkg_src"
 
     # Exit tmp
-    popd
+    Pop-Location
 }
 
-echo "Copying into '$pkg_dst' from '$pkg_src'"
+Write-Output "Copying into '$pkg_dst' from '$pkg_src'"
 Remove-Item -Path "$pkg_dst" -Recurse -ErrorAction Ignore | Out-Null
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse
 

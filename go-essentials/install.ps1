@@ -7,22 +7,22 @@ if (!(Get-Command "go.exe" -ErrorAction SilentlyContinue)) {
 }
 
 # Special to go: re-run all go tooling builds
-echo "Building go language tools..."
+Write-Output "Building go language tools..."
 
-echo ""
-echo godoc
+Write-Output ""
+Write-Output godoc
 & go install golang.org/x/tools/cmd/godoc@latest
 
-echo ""
-echo gopls
+Write-Output ""
+Write-Output gopls
 & go install golang.org/x/tools/gopls@latest
 
-echo ""
-echo guru
+Write-Output ""
+Write-Output guru
 & go install golang.org/x/tools/guru@latest
 
-echo ""
-echo golint
+Write-Output ""
+Write-Output golint
 & go install golang.org/x/lint/golint@latest
 
 #echo ""
@@ -33,33 +33,33 @@ echo golint
 #echo gotags
 #& go install github.com/jstemmer/gotags
 
-echo ""
-echo goimports
+Write-Output ""
+Write-Output goimports
 & go install golang.org/x/tools/cmd/goimports@latest
 
-echo ""
-echo gomvpkg
+Write-Output ""
+Write-Output gomvpkg
 & go install golang.org/x/tools/cmd/gomvpkg@latest
 
-echo ""
-echo gorename
+Write-Output ""
+Write-Output gorename
 & go install golang.org/x/tools/cmd/gorename
 
-echo ""
-echo gotype
+Write-Output ""
+Write-Output gotype
 & go install golang.org/x/tools/cmd/gotype
 
-echo ""
-echo stringer
+Write-Output ""
+Write-Output stringer
 & go install golang.org/x/tools/cmd/stringer
 
-echo ""
+Write-Output ""
 # literal %USERPROFILE% on purpose
-echo 'Installed go "x" tools to GOBIN=%USERPROFILE%/go/bin'
+Write-Output 'Installed go "x" tools to GOBIN=%USERPROFILE%/go/bin'
 
-echo ""
-echo "Suggestion: Also check out these great productivity multipliers:"
-echo ""
-echo "    - vim-essentials  (sensible defaults for vim)"
-echo "    - vim-go          (golang linting, etc)"
-echo ""
+Write-Output ""
+Write-Output "Suggestion: Also check out these great productivity multipliers:"
+Write-Output ""
+Write-Output "    - vim-essentials  (sensible defaults for vim)"
+Write-Output "    - vim-go          (golang linting, etc)"
+Write-Output ""

@@ -18,37 +18,37 @@ if (!(Get-Command "git.exe" -ErrorAction SilentlyContinue)) {
 
 # Fetch archive
 IF (!(Test-Path -Path "$pkg_download")) {
-    echo "Downloading $Env:PKG_NAME from $Env:WEBI_PKG_URL to $pkg_download"
+    Write-Output "Downloading $Env:PKG_NAME from $Env:WEBI_PKG_URL to $pkg_download"
     & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
-    & move "$pkg_download.part" "$pkg_download"
+    & Move-Item "$pkg_download.part" "$pkg_download"
 }
 
 IF (!(Test-Path -Path "$pkg_src")) {
-    echo "Installing $pkg_cmd_name"
+    Write-Output "Installing $pkg_cmd_name"
     # TODO: temp directory
 
     # Enter opt
-    pushd .local\tmp
+    Push-Location .local\tmp
 
     # Remove any leftover tmp cruft
     Remove-Item -Path "$pkg_cmd_name*" -Recurse -ErrorAction Ignore
 
     # Unpack archive
     # Windows BSD-tar handles zip. Imagine that.
-    echo "Unpacking $pkg_download"
+    Write-Output "Unpacking $pkg_download"
     & tar xf "$pkg_download"
 
     # Settle unpacked archive into place
-    echo "New Name: $pkg_cmd_name-v$Env:WEBI_VERSION"
-    Get-ChildItem "$pkg_cmd_name*" | select -f 1 | Rename-Item -NewName "$pkg_cmd_name-v$Env:WEBI_VERSION"
-    echo "New Location: $pkg_src"
+    Write-Output "New Name: $pkg_cmd_name-v$Env:WEBI_VERSION"
+    Get-ChildItem "$pkg_cmd_name*" | Select-Object -f 1 | Rename-Item -NewName "$pkg_cmd_name-v$Env:WEBI_VERSION"
+    Write-Output "New Location: $pkg_src"
     Move-Item -Path "$pkg_cmd_name-v$Env:WEBI_VERSION" -Destination "$Env:USERPROFILE\.local\opt"
 
     # Exit tmp
-    popd
+    Pop-Location
 }
 
-echo "Copying into '$pkg_dst' from '$pkg_src'"
+Write-Output "Copying into '$pkg_dst' from '$pkg_src'"
 Remove-Item -Path "$pkg_dst" -Recurse -ErrorAction Ignore
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse
 IF (!(Test-Path -Path go\bin)) { New-Item -Path go\bin -ItemType Directory -Force | Out-Null }

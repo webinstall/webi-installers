@@ -12,7 +12,7 @@ if (!$my_key_id) {
     $my_email = git config --global user.email
     $my_host = hostname
 
-    echo "
+    Write-Output "
      %echo Generating RSA 3072 key
      Key-Type: RSA
      Key-Length: 3072
@@ -31,10 +31,10 @@ $my_asc_relpath = "Downloads/$my_email.$my_key_id.gpg.asc"
 
 # TODO use the comment (if any) for the name of the file
 $my_email = git config --global user.email
-echo ""
-echo "GnuPG Public Key ID: $MY_KEY_ID"
-echo ""
-echo "~/$my_asc_relpath":
-echo ""
-& type "$Env:USERPROFILE/$my_asc_relpath"
-echo ""
+Write-Output ""
+Write-Output "GnuPG Public Key ID: $MY_KEY_ID"
+Write-Output ""
+Write-Output "~/$my_asc_relpath":
+Write-Output ""
+& Get-Content "$Env:USERPROFILE/$my_asc_relpath"
+Write-Output ""

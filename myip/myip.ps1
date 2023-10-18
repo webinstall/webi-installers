@@ -2,12 +2,12 @@
 
 $ipv4 = curl.exe -sf https://api.ipify.org
 
-IF (!($ipv4 -eq $null -or $ipv4 -eq "")) {
-    echo "IPv4 (A)   : $ipv4"
+IF (!($null -eq $ipv4 -or $ipv4 -eq "")) {
+    Write-Output "IPv4 (A)   : $ipv4"
 }
 
 $ipv6 = curl.exe -sf https://api6.ipify.org
 
-IF (!($ipv6 -eq $null -or $ipv6 -eq "")) {
-    echo "IPv6 (AAAA): $ipv6"
+IF (!($null -eq $ipv6 -or $ipv6 -eq "")) {
+    Write-Output "IPv6 (AAAA): $ipv6"
 }

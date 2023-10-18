@@ -32,7 +32,7 @@ $Env:WEBI_UA = "Windows/10 $my_arch"
 $exename = $args[0]
 
 # Switch to userprofile
-pushd $Env:USERPROFILE
+Push-Location $Env:USERPROFILE
 
 # Make paths if needed
 New-Item -Path .local\bin -ItemType Directory -Force | Out-Null
@@ -53,7 +53,7 @@ if (!(Test-Path -Path .local\tmp)) {
 
 # TODO SetStrictMode
 # TODO Test-Path variable:global:Env:WEBI_HOST ???
-IF ($Env:WEBI_HOST -eq $null -or $Env:WEBI_HOST -eq "") {
+IF ($null -eq $Env:WEBI_HOST -or $Env:WEBI_HOST -eq "") {
     $Env:WEBI_HOST = "https://webinstall.dev"
 }
 
@@ -63,32 +63,32 @@ IF ($Env:WEBI_HOST -eq $null -or $Env:WEBI_HOST -eq "") {
 $my_version = 'v1.1.15'
 
 ## show help if no params given or help flags are used
-if ($exename -eq $null -or $exename -eq "-h" -or $exename -eq "--help" -or $exename -eq "help" -or $exename -eq "/?") {
+if ($null -eq $exename -or $exename -eq "-h" -or $exename -eq "--help" -or $exename -eq "help" -or $exename -eq "/?") {
     Write-Host "webi " -ForegroundColor Green -NoNewline; Write-Host "$my_version " -ForegroundColor Red -NoNewline; Write-Host "Copyright 2020+ AJ ONeal"
     Write-Host "  https://webinstall.dev/webi" -ForegroundColor blue
-    echo ""
-    echo "SUMMARY"
-    echo "    Webi is the best way to install the modern developer tools you love."
-    echo "    It's fast, easy-to-remember, and conflict free."
-    echo ""
-    echo "USAGE"
-    echo "    webi <thing1>[@version] [thing2] ..."
-    echo ""
-    echo "UNINSTALL"
-    echo "    Almost everything that is installed with webi is scoped to"
-    echo "    ~/.local/opt/<thing1>, so you can remove it like so:"
-    echo ""
-    echo "    rmdir /s %USERPROFILE%\.local\opt\<thing1>"
-    echo "    del %USERPROFILE%\.local\bin\<thing1>"
-    echo ""
-    echo "    Some packages have special uninstall instructions, check"
-    echo "    https://webinstall.dev/<thing1> to be sure."
-    echo ""
-    echo "FAQ"
+    Write-Output ""
+    Write-Output "SUMMARY"
+    Write-Output "    Webi is the best way to install the modern developer tools you love."
+    Write-Output "    It's fast, easy-to-remember, and conflict free."
+    Write-Output ""
+    Write-Output "USAGE"
+    Write-Output "    webi <thing1>[@version] [thing2] ..."
+    Write-Output ""
+    Write-Output "UNINSTALL"
+    Write-Output "    Almost everything that is installed with webi is scoped to"
+    Write-Output "    ~/.local/opt/<thing1>, so you can remove it like so:"
+    Write-Output ""
+    Write-Output "    rmdir /s %USERPROFILE%\.local\opt\<thing1>"
+    Write-Output "    del %USERPROFILE%\.local\bin\<thing1>"
+    Write-Output ""
+    Write-Output "    Some packages have special uninstall instructions, check"
+    Write-Output "    https://webinstall.dev/<thing1> to be sure."
+    Write-Output ""
+    Write-Output "FAQ"
     Write-Host "    See " -NoNewline; Write-Host "https://webinstall.dev/faq" -ForegroundColor blue
-    echo ""
-    echo "ALWAYS REMEMBER"
-    echo "    Friends don't let friends use brew for simple, modern tools that don't need it."
+    Write-Output ""
+    Write-Output "ALWAYS REMEMBER"
+    Write-Output "    Friends don't let friends use brew for simple, modern tools that don't need it."
     exit 0
 }
 
@@ -101,7 +101,7 @@ if ($exename -eq "-V" -or $exename -eq "--version" -or $exename -eq "version" -o
 # Fetch <whatever>.ps1
 # TODO detect formats
 $PKG_URL = "$Env:WEBI_HOST/api/installers/$exename.ps1?formats=zip,exe,tar"
-echo "Downloading $PKG_URL"
+Write-Output "Downloading $PKG_URL"
 # Invoke-WebRequest -UserAgent "Windows amd64" "$PKG_URL" -OutFile ".\.local\tmp\$exename.install.ps1"
 & curl.exe -fsSL -A "$Env:WEBI_UA" "$PKG_URL" -o .\.local\tmp\$exename.install.ps1
 
@@ -109,4 +109,4 @@ echo "Downloading $PKG_URL"
 powershell .\.local\tmp\$exename.install.ps1
 
 # Done
-popd
+Pop-Location
