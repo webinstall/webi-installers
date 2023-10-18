@@ -7,3 +7,9 @@ curl -fsS https://webi.sh/shfmt@3.7 | sh
 
 # Install 'shellcheck v0.9.x'
 curl -fsS https://webi.sh/shellcheck@0.9 | sh
+
+# Install 'pwsh (PowerShell Core) v7.x'
+curl -fsS https://webi.sh/pwsh@7 | sh
+# shellcheck disable=SC1090
+. ~/.config/envman/PATH.env
+pwsh -Command "Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -AllowClobber"
