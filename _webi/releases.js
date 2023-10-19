@@ -5,6 +5,8 @@ var path = require('node:path');
 var request = require('@root/request');
 var _normalize = require('../_webi/normalize.js');
 
+// PowerShell: { { installer } }
+// POSIX:      {{ installer }}
 var reInstallTpl = /\s*#?\s*{{ installer }}/;
 
 var Releases = module.exports;
