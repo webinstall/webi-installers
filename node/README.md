@@ -68,6 +68,8 @@ To run them manually on your code;
   fixjson -i 2 -w ./package.json
   ```
 
+To run with **GitHub Actions on PRs** see "Fmt & Lint Automatically" below.
+
 ### A Simple Web Server
 
 `server.js`:
@@ -293,4 +295,72 @@ sudo env PATH="$PATH" \
 ```sh
 sudo journalctl -xef -u my-node-project
 sudo systemctl restart my-node-project
+```
+
+### How to Fmt & Lint Automatically
+
+Here are some useful scripts to have in your `package.json`, and a sample file
+to run them with GitHub Actions (Workflows):
+
+```sh
+npm run
+        fmt
+        lint
+        bump <major|minor|patch|prerelease>
+        prepublish # also runs after npm install
+```
+
+```sh
+# bump
+npm pkg set scripts.bump='npm version -m "chore(release): bump to v%s"'
+
+# fmt
+npm pkg set scripts.fmt='npm run fixjson && npm run prettier'
+npm pkg set scripts.prettier="npx -p prettier@2 -- prettier --write '**/*.{md,js,jsx,json,css,html,vue}'"
+npm pkg set scripts.fixjson="npx -p fixjson@1 -- fixjson -i 2 -w '*.json' '*/*.json'"
+echo 'node_modules' >> .prettierignore
+
+# lint
+npm pkg set scripts.lint='npm run jshint'
+npm pkg set scripts.jshint="npx -p jshint@2 -- jshint -c ./.jshintrc ./*.js ./*/*.json"
+echo 'node_modules' >> .jshintignore
+
+# prepublish
+npm pkg set scripts.prepublish='npm run lint && npm run fmt'
+```
+
+To run these automatically for all PRs on GitHub:
+
+`.github/workflows/node.js.yml`:
+
+```sh
+name: Node.js CI
+on:
+  push:
+    branches: ['main']
+  pull_request:
+jobs:
+  build:
+    name: "Fmt, Lint, & Test"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 20.x
+          - latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: "Webi: Install 'shfmt' and 'shellcheck', and update PATH"
+        run: |
+          #sh ./_scripts/install-ci-deps
+          echo "${HOME}/.local/bin" >> $GITHUB_PATH
+      - run: node --version
+      - run: npm run fmt
+      - run: npm clean-install
+      - run: npm run lint
+      - run: npm run test
 ```
