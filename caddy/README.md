@@ -88,6 +88,8 @@ See also:
 - [Wiki Guides][wiki]: <https://caddy.community/c/wiki/13>
 
 [wiki]: https://caddy.community/c/wiki/13
+[cel]:
+  https://github.com/google/cel-spec/blob/master/doc/langdef.md#list-of-standard-definitions
 [concepts]: https://caddyserver.com/docs/caddyfile/concepts#structure
 [encode]: https://caddyserver.com/docs/caddyfile/directives/encode
 [file]: https://caddyserver.com/docs/json/apps/http/servers/routes/match/file/
@@ -98,6 +100,7 @@ See also:
 [http]: https://caddyserver.com/docs/json/apps/http/#docs
 [import]: https://caddyserver.com/docs/caddyfile/directives/import
 [log]: https://caddyserver.com/docs/caddyfile/directives/log
+[matchers]: https://caddyserver.com/docs/caddyfile/matchers#named-matchers
 [placeholders]: https://caddyserver.com/docs/caddyfile/concepts#placeholders
 [placeholders2]: https://caddyserver.com/docs/conventions#placeholders
 [snippets]: https://caddyserver.com/docs/caddyfile/concepts#snippets
@@ -327,78 +330,174 @@ example.com {
 
 ### How to handle CORS Preflight + Request
 
-For static files:
+CORS comes in 3 basic varieties:
+
+- Simple Requests
+- Preflight Requests
+- Credentialed Requests \
+  (by `Origin` and/or `Authentication`)
+
+#### "Simple Requests"
+
+[Simple Requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#simple_requests)
+are those that match:
+
+- `GET`, `HEAD`, or `POST`
+- `Accept`, `Range` and traditional `Content-Type`s, which are: \
+  - `application/x-www-form-urlencoded`, `multipart/form-data`, `text/plain`
+
+Typical use cases include
+
+- Static Files
+- Public Assets
+- Contact Request Forms
 
 ```Caddyfile
-(cors) {
-        @cors_preflight{args.0} method OPTIONS
-        @cors{args.0} header Origin {args.0}
+# CORS "Simple Request"
+# (for Static Files & Form Posts)
+(cors-simple) {
+    @match-cors-request-simple {
+        not header Origin "{http.request.scheme}://{http.request.host}"
+        header Origin "{http.request.header.origin}"
+        method GET HEAD POST
+    }
 
-        handle @cors_preflight{args.0} {
-                header {
-                        Access-Control-Allow-Origin "{args.0}"
-                        Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-                        Access-Control-Allow-Headers *
-                        Access-Control-Max-Age "3600"
-                        defer
-                }
-                respond "" 204
+    handle @match-cors-request-simple {
+        header {
+            Access-Control-Allow-Origin "*"
+            Access-Control-Expose-Headers *
+            defer
         }
-
-        handle @cors{args.0} {
-                header {
-                        Access-Control-Allow-Origin "{args.0}"
-                        Access-Control-Expose-Headers *
-                        defer
-                }
-        }
+    }
 }
 
 example.com {
-    root * /srv/public/
-    file_server
-    import cors https://member.example.com
-    import cors https://whatever.com
+    # ex: POST to unauthenticated forms
+    handle /api/public/* {
+        import cors-simple
+        reverse_proxy localhost:3000
+    }
+
+    # ex: GET, HEAD static assets
+    handle /* {
+        import cors-simple
+        file_server {
+            /srv/public/
+        }
+    }
 }
 ```
 
-For an API:
+#### API Requests
+
+Typical use cases for this are:
+
+- Fully Public APIs
+- APIs Authenticated by Token or username
+  - `Authentication: Basic <base64(api:token)>`
+  - `Authentication: Bearer <token>`
+- `POST` forms with non-traditional `Content-Types`using
+  - `application/json`
+  - `application/graphql+json`
+  - etc
+
+Important Notes:
 
 - `*` wildcards may NOT be used for authenticated API requests
 - `Access-Control-Expose-Headers` exposes to _JavaScript_, not just the browser
 
 ```Caddyfile
+# CORS Preflight (OPTIONS) + Request (GET, POST, PATCH, PUT, DELETE)
 (cors-api) {
-        @cors-preflight-wild method OPTIONS
-        @cors-wild header Origin {http.request.host}
-
-        handle @cors-preflight-wild {
-                header {
-                        Access-Control-Allow-Origin "{http.request.host}"
-                        Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-                        Access-Control-Allow-Headers "Origin, Accept, Authorization, Content-Type, X-Requested-With"
-                        Access-Control-Allow-Credentials "true"
-                        Access-Control-Max-Age "3600"
-                        defer
-                }
-                respond "" 204
+    @match-cors-api-preflight {
+        not header Origin "{http.request.scheme}://{http.request.host}"
+        header Origin "{http.request.header.origin}"
+        method OPTIONS
+    }
+    handle @match-cors-api-preflight {
+        header {
+            Access-Control-Allow-Origin "{http.request.header.origin}"
+            Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+            Access-Control-Allow-Headers "Origin, Accept, Authorization, Content-Type, X-Requested-With"
+            Access-Control-Allow-Credentials "true"
+            Access-Control-Max-Age "3600"
+            defer
         }
+        respond "" 204
+    }
 
-        handle @cors-wild {
-                header {
-                        Access-Control-Allow-Origin "{http.request.host}"
-                        Access-Control-Allow-Credentials "true"
-                        Access-Control-Expose-Headers "Content-Encoding"
-                        Vary "Accept-Encoding, Origin"
-                        defer
-                }
+    @match-cors-api-request {
+        not header Origin "{http.request.scheme}://{http.request.host}"
+        header Origin "{http.request.header.origin}"
+        not method OPTIONS
+    }
+    handle @match-cors-api-request {
+        header {
+            Access-Control-Allow-Origin "{http.request.header.origin}"
+            Access-Control-Allow-Credentials "true"
+            Access-Control-Max-Age "3600"
+            defer
         }
+    }
 }
 
 api.example.com {
     handle /api/* {
         import cors-api
+
         reverse_proxy localhost:3000
+    }
+
+    # ...
+}
+```
+
+#### Restricted by Origin
+
+Typical use cases for this are:
+
+- Allow access to partners or sister domains
+
+Important Notes:
+
+- `*` wildcards can be used for unauthenticated requests
+
+```Caddyfile
+(cors-origin) {
+    @match-cors-preflight-{args.0} {
+        header Origin "{args.0}"
+        method OPTIONS
+    }
+    handle @match-cors-preflight-{args.0} {
+        header {
+            Access-Control-Allow-Origin "{args.0}"
+            Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+            Access-Control-Allow-Headers *
+            Access-Control-Max-Age "3600"
+            defer
+        }
+        respond "" 204
+    }
+
+    @match-cors-request-{args.0} {
+        header Origin "{args.0}"
+        not method OPTIONS
+    }
+    handle @match-cors-request-{args.0} {
+        header {
+            Access-Control-Allow-Origin "{http.request.header.origin}"
+            Access-Control-Expose-Headers *
+            defer
+        }
+    }
+}
+
+partners.example.com {
+    import cors-origin https://member.example.com
+    import cors-origin https://whatever.com
+
+    file_server {
+        root /srv/public/
     }
 }
 ```
