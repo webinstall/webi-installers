@@ -42,7 +42,7 @@ We've split what we find most useful into two categories:
   - CORS
   - Wildcard Domain Example (with DuckDNS)
   - TLS on Private DNS (192.168.x.x)
-  - Variables & Placeholders
+  - Variables, Placeholders, Macros, Snippets
   - **Comprehensive Caddyfile Example**
   - As a macOS service (`launchd` & `launchctl`)
   - As a Windows service (starup item)
@@ -498,7 +498,7 @@ See also:
   }
   ```
 
-- "Imports" and "Snippets" are the templates that look like:
+- "Imports" and "Snippets" are the macro templates that look like:
 
   ```Caddyfile
   # (template-name)
