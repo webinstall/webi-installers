@@ -531,52 +531,51 @@ See also:
 ### Placeholder Hierarchy
 
 ```text
-Path                                            # Shorthand
-├── args[]                                      # in snippets (template functions)
+Path                                        # Shorthand
+├── args[]                                  # in snippets (template functions)
 ├── env.*
 ├── http
-│   ├── error.+                                 # {err.+}
+│   ├── error.+                             # {err.+}
 │   ├── matchers
-│   │   ├── file.+                              # {file_match.+}
+│   │   ├── file.+                          # {file_match.+}
 │   │   ├── header_regexp.?
 │   │   ├── path_regexp.?
 │   │   └── vars_regexp.?
-│   ├── regexp.*[]                              # {re.*.1}
+│   ├── regexp.*[]                          # {re.*.1}
 │   ├── request
-│   │   ├── cookie.*                            # {cookie.*}
-│   │   ├── header.*                            # {header.*}
+│   │   ├── cookie.*                        # {cookie.*}
+│   │   ├── header.*                        # {header.*}
 │   │   ├── host
-│   │   │   ├── labels[]                        # {labels.0} (as rDNS: com.example)
-│   │   │   ├── port                            # {hostport}
-│   │   │   ├── host                            # {host}
-│   │   │   ├── method                          # {method}
-│   │   │   ├── port                            # {port}
-│   │   │   ├── remote                          # {remote}
-│   │   │   │   ├── host                        # {remote_host}
-│   │   │   │   └── port                        # {remote_port}
-│   │   │   ├── scheme                          # {scheme}
-│   │   │   ├── tls
-│   │   │   │   ├── cipher_suite                # {tls_cipher}
-│   │   │   │   ├── client
-│   │   │   │   │   ├── certificate_der_base64  # {tls_client_certificate_der_base64}
-│   │   │   │   │   ├── certificate_pem         # {tls_client_certificate_pem}
-│   │   │   │   │   ├── fingerprint             # {tls_client_fingerprint}
-│   │   │   │   │   ├── issuer                  # {tls_client_issuer}
-│   │   │   │   │   ├── serial                  # {tls_client_serial}
-│   │   │   │   │   └── subject                 # {tls_client_subject}
-│   │   │   │   └── version                     # {tls_version}
-│   │   ├── uri                                 # {uri}
-│   │   │   ├── path.+                          # {path.+}
-│   │   │   │   ├── dir                         # {dir}
-│   │   │   │   └── file.+                      # {file}
-│   │   │   │       ├── base                    # {file.base}
-│   │   │   │       └── ext                     # {file.ext}
-│   │   │   └── query.*                         # {query.*}
-│   ├── reverse_proxy.+                         # {rp.+}
-│   │   └── upstream                            # {upstream}
-│   │   │   └── hostport                        # {upstream_hostport}
-│   └── vars.*                                  # {vars.*}
-│       └── client_ip                           # {client_ip}
+│   │   │   └── labels[]                    # {labels.0} (as rDNS: com.example)
+│   │   ├── hostport                        # {hostport}
+│   │   ├── method                          # {method}
+│   │   ├── port                            # {port}
+│   │   ├── remote                          # {remote}
+│   │   │   ├── host                        # {remote_host}
+│   │   │   └── port                        # {remote_port}
+│   │   ├── scheme                          # {scheme}
+│   │   ├── tls
+│   │   │   ├── cipher_suite                # {tls_cipher}
+│   │   │   ├── client
+│   │   │   │   ├── certificate_der_base64  # {tls_client_certificate_der_base64}
+│   │   │   │   ├── certificate_pem         # {tls_client_certificate_pem}
+│   │   │   │   ├── fingerprint             # {tls_client_fingerprint}
+│   │   │   │   ├── issuer                  # {tls_client_issuer}
+│   │   │   │   ├── serial                  # {tls_client_serial}
+│   │   │   │   └── subject                 # {tls_client_subject}
+│   │   │   └── version                     # {tls_version}
+│   │   ├── uri                             # {uri}
+│   │   │   ├── path.+                      # {path.+}
+│   │   │   │   ├── dir                     # {dir}
+│   │   │   │   └── file.+                  # {file}
+│   │   │   │       ├── base                # {file.base}
+│   │   │   │       └── ext                 # {file.ext}
+│   │   │   └── query.*                     # {query.*}
+│   ├── reverse_proxy.+                     # {rp.+}
+│   │   └── upstream                        # {upstream}
+│   │   │   └── hostport                    # {upstream_hostport}
+│   └── vars.*                              # {vars.*}
+│       └── client_ip                       # {client_ip}
 ├── system
 │   ├── hostname
 │   ├── slash
