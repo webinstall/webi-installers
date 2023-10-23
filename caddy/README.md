@@ -43,6 +43,7 @@ We've split what we find most useful into two categories:
   - Wildcard Domain Example (with DuckDNS)
   - TLS on Private DNS (192.168.x.x)
   - Variables, Placeholders, Macros, Snippets
+  - Conditional Logic (`if`)
   - **Comprehensive Caddyfile Example**
   - As a macOS service (`launchd` & `launchctl`)
   - As a Windows service (starup item)
@@ -704,6 +705,35 @@ See also:
 - [`http`][http]: <https://caddyserver.com/docs/json/apps/http/#docs>
 - [`file`][file]:
   <https://caddyserver.com/docs/json/apps/http/servers/routes/match/file/>
+
+### How to Conditional ENVs
+
+There is no `if` in Caddy, but a _matcher_ with "CEL" does the same thing.
+
+Ex: I only want to enforce HTTP Basic Auth if it's enabled:
+
+```Caddyfile
+localhost {
+    @match-enforce-auth `"{$HTTP_BASIC_AUTH_ENABLED}".size() > 0`
+    basicauth @match-enforce-auth {
+        {$HTTP_BASIC_AUTH_USERNAME} {$HTTP_BASIC_AUTH_PASSWORD_DIGEST}
+    }
+
+    # ...
+}
+```
+
+You can do slightly more complex expressions on the variety of variables
+(_placeholders_), but you'd have to look up the [CEL docs]().
+
+However, you can only do these expressions in things that have a _matcher_.
+
+See also:
+
+- [`matchers`](matchers):
+  <https://caddyserver.com/docs/caddyfile/matchers#named-matchers>
+- [CEL][cel]:
+  <https://github.com/google/cel-spec/blob/master/doc/langdef.md#list-of-standard-definitions>
 
 ### Putting it All Together
 
