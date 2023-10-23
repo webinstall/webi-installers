@@ -851,7 +851,7 @@ sudo serviceman add --system --name caddy -- \
    ```
 2. Install [`serviceman`](../serviceman/)
    ```sh
-   webi.bat serviceman
+   webi serviceman
    ```
 3. Create a **Startup Registry Entry** with Serviceman.
    ```sh

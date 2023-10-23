@@ -79,9 +79,6 @@ async function serveInstaller(baseurl, ua, pkg, tag, ext, formats) {
   rel.arches = rels.arches;
   rel.formats = rels.formats;
 
-  if ('bat' === ext) {
-    return Releases.renderBatch(pkgdir, rel, opts);
-  }
   if ('ps1' === ext) {
     return Releases.renderPowerShell(pkgdir, rel, opts);
   }
