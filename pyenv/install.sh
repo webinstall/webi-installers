@@ -45,10 +45,10 @@ __init_pyenv() {
     fi
 
     mkdir -p ~/.pyenv/bin
-    pathman add ~/.pyenv/bin
+    webi_path_add ~/.pyenv/bin
 
     mkdir -p ~/.pyenv/shims
-    pathman add ~/.pyenv/shims
+    webi_path_add ~/.pyenv/shims
 
     echo "NOTE: You may also need to CLOSE and RE-OPEN your terminal for pyenv to take effect."
 }

@@ -39,9 +39,10 @@ webi node@lts golang@stable flutter@beta rustlang
 
 ### webi PATHs
 
-You can see exactly what PATHs have been edited:
+You can see exactly what PATHs have been edited with [`pathman`](../pathman/):
 
 ```sh
+webi pathman
 pathman list
 ```
 
@@ -58,17 +59,14 @@ These are the files that are installed when you use [webinstall.dev](/):
 ```sh
 # Mac, Linux
 ~/.local/bin/webi
-~/.local/bin/pathman
-~/.local/opt/pathman-*
 
 # Windows
 ~/.local/bin/webi.bat
 ~/.local/bin/webi-pwsh.ps1
 ```
 
-Assuming that you don't use `pathman` for anything else, you can safely remove
-all of them. If you use [webinstall.dev](/) again in the future they will be
-reinstalled.
+You can safely remove all of them. If you use [webinstall.dev](/) again in the
+future they will be reinstalled.
 
 Additionally, these files may be modified to update your `PATH`:
 

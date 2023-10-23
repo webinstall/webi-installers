@@ -34,7 +34,7 @@ _install_gpg() {
     rm -rf ~/.local/opt/gnupg
     ln -s gnupg-"${WEBI_VERSION}" ~/.local/opt/gnupg
 
-    pathman add ~/.local/opt/gnupg/bin
+    webi_path_add ~/.local/opt/gnupg/bin
     export PATH="$HOME/.local/opt/gnupg/bin:$PATH"
     export PATH="$HOME/.local/opt/gnupg/bin/pinentry-mac.app/Contents/MacOS:$PATH"
 
