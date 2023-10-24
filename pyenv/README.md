@@ -7,9 +7,25 @@ tagline: |
 
 To update run `pyenv update`.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```sh
+~/.config/envman/PATH.env
+~/.pyenv/bin/
+~/.pyenv/shims/
+
+# pyenv also loads shell hooks via
+~/.bashrc
+~/.config/fish/config.fish
+~/.zshrc
+```
+
 ### How to Install pyenv on macOS
 
-Make sure that you already have Xcode tools installed:
+Install Xcode tools first:
 
 ```sh
 xcode-select --install
@@ -25,7 +41,8 @@ sudo apt update
 sudo apt install -y build-essential zlib1g-dev libssl-dev
 
 # recommended
-sudo apt install -y libreadline-dev libbz2-dev libsqlite3-dev libffi-dev
+sudo apt install -y libreadline-dev libsqlite3-dev \
+                    libffi-dev libbz2-dev liblzma-dev
 ```
 
 ## Cheat Sheet

@@ -7,15 +7,29 @@ tagline: |
 
 To update or switch versions, run `pyenv install -v 3` (or `3.10`, etc).
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```sh
+~/.config/envman/PATH.env
+~/.pyenv/bin/
+~/.pyenv/shims/
+
+# pyenv also loads shell hooks via
+~/.bashrc
+~/.config/fish/config.fish
+~/.zshrc
+```
+
 ### How to Install python3 on macOS
 
-Make sure that you already have Xcode tools installed:
+Install Xcode tools first:
 
 ```sh
 xcode-select --install
 ```
-
-You may also need to install Xcode proper from the App Store.
 
 ### How to Install python3 on Linux
 
@@ -27,18 +41,8 @@ sudo apt update
 sudo apt install -y build-essential zlib1g-dev libssl-dev
 
 # recommended
-sudo apt install -y libreadline-dev libbz2-dev libsqlite3-dev
-```
-
-### Files
-
-These are the files / directories that are created and/or modified with this
-install:
-
-```text
-~/.bashrc (or your shell's equivalent)
-~/.config/envman/PATH.env
-~/.pyenv
+sudo apt install -y libreadline-dev libsqlite3-dev \
+                    libffi-dev libbz2-dev liblzma-dev
 ```
 
 ## Cheat Sheet
