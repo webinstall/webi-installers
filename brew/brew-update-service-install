@@ -7,6 +7,7 @@ main() { (
     chmod a+x ~/.local/bin/brew-update-hourly
 
     env PATH="$PATH" serviceman add --user \
+        --workdir ~/.local/opt/brew/ \
         --name sh.brew.updater -- \
         ~/.local/bin/brew-update-hourly
 ); }
