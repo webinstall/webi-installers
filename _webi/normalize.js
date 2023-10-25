@@ -66,6 +66,7 @@ arches.forEach(function (name) {
 });
 
 function normalize(all) {
+  /* jshint maxcomplexity:26 */
   var supported = {
     oses: {},
     arches: {},
@@ -73,17 +74,27 @@ function normalize(all) {
   };
 
   for (let rel of all.releases) {
-    /* jshint maxcomplexity:25 */
     rel.version = rel.version.replace(/^v/i, '');
+
     if (!rel.name) {
       rel.name = rel.download.replace(/.*\//, '');
     }
+
     if (!rel.os) {
-      rel.os =
-        Object.keys(osMap).find(function (regKey) {
-          return osMap[regKey].test(rel.name || rel.download);
-        }) || 'unknown';
+      rel.os = 'unknown';
+
+      let osNames = Object.keys(osMap);
+      for (let osName of osNames) {
+        let relName = rel.name || rel.download;
+        let osRegExp = osMap[osName];
+        let matches = osRegExp.test(relName);
+        if (matches) {
+          rel.os = osName;
+          break;
+        }
+      }
     }
+
     // Hacky-doo for musl
     // TODO 'libc' some sort of glibc vs musl tag?
     if (!rel._musl_native) {
