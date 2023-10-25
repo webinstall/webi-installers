@@ -55,6 +55,9 @@ __webi_main() {
     fi
     export _WEBI_PARENT=true
 
+    my_os="\$(uname -s)"
+    my_arch="\$(uname -m)"
+
     ##
     ## Detect acceptable package formats
     ##
@@ -173,9 +176,20 @@ __webi_main() {
 
     }
 
+    fn_checksum() {
+        cmd_shasum='sha1sum'
+        if command -v shasum > /dev/null; then
+            cmd_shasum='shasum'
+        fi
+        \$cmd_shasum "\${0}" | cut -d' ' -f1 | cut -c 1-8
+    }
+
     version() {
-        my_version=v1.1.15
-        printf "\\e[35mwebi\\e[32m %s\\e[0m Copyright 2020+ AJ ONeal\\n" "\${my_version}"
+        my_checksum="\$(
+            fn_checksum
+        )"
+        my_version=v1.2.0
+        printf "\\e[35mwebi\\e[32m %s\\e[0m Copyright 2020+ AJ ONeal\\n" "\${my_version} (\${my_checksum})"
         printf "    \\e[36mhttps://webinstall.dev/webi\\e[0m\\n"
     }
 
@@ -202,6 +216,19 @@ __webi_main() {
         echo "    Some packages have special uninstall instructions, check"
         echo "    https://webinstall.dev/<thing1> to be sure."
         echo ""
+        printf "\\e[1mOPTIONS\\e[0m\\n"
+        echo "    Generic Program Information"
+        echo "        --help Output a usage message and exit."
+        echo ""
+        echo "        -V, --version"
+        echo "               Output the version number of webi and exit."
+        echo ""
+        echo "    Helper Utilities"
+        echo "        --list Show everything webi has to offer."
+        echo ""
+        echo "        --info <package>"
+        echo "               Show various links and example release."
+        echo ""
         printf "\\e[1mFAQ\\e[0m\\n"
         printf "    See \\e[34mhttps://webinstall.dev/faq\\e[0m\\n"
         echo ""
@@ -218,6 +245,74 @@ __webi_main() {
 
     if echo "\$1" | grep -q -E '^(-h|--help|help)$'; then
         usage "\$@"
+        exit 0
+    fi
+
+    if echo "\$1" | grep -q -E '^(-l|--list|list)$'; then
+        echo >&2 "[warn] the format of --list output may change"
+
+        # because we don't have sitemap.xml for dev sites yet
+        my_host="https://webinstall.dev"
+        my_len="\${#my_host}"
+
+        # 6 because the field will looks like "loc>WEBI_HOST/PKG_NAME"
+        # and the count is 1-indexed
+        my_count="\$((my_len + 6))"
+
+        curl -fsS "\${my_host}/sitemap.xml" |
+            grep -F "\${my_host}" |
+            cut -d'<' -f2 |
+            cut -c "\${my_count}"-
+
+        exit 0
+    fi
+
+    if echo "\${1}" | grep -q -E '^(--info|info)$'; then
+        if test -z "\${2}"; then
+            echo >&2 "Usage: webi --info <package>"
+            exit 1
+        fi
+
+        echo >&2 "[warn] the output of --info is completely half-baked and will change"
+        my_pkg="\${2}"
+        # TODO need a way to check that it exists at all (readme, win, lin)
+        echo ""
+        echo "    Cheat Sheet: \${WEBI_HOST}/\${my_pkg}"
+        echo "          POSIX: curl -sS \${WEBI_HOST}/\${my_pkg} | sh"
+        echo "        Windows: curl.exe -A MS \${WEBI_HOST}/\${my_pkg} | powershell"
+        echo "Releases (JSON): \${WEBI_HOST}/api/releases/\${my_pkg}.json"
+        echo " Releases (tsv): \${WEBI_HOST}/api/releases/\${my_pkg}.tab"
+        echo " (query params):     ?channel=stable&limit=10"
+        echo "                     &os=\${my_os}&arch=\${my_arch}"
+        echo " Install Script: \${WEBI_HOST}/api/installers/\${my_pkg}.sh?formats=tar,zip,xz,git,dmg,pkg"
+        echo "  Static Assets: \${WEBI_HOST}/packages/\${my_pkg}/README.md"
+        echo ""
+
+        # TODO os=linux,macos,windows (limit to tagged releases)
+        my_releases="\$(
+            curl -fsS "\${WEBI_HOST}/api/releases/\${my_pkg}.json?channel=stable&limit=1&pretty=true"
+        )"
+
+        if printf '%s\\n' "\${my_releases}" | grep -q "error"; then
+            my_releases_beta="\$(
+                curl -fsS "\${WEBI_HOST}/api/releases/\${my_pkg}.json?&limit=1&pretty=true"
+            )"
+            if printf '%s\\n' "\${my_releases_beta}" | grep -q "error"; then
+                echo >&2 "'\${my_pkg}' is a special case that does not have releases"
+            else
+                echo >&2 "ERROR no stable releases for '\${my_pkg}'!"
+            fi
+            exit 0
+        fi
+
+        echo >&2 "Stable '\${my_pkg}' releases:"
+        if command -v jq > /dev/null; then
+            printf '%s\\n' "\${my_releases}" |
+                jq
+        else
+            printf '%s\\n' "\${my_releases}"
+        fi
+
         exit 0
     fi
 
