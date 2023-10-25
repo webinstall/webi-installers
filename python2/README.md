@@ -45,7 +45,6 @@ sudo apt install -y libreadline-dev libsqlite3-dev \
                     libffi-dev libbz2-dev liblzma-dev
 ```
 
-
 ## Cheat Sheet
 
 ![](https://github.com/ewjoachim/zen-of-python/raw/master/zen_web.png)
