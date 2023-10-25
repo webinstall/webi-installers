@@ -28,7 +28,11 @@ __init_cmake() {
         mkdir -p "$(dirname "${pkg_src_dir}")"
 
         # mv ./cmake-*/ ~/.local/opt/cmake-v3.27.0/
-        mv ./cmake-*/ "${pkg_src_dir}"
+        if test -e ./cmake-*/CMake.app/Contents/; then
+            mv ./cmake-*/CMake.app/Contents/ "${pkg_src_dir}"
+        else
+            mv ./cmake-*/ "${pkg_src_dir}"
+        fi
     }
 
     # pkg_get_current_version is recommended, but not required
