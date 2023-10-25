@@ -17,7 +17,7 @@ install:
 ~/.local/opt/node/bin/redis-commander
 ```
 
-If [`node`](/node) is not found, it will also be installed.
+If [`node`](../node/) is not found, it will also be installed.
 
 ## Cheat Sheet
 
@@ -29,7 +29,7 @@ If [`node`](/node) is not found, it will also be installed.
 - Sets
 - Sorted Set
 - Streams (Basic support based on HFXBus project from
-  https://github.com/exocet-engineering/hfx-bus, only view/add/delete data)
+  <https://github.com/exocet-engineering/hfx-bus>, only view/add/delete data)
 - ReJSON documents (Basic support, only for viewing values of ReJSON type keys)
 
 List available commands:
@@ -44,5 +44,5 @@ Start redis commander with default settings:
 redis-commander
 ```
 
-This will open up web app at `http://127.0.0.1:8081` and will be connected to
+This will open up web app at <http://127.0.0.1:8081> and will be connected to
 local redis server at default port!
