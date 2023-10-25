@@ -72,7 +72,7 @@ function normalize(all) {
     formats: {},
   };
 
-  all.releases.forEach(function (rel) {
+  for (let rel of all.releases) {
     /* jshint maxcomplexity:25 */
     rel.version = rel.version.replace(/^v/i, '');
     if (!rel.name) {
@@ -85,7 +85,7 @@ function normalize(all) {
         }) || 'unknown';
     }
     // Hacky-doo for musl
-    // TODO some sort of glibc vs musl tag?
+    // TODO 'libc' some sort of glibc vs musl tag?
     if (!rel._musl_native) {
       if (!rel._musl) {
         if (/(\b|\.|_|-)(musl)(\b|\.|_|-)/.test(rel.download)) {
@@ -139,10 +139,28 @@ function normalize(all) {
     }
     supported.formats[tarExt || rel.ext] = true;
 
+    if (!rel.channel) {
+      // basically like this: (+.-_)(beta|rc)(0-9)(+.-_)
+      // matches:
+      //   - v1.0-beta
+      //   - v1.0-beta1.1
+      //   - v1.0-beta-11
+      // won't match:
+      //   - v1.0beta
+      //   - v1.0-beta1b
+      let isBetaRe = /(\b|_)(preview|rc|beta|alpha)(\d+)(\b|_)/;
+      let isBeta = isBetaRe.test(rel.name);
+      if (isBeta) {
+        rel.channel = 'beta';
+      } else {
+        rel.channel = 'stable';
+      }
+    }
+
     if (all.download) {
       rel.download = all.download.replace(/{{ download }}/, rel.download);
     }
-  });
+  }
 
   all.oses = Object.keys(supported.oses).filter(function (name) {
     return maps.oses[name];

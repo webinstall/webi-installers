@@ -61,20 +61,32 @@ async function getAllReleases(
   }
 
   function transformReleases(release) {
-    release['assets'].forEach(function (asset) {
+    for (let asset of release['assets']) {
       let name = asset['name'];
+      let date = release['published_at']?.replace(/T.*/, '');
+      let download = asset['browser_download_url'];
+
+      // TODO tags aren't always semver / sensical
+      let version = release['tag_name'];
+      let channel;
+      if (release['prerelease']) {
+        // -rcX, -preview, -beta, etc will be checked in _webi/normalize.js
+        channel = 'beta';
+      }
+      let lts = /(\b|_)(lts)(\b|_)/.test(release['tag_name']);
+
       all.releases.push({
         name: name,
-        version: release['tag_name'], // TODO tags aren't always semver / sensical
-        lts: /(\b|_)(lts)(\b|_)/.test(release['tag_name']),
-        channel: !release['prerelease'] ? 'stable' : 'beta',
-        date: (release['published_at'] || '').replace(/T.*/, ''),
+        version: version,
+        lts: lts,
+        channel: channel,
+        date: date,
         os: '', // will be guessed by download filename
         arch: '', // will be guessed by download filename
         ext: '', // will be normalized
-        download: asset['browser_download_url'],
+        download: download,
       });
-    });
+    }
   }
 
   return all;
