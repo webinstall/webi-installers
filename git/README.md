@@ -7,6 +7,18 @@ tagline: |
 
 To update or switch versions, run `webi git@stable` (or `@v2.30`, `@beta`, etc).
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.gitconfig
+~/.local/opt/git # Windows
+/Library/Developer/CommandLineTools # macOS
+```
+
 ## Cheat Sheet
 
 > Git is a fast, scalable, distributed revision control system with an unusually
