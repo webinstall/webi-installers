@@ -7,6 +7,16 @@ tagline: |
 
 To update or switch versions, run `webi keypairs@stable`.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/keypairs
+```
+
 ## Cheat Sheet
 
 > keypairs is like JWT.io, at your fingertips.
