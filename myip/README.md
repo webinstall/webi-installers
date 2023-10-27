@@ -11,6 +11,16 @@ tagline: |
 webi myip
 ```
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/myip
+```
+
 ## Cheat Sheet
 
 `myip` will contact ipify.org to tell you your IP addresses:
