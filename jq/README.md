@@ -7,6 +7,16 @@ tagline: |
 
 To update or switch versions, run `webi jq@stable` (or `@v1.6`, `@beta`, etc).
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/jq
+```
+
 ## Cheat Sheet
 
 > `jq` is like `sed` for JSON data - you can use it to slice and filter and map
