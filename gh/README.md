@@ -7,6 +7,16 @@ tagline: |
 
 To update or switch versions, run `webi gh@stable` (or `@v1`, `@beta`, etc).
 
+### Files
+
+These are the files / directories that are created and/or modified with this install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/gh
+~/.config/gh/
+```
+
 ## Cheat Sheet
 
 > `gh` is cross-platform Github command-line. You can perform pull requests
