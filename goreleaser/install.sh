@@ -20,20 +20,41 @@ __init_goreleaser() {
 
     # pkg_install must be defined by every package
     pkg_install() {
-        # ~/.local/opt/goreleaser-v0.99.9/bin
+        # ~/.local/opt/goreleaser-v1.21.2/bin
         mkdir -p "$(dirname "$pkg_src_cmd")"
 
-        # mv ./goreleaser-*/goreleaser ~/.local/opt/goreleaser-v0.99.9/bin/goreleaser
+        # mv ./goreleaser-*/goreleaser ~/.local/opt/goreleaser-v1.21.2/bin/goreleaser
         mv ./goreleaser "$pkg_src_cmd"
     }
 
     # pkg_get_current_version is recommended, but (soon) not required
     pkg_get_current_version() {
         # 'goreleaser --version' has output in this format:
-        #       goreleaser 0.99.9 (rev abcdef0123)
+        #         ____       ____      _
+        #        / ___| ___ |  _ \ ___| | ___  __ _ ___  ___ _ __
+        #       | |  _ / _ \| |_) / _ \ |/ _ \/ _` / __|/ _ \ '__|
+        #       | |_| | (_) |  _ <  __/ |  __/ (_| \__ \  __/ |
+        #        \____|\___/|_| \_\___|_|\___|\__,_|___/\___|_|
+        #       goreleaser: Deliver Go Binaries as fast and easily as possible
+        #       https://goreleaser.com
+        #
+        #       GitVersion:    1.21.2
+        #       GitCommit:     26fed97a0defe4e73e3094cb903225d5445e5f0d
+        #       GitTreeState:  false
+        #       BuildDate:     2023-09-26T11:20:15Z
+        #       BuiltBy:       goreleaser
+        #       GoVersion:     go1.21.1
+        #       Compiler:      gc
+        #       ModuleSum:     h1:dgYtIS7aZlQuRMUMLCjDCOs4lWss85Oh60RDSO0rbWU=
+        #       Platform:      darwin/arm64
         # This trims it down to just the version number:
-        #       0.99.9
-        goreleaser --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2
+        #       1.21.2
+        # shellcheck disable=SC2046,SC2005 # unquoted echo trims whitespace
+        echo $(
+            goreleaser --version 2> /dev/null |
+                grep 'GitVersion:' |
+                cut -d':' -f2
+        )
     }
 
 }

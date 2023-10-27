@@ -17,6 +17,7 @@ To update or switch versions, run `webi goreleaser@stable` (or `@v0.174`,
 There's a lot that you can do with GoReleaser. These are the things that we've
 found the most useful for the majority of projects:
 
+- Files
 - Basic Usage & Versioning
 - Publishing Builds to GitHub
 - Publishing to Gitea and Gitlab
@@ -25,18 +26,29 @@ found the most useful for the majority of projects:
 - Cross-Compiling with cgo
 - Full `.goreleaser.yml` example
 
+### Files
+
+```text
+~/.config/envman/PATH.env
+~/.config/goreleaser/github_token
+~/.local/bin/goreleaser
+<PROJECT-DIR>/.goreleaser.yaml
+```
+
 ## Basic Usage & Versioning
 
 To create an example `.goreleaser.yaml` file, and test the configuration:
 
 ```sh
 goreleaser init
-goreleaser --snapshot --skip-publish --rm-dist
+
+# dry run
+goreleaser --snapshot --skip=publish --clean
 ```
 
 - `--snapshot` allows "dirty" builds (when the repo has uncommitted changes)
-- `--skip-publish` will NOT publish to GitHub, etc
-- `--rm-dist` will automatically remove the `./dist/` directory
+- `--skip=publish` will NOT publish to GitHub, etc
+- `--clean` will automatically remove the `./dist/` directory
 
 The default `.goreleaser.yml` works well for projects for which `package main`
 is at the root.
@@ -49,14 +61,17 @@ package main
 
 var (
 	// these will be replaced by goreleaser
-	version = "v0.0.0"
+	version = "0.0.0"
 	date    = "0001-01-01T00:00:00Z"
 	commit  = "0000000"
 )
 
 func main() {
-	if len(os.Args) >= 2 && "version" == strings.TrimPrefix(os.Args[1]) {
-		fmt.Printf("YOUR_CLI_NAME v%s %s (%s)\n", version, commit[:7], date)
+	if len(os.Args) >= 2 {
+        if os.Args[1] == "-V" || strings.TrimPrefix(os.Args[1]) == "version" {
+		    fmt.Printf("CHANGE_ME v%s %s (%s)\n", version, commit[:7], date)
+            os.Exit(0)
+        }
 	}
 
 	// ...
@@ -96,10 +111,10 @@ git tag -a v1.0.0 -m "First release"
 git push origin v1.0.0
 ```
 
-Running GoReleaser without `--skip-publish` will publish the builds:
+Running GoReleaser without `--skip=publish` will publish the builds:
 
 ```sh
-goreleaser --rm-dist
+goreleaser --clean
 ```
 
 Check the console output to make sure that there are no messages about a failed
@@ -319,21 +334,19 @@ builds:
       - linux
       - windows
       - darwin
+      - freebsd
+      - js
     goarch:
       - 386
       - amd64
       - arm
       - arm64
+      - wasm
     goarm:
-      - 6
       - 7
 archives:
-  - replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
-      386: i386
-      amd64: x86_64
+  - id: my-binary
+    format: tar.xz
     format_overrides:
       - goos: windows
         format: zip
