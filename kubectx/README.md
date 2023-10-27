@@ -8,6 +8,16 @@ tagline: |
 To update or switch versions, run `webi kubectx@stable` (or `@v0.9`, `@beta`,
 etc).
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/kubectx
+```
+
 ## Cheat Sheet
 
 > `kubectx` kubectx helps you switch between Kubernetes clusters back and forth
