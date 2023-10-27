@@ -8,6 +8,16 @@ tagline: |
 To update or switch versions, run `webi hexyl@stable` (or `@v0.9`, `@beta`,
 etc).
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/hexyl
+```
+
 ## Cheat Sheet
 
 ![](https://camo.githubusercontent.com/1f71ee7031e1962b23f21c8cc89cb837e1201238/68747470733a2f2f692e696d6775722e636f6d2f4d574f3975534c2e706e67)
