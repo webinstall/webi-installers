@@ -28,6 +28,9 @@ found the most useful for the majority of projects:
 
 ### Files
 
+These are the files / directories that are created and/or modified with this
+install:
+
 ```text
 ~/.config/envman/PATH.env
 ~/.config/goreleaser/github_token
