@@ -8,6 +8,17 @@ tagline: |
 To update or switch versions, run `webi mutagen@stable` (or `@v2`, `@beta`,
 etc).
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/mutagen
+~/.mutagen.yml
+```
+
 ## Cheat Sheet
 
 > Mutagen is a new kind of remote development tool that enables your existing
