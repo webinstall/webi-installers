@@ -7,6 +7,20 @@ tagline: |
 
 To update or switch versions, run `webi gitdeploy@stable`.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/gitdeploy
+~/.gitconfig
+<PROJECT-DIR>/.env
+<PROJECT-DIR>/.gitdeploy/
+<PROJECT-DIR>/scripts/
+```
+
 ## Cheat Sheet
 
 > gitdeploy makes it easy to build and deploy static sites (or anything else)
