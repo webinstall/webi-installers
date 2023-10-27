@@ -13,15 +13,17 @@ __install_webi() {
     #WEBI_PKG=
     #WEBI_HOST=https://webinstall.dev
     export WEBI_HOST
-
-    echo ""
-    printf "Thanks for using webi to install '\e[32m%s\e[0m' on '\e[33m%s/%s\e[0m'.\n" "${WEBI_PKG-}" "$(uname -s)/$(uname -r)" "$(uname -m)"
-    echo "Have a problem? Experience a bug? Please let us know:"
-    printf "        \e[2m\e[36mhttps://github.com/webinstall/webi-installers/issues\e[0m\n"
-    echo ""
-    printf "\e[35mLovin'\e[0m it? Say thanks with a \e[1m\e[33mStar on GitHub\e[0m:\n"
-    printf "        \e[36mhttps://github.com/webinstall/webi-installers\e[0m\n"
-    echo ""
+   
+    if test -z "$WEBI_WELCOME"; then
+      echo ""
+      printf "Thanks for using webi to install '\e[32m%s\e[0m' on '\e[33m%s/%s\e[0m'.\n" "${WEBI_PKG-}" "$(uname -s)/$(uname -r)" "$(uname -m)"
+      echo "Have a problem? Experience a bug? Please let us know:"
+      printf "        \e[2m\e[36mhttps://github.com/webinstall/webi-installers/issues\e[0m\n"
+      echo ""
+      printf "\e[35mLovin'\e[0m it? Say thanks with a \e[1m\e[33mStar on GitHub\e[0m:\n"
+      printf "        \e[36mhttps://github.com/webinstall/webi-installers\e[0m\n"
+      echo ""
+    fi
 
     WEBI_WELCOME=true
     export WEBI_WELCOME

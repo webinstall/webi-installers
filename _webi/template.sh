@@ -517,6 +517,9 @@ __bootstrap_webi() {
         echo ""
     fi
 
+    WEBI_WELCOME=true
+    export WEBI_WELCOME
+
     __init_installer() {
 
         # do nothing - to satisfy parser prior to templating
