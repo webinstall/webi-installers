@@ -45,7 +45,7 @@ curl -H "Host: example.com" http://localhost:3000
 SSH can be tunneled within HTTPS, TLS, SSL, WebSockets, etc.
 
 ```sh
-ssh -o ProxyCommand="sclient %h" jon.telebit.io
+ssh -o ProxyCommand="sclient --alpn ssh %h" jon.telebit.io
 ```
 
 This is useful to be able to connect to SSH even from behind a corporate
@@ -65,7 +65,7 @@ telnet localhost 3000
 ### How to unwrap TLS for SMTP/SMTPS/STARTTLS
 
 ```sh
-sclient smtp.gmail.com:465 localhost:2525
+sclient --alpn smtp smtp.gmail.com:465 localhost:2525
 ```
 
 ```sh
