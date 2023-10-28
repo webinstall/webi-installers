@@ -1,46 +1,49 @@
 #!/bin/sh
 
-# shellcheck disable=SC2034
-# "'pkg_cmd_name' appears unused. Verify it or export it."
+# The generic functions - version checks, download, extract, etc - are here:
+#   - https://github.com/webinstall/packages/branches/master/_webi/template.sh
 
-__init_crabz() {
-    set -e
-    set -u
+set -e
+set -u
 
-    ##################
-    # Install crabz #
-    ##################
+pkg_cmd_name="crabz"
 
-    # Every package should define these 6 variables
-    pkg_cmd_name="crabz"
+# IMPORTANT: this let's other functions know to expect this to be a single file
+WEBI_SINGLE=true
 
-    pkg_dst_cmd="$HOME/.local/bin/crabz"
-    pkg_dst="$pkg_dst_cmd"
+# Every package should define these 6 variables
+pkg_cmd_name="crabz"
 
-    pkg_src_cmd="$HOME/.local/opt/crabz-v$WEBI_VERSION/bin/crabz"
-    pkg_src_dir="$HOME/.local/opt/crabz-v$WEBI_VERSION"
-    pkg_src="$pkg_src_cmd"
+pkg_dst_cmd="$HOME/.local/bin/crabz"
+#pkg_dst="$pkg_dst_cmd"
 
-    # pkg_install must be defined by every package
-    pkg_install() {
-        # ~/.local/opt/crabz-v0.99.9/bin
-        mkdir -p "$(dirname "${pkg_src_cmd}")"
+pkg_src_cmd="$HOME/.local/opt/crabz-v$WEBI_VERSION/bin/crabz"
+#pkg_src_dir="$HOME/.local/opt/crabz-v$WEBI_VERSION/bin"
+#pkg_src="$pkg_src_cmd"
 
-        # mv ./crabz-*/crabz ~/.local/opt/crabz-v0.99.9/bin/crabz
-        mv ./crabz-* "${pkg_src_cmd}"
-    }
-
-    # pkg_get_current_version is recommended, but not required
-    pkg_get_current_version() {
-        # 'crabz --version' has output in this format:
-        #       crabz 0.99.9 (rev abcdef0123)
-        # This trims it down to just the version number:
-        #       0.99.9
-        crabz --version 2> /dev/null |
-            head -n 1 |
-            cut -d ' ' -f 2
-    }
-
+pkg_get_current_version() {
+    # 'crabz version' has output in this format:
+    #       crabz git:xxxxxxx
+    # Since that's not sortable, this prints v0.0.0
+    #       v0.0.0
+    echo "v0.0.0"
 }
 
-__init_crabz
+pkg_install() {
+    # $HOME/.local/opt/crabz-v0.3.5/bin
+    mkdir -p "${pkg_src_bin}"
+
+    # mv ./crabz* "$HOME/.local/opt/crabz-v0.3.5/bin/crabz"
+    mv ./"${pkg_cmd_name}"* "${pkg_src_cmd}"
+
+    # chmod a+x "$HOME/.local/opt/crabz-v0.3.5/bin/crabz"
+    chmod a+x "${pkg_src_cmd}"
+}
+
+pkg_link() {
+    # rm -f "$HOME/.local/bin/crabz"
+    rm -f "${pkg_dst_cmd}"
+
+    # ln -s "$HOME/.local/opt/crabz-v0.3.5/bin/crabz" "$HOME/.local/bin/crabz"
+    ln -s "${pkg_src_cmd}" "${pkg_dst_cmd}"
+}

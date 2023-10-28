@@ -4,10 +4,21 @@ var github = require('../_common/github.js');
 var owner = 'sstadick';
 var repo = 'crabz';
 
-module.exports = function (request) {
-  return github(request, owner, repo).then(function (all) {
-    return all;
-  });
+module.exports = async function (request) {
+  let all = await github(request, owner, repo);
+
+  let releases = [];
+  for (let rel of all.releases) {
+    let isSrc = rel.download.includes('-src.');
+    if (isSrc) {
+      continue;
+    }
+
+    releases.push(rel);
+  }
+  all.releases = releases;
+
+  return all;
 };
 
 if (module === require.main) {
