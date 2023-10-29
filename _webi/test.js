@@ -66,30 +66,61 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
   var pkgname = path.basename(pkgdir.replace(/\/$/, ''));
   var osrel = os.platform() + '-' + os.release();
   var arch = os.arch();
-  var formats = ['exe', 'xz', 'tar', 'zip'];
+  var formats = ['exe', 'xz', 'tar', 'zip', 'git'];
 
-  var rel = all.releases.filter(function (rel) {
-    return (
-      formats.filter(function (ext) {
-        return rel.ext.match(ext);
-      })[0] &&
-      'stable' === rel.channel &&
-      rel.os === uaDetect.os(osrel) &&
-      rel.arch === uaDetect.arch(arch) &&
-      (!pkgtag ||
-        rel.tag === pkgtag ||
-        new RegExp('^' + pkgtag).test(rel.version))
-    );
-  })[0];
-  rel.oses = all.oses;
-  rel.arches = all.arches;
-  rel.formats = all.formats;
+  var rel;
+  //var releases = [];
+  for (let _rel of all.releases) {
+    for (let ext of formats) {
+      let isSupported = _rel.ext.match(ext);
+      if (!isSupported) {
+        continue;
+      }
+    }
+
+    if (_rel.channel !== 'stable') {
+      continue;
+    }
+
+    if (_rel.os !== '*') {
+      let curOs = uaDetect.os(osrel);
+      if (_rel.os !== curOs) {
+        continue;
+      }
+    }
+
+    if (_rel.arch !== '*') {
+      let curArch = uaDetect.arch(arch);
+      if (_rel.arch !== curArch) {
+        continue;
+      }
+    }
+
+    if (pkgtag) {
+      if (_rel.tag !== pkgtag) {
+        let pkgtagRe = new RegExp('^' + pkgtag);
+        let matchesVersion = pkgtagRe.test(_rel.version);
+        if (!matchesVersion) {
+          continue;
+        }
+      }
+    }
+
+    rel = _rel;
+    break;
+  }
 
   if (!rel) {
-    console.error('Error: ❌ no release found for current os, arch, and tag');
+    console.error(
+      `Error: ❌ no release found for os=${osrel}, arch=${arch}, and tag=${pkgtag}`,
+    );
     process.exit(1);
     return;
   }
+
+  rel.oses = all.oses;
+  rel.arches = all.arches;
+  rel.formats = all.formats;
 
   console.info('');
   console.info('Found release matching current os, arch, and tag:');
