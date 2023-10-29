@@ -7,18 +7,6 @@ tagline: |
 
 To update or switch versions, run `webi git@stable` (or `@v2.30`, `@beta`, etc).
 
-### Files
-
-These are the files / directories that are created and/or modified with this
-install:
-
-```text
-~/.config/envman/PATH.env
-~/.gitconfig
-~/.local/opt/git # Windows
-/Library/Developer/CommandLineTools # macOS
-```
-
 ## Cheat Sheet
 
 > Git is a fast, scalable, distributed revision control system with an unusually
@@ -27,6 +15,28 @@ install:
 
 Github's [Git 'Hello World'](https://guides.github.com/activities/hello-world/)
 is a good place to get started if you're new to git.
+
+## Table of Contents
+
+- Files
+- Commit Files
+- Ignore Files
+- Create Branch
+- Rebase by Default
+- Rebase
+- Auth via Token
+
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.gitconfig
+~/.local/opt/git/ # Windows
+/Library/Developer/CommandLineTools/ # macOS
+```
 
 ### How to commit files
 
@@ -53,7 +63,7 @@ ignore
 This will branch from the branch you're currently on.
 
 ```sh
-git checkout -b my-branch-name
+git switch -c my-branch-name
 ```
 
 ### How to rebase by default
@@ -78,11 +88,11 @@ Rebase a feature branch from master before a merge
 ```sh
 # update master
 git fetch
-git checkout master
+git switch master
 git pull
 
 # go back to your feature branch
-git checkout my-feature
+git switch my-feature
 
 # start the rebase
 git rebase master
@@ -109,14 +119,14 @@ git config --global url."https://git@github.com/".insteadOf "git@github.com:"
 Next, create a `.git-askpass`:
 
 ```sh
-echo 'echo $MY_GIT_TOKEN' > $HOME/.git-askpass
-chmod +x $HOME/.git-askpass
+echo 'echo "${MY_GIT_TOKEN}"' > ~/.git-askpass
+chmod +x ~/.git-askpass
 ```
 
 Finally, add the following ENVs to your deployment environment:
 
 ```sh
-GIT_ASKPASS=$HOME/.git-askpass
+GIT_ASKPASS="${HOME}/.git-askpass"
 
 # Relpace xxxx... with your deploy token
 MY_GIT_TOKEN=xxxxxxxxxxxxxxxx
