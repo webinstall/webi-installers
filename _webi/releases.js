@@ -108,7 +108,7 @@ Releases.renderBash = async function (
               )
               .replace(
                 /^\s*#?WEBI_VERSION=.*/m,
-                'WEBI_VERSION=' + JSON.stringify(rel.version),
+                "WEBI_VERSION='" + rel.version + "'",
               )
               .replace(/^\s*#?WEBI_MAJOR=.*/m, 'WEBI_MAJOR=' + v.major)
               .replace(/^\s*#?WEBI_MINOR=.*/m, 'WEBI_MINOR=' + v.minor)
