@@ -25,6 +25,7 @@ __bootstrap_webi() {
     #WEBI_PATCH=
     # TODO not sure if BUILD is the best name for this
     #WEBI_BUILD=
+    #WEBI_GIT_TAG=
     #WEBI_LTS=
     #WEBI_CHANNEL=
     #WEBI_EXT=
@@ -248,6 +249,32 @@ __bootstrap_webi() {
         echo "Saved as ${my_dl_rel}"
     }
 
+    webi_git_clone() { (
+        my_url="${1}"
+        my_dl="${2}"
+
+        my_dl_rel="$(
+            webi_sub_home "${my_dl}"
+        )"
+        if [ -e "${my_dl}" ]; then
+            echo "Found ${my_dl_rel}"
+
+            cp -RPp "${my_dl}" "${WEBI_TMP}/${WEBI_PKG_FILE}/"
+            return 0
+        fi
+
+        echo "Cloning ${my_url}"
+        cmd_git="git clone --config advice.detachedHead=false --quiet --depth=1 --single-branch"
+        rm -rf "${my_dl}.part"
+        if ! $cmd_git "${my_url}" --branch "${WEBI_GIT_TAG}" "${my_dl}.part"; then
+            echo >&2 "failed to git clone ${WEBI_PKG_URL}"
+            exit 1
+        fi
+        mv "${my_dl}.part" "${my_dl}"
+
+        cp -RPp "${my_dl}" "${WEBI_TMP}/${WEBI_PKG_FILE}/"
+    ); }
+
     # detect which archives can be used
     webi_extract() {
         (
@@ -263,6 +290,9 @@ __bootstrap_webi() {
                 echo "Extracting ${my_dl_rel}"
                 unzip "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" > __unzip__.log
             elif [ "exe" = "$WEBI_EXT" ]; then
+                echo "Moving ${my_dl_rel}"
+                mv "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" .
+            elif [ "git" = "$WEBI_EXT" ]; then
                 echo "Moving ${my_dl_rel}"
                 mv "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" .
             elif [ "xz" = "$WEBI_EXT" ]; then
@@ -456,6 +486,12 @@ __bootstrap_webi() {
     webi_pre_install() {
         webi_check_installed
         webi_check_available
+        if test "git" = "${WEBI_EXT}"; then
+            webi_git_clone \
+                "${WEBI_PKG_URL}" \
+                "${WEBI_PKG_PATH}/${WEBI_PKG_FILE}"
+            return 0
+        fi
         webi_download \
             "${WEBI_PKG_URL}" \
             "${WEBI_PKG_PATH}/${WEBI_PKG_FILE}"

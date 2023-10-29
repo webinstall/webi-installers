@@ -20,7 +20,7 @@ Object.keys(osMap).forEach(function (name) {
   maps.oses[name] = true;
 });
 
-var formats = ['zip', 'xz', 'tar', 'pkg', 'msi', 'git', 'exe', 'dmg'];
+var formats = ['zip', 'xz', 'tar', 'pkg', 'msi', 'git', 'exe', 'dmg', 'git'];
 formats.forEach(function (name) {
   maps.formats[name] = true;
 });

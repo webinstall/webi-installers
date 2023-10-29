@@ -114,6 +114,10 @@ Releases.renderBash = async function (
               .replace(/^\s*#?WEBI_MINOR=.*/m, 'WEBI_MINOR=' + v.minor)
               .replace(/^\s*#?WEBI_PATCH=.*/m, 'WEBI_PATCH=' + v.patch)
               .replace(/^\s*#?WEBI_BUILD=.*/m, 'WEBI_BUILD=' + v.build)
+              .replace(
+                /^\s*#?WEBI_GIT_TAG=.*/m,
+                "WEBI_GIT_TAG='" + rel.git_tag + "'",
+              )
               .replace(/^\s*#?WEBI_LTS=.*/m, 'WEBI_LTS=' + rel.lts)
               .replace(/^\s*#?WEBI_CHANNEL=.*/m, 'WEBI_CHANNEL=' + rel.channel)
               .replace(
@@ -187,32 +191,44 @@ Releases.renderPowerShell = async function (
         .readFile(path.join(__dirname, 'template.ps1'), 'utf8')
         .then(function (tplTxt) {
           var pkgver = pkg + '@' + ver;
-          return tplTxt
-            .replace(
-              /^(#)?\$Env:WEBI_HOST\s*=.*/im,
-              "$Env:WEBI_HOST = '" + baseurl + "'",
-            )
-            .replace(
-              /^(#)?\$Env:WEBI_PKG\s*=.*/im,
-              "$Env:WEBI_PKG = '" + pkgver + "'",
-            )
-            .replace(
-              /^(#)?\$Env:PKG_NAME\s*=.*/im,
-              "$Env:PKG_NAME = '" + pkg + "'",
-            )
-            .replace(
-              /^(#)?\$Env:WEBI_VERSION\s*=.*/im,
-              "$Env:WEBI_VERSION = '" + rel.version + "'",
-            )
-            .replace(
-              /^(#)?\$Env:WEBI_PKG_URL\s*=.*/im,
-              "$Env:WEBI_PKG_URL = '" + rel.download + "'",
-            )
-            .replace(
-              /^(#)?\$Env:WEBI_PKG_FILE\s*=.*/im,
-              "$Env:WEBI_PKG_FILE = '" + rel.name + "'",
-            )
-            .replace(reInstallTpl, '\n' + installTxt);
+          return (
+            tplTxt
+              .replace(
+                /^(#)?\$Env:WEBI_HOST\s*=.*/im,
+                "$Env:WEBI_HOST = '" + baseurl + "'",
+              )
+              .replace(
+                /^(#)?\$Env:WEBI_PKG\s*=.*/im,
+                "$Env:WEBI_PKG = '" + pkgver + "'",
+              )
+              .replace(
+                /^(#)?\$Env:PKG_NAME\s*=.*/im,
+                "$Env:PKG_NAME = '" + pkg + "'",
+              )
+              .replace(
+                /^(#)?\$Env:WEBI_VERSION\s*=.*/im,
+                "$Env:WEBI_VERSION = '" + rel.version + "'",
+              )
+              .replace(
+                /^(#)?\$Env:WEBI_GIT_TAG\s*=.*/im,
+                "$Env:WEBI_GIT_TAG = '" + rel.git_tag + "'",
+              )
+              .replace(
+                /^(#)?\$Env:WEBI_PKG_URL\s*=.*/im,
+                "$Env:WEBI_PKG_URL = '" + rel.download + "'",
+              )
+              // TODO replace WEBI_PKG_FILE (which is sometimes a dir)
+              .replace(
+                /^(#)?\$Env:WEBI_PKG_PATHNAME\s*=.*/im,
+                "$Env:WEBI_PKG_PATHNAME = '" + rel.name + "'",
+              )
+              // TODO deprecate
+              .replace(
+                /^(#)?\$Env:WEBI_PKG_FILE\s*=.*/im,
+                "$Env:WEBI_PKG_FILE = '" + rel.name + "'",
+              )
+              .replace(reInstallTpl, '\n' + installTxt)
+          );
         });
     });
 };

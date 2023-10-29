@@ -182,14 +182,18 @@ async function filterReleases(
 
   function selectMatches(rel) {
     if (os) {
-      if (rel.os !== os) {
-        return false;
+      if (rel.os !== '*') {
+        if (rel.os !== os) {
+          return false;
+        }
       }
     }
 
     if (arch) {
-      if (rel.arch !== arch) {
-        return false;
+      if (rel.arch !== '*') {
+        if (rel.arch !== arch) {
+          return false;
+        }
       }
     }
 
