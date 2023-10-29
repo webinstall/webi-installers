@@ -3,7 +3,9 @@ set -e
 set -u
 
 main() {
-    webi_download
+    webi_download \
+        "${WEBI_PKG_URL}" \
+        "${WEBI_PKG_PATH}/${WEBI_PKG_FILE}"
 
     (
         cd ~/Downloads/webi

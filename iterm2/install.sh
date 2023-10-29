@@ -16,7 +16,9 @@ _install_iterm2() {
         exit 1
     fi
 
-    webi_download
+    webi_download \
+        "${WEBI_PKG_URL}" \
+        "${WEBI_PKG_PATH}/${WEBI_PKG_FILE}"
     webi_extract
 
     if [ ! -d "${WEBI_TMP}/iTerm.app" ]; then

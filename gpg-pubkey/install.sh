@@ -6,7 +6,9 @@ __install_gpg_pubkey() {
     MY_CMD="gpg-pubkey"
 
     rm -f "$HOME/.local/bin/$MY_CMD"
-    webi_download "$WEBI_HOST/packages/$MY_CMD/$MY_CMD.sh" "$HOME/.local/bin/$MY_CMD"
+    webi_download \
+        "$WEBI_HOST/packages/$MY_CMD/$MY_CMD.sh" \
+        "$HOME/.local/bin/$MY_CMD"
     chmod a+x "$HOME/.local/bin/$MY_CMD"
 }
 
@@ -15,7 +17,9 @@ __install_gpg_pubkey_id() {
     MY_SUBCMD="gpg-pubkey-id"
 
     rm -f "$HOME/.local/bin/$MY_SUBCMD"
-    webi_download "$WEBI_HOST/packages/$MY_CMD/$MY_SUBCMD.sh" "$HOME/.local/bin/$MY_SUBCMD"
+    webi_download \
+        "$WEBI_HOST/packages/$MY_CMD/$MY_SUBCMD.sh" \
+        "$HOME/.local/bin/$MY_SUBCMD"
     chmod a+x "$HOME/.local/bin/$MY_SUBCMD"
 }
 

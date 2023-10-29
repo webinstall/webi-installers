@@ -12,7 +12,9 @@ _install_gpg() {
 
     # Download the latest LTS
     #curl -fsSL -o ~/Downloads/webi/GnuPG-2.2.32.dmg 'https://sourceforge.net/projects/gpgosx/files/GnuPG-2.2.32.dmg/download'
-    webi_download
+    webi_download \
+        "${WEBI_PKG_URL}" \
+        "${WEBI_PKG_PATH}/${WEBI_PKG_FILE}"
     chmod a-w "${WEBI_PKG_DOWNLOAD}"
 
     # Mount the DMG in /Volumes
