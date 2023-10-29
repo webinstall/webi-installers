@@ -3,8 +3,7 @@
 require('dotenv').config();
 
 /**
- * Gets the releases for 'ripgrep'. This function could be trimmed down and made
- * for use with any github release.
+ * Lists GitHub Releases (w/ uploaded assets)
  *
  * @param request
  * @param {string} owner

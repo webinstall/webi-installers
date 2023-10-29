@@ -13,7 +13,6 @@ __bootstrap_webi() {
 
     #WEBI_PKG=
     #PKG_NAME=
-    # TODO should this be BASEURL instead?
     #WEBI_OS=
     #WEBI_ARCH=
     #WEBI_HOST=
@@ -70,7 +69,8 @@ __bootstrap_webi() {
     export WEBI_WGET
     set -e
 
-    # get the special formatted version (i.e. "go is go1.14" while node is "node v12.10.8")
+    # get the special formatted version
+    # (i.e. "go is go1.14" while node is "node v12.10.8")
     my_versioned_name=""
     _webi_canonical_name() {
         if [ -n "$my_versioned_name" ]; then
@@ -87,9 +87,8 @@ __bootstrap_webi() {
         echo "$my_versioned_name"
     }
 
-    # update symlinks according to $HOME/.local/opt and $HOME/.local/bin install paths.
+    # Update symlinks as per $HOME/.local/opt and $HOME/.local/bin install paths.
     # shellcheck disable=2120
-    # webi_link may be used in the templated install script
     webi_link() {
         if [ -n "$(command -v pkg_link)" ]; then
             pkg_link
@@ -101,13 +100,15 @@ __bootstrap_webi() {
             ln -s "$pkg_src_cmd" "$pkg_dst_cmd"
         else
             # 'pkg_dst' will default to $HOME/.local/opt/<pkg>
-            # 'pkg_src' will be the installed version, such as to $HOME/.local/opt/<pkg>-<version>
+            # 'pkg_src' will be the installed version,
+            # such as to $HOME/.local/opt/<pkg>-<version>
             rm -rf "$pkg_dst"
             ln -s "$pkg_src" "$pkg_dst"
         fi
     }
 
-    # detect if this program is already installed or if an installed version may cause conflict
+    # detect if this program is already installed
+    # or if an installed version may cause conflict
     webi_check() {
         # Test for existing version
         set +e
@@ -136,8 +137,6 @@ __bootstrap_webi() {
                 exit 0
             fi
             if [ -x "$pkg_src_cmd" ]; then
-                # shellcheck disable=2119
-                # this function takes no args
                 webi_link
                 echo "switched to $my_canonical_name:"
                 echo "    ${pkg_dst} => ${pkg_src}"
@@ -225,7 +224,6 @@ __bootstrap_webi() {
             set -e
         else
             # Neither GNU nor BSD curl have sane resume download options, hence we don't bother
-            # TODO curl -fsSL --remote-name --remote-header-name --write-out "$my_url"
             my_show_progress="-#"
             if is_interactive_shell; then
                 my_show_progress=""
@@ -257,7 +255,6 @@ __bootstrap_webi() {
                 echo "Inflating ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
                 unxz -c "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" > "$(basename "$WEBI_PKG_FILE")"
             else
-                # do nothing
                 echo "Failed to extract ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
                 exit 1
             fi
@@ -448,11 +445,10 @@ __bootstrap_webi() {
         webi_extract
     }
 
-    # move commands from the extracted archive directory to $HOME/.local/opt or $HOME/.local/bin
-    # shellcheck disable=2120
-    # webi_install may be sourced and used elsewhere
+    # move commands from the extracted archive directory
+    # to $HOME/.local/opt or $HOME/.local/bin
     webi_install() {
-        if [ -n "$WEBI_SINGLE" ] || [ "single" = "${1-}" ]; then
+        if test -n "${WEBI_SINGLE}"; then
             mkdir -p "$(dirname "$pkg_src_cmd")"
             mv ./"$pkg_cmd_name"* "$pkg_src_cmd"
         else
@@ -472,28 +468,8 @@ __bootstrap_webi() {
             xattr -r -d com.apple.quarantine "$pkg_src" || true
             return 0
         fi
-        # TODO need to test that the above actually worked
-        # (and proceed to this below if it did not)
-        if [ -n "$(command -v spctl)" ]; then
-            echo "Checking permission to execute '$pkg_cmd_name' on macOS 11+"
-            set +e
-            is_allowed="$(spctl -a "$pkg_src_cmd" 2>&1 | grep valid)"
-            set -e
-            if [ -z "$is_allowed" ]; then
-                echo ""
-                echo "##########################################"
-                echo "#  IMPORTANT: Permission Grant Required  #"
-                echo "##########################################"
-                echo ""
-                echo "Requesting permission to execute '$pkg_cmd_name' on macOS 10.14+"
-                echo ""
-                sleep 3
-                spctl --add "$pkg_src_cmd"
-            fi
-        fi
     }
 
-    # a friendly message when all is well, showing the final install path in $HOME/.local
     _webi_done_message() {
         echo "Installed $(_webi_canonical_name) as $pkg_dst_cmd"
     }
@@ -521,12 +497,10 @@ __bootstrap_webi() {
     export WEBI_WELCOME
 
     __init_installer() {
-
-        # do nothing - to satisfy parser prior to templating
-        printf ""
-
+        # the installer will be injected here
         # {{ installer }}
 
+        return 0
     }
 
     __init_installer
@@ -556,11 +530,11 @@ __bootstrap_webi() {
 
         if [ -n "$WEBI_SINGLE" ]; then
             pkg_dst_cmd="${pkg_dst_cmd:-$HOME/.local/bin/$pkg_cmd_name}"
-            pkg_dst="$pkg_dst_cmd" # "$(dirname "$(dirname $pkg_dst_cmd)")"
+            pkg_dst="$pkg_dst_cmd"
 
             #pkg_src_cmd="${pkg_src_cmd:-$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION/bin/$pkg_cmd_name-v$WEBI_VERSION}"
             pkg_src_cmd="${pkg_src_cmd:-$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION/bin/$pkg_cmd_name}"
-            pkg_src="$pkg_src_cmd" # "$(dirname "$(dirname $pkg_src_cmd)")"
+            pkg_src="$pkg_src_cmd"
         else
             pkg_dst="${pkg_dst:-$HOME/.local/opt/$pkg_cmd_name}"
             pkg_dst_cmd="${pkg_dst_cmd:-$pkg_dst/bin/$pkg_cmd_name}"
@@ -568,10 +542,9 @@ __bootstrap_webi() {
             pkg_src="${pkg_src:-$HOME/.local/opt/$pkg_cmd_name-v$WEBI_VERSION}"
             pkg_src_cmd="${pkg_src_cmd:-$pkg_src/bin/$pkg_cmd_name}"
         fi
-        # this script is templated and these are used elsewhere
-        # shellcheck disable=SC2034
+        # shellcheck disable=SC2034 # used in ${WEBI_PKG}/install.sh
         pkg_src_bin="$(dirname "$pkg_src_cmd")"
-        # shellcheck disable=SC2034
+        # shellcheck disable=SC2034 # used in ${WEBI_PKG}/install.sh
         pkg_dst_bin="$(dirname "$pkg_dst_cmd")"
 
         if [ -n "$(command -v pkg_pre_install)" ]; then pkg_pre_install; else webi_pre_install; fi
@@ -618,11 +591,7 @@ __bootstrap_webi() {
         fi
     fi
 
-    # cleanup the temp directory
     rm -rf "$WEBI_TMP"
-
-    # See? No magic. Just downloading and moving files.
-
 }
 
 __bootstrap_webi
