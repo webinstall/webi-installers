@@ -120,6 +120,9 @@ async function getAllReleases(gitUrl) {
   }
   all.releases = releases;
 
+  // TODO, if no tags are found, use v0.0.0-{date}
+  // (and allow them to be downloaded as such)
+
   return all;
 }
 
