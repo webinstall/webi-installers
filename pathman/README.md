@@ -11,6 +11,16 @@ tagline: |
 webi pathman
 ```
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/pathman
+```
+
 ## Cheat Sheet
 
 Manages PATH on various OSes and shells
