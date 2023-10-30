@@ -7,6 +7,16 @@ tagline: |
 
 To update or switch versions, run `webi sttr@stable` (or `@v0.2.16` etc).
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/sttr
+```
+
 ## Cheat Sheet
 
 > `sttr` makes it easy to perform various operations on string.
