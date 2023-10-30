@@ -108,7 +108,7 @@ __bootstrap_webi() {
 
     # detect if this program is already installed
     # or if an installed version may cause conflict
-    webi_check() {
+    webi_check_installed() {
         # Test for existing version
         set +e
         my_path="$PATH"
@@ -157,6 +157,25 @@ __bootstrap_webi() {
         export PATH="$my_path"
     }
 
+    webi_check_available() {
+        if test "$WEBI_CHANNEL" != "error"; then
+            return 0
+        fi
+
+        echo >&2 "Error: no '$PKG_NAME' release for '${WEBI_OS-}' on '$WEBI_ARCH' as one of '$WEBI_FORMATS' by the tag '${WEBI_TAG-}'"
+        echo >&2 "       '$PKG_NAME' is available for '$PKG_OSES' on '$PKG_ARCHES' as one of '$PKG_FORMATS'"
+        echo >&2 "       (check that the package name and version are correct)"
+        echo >&2 ""
+        my_release_url="$(
+            echo "$WEBI_RELEASES" |
+                sed 's:\?.*::'
+        )"
+        echo >&2 "       Double check at ${my_release_url}"
+        echo >&2 ""
+
+        exit 1
+    }
+
     is_interactive_shell() {
         # $- shows shell flags (error,unset,interactive,etc)
         case $- in
@@ -179,39 +198,9 @@ __bootstrap_webi() {
 
     # detect if file is downloaded, and how to download it
     webi_download() {
-        # determine the url to download
-        if [ -n "${1-}" ]; then
-            my_url="${1}"
-        else
-            if [ "error" = "$WEBI_CHANNEL" ]; then
-                # TODO pass back requested OS / Arch / Version
-                echo >&2 "Error: no '$PKG_NAME' release for '${WEBI_OS-}' on '$WEBI_ARCH' as one of '$WEBI_FORMATS' by the tag '${WEBI_TAG-}'"
-                echo >&2 "       '$PKG_NAME' is available for '$PKG_OSES' on '$PKG_ARCHES' as one of '$PKG_FORMATS'"
-                echo >&2 "       (check that the package name and version are correct)"
-                echo >&2 ""
-                my_release_url="$(
-                    echo "$WEBI_RELEASES" |
-                        sed 's:\?.*::'
-                )"
-                echo >&2 "       Double check at ${my_release_url}"
-                echo >&2 ""
-                exit 1
-            fi
-            my_url="$WEBI_PKG_URL"
-        fi
-
-        # determine the location to download to
-        if [ -n "${2-}" ]; then
-            my_dl="${2}"
-        else
-            my_dl="${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
-        fi
-
-        if [ -n "${3-}" ]; then
-            my_dl_name="${3}"
-        else
-            my_dl_name="${PKG_NAME}"
-        fi
+        my_url="${1}"
+        my_dl="${2}"
+        my_dl_name="${3:-${PKG_NAME}}"
 
         my_dl_rel="$(
             webi_sub_home "${my_dl}"
@@ -465,8 +454,11 @@ __bootstrap_webi() {
 
     # group common pre-install tasks as default
     webi_pre_install() {
-        webi_check
-        webi_download
+        webi_check_installed
+        webi_check_available
+        webi_download \
+            "${WEBI_PKG_URL}" \
+            "${WEBI_PKG_PATH}/${WEBI_PKG_FILE}"
         webi_extract
     }
 
