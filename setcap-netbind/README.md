@@ -1,9 +1,19 @@
 ---
 title: setcap-netbind
-homepage: https://github.com/webinstall/webi-installers/setcap-netbind/
+homepage: https://webinstall.dev/setcap-netbind/
 tagline: |
   setcap-netbind: Give a binary the ability to bind to privileged ports.
 ---
+
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/setcap-netbind
+```
 
 ## Cheat Sheet
 
