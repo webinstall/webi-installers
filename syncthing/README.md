@@ -8,6 +8,17 @@ tagline: |
 To update or switch versions, run `webi syncthing@stable` (or use `@beta` for
 pre-releases).
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/syncthing
+~/.config/syncthing/
+```
+
 ## Cheat Sheet
 
 > Syncthing is like a self-hosted Dropbox or Google Drive. It keeps data safe,
