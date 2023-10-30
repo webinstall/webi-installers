@@ -5,6 +5,19 @@ tagline: |
   Get your SSH public key.
 ---
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/ssh-pubkey
+~/.ssh/id_rsa
+~/.ssh/id_rsa.pub
+~/Downloads/id_rsa.<USERNAME>.pub
+```
+
 ## Cheat Sheet
 
 > Your SSH Public Key is used for secure login from your laptop to servers and
