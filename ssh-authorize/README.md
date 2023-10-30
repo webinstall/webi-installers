@@ -5,6 +5,17 @@ tagline: |
   Add to your SSH Authorized Keys from a string, file, or url.
 ---
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/ssh-authorize
+~/.ssh/authorized_keys
+```
+
 ## Cheat Sheet
 
 > Does the tedious work of making sure your `.ssh/authorized_keys` exists with
