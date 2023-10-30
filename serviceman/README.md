@@ -7,6 +7,16 @@ tagline: |
 
 To update or switch versions, run `webi serviceman@stable`
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/serviceman
+```
+
 ## Cheat Sheet
 
 > Serviceman is a hassle-free wrapper around your system launcher. It works with
