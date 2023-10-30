@@ -78,7 +78,7 @@ __bootstrap_webi() {
             return 0
         fi
 
-        if [ -n "$(command -v pkg_format_cmd_version)" ]; then
+        if command -v pkg_format_cmd_version > /dev/null; then
             my_versioned_name="'$(pkg_format_cmd_version "$WEBI_VERSION")'"
         else
             my_versioned_name="'$pkg_cmd_name v$WEBI_VERSION'"
@@ -88,14 +88,13 @@ __bootstrap_webi() {
     }
 
     # Update symlinks as per $HOME/.local/opt and $HOME/.local/bin install paths.
-    # shellcheck disable=2120
     webi_link() {
-        if [ -n "$(command -v pkg_link)" ]; then
+        if command -v pkg_link > /dev/null; then
             pkg_link
             return 0
         fi
 
-        if [ -n "$WEBI_SINGLE" ] || [ "single" = "${1-}" ]; then
+        if test -n "${WEBI_SINGLE}"; then
             rm -rf "$pkg_dst_cmd"
             ln -s "$pkg_src_cmd" "$pkg_dst_cmd"
         else
@@ -489,7 +488,7 @@ __bootstrap_webi() {
     }
 
     _webi_enable_exec() {
-        if [ -n "$(command -v spctl)" ] && [ -n "$(command -v xattr)" ]; then
+        if command -v spctl > /dev/null && command -v xattr > /dev/null; then
             # note: some packages contain files that cannot be affected by xattr
             xattr -r -d com.apple.quarantine "$pkg_src" || true
             return 0
@@ -585,7 +584,7 @@ __bootstrap_webi() {
         # shellcheck disable=SC2034 # used in ${WEBI_PKG}/install.sh
         pkg_dst_bin="$(dirname "$pkg_dst_cmd")"
 
-        if [ -n "$(command -v pkg_pre_install)" ]; then pkg_pre_install; else webi_pre_install; fi
+        if command -v pkg_pre_install > /dev/null; then pkg_pre_install; else webi_pre_install; fi
 
         (
             cd "$WEBI_TMP"
@@ -609,12 +608,12 @@ __bootstrap_webi() {
         fi
         (
             cd "$WEBI_TMP"
-            if [ -n "$(command -v pkg_post_install)" ]; then pkg_post_install; else webi_post_install; fi
+            if command -v pkg_post_install > /dev/null; then pkg_post_install; else webi_post_install; fi
         )
 
         (
             cd "$WEBI_TMP"
-            if [ -n "$(command -v pkg_done_message)" ]; then pkg_done_message; else _webi_done_message; fi
+            if command -v pkg_done_message > /dev/null; then pkg_done_message; else _webi_done_message; fi
         )
 
         echo ""
@@ -622,7 +621,7 @@ __bootstrap_webi() {
 
     webi_path_add "$HOME/.local/bin"
     if [ -z "${_WEBI_CHILD-}" ] && [ -f "$_webi_tmp/.PATH.env" ]; then
-        if [ -n "$(cat "$_webi_tmp/.PATH.env")" ]; then
+        if test -s "$_webi_tmp/.PATH.env"; then
             printf 'PATH.env updated with:\n'
             sort -u "$_webi_tmp/.PATH.env" | while read -r my_new_path; do
                 echo "        ${my_new_path}"
