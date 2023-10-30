@@ -512,6 +512,10 @@ __bootstrap_webi() {
 
     # run post-install functions - just updating PATH by default
     webi_post_install() {
+        if test -n "${pkg_no_exec}"; then
+            return 0
+        fi
+
         webi_path_add "$(dirname "$pkg_dst_cmd")"
     }
 
@@ -629,9 +633,8 @@ __bootstrap_webi() {
             fi
         )
 
-        webi_link
-
         if test -z "${pkg_no_exec}"; then
+            webi_link
             _webi_enable_exec
         fi
         (
