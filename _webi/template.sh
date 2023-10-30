@@ -560,7 +560,13 @@ __bootstrap_webi() {
 
         pkg_cmd_name="${pkg_cmd_name:-$PKG_NAME}"
 
-        if [ -n "$WEBI_SINGLE" ]; then
+        pkg_no_exec="${pkg_no_exec:-}"
+
+        if [ -n "${pkg_no_exec}" ]; then
+            pkg_dst_cmd="${pkg_dst}"
+            pkg_src="${pkg_dst}"
+            pkg_src_cmd="${pkg_dst}"
+        elif [ -n "${WEBI_SINGLE}" ]; then
             pkg_dst_cmd="${pkg_dst_cmd:-$HOME/.local/bin/$pkg_cmd_name}"
             pkg_dst="$pkg_dst_cmd"
 
@@ -598,7 +604,9 @@ __bootstrap_webi() {
 
         webi_link
 
-        _webi_enable_exec
+        if test -z "${pkg_no_exec}"; then
+            _webi_enable_exec
+        fi
         (
             cd "$WEBI_TMP"
             if [ -n "$(command -v pkg_post_install)" ]; then pkg_post_install; else webi_post_install; fi
