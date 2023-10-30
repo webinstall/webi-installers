@@ -6,6 +6,17 @@ tagline: |
 linux: true
 ---
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/ssh-adduser
+~/.local/bin/sshd-prohibit-password
+```
+
 ## Cheat Sheet
 
 > Many modern web programs (`npm` and `postgres`, for example) will not function
