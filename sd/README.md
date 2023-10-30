@@ -7,6 +7,16 @@ tagline: |
 
 To update or switch versions, run `webi sd@stable` (or `@v0.7`, `@beta`, etc).
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/sd
+```
+
 ## Cheat Sheet
 
 > sd is a productive and faster replacement of sed and awk command used for
