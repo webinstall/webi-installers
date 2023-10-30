@@ -13,6 +13,20 @@ rustup update
 
 You can `rustup use x.y.z` for a specific version or toolchain.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.cargo/
+~/.rustup/
+<PROJECT-DIR>/Cargo.toml
+<PROJECT-DIR>/src/main.rs
+<PROJECT-DIR>/src/lib.rs
+```
+
 ## Cheat Sheet
 
 > Rust is what C++ and D were trying to do, but didn't. It's a modern, safe,
