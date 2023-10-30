@@ -129,9 +129,15 @@ __bootstrap_webi() {
             # but that's okay, 'cmp -s' is good enough for us
             if cmp -s "${pkg_src_cmd}" "${my_current_cmd}"; then
                 echo "${my_canonical_name} already installed:"
-                printf "    %s" "${pkg_dst}"
+                my_dst_rel="$(
+                    webi_sub_home "${pkg_dst}"
+                )"
+                printf "    %s" "${my_dst_rel}"
                 if [ "${pkg_src_cmd}" != "${my_current_cmd}" ]; then
-                    printf " => %s" "${pkg_src}"
+                    my_src_rel="$(
+                        webi_sub_home "${pkg_src}"
+                    )"
+                    printf " => %s" "${my_src_rel}"
                 fi
                 echo ""
                 exit 0
@@ -139,7 +145,13 @@ __bootstrap_webi() {
             if [ -x "$pkg_src_cmd" ]; then
                 webi_link
                 echo "switched to $my_canonical_name:"
-                echo "    ${pkg_dst} => ${pkg_src}"
+                my_src_rel="$(
+                    webi_sub_home "${pkg_src}"
+                )"
+                my_dst_rel="$(
+                    webi_sub_home "${pkg_dst}"
+                )"
+                echo "    ${my_dst_rel} => ${my_src_rel}"
                 exit 0
             fi
         fi
@@ -159,6 +171,12 @@ __bootstrap_webi() {
                 ;;
         esac
     }
+
+    webi_sub_home() { (
+        my_rel=${HOME}
+        my_abs=${1}
+        echo "${my_abs}" | sed "s:^${my_rel}:~:"
+    ); }
 
     # detect if file is downloaded, and how to download it
     webi_download() {
@@ -196,11 +214,15 @@ __bootstrap_webi() {
             my_dl_name="${PKG_NAME}"
         fi
 
+        my_dl_rel="$(
+            webi_sub_home "${my_dl}"
+        )"
+
         WEBI_PKG_DOWNLOAD="${my_dl}"
         export WEBI_PKG_DOWNLOAD
 
-        if [ -e "$my_dl" ]; then
-            echo "Found $my_dl"
+        if [ -e "${my_dl}" ]; then
+            echo "Found ${my_dl_rel}"
             return 0
         fi
 
@@ -235,24 +257,28 @@ __bootstrap_webi() {
         mv "$my_dl.part" "$my_dl"
 
         echo ""
-        echo "Saved as $my_dl"
+        echo "Saved as ${my_dl_rel}"
     }
 
     # detect which archives can be used
     webi_extract() {
         (
             cd "$WEBI_TMP"
+
+            my_dl_rel="$(
+                webi_sub_home "${WEBI_PKG_PATH}/${WEBI_PKG_FILE}"
+            )"
             if [ "tar" = "$WEBI_EXT" ]; then
-                echo "Extracting ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
+                echo "Extracting ${my_dl_rel}"
                 tar xf "${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
             elif [ "zip" = "$WEBI_EXT" ]; then
-                echo "Extracting ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
+                echo "Extracting ${my_dl_rel}"
                 unzip "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" > __unzip__.log
             elif [ "exe" = "$WEBI_EXT" ]; then
-                echo "Moving ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
+                echo "Moving ${my_dl_rel}"
                 mv "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" .
             elif [ "xz" = "$WEBI_EXT" ]; then
-                echo "Inflating ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
+                echo "Inflating ${my_dl_rel}"
                 unxz -c "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" > "$(basename "$WEBI_PKG_FILE")"
             else
                 echo "Failed to extract ${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
@@ -471,7 +497,13 @@ __bootstrap_webi() {
     }
 
     _webi_done_message() {
-        echo "Installed $(_webi_canonical_name) as $pkg_dst_cmd"
+        my_dst_rel="$(
+            webi_sub_home "${pkg_dst_cmd}"
+        )"
+        my_canonical_name="$(
+            _webi_canonical_name
+        )"
+        echo "Installed ${my_canonical_name} as ${my_dst_rel}"
     }
 
     ##
@@ -551,10 +583,17 @@ __bootstrap_webi() {
 
         (
             cd "$WEBI_TMP"
-            echo "Installing to $pkg_src_cmd"
-            if [ -n "$(command -v pkg_install)" ]; then pkg_install; else webi_install; fi
-            chmod a+x "$pkg_src"
-            chmod a+x "$pkg_src_cmd"
+            my_src_rel="$(
+                webi_sub_home "${pkg_src_cmd}"
+            )"
+            if test -e "${pkg_src_cmd}"; then
+                echo "Found ${my_src_rel} (remove to force reinstall)"
+            else
+                echo "Installing to ${my_src_rel}"
+                if command -v pkg_install > /dev/null; then pkg_install; else webi_install; fi
+                chmod a+x "$pkg_src"
+                chmod a+x "$pkg_src_cmd"
+            fi
         )
 
         webi_link
