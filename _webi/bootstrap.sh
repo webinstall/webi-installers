@@ -42,8 +42,11 @@ set -u
 
 __webi_main() {
 
-    export WEBI_TIMESTAMP="\$(date +%F_%H-%M-%S)"
-    export _webi_tmp="\${_webi_tmp:-\$(mktemp -d -t webi-\$WEBI_TIMESTAMP.XXXXXXXX)}"
+    my_date="\$(date +%F_%H-%M-%S)"
+    export WEBI_TIMESTAMP="\${my_date}"
+    export _webi_tmp="\${_webi_tmp:-\$(
+        mktemp -d -t "webi-\$WEBI_TIMESTAMP.XXXXXXXX"
+    )}"
 
     if [ -n "\${_WEBI_PARENT:-}" ]; then
         export _WEBI_CHILD=true
@@ -90,8 +93,10 @@ __webi_main() {
     ##
 
     set +e
-    export WEBI_CURL="\$(command -v curl)"
-    export WEBI_WGET="\$(command -v wget)"
+    WEBI_CURL="\$(command -v curl)"
+    export WEBI_URL
+    WEBI_WGET="\$(command -v wget)"
+    export WEBI_WGET
     set -e
 
     my_libc=''
@@ -100,8 +105,15 @@ __webi_main() {
     fi
 
     export WEBI_HOST="\${WEBI_HOST:-https://webinstall.dev}"
-    export WEBI_UA="\$(uname -s)/\$(uname -r) \$(uname -m)/unknown\${my_libc}"
 
+    # ex: Darwin or Linux
+    my_sys="\$(uname -s)"
+    # ex: 22.6.0
+    my_rev="\$(uname -r)"
+    # ex: arm64
+    my_machine="\$(uname -m)"
+
+    export WEBI_UA="\${my_sys}/\${my_rev} \${my_machine}/unknown \${my_libc}"
 
     webinstall() {
 
@@ -112,7 +124,10 @@ __webi_main() {
             exit 1
         fi
 
-        export WEBI_BOOT="\$(mktemp -d -t "\$my_package-bootstrap.\$WEBI_TIMESTAMP.XXXXXXXX")"
+        WEBI_BOOT="\$(
+            mktemp -d -t "\$my_package-bootstrap.\$WEBI_TIMESTAMP.XXXXXXXX"
+        )"
+        export WEBI_BOOT
 
         my_installer_url="\$WEBI_HOST/api/installers/\$my_package.sh?formats=\$my_ext"
         if [ -n "\$WEBI_CURL" ]; then
