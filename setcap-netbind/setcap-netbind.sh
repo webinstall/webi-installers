@@ -5,13 +5,13 @@ set -u
 main() {
     my_bin="${1}"
     # ex: node
-    if [ -z "$(command -v "${my_bin}")" ]; then
+    if ! command -v "${my_bin}" > /dev/null; then
         echo "setcap-netbind: '${my_bin}' not found"
         exit 1
     fi
 
     my_sudo=""
-    if [ -n "$(command -v sudo)" ]; then
+    if command -v sudo > /dev/null; then
         my_sudo=sudo
     fi
 
