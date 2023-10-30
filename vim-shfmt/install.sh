@@ -9,10 +9,10 @@ __init_vim_shfmt() {
     git clone --depth=1 https://github.com/z0mbix/vim-shfmt.git "$HOME/.vim/pack/plugins/start/vim-shfmt"
 
     export PATH="$HOME/.local/bin:${PATH}"
-    if [ -z "$(command -v shfmt)" ]; then
+    if ! command -v shfmt > /dev/null; then
         "$HOME/.local/bin/webi" shfmt
     fi
-    if [ -z "$(command -v shellcheck)" ]; then
+    if ! command -v shellcheck > /dev/null; then
         "$HOME/.local/bin/webi" shellcheck
     fi
 

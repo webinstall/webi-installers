@@ -8,7 +8,7 @@ __init_vim_prettier() {
     rm -rf "$HOME/.vim/pack/plugins/start/vim-prettier"
     git clone --depth=1 https://github.com/prettier/vim-prettier.git "$HOME/.vim/pack/plugins/start/vim-prettier"
 
-    if [ -z "$(command -v node)" ]; then
+    if ! command -v node > /dev/null; then
         export PATH="$HOME/.local/opt/node/bin:$HOME/.local/bin:${PATH}"
         "$HOME/.local/bin/webi" node
     fi

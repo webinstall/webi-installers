@@ -4,14 +4,20 @@ set -u
 
 __init_sudo() {
 
-    if [ -z "$(command -v sudo)" ]; then
-        echo >&2 "Error: on Linux and BSD you should install sudo via the native package manager"
-        echo >&2 "       for example: apt install -y sudo"
-        exit 1
-    else
+    if command -v sudo > /dev/null; then
         echo "'sudo' already installed"
+        exit 0
     fi
 
+    echo >&2 "Error: on Linux & BSD use the native package manager to install sudo:"
+    echo >&2 "    For Ubuntu / Debian:"
+    echo >&2 "       apt install -y sudo"
+    echo >&2 ""
+    echo >&2 "    For Alpine / Docker:"
+    echo >&2 "       apk add sudo"
+    echo >&2 ""
+
+    exit 1
 }
 
 __init_sudo

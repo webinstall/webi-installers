@@ -17,7 +17,7 @@ __init_pyenv() {
         } >> ~/.bashrc
     fi
 
-    if [ -n "$(command -v zsh)" ]; then
+    if command -v zsh > /dev/null; then
         touch ~/.zshrc
         if ! grep -q 'pyenv init' ~/.zshrc; then
             {
@@ -31,7 +31,7 @@ __init_pyenv() {
         fi
     fi
 
-    if [ -n "$(command -v fish)" ]; then
+    if command -v fish > /dev/null; then
         mkdir -p ~/.config/fish
         touch ~/.config/fish/config.fish
         if ! grep -q 'pyenv init' ~/.config/fish/config.fish; then

@@ -22,7 +22,7 @@ __init_vim_beyondcode() {
         nerdfont \
         vim-devicons
 
-    if [ -n "$(command -v go)" ]; then
+    if command -v go > /dev/null; then
         "$HOME/.local/bin/webi" vim-go
     fi
     # done
