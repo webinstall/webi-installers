@@ -5,6 +5,20 @@ tagline: |
   SSH Utils: Because --help takes too long.
 ---
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/sshd-prohibit-password
+~/.local/bin/ssh-authorize
+~/.local/bin/ssh-adduser
+~/.local/bin/ssh-pubkey
+~/.local/bin/ssh-setpass
+```
+
 ## Cheat Sheet
 
 > SSH Utils includes shortcut commands for common tasks.
