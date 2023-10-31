@@ -21,7 +21,7 @@ $pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 
 # Fetch Go compiler
 Write-Output "Checking for Go compiler..."
-IF (-not (Test-Path "$Env:USERPROFILE\.local\opt\go")) {
+IF (-Not (Get-Command -Name "go" -ErrorAction Silent)) {
     & "$Env:USERPROFILE\.local\bin\webi-pwsh.ps1" go
 }
 
