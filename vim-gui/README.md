@@ -7,6 +7,17 @@ tagline: |
 
 To update (replacing the current version) run `webi vim-gui`.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.vim/plugins/mouse.vim
+~/.vim/plugins/gui.vim
+~/.vimrc
+```
+
 ## Cheat Sheet
 
 Vim has built-in GUI support.
