@@ -7,6 +7,16 @@ tagline: |
 
 To update (replacing the current version) run `webi vim-viminfo`.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.vim/plugins/viminfo.vim
+~/.vimrc
+```
+
 ## Cheat Sheet
 
 > ~/.viminfo stores cursor position, copy and paste buffers, command history,
