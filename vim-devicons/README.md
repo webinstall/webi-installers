@@ -10,6 +10,17 @@ configure your Terminal to use it) first.
 
 To update (replacing the current version) run `webi vim-devicons`.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.vim/plugins/devicons.vim
+~/.vim/pack/plugins/start/devicons.vim/
+~/.vimrc
+```
+
 ## Cheat Sheet
 
 ![](https://raw.githubusercontent.com/wiki/ryanoasis/vim-devicons/screenshots/v0.10.x/overall-screenshot.png)
