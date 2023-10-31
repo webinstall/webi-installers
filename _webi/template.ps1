@@ -84,27 +84,31 @@ function webi_path_add($pathname) {
         }
     }
 
-    if (-Not $in_session_path) {
-        $my_cmd = 'PATH ' + "$pathname" + ';%PATH%'
-        $my_pwsh = '$Env:Path = "' + "$pathname" + ';$Env:Path"'
-
-        Write-Host ''
-        Write-Host '**********************************' -ForegroundColor red -BackgroundColor white
-        Write-Host '*      IMPORTANT -- READ ME      *' -ForegroundColor red -BackgroundColor white
-        Write-Host '*  (run the PATH command below)  *' -ForegroundColor red -BackgroundColor white
-        Write-Host '**********************************' -ForegroundColor red -BackgroundColor white
-        Write-Host ''
-        Write-Output ""
-        Write-Output "Copy, paste, and run the appropriate command to update your PATH:"
-        Write-Output "(or close and reopen the terminal, or reboot)"
-        Write-Output ""
-        Write-Output "cmd.exe:"
-        Write-Output "    $my_cmd"
-        Write-Output ""
-        Write-Output "PowerShell:"
-        Write-Output "    $my_pwsh"
-        Write-Output ""
+    if (-Not ($in_session_path)) {
+        webi_path_add_followup $pathname
     }
+}
+
+function webi_path_add_followup($pathname) {
+    $my_cmd = 'PATH ' + "$pathname" + ';%PATH%'
+    $my_pwsh = '$Env:Path = "' + "$pathname" + ';$Env:Path"'
+
+    Write-Host ''
+    Write-Host '**********************************' -ForegroundColor yellow -BackgroundColor black
+    Write-Host '*      IMPORTANT -- READ ME      *' -ForegroundColor yellow -BackgroundColor black
+    Write-Host '*  (run the PATH command below)  *' -ForegroundColor yellow -BackgroundColor black
+    Write-Host '**********************************' -ForegroundColor yellow -BackgroundColor black
+    Write-Host ''
+    Write-Output ""
+    Write-Output "Copy, paste, and run the appropriate command to update your PATH:"
+    Write-Output "(or close and reopen the terminal, or reboot)"
+    Write-Output ""
+    Write-Output "cmd.exe:"
+    Write-Host "    $my_cmd" -ForegroundColor yellow -BackgroundColor black
+    Write-Output ""
+    Write-Output "PowerShell:"
+    Write-Host "    $my_pwsh" -ForegroundColor yellow -BackgroundColor black
+    Write-Output ""
 }
 
 #$has_local_bin = echo "$Env:PATH" | Select-String -Pattern '\.local.bin'
