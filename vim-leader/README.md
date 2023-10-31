@@ -7,6 +7,15 @@ tagline: |
 
 To update (replacing the current version) run `webi vim-leader`.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+ ~/.vimrc
+```
+
 ## Cheat Sheet
 
 > `let mapleader = " "`
