@@ -13,6 +13,20 @@ webi webi
 
 Since `webi` is just a small helper script, it always updates on each use.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+# Mac, Linux
+~/.local/bin/webi
+# Windows
+~/.local/bin/webi.bat
+~/.local/bin/webi-pwsh.ps1
+```
+
 ## Cheat Sheet
 
 > `webi` is what you would have created if you automated how you install your
