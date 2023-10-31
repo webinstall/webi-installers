@@ -132,6 +132,12 @@ Releases.renderBash = async function (
                 /^\s*#?WEBI_PKG_URL=.*/m,
                 "WEBI_PKG_URL='" + rel.download + "'",
               )
+              // TODO replace WEBI_PKG_FILE (which is sometimes a dir)
+              .replace(
+                /^\s*#?WEBI_PKG_PATHNAME=.*/m,
+                "WEBI_PKG_PATHNAME='" + pkgFile + "'",
+              )
+              // TODO deprecate
               .replace(
                 /^\s*#?WEBI_PKG_FILE=.*/m,
                 "WEBI_PKG_FILE='" + pkgFile + "'",

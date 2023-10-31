@@ -32,6 +32,7 @@ __bootstrap_webi() {
     #WEBI_FORMATS=
     #WEBI_PKG_URL=
     #WEBI_PKG_FILE=
+    #WEBI_PKG_PATHNAME=
     #PKG_OSES=
     #PKG_ARCHES=
     #PKG_FORMATS=

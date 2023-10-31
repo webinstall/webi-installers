@@ -31,6 +31,7 @@ $Env:WEBI_HOST = 'https://webinstall.dev'
 #$Env:WEBI_GIT_TAG = 12.16.2
 #$Env:WEBI_PKG_URL = "https://.../node-....zip"
 #$Env:WEBI_PKG_FILE = "node-v12.16.2-win-x64.zip"
+#$Env:WEBI_PKG_PATHNAME = "node-v12.16.2-win-x64.zip"
 
 # Switch to userprofile
 Push-Location $Env:USERPROFILE
