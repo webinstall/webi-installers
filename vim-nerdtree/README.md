@@ -7,6 +7,17 @@ tagline: |
 
 To update (replacing the current version) run `webi vim-nerdtree`.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.vim/pack/plugins/start/nerdtree.vim/
+~/.vim/plugins/nerdtree.vim
+~/.vimrc
+```
+
 ## Cheat Sheet
 
 ![](https://raw.githubusercontent.com/preservim/nerdtree/master/screenshot.png)
