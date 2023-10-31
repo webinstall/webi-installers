@@ -7,6 +7,16 @@ tagline: |
 
 To update (replacing the current version) run `webi vim-whitespace`.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.vim/plugins/whitespace.vim
+~/.vimrc
+```
+
 ## Cheat Sheet
 
 The idea that tabs should be 8 spaces wide is redonkulous.
