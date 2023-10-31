@@ -16,6 +16,19 @@ You'll also need to install [`ALE`](https://webinstall.dev/vim-ale) (part of
 [`vim-essentials`](https://webinstall.dev/vim-essentials)) or
 [`syntastic`](https://webinstall.dev/vim-syntastic) first.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.vim/pack/plugins/start/vim-go/
+~/.vim/plugins/go.vim
+```
+
+note: this will also install the go modules that vim-go depends on
+
 ### How to install by hand
 
 ```sh
