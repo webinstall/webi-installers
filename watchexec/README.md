@@ -8,6 +8,16 @@ tagline: |
 To update or switch versions, run `webi watchexec@stable` (or `@v1.17`, `@beta`,
 etc).
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/watchexec
+```
+
 ## Cheat Sheet
 
 `watchexec` runs a given command when any files in watched directories change. \
