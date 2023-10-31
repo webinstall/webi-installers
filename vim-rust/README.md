@@ -7,6 +7,16 @@ tagline: |
 
 To update (replacing the current version) run `webi vim-rust`.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.vim/pack/plugins/start/rust.vim/
+~/.vim/plugins/rust.vim
+```
+
 ## Cheat Sheet
 
 > `vim-rust` provides integration with `cargo check`, `rustfmt`, and other rust
