@@ -7,6 +7,17 @@ tagline: |
 
 To update (replacing the current version) run `webi vim-lastplace`.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.vim/pack/plugins/start/vim-lastplace/
+~/.vim/plugins/lastplace.vim
+~/.vimrc
+```
+
 ## Cheat Sheet
 
 > `vim-lastplace` will resume your cursor to its last position when you re-open
