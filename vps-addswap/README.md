@@ -6,6 +6,16 @@ tagline: |
 linux: true
 ---
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+/var/swapfile
+/etc/fstab
+```
+
 ## Cheat Sheet
 
 > Creates permanent swap space that will be activated on each boot.
