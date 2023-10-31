@@ -8,6 +8,16 @@ tagline: |
 To update or switch versions, run `webi pandoc@stable` (or `@v2.14`, `@beta`,
 etc).
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/pandoc
+```
+
 ## Cheat Sheet
 
 > Pandoc is a Haskell library for converting from one markup format to another,
