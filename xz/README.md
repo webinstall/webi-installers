@@ -7,6 +7,17 @@ tagline: |
 
 To update or switch versions, run `webi xz@stable` (or `@v5.2`, `@beta`, etc).
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/unxz
+~/.local/bin/xz
+```
+
 ## Cheat Sheet
 
 `xz` and `unxz` are modern alternatives to `gzip` (and `gunzip`). They use LZMA2
