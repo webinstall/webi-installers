@@ -5,6 +5,16 @@ tagline: |
   zoxide: A smarter cd command.
 ---
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/zoxide
+```
+
 ## Cheat Sheet
 
 `zoxide` is a smarter `cd` command for your terminal. It keeps track of the
