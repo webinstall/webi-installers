@@ -5,6 +5,19 @@ tagline: |
   VPS Utils make it easy to setup and manage a VPS
 ---
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/vps-myip
+~/.local/bin/myip
+~/.local/bin/cap-net-bind
+~/.local/bin/vps-addswap
+```
+
 ## Cheat Sheet
 
 > VPS Utils includes shortcut commands for some common tasks, including
