@@ -24,3 +24,20 @@ It includes many of the vim plugins available on webinstall.dev such as:
 - [vim-viminfo](/vim-viminfo)
 - [vim-ale](/vim-ale)
 - [vim-prettier](/vim-prettier)
+
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/opt/node/
+~/.local/share/fonts/
+~/.vim/pack/plugins/start/
+~/.vim/plugins/
+~/.vimrc
+```
+
+note: each of the vim plugins above makes an entry into the vim plugin
+directories
