@@ -11,6 +11,15 @@ tagline: |
 webi vim-syntastic
 ```
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.vim/pack/plugins/start/vim-syntastic/
+```
+
 ## Cheat Sheet
 
 `vim-syntastic` has been superseded by
