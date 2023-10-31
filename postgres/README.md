@@ -8,6 +8,17 @@ tagline: |
 To update or switch versions, run `webi postgres@stable` (or `@v10`, `@beta`,
 etc).
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/opt/postgres/
+~/.local/share/postgres/var/postgresql.conf
+```
+
 ## Cheat Sheet
 
 > Postgres is the all-in-one database for beginners and experts alike. It
