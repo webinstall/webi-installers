@@ -7,6 +7,17 @@ tagline: |
 
 To update (replacing the current version) run `webi vim-ale`.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.vim/pack/plugins/start/
+~/.vim/plugins/ale.vim
+```
+
 ## Cheat Sheet
 
 > ALE (Asynchronous Lint Engine) is a plugin providing linting (syntax checking
