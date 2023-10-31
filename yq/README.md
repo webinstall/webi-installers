@@ -7,6 +7,17 @@ tagline: |
 
 To update or switch versions, run `webi yq@stable` or `webi yq@beta`, etc.
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.config/envman/PATH.env
+~/.local/bin/yq
+~/.local/share/man/man1/yq.1
+```
+
 ## Cheat Sheet
 
 > `yq` is like [`jq`](../jq), meaning that it's like `sed` for YAML data - you
