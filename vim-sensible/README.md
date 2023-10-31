@@ -5,6 +5,17 @@ tagline: |
   Vim Sensible: sensible defaults for vim
 ---
 
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```text
+~/.vim/pack/plugins/start/vim-sensible/
+~/.vim/plugins/sensible.vim
+~/.vimrc
+```
+
 ## Updating `vim-sensible`
 
 ```sh
