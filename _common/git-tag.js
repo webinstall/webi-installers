@@ -36,6 +36,10 @@ Repos.checkExists = async function (repoPath) {
   return false;
 };
 
+Repos.fetch = async function (repoPath) {
+  await exec(`git --git-dir=${repoPath} fetch`);
+};
+
 Repos.getTags = async function (repoPath) {
   var { stdout } = await exec(`git --git-dir=${repoPath} tag`);
   var rawTags = stdout.trim().split('\n');
@@ -91,6 +95,8 @@ async function getAllReleases(gitUrl) {
   let isCloned = await Repos.checkExists(repoPath);
   if (!isCloned) {
     await Repos.clone(repoPath, gitUrl);
+  } else {
+    await Repos.fetch(repoPath);
   }
 
   let commitInfos = [];
