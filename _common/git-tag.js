@@ -130,14 +130,20 @@ module.exports = getAllReleases;
 
 if (module === require.main) {
   (async function main() {
-    let all = await getAllReleases('https://github.com/dense-analysis/ale.git');
-    // for stderr
-    let sample = JSON.stringify(all.releases[0], null, 2);
-    console.error('Sample:');
-    console.error(sample);
+    let testRepos = [
+      // just a few tags, and a different HEAD
+      'https://github.com/tpope/vim-commentary.git',
+      // no tags, just HEAD
+      'https://github.com/ziglang/zig.vim.git',
+      // many, many tags
+      //'https://github.com/dense-analysis/ale.git',
+    ];
+    for (let url of testRepos) {
+      let all = await getAllReleases(url);
 
-    all = require('../_webi/normalize.js')(all);
-    console.info(JSON.stringify(all, null, 2));
+      all = require('../_webi/normalize.js')(all);
+      console.info(JSON.stringify(all, null, 2));
+    }
   })()
     .then(function () {
       process.exit(0);
