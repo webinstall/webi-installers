@@ -48,9 +48,6 @@ Repos.getTags = async function (repoPath) {
     if (maybeVersion) {
       tags.push(tag);
     }
-
-    // TODO date versions
-    // let maybeVersionDate = /^v?\d{4}[._-]\d{2}[._-]\d{2}[._-]\D/.test(tag);
   }
 
   tags = tags.reverse();
@@ -64,6 +61,7 @@ Repos.getCommitInfo = async function (repoPath, commitish) {
   stdout = stdout.trim();
   var commitParts = stdout.split(/\s+/g);
   return {
+    commitish: commitish,
     commit_id: `${commitParts[0]}`,
     commit: `${commitParts[1]}`,
     date: commitParts[2],
@@ -95,35 +93,42 @@ async function getAllReleases(gitUrl) {
     await Repos.clone(gitUrl, repoPath);
   }
 
-  let releases = [];
+  let commitInfos = [];
   let tags = await Repos.getTags(repoPath);
   for (let tag of tags) {
     let commitInfo = await Repos.getCommitInfo(repoPath, tag);
+    Object.assign(commitInfo, { version: tag, channel: '' });
+    commitInfos.push(commitInfo);
+  }
+
+  let releases = [];
+  for (let commitInfo of commitInfos) {
+    let version = commitInfo.version.replace(/^v/, '');
+
     let date = new Date(commitInfo.date);
-    let version = tag.replace(/^v/, '');
+    let isoDate = date.toISOString();
+    isoDate = isoDate.replace(/\.\d+Z/, '');
+
+    // tags and HEAD qualify for '--branch <branchish>'
+    let branch = commitInfo.commitish;
 
     let rel = {
       name: `${repoName}-v${version}`,
-      version: tag,
-      git_tag: tag,
+      version: version,
+      git_tag: branch,
       git_commit_hash: commitInfo.commit_id,
-      //git_long_commit_hash: commitInfo.commit,
       lts: false,
-      channel: '',
-      date: date.toISOString(),
+      channel: commitInfo.channel,
+      date: isoDate,
       os: '*',
       arch: '*',
       ext: 'git',
-      //command: `git clone --depth=1 --single-branch --branch ${tag} ${gitUrl}`,
       download: gitUrl,
     };
 
     releases.push(rel);
   }
   all.releases = releases;
-
-  // TODO, if no tags are found, use v0.0.0-{date}
-  // (and allow them to be downloaded as such)
 
   return all;
 }
