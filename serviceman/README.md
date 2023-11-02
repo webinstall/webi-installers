@@ -2,10 +2,37 @@
 title: Serviceman
 homepage: https://git.rootprojects.org/root/serviceman
 tagline: |
-  Serviceman: cross-platform service management for Linux, Mac, and Windows.
+  Serviceman generates and enables startup files on Linux, Mac, and Windows.
 ---
 
-To update or switch versions, run `webi serviceman@stable`
+To update or switch versions, run `webi serviceman@stable` (or `@v0.8`, `beta`,
+etc).
+
+## Cheat Sheet
+
+> A **lightweight, cross-platform wrapper** to more easily \
+> use your **native init system** to control system **service daemons** \
+> and user **launch agents**. \
+>
+> Works for web servers, backup scripts, network and system tools, etc, in all
+> languages.
+
+- Launchd (macOS)
+- Systemd (Linux)
+- OpenRC (Alpine, Docker)
+- Windows: Startup Registry
+
+Works for _any program_, written in _any language_.
+
+## Table of Contents
+
+- Files
+- User Agents & System Daemons
+  - Bash, Node, Go, etc
+- Service Management
+- Dry Run
+- Unit File Examples
+  - systemd, launchd, openrc
 
 ### Files
 
@@ -17,28 +44,36 @@ install:
 ~/.local/bin/serviceman
 ```
 
-## Cheat Sheet
+This will also generate init system unit files according to your OS:
 
-> Serviceman is a hassle-free wrapper around your system launcher. It works with
-> the default system launcher to make it easy to start _user_- and
-> _system_-level services, such as webservers, backup scripts, network and
-> system tools, etc.
-
-Supports
+(use the `--dryrun` option to learn what `serviceman` does without making any
+changes)
 
 - `launchctl` (macOS)
+  ```sh
+  ~/Library/LaunchAgents/<AGENT>.plist
+  /Library/LaunchDaemons/<DAEMON>.plist
+  ```
 - `systemctl` (Linux)
+  ```sh
+  /etc/systemd/system/<DAEMON>.service
+  ~/.config/systemd/user/<AGENT>.service
+  ```
+- `openrc` (Alpine, Docker)
+  ```text
+  /etc/init.d/<DAEMON>
+  ```
 - The Registry (Windows)
-
-Serviceman can run an app in just about any programming language very simply.
-
-If you'd like to learn what `serviceman` does without actually making changes,
-add the `--dryrun` option.
+  ```text
+  HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run <AGENT>
+  ```
 
 ### Example: Bash
 
 ```sh
-sudo env PATH="$PATH" serviceman add bash ./backup.sh /mnt/data
+sudo env PATH="$PATH" \
+    serviceman add --system --path="$PATH" -- \
+    bash ./backup.sh /mnt/data
 ```
 
 ### Example: Node.js
@@ -49,7 +84,8 @@ sudo env PATH="$PATH" serviceman add bash ./backup.sh /mnt/data
 pushd ./my-node-app/
 
 sudo env PATH="$PATH" \
-    serviceman add --system --cap-net-bind \
+    serviceman add --system --path="$PATH" \
+    --cap-net-bind -- \
     npx nodemon ./server.js
 ```
 
@@ -59,7 +95,8 @@ sudo env PATH="$PATH" \
 pushd ./my-node-app/
 
 sudo env PATH="$PATH" \
-    serviceman add --system --cap-net-bind \
+    serviceman add --system --path="$PATH" \
+    --cap-net-bind -- \
     npm start
 ```
 
@@ -69,7 +106,8 @@ sudo env PATH="$PATH" \
 pushd ./my-go-package/
 
 sudo env PATH="$PATH" \
-    serviceman add --system \
+    serviceman add --system --path="$PATH" \
+    -- \
     go run -mod=vendor cmd/my-service/*.go --port 3000
 ```
 
@@ -78,7 +116,8 @@ pushd ./my-go-package/
 go build -mod=vendor cmd/my-service
 
 sudo env PATH="$PATH" \
-    serviceman add --cap-net-bind --system \
+    serviceman add --system --path="$PATH" \
+    --cap-net-bind -- \
     ./my-service --port 80
 ```
 
@@ -105,7 +144,33 @@ sudo env PATH="$PATH" serviceman stop example-service
 sudo env PATH="$PATH" serviceman start example-service
 ```
 
-## What a typical systemd .service file looks like
+### See the (sub)command help
+
+The main help, showing all subcommands:
+
+```sh
+serviceman --help
+```
+
+Sub-command specific help:
+
+```sh
+serviceman add --help
+```
+
+### Use `--dryrun` to see the generated launcher config:
+
+```sh
+sudo env PATH="$PATH" \
+    serviceman add --system --path="$PATH" \
+    --dryrun -- \
+    bash ./backup.sh /mnt/data
+```
+
+### What a typical systemd .service file looks like
+
+`systemd` is the init system on cloud-init enabled server distros, and most
+desktop distros.
 
 ```text
 [Unit]
@@ -134,7 +199,63 @@ NoNewPrivileges=true
 WantedBy=multi-user.target
 ```
 
-## What a typical launchd .plist file looks like
+### What a typical `init.d` service script looks like
+
+`openrc` is the `init` system on Alpine and other Docker and
+_container-friendly_ Linuxes.
+
+`/etc/init.d/exampled`:
+
+```sh
+#!/sbin/openrc-run
+supervisor=supervise-daemon
+
+name="Example System Daemon"
+description="A Service for Logging 'Hello, World', a lot!"
+description_checkconfig="Check configuration"
+description_reload="Reload configuration without downtime"
+
+# example:
+# exampled run --port 1337 --envfile /path/to/env
+# exampled check-config --port 1337 --envfile /path/to/env
+# exampled reload --port 1337 --envfile /path/to/env
+
+# for setting Config
+: ${exampled_opts:="--envfile /root/.config/exampled/env"}
+
+command=/root/bin/exampled
+command_args="run --port 1337 $exampled_opts"
+command_user=root:root
+extra_commands="checkconfig"
+extra_started_commands="reload"
+output_log=/var/log/exampled.log
+error_log=/var/log/exampled.err
+
+depend() {
+    need net localmount
+    after firewall
+}
+
+checkconfig() {
+    ebegin "Checking configuration for $name"
+    su ${command_user%:*} -s /bin/sh -c "$command check-config $exampled_opts"
+    eend $?
+}
+
+reload() {
+    ebegin "Reloading $name"
+    su ${command_user%:*} -s /bin/sh -c "$command reload $exampled_opts"
+    eend $?
+}
+
+stop_pre() {
+    if [ "$RC_CMD" = restart ]; then
+        checkconfig || return $?
+    fi
+}
+```
+
+### What a typical launchd .plist file looks like
 
 ```text
 <?xml version="1.0" encoding="UTF-8"?>
@@ -164,26 +285,4 @@ WantedBy=multi-user.target
   <string>/Users/me/.local/share/example-service/var/log/example-service.log</string>
 </dict>
 </plist>
-```
-
-### Use `--dryrun` to see the generated launcher config:
-
-```sh
-sudo env PATH="$PATH" \
-    serviceman add --system --dryrun \
-    bash ./backup.sh /mnt/data
-```
-
-### See the (sub)command help
-
-The main help, showing all subcommands:
-
-```sh
-serviceman --help
-```
-
-Sub-command specific help:
-
-```sh
-serviceman add --help
 ```
