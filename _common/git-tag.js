@@ -1,17 +1,19 @@
 'use strict';
 
 require('dotenv').config({ path: '.env' });
-if (!process.env.REPO_BASE_DIR) {
-  // for stderr
-  console.error('[Warn] REPO_BASE_DIR= not set, using ./repos/');
-}
-// ../ because this script is one directory deep
-let repoBaseDir = process.env.REPO_BASE_DIR || '../repos';
 
 var Crypto = require('crypto');
 var util = require('util');
 var exec = util.promisify(require('child_process').exec);
 var Fs = require('node:fs/promises');
+var Path = require('node:path');
+
+var repoBaseDir = process.env.REPO_BASE_DIR || '';
+if (!repoBaseDir) {
+  repoBaseDir = Path.resolve('./repos');
+  // for stderr
+  console.error(`[Warn] REPO_BASE_DIR= not set, ${repoBaseDir}`);
+}
 
 var Repos = {};
 
