@@ -8,12 +8,17 @@ IF ($null -eq $Env:WEBI_HOST -or "" -eq $Env:WEBI_HOST) {
 # Install vim-commentary #
 ##########################
 
-# Every package should define these variables
-$pkg_cmd_name = "vim-commentary"
-$pkg_src = "$HOME\Downloads\webi\$Env:WEBI_PKG_PATHNAME"
-$pkg_dst = "$HOME\.vim\pack\plugins\start\$Env:PKG_NAME"
+# ~/.vim/plugins/<vim-name>.vim
+$my_vim_confname = "commentary.vim"
 
-$my_vim_filename = "commentary.vim"
+# ~/.vim/pack/plugins/start/<vim-plugin>/
+$my_vim_plugin = "vim-commentary"
+
+# Non-executable packages should define these variables
+$pkg_cmd_name = "${my_vim_plugin}"
+$pkg_no_exec = $true
+$pkg_src = "$HOME\Downloads\webi\$Env:WEBI_PKG_PATHNAME"
+$pkg_dst = "$HOME\.vim\pack\plugins\start\$my_vim_plugin"
 
 function fn_vim_init {
     if (-Not (Test-Path "$HOME\.vimrc")) {
@@ -26,10 +31,10 @@ function fn_vim_init {
 }
 
 function fn_git_shallow_clone {
-    # IF (Test-Path -Path "$pkg_src") {
-    #     Write-Host "Found $pkg_src"
-    #     Return
-    # }
+    IF (Test-Path -Path "$pkg_src") {
+        Write-Host "Found $pkg_src"
+        Return
+    }
 
     Write-Output "Checking for Git..."
     IF (-Not (Get-Command -Name "git" -ErrorAction Silent)) {
@@ -62,18 +67,18 @@ function fn_install {
 }
 
 function fn_vim_config_download {
-    $my_vim_filepath = "$HOME\.vim\plugins\$my_vim_filename"
-    IF (Test-Path -Path "$my_vim_filepath") {
-        Write-Host "Found $my_vim_filepath"
+    $my_vim_confpath = "$HOME\.vim\plugins\$my_vim_confname"
+    IF (Test-Path -Path "$my_vim_confpath") {
+        Write-Host "Found $my_vim_confpath"
         Return
     }
 
-    & curl.exe -sS -o "$my_vim_filepath" `
-        "$Env:WEBI_HOST/packages/${Env:PKG_NAME}/${my_vim_filename}"
+    & curl.exe -sS -o "$my_vim_confpath" `
+        "$Env:WEBI_HOST/packages/${Env:PKG_NAME}/${my_vim_confname}"
 }
 
 function fn_vim_config_update {
-    $my_vim_filepath = "$HOME\.vim\plugin\$my_vim_filename"
+    $my_vim_confpath = "$HOME\.vim\plugin\$my_vim_confname"
 
 
     Write-Host ''
@@ -82,7 +87,7 @@ function fn_vim_config_update {
     Write-Host ''
     Write-Host "Add the following to ~/.vimrc:" `
         -ForegroundColor magenta -BackgroundColor white
-    Write-Host "    source $my_vim_filepath" `
+    Write-Host "    source $my_vim_confpath" `
         -ForegroundColor magenta -BackgroundColor white
     Write-Host ''
 
