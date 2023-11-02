@@ -5,11 +5,38 @@ tagline: |
   Pathman: cross-platform PATH management for bash, zsh, fish, cmd.exe, and PowerShell.
 ---
 
-## Updating `pathman`
+To update or switch versions, run `webi pathman@stable` (or `@v0.5`, `@beta`,
+etc).
+
+## Cheat Sheet
+
+Manages PATH on various OSes and shells
+
+- Mac, Windows, Linux
+- POSIX Shell, Bash, Zsh, Fish
+- Command, Powershell
 
 ```sh
-webi pathman
+pathman add ~/bin/
 ```
+
+<pre>
+Saved changes to <code>~/.config/envman/PATH.env</code>
+
+Copy, paste, and run the following command:
+
+    <strong><em><code>PATH="$HOME/bin:$PATH"</code></em></strong>
+
+(newly opened terminal windows will have the updated PATH)
+</pre>
+
+**Windows Users**: use POSIX-style `/` (for paths) and `~` (for
+`%USERPROFILE%`) - they'll be adjusted automatically.
+
+## Table of Contents
+
+- Files
+- Add, Remove, List, etc
 
 ### Files
 
@@ -19,21 +46,19 @@ install:
 ```text
 ~/.config/envman/PATH.env
 ~/.local/bin/pathman
+
+# 'source ~/.config/envman/PATH.env' will be added to
+~/.profile
+~/.bashrc
+~/.zshrc
+~/.config/fish/config.fish
 ```
 
-## Cheat Sheet
-
-Manages PATH on various OSes and shells
-
-- Mac, Windows, Linux
-- Bash, Zsh, Fish
-- Command, Powershell
+### Usage
 
 ```sh
 pathman help
 ```
-
-### Usage
 
 ```sh
 pathman add ~/.local/bin
@@ -42,9 +67,6 @@ pathman add ~/.local/bin
 ```sh
 pathman remove ~/.local/bin
 ```
-
-Note: Even on Windows it is best to use Unix-style `/` paths and `~` for
-`%USERPROFILE%`.
 
 ```sh
 pathman list
