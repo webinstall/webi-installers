@@ -58,6 +58,18 @@ Repos.getTags = async function (repoPath) {
   return tags;
 };
 
+Repos.getTipInfo = async function (repoPath) {
+  var { stdout } = await exec(
+    `git --git-dir=${repoPath} rev-parse --abbrev-ref HEAD`,
+  );
+  var branch = stdout.trim();
+
+  var info = await Repos.getCommitInfo(repoPath, 'HEAD');
+  info.commitish = branch;
+
+  return info;
+};
+
 Repos.getCommitInfo = async function (repoPath, commitish) {
   var { stdout } = await exec(
     `git --git-dir=${repoPath} log -1 --format="%h %H %ad %cd" --date=iso-strict ${commitish}`,
@@ -105,6 +117,23 @@ async function getAllReleases(gitUrl) {
     let commitInfo = await Repos.getCommitInfo(repoPath, tag);
     Object.assign(commitInfo, { version: tag, channel: '' });
     commitInfos.push(commitInfo);
+  }
+
+  {
+    let tipInfo = await Repos.getTipInfo(repoPath);
+    // "2024-01-01T00:00:00-05:00" => "2024-01-01T05:00:00"
+    let date = new Date(tipInfo.date);
+    // "2024-01-01T05:00:00" => "v2024.01.01-05.00.00"
+    let version = date.toISOString();
+    // strip '.000Z'
+    version = version.replace(/\.\d+Z/, '');
+    version = version.replace(/[:\-]/g, '.');
+    version = version.replace(/T/, '-');
+    Object.assign(tipInfo, { version: `v${version}`, channel: '' });
+    if (commitInfos.length > 1) {
+      tipInfo.channel = 'beta';
+    }
+    commitInfos.push(tipInfo);
   }
 
   let releases = [];
