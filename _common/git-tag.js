@@ -17,7 +17,7 @@ if (!repoBaseDir) {
 
 var Repos = {};
 
-Repos.clone = async function (gitUrl, repoPath) {
+Repos.clone = async function (repoPath, gitUrl) {
   let uuid = Crypto.randomUUID();
   let tmpPath = `${repoPath}.${uuid}.tmp`;
   await exec(`git clone --bare --filter=tree:0 ${gitUrl} ${tmpPath}`);
@@ -90,7 +90,7 @@ async function getAllReleases(gitUrl) {
 
   let isCloned = await Repos.checkExists(repoPath);
   if (!isCloned) {
-    await Repos.clone(gitUrl, repoPath);
+    await Repos.clone(repoPath, gitUrl);
   }
 
   let commitInfos = [];
