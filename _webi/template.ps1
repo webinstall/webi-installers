@@ -37,9 +37,9 @@ $Env:WEBI_HOST = 'https://webinstall.dev'
 Push-Location $Env:USERPROFILE
 
 # Make paths
-New-Item -Path Downloads -ItemType Directory -Force | Out-Null
-New-Item -Path .local\bin -ItemType Directory -Force | Out-Null
-New-Item -Path .local\opt -ItemType Directory -Force | Out-Null
+New-Item -Path "$Env:USERPROFILE\Downloads" -ItemType Directory -Force | Out-Null
+New-Item -Path "$Env:USERPROFILE\.local\bin" -ItemType Directory -Force | Out-Null
+New-Item -Path "$Env:USERPROFILE\.local\opt" -ItemType Directory -Force | Out-Null
 
 # {{ baseurl }}
 # {{ version }}
