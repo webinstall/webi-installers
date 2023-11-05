@@ -211,7 +211,8 @@ function normalize(all) {
       // won't match:
       //   - v1.0beta
       //   - v1.0-beta1b
-      let isBetaRe = /(\b|_)(preview|rc|beta|alpha)(\d+)(\b|_)/;
+      let isBetaRe =
+        /(\b|_)(alpha|beta|dev|developer|prev|preview|rc)(\d+)(\b|_)/;
       let isBeta = isBetaRe.test(rel.name);
       if (isBeta) {
         rel.channel = 'beta';
