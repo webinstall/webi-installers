@@ -119,6 +119,7 @@ async function getAllReleases(request) {
         let os = osMap[osPart];
         let archPart = fileParts[1];
         let arch = archMap[archPart];
+        let libc = '';
         let pkgPart = fileParts[2];
         let pkgs = pkgMap[pkgPart];
         if (!pkgPart) {
@@ -133,13 +134,16 @@ async function getAllReleases(request) {
         if (fileParts[2] === 'musl') {
           extra = '-musl';
           muslNative = true;
+          libc = 'musl';
+        } else if (os === 'linux') {
+          libc = 'gnu';
+        }
+
+        if (osPart === 'osx') {
+          osPart = 'darwin';
         }
 
         pkgs.forEach(function (pkg) {
-          if (osPart === 'osx') {
-            osPart = 'darwin';
-          }
-
           let filename = `node-${build.version}-${osPart}-${archPart}${extra}.${pkg}`;
           if ('msi' === pkg) {
             filename = `node-${build.version}-${archPart}${extra}.${pkg}`;
@@ -156,7 +160,7 @@ async function getAllReleases(request) {
             arch: arch,
             ext: pkg,
             download: downloadUrl,
-            _musl_native: muslNative,
+            libc: libc,
           };
 
           all.releases.push(release);
