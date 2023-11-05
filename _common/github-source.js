@@ -15,8 +15,6 @@ async function getDistributables(
   request,
   owner,
   repo,
-  oses,
-  arches,
   baseurl = 'https://api.github.com',
 ) {
   if (!owner) {
@@ -82,40 +80,14 @@ async function getDistributables(
         lts: lts,
         channel: channel,
         date: date,
-        os: '', // will be guessed by download filename
-        arch: '', // will be guessed by download filename
-        ext: '', // will be normalized
+        os: '*',
+        arch: '*',
+        libc: '',
+        ext: '',
         download: resp.request.uri.href,
       });
     }
   }
-
-  if (oses) {
-    return combinate(all, oses, arches);
-  }
-
-  return all;
-}
-
-function combinate(all, oses, arches) {
-  let releases = all.releases;
-  // ex: arches = ['amd64', 'arm64', 'armv7l', 'armv6l', 'x86'];
-  // ex: oses = ['macos', 'linux', 'bsd', 'posix'];
-
-  let combos = [];
-  for (let release of releases) {
-    for (let arch of arches) {
-      for (let os of oses) {
-        let combo = {
-          arch: arch,
-          os: os,
-        };
-        let rel = Object.assign({}, release, combo);
-        combos.push(rel);
-      }
-    }
-  }
-  all.releases = combos;
 
   return all;
 }
