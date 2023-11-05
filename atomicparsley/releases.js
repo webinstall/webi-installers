@@ -8,10 +8,13 @@ let targets = {
   x86win: {
     os: 'windows',
     arch: 'x86',
+    libc: 'msvc',
   },
   x64win: {
     os: 'windows',
     arch: 'amd64',
+    // https://github.com/wez/atomicparsley/issues/6#issuecomment-1364523028
+    libc: 'msvc',
   },
   x64mac: {
     os: 'macos',
@@ -20,11 +23,12 @@ let targets = {
   x64lin: {
     os: 'linux',
     arch: 'amd64',
+    libc: 'gnu',
   },
   x64musl: {
     os: 'linux',
     arch: 'amd64',
-    _musl_native: true,
+    libc: 'musl',
   },
 };
 
