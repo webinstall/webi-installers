@@ -170,7 +170,7 @@ __bootstrap_webi() {
         echo >&2 ""
         my_release_url="$(
             echo "$WEBI_RELEASES" |
-                sed 's:\?.*::'
+                sed 's:?.*::'
         )"
         echo >&2 "       Double check at ${my_release_url}"
         echo >&2 ""
