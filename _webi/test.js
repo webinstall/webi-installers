@@ -33,7 +33,8 @@ var os = require('os');
 var fs = require('fs');
 var path = require('path');
 var Releases = require('./releases.js');
-var uaDetect = require('./ua-detect.js');
+var ServeInstaller = require('./serve-installer.js');
+
 var pkg = process.argv[2].split('@');
 var pkgdir = pkg[0];
 var pkgtag = pkg[1] || '';
@@ -42,6 +43,7 @@ var nodes = fs.readdirSync(pkgdir);
 nodes.forEach(function (node) {
   nodesMap[node] = true;
 });
+var baseurl = 'https://webinstall.dev';
 
 var maxLen = 0;
 console.info('');
@@ -62,79 +64,51 @@ console.info('Has the necessary files?');
   });
 
 console.info('');
-Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
+Releases.get(path.join(process.cwd(), pkgdir)).then(async function (all) {
   var pkgname = path.basename(pkgdir.replace(/\/$/, ''));
-  var osrel = os.platform() + '-' + os.release();
-  var arch = os.arch();
-  var libc = 'libc';
+  var nodeOs = os.platform();
+  var nodeOsRelease = os.release();
+  var nodeArch = os.arch();
+  var nodeLibc = 'libc';
+  if (process.platform === 'linux') {
+    nodeLibc = 'gnu';
+    let isUnofficial =
+      process.config.variables.node_release_urlbase.includes('unofficial');
+    if (isUnofficial) {
+      nodeLibc = 'musl';
+    }
+  }
   var formats = ['exe', 'xz', 'tar', 'zip', 'git'];
 
-  var rel;
-  //var releases = [];
-  for (let _rel of all.releases) {
-    for (let ext of formats) {
-      let isSupported = _rel.ext.match(ext);
-      if (!isSupported) {
-        continue;
-      }
-    }
-
-    if (_rel.channel !== 'stable') {
-      continue;
-    }
-
-    if (_rel.os !== '*') {
-      let curOs = uaDetect.os(osrel);
-      if (_rel.os !== curOs) {
-        continue;
-      }
-    }
-
-    if (_rel.libc !== 'none') {
-      let curLibc = uaDetect.libc(libc);
-      if (_rel.libc !== curLibc) {
-        continue;
-      }
-    }
-
-    if (_rel.arch !== '*') {
-      let curArch = uaDetect.arch(arch);
-      if (_rel.arch !== curArch) {
-        continue;
-      }
-    }
-
-    if (pkgtag) {
-      if (_rel.tag !== pkgtag) {
-        let pkgtagRe = new RegExp('^' + pkgtag);
-        let matchesVersion = pkgtagRe.test(_rel.version);
-        if (!matchesVersion) {
-          continue;
-        }
-      }
-    }
-
-    rel = _rel;
-    break;
-  }
+  let [rel, opts] = await ServeInstaller.helper({
+    ua: `${nodeOs}/${nodeOsRelease} ${nodeArch}/unknown ${nodeLibc}`,
+    pkg: pkgname,
+    tag: pkgtag || '',
+    formats: formats,
+    libc: nodeLibc,
+  });
+  Object.assign(
+    {
+      ver: '',
+      lts: null,
+      channel: '',
+      os: '',
+      arch: '',
+      limit: 0,
+    },
+    opts,
+    {
+      baseurl,
+    },
+  );
 
   if (!rel) {
     console.error(
-      `Error: ❌ no release found for os=${osrel}, arch=${arch}, and tag=${pkgtag}`,
+      `Error: ❌ no release found for @${pkgtag}?os=${nodeOs}&arch=${nodeArch}&libc=${nodeLibc}&formats=${formats}`,
     );
     process.exit(1);
     return;
   }
-
-  rel = Object.assign(
-    {
-      oses: all.oses,
-      arches: all.arches,
-      libcs: all.libcs,
-      formats: all.formats,
-    },
-    rel,
-  );
 
   console.info('');
   console.info('Found release matching current os, arch, and tag:');
@@ -142,24 +116,8 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
   console.info('');
 
   return Promise.all([
-    Releases.renderBash(pkgdir, rel, {
-      baseurl: 'https://webinstall.dev',
-      pkg: pkgname,
-      tag: pkgtag || '',
-      ver: '',
-      os: osrel,
-      arch,
-      formats: formats,
-    }).catch(function () {}),
-    Releases.renderPowerShell(pkgdir, rel, {
-      baseurl: 'https://webinstall.dev',
-      pkg: pkgname,
-      tag: pkgtag || '',
-      ver: '',
-      os: osrel,
-      arch,
-      formats: formats,
-    }).catch(function () {}),
+    Releases.renderBash(pkgdir, rel, opts).catch(function () {}),
+    Releases.renderPowerShell(pkgdir, rel, opts).catch(function () {}),
   ]).then(function (scripts) {
     var bashTxt = scripts[0];
     var ps1Txt = scripts[1];
