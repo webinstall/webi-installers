@@ -27,6 +27,7 @@ function padScript(txt) {
   return txt.replace(/^/g, '        ');
 }
 
+var BAD_SH_RE = /[<>'"`$\\]/;
 Releases.renderBash = async function (
   pkgdir,
   rel,
@@ -55,7 +56,7 @@ Releases.renderBash = async function (
   };
   var pkgFile = rel.filename || rel.name;
   let tplTxt = await fs.promises.readFile(
-    path.join(__dirname, 'template.sh'),
+    path.join(__dirname, 'install-package.tpl.sh'),
     'utf8',
   );
   // ex: 'node@lts' or 'node'
@@ -63,102 +64,85 @@ Releases.renderBash = async function (
   if (ver) {
     webiPkg += `@${ver}`;
   }
-  return (
-    tplTxt
-      .replace(/CHEATSHEET_URL/g, `${baseurl}/${pkg}`)
-      .replace(/^\s*#?WEBI_PKG=.*/m, `WEBI_PKG='${webiPkg}'`)
-      .replace(/^\s*#?WEBI_HOST=.*/m, `WEBI_HOST='${baseurl}'`)
-      .replace(/^\s*#?WEBI_OS=.*/m, `WEBI_OS='${os}'`)
-      .replace(/^\s*#?WEBI_ARCH=.*/m, `WEBI_ARCH='${arch}'`)
-      .replace(/^\s*#?WEBI_LIBC=.*/m, `WEBI_LIBC='${libc}'`)
-      .replace(/^\s*#?WEBI_TAG=.*/m, `WEBI_TAG='${tag}'`)
-      .replace(
-        /^\s*#?WEBI_RELEASES=.*/m,
-        "WEBI_RELEASES='" +
-          baseurl +
-          '/api/releases/' +
-          pkg +
-          '@' +
-          tag +
-          '.tab?os=' +
-          rel.os +
-          '&arch=' +
-          rel.arch +
-          '&libc=' +
-          rel.libc +
-          '&formats=' +
-          formats.join(',') +
-          '&pretty=true' +
-          "'",
-      )
-      .replace(
-        /^\s*#?WEBI_CSV=.*/m,
-        "WEBI_CSV='" +
-          [
-            rel.version,
-            rel.lts,
-            rel.channel,
-            rel.date,
-            rel.os,
-            rel.arch,
-            rel.ext,
-            '-',
-            rel.download,
-            rel.name,
-            rel.comment || '',
-          ]
-            .join(',')
-            .replace(/'/g, '') +
-          "'",
-      )
-      .replace(/^\s*#?WEBI_VERSION=.*/m, "WEBI_VERSION='" + rel.version + "'")
-      .replace(/^\s*#?WEBI_MAJOR=.*/m, 'WEBI_MAJOR=' + v.major)
-      .replace(/^\s*#?WEBI_MINOR=.*/m, 'WEBI_MINOR=' + v.minor)
-      .replace(/^\s*#?WEBI_PATCH=.*/m, 'WEBI_PATCH=' + v.patch)
-      .replace(/^\s*#?WEBI_BUILD=.*/m, 'WEBI_BUILD=' + v.build)
-      .replace(/^\s*#?WEBI_GIT_TAG=.*/m, "WEBI_GIT_TAG='" + rel.git_tag + "'")
-      .replace(/^\s*#?WEBI_LTS=.*/m, 'WEBI_LTS=' + rel.lts)
-      .replace(/^\s*#?WEBI_CHANNEL=.*/m, 'WEBI_CHANNEL=' + rel.channel)
-      .replace(
-        /^\s*#?WEBI_EXT=.*/m,
-        'WEBI_EXT=' + rel.ext.replace(/tar.*/, 'tar'),
-      )
-      .replace(
-        /^\s*#?WEBI_FORMATS=.*/m,
-        "WEBI_FORMATS='" + formats.join(',') + "'",
-      )
-      .replace(/^\s*#?WEBI_PKG_URL=.*/m, "WEBI_PKG_URL='" + rel.download + "'")
-      // TODO replace WEBI_PKG_FILE (which is sometimes a dir)
-      .replace(
-        /^\s*#?WEBI_PKG_PATHNAME=.*/m,
-        "WEBI_PKG_PATHNAME='" + pkgFile + "'",
-      )
-      // TODO deprecate
-      .replace(/^\s*#?WEBI_PKG_FILE=.*/m, "WEBI_PKG_FILE='" + pkgFile + "'")
-      // PKG details
-      .replace(/^\s*#?PKG_NAME=.*/m, "PKG_NAME='" + pkg + "'")
-      .replace(
-        /^\s*#?PKG_OSES=.*/m,
-        "PKG_OSES='" + ((rel && rel.oses) || []).join(',') + "'",
-      )
-      .replace(
-        /^\s*#?PKG_ARCHES=.*/m,
-        "PKG_ARCHES='" + ((rel && rel.arches) || []).join(',') + "'",
-      )
-      .replace(
-        /^\s*#?PKG_LIBCS=.*/m,
-        "PKG_LIBCS='" + ((rel && rel.libcs) || []).join(',') + "'",
-      )
-      .replace(
-        /^\s*#?PKG_FORMATS=.*/m,
-        "PKG_FORMATS='" + ((rel && rel.formats) || []).join(',') + "'",
-      )
-      // $', $0, ... $9, $`, $&, and $_ all have special meaning
-      // (see https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
-      // However, it can be escaped with $$ (which must be escaped with $$)
 
-      .replace(reInstallTpl, '\n' + installTxt.replace(/\$/g, '$$$$'))
-  );
+  let releaseParams = new URLSearchParams({
+    os: rel.os,
+    arch: rel.arch,
+    libc: rel.libc,
+    formats: formats.join(','),
+    pretty: true,
+  });
+  let releaseSearch = releaseParams.toString();
+  releaseSearch = releaseSearch.replace(/%2C/g, ',');
+  let releaseUrl = `/api/releases/${pkg}@${tag}.tab?${releaseSearch}`;
+  let releaseCsv = [
+    rel.version,
+    rel.lts,
+    rel.channel,
+    rel.date,
+    rel.os,
+    rel.arch,
+    rel.ext,
+    '-',
+    rel.download,
+    rel.name,
+    rel.comment || '',
+  ]
+    .join(',')
+    .replace(/'/g, '');
+  let envReplacements = [
+    ['WEBI_PKG', webiPkg],
+    ['WEBI_HOST', baseurl],
+    ['WEBI_OS', os],
+    ['WEBI_ARCH', arch],
+    ['WEBI_LIBC', libc],
+    ['WEBI_TAG', tag],
+    ['WEBI_RELEASES', `${baseurl}/${releaseUrl}`],
+    ['WEBI_CSV', releaseCsv],
+    ['WEBI_VERSION', rel.version],
+    ['WEBI_MAJOR', v.major],
+    ['WEBI_MINOR', v.minor],
+    ['WEBI_PATCH', v.patch],
+    ['WEBI_BUILD', v.build],
+    ['WEBI_GIT_BRANCH', rel.git_branch || rel.git_tag],
+    ['WEBI_GIT_TAG', rel.git_tag], // TODO replace with branch
+    ['WEBI_LTS', rel.lts],
+    ['WEBI_CHANNEL', rel.channel],
+    ['WEBI_EXT', rel.ext.replace(/tar.*/, 'tar')],
+    ['WEBI_FORMATS', formats.join(',')],
+    ['WEBI_PKG_URL', rel.download],
+    ['WEBI_PKG_PATHNAME', pkgFile],
+    ['WEBI_PKG_FILE', pkgFile], // TODO replace with pathname
+    ['PKG_NAME', pkg],
+    ['PKG_OSES', rel.oses],
+    ['PKG_ARCHES', rel.arches],
+    ['PKG_LIBCS', rel.libcs],
+    ['PKG_FORMATS', (rel.formats || []).join(',')],
+  ];
+
+  for (let env of envReplacements) {
+    let name = env[0];
+    let value = env[1];
+    // Ex:
+    // #export WEBI_FOO=xyz => export WEBI_FOO='123'
+    // export WEBI_FOO=     => export WEBI_FOO='123'
+    let envRe = new RegExp(
+      `^[ \\t]*#?[ \\t]*(export\\s)?[ \\t]*(${name})=.*`,
+      'm',
+    );
+    if (BAD_SH_RE.test(value)) {
+      throw new Error(`key '${name}' has invalid value '${value}'`);
+    }
+    tplTxt = tplTxt.replace(envRe, `$1$2='${value}'`);
+  }
+
+  tplTxt = tplTxt
+    .replace(/CHEATSHEET_URL/g, `${baseurl}/${pkg}`)
+    // $', $0, ... $9, $`, $&, and $_ all have special meaning
+    // (see https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
+    // However, it can be escaped with $$ (which must be escaped with $$)
+    .replace(reInstallTpl, '\n' + installTxt.replace(/\$/g, '$$$$'));
+  return tplTxt;
 };
 
 Releases.renderPowerShell = async function (
@@ -190,7 +174,7 @@ Releases.renderPowerShell = async function (
     };
   */
   let tplTxt = await fs.promises.readFile(
-    path.join(__dirname, 'template.ps1'),
+    path.join(__dirname, 'install-package.tpl.ps1'),
     'utf8',
   );
   var pkgver = pkg + '@' + ver;
