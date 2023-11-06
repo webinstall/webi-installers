@@ -2,7 +2,6 @@
 
 var path = require('path');
 var Releases = require('./releases.js');
-var uaDetect = require('./ua-detect.js');
 
 var cache = {};
 //var staleAge = 5 * 1000;
@@ -54,21 +53,14 @@ function createFormatsSorter(formats) {
       return 1;
     }
 
-    // Hacky-doo for musl-native: prefer non-musl
-    if (a._musl_native && !b._musl_native) {
-      return 1;
-    }
-    if (!a._musl_native && b._musl_native) {
+    // rank builds that don't depend on any form of libc first
+    if (a.libc === 'none' && b.libc !== 'none') {
       return -1;
+    }
+    if (a.libc !== 'none' && b.libc === 'none') {
+      return 1;
     }
 
-    // Hacky-doo for linux: prefer musl
-    if (a._musl && !b._musl) {
-      return -1;
-    }
-    if (!a._musl && b._musl) {
-      return 1;
-    }
     return 0;
   };
 }
@@ -197,13 +189,20 @@ async function filterReleases(
       }
     }
 
-    // Hacky-doo for linux musl
-    if (libc === uaDetect.MUSL_NATIVE) {
-      if (!rel._musl && !rel._musl_native) {
+    if (rel.libc !== 'none') {
+      let releaseRequiresMusl = rel.libc === 'musl';
+      // goal: handle non-glibc (Alpine / Docker / musl)
+      let osHasMusl = libc === 'musl';
+      if (osHasMusl) {
+        // goal: fail if dependent on libc
+        let releaseRequiresLibc = rel.libc === 'gnu';
+        if (releaseRequiresLibc) {
+          return false;
+        }
+      } else if (releaseRequiresMusl) {
+        // goal: don't use musl++ on glibc (Ubuntu, GNU, etc)
         return false;
       }
-    } else if (rel._musl_native) {
-      return false;
     }
 
     if (lts) {
@@ -363,20 +362,20 @@ module.exports = function getReleases({
               date: '1970-01-01',
               os: os || '-',
               arch: arch || '-',
-              _musl: undefined,
-              _musl_native: undefined,
+              libc: libc || '-',
               ext: 'err',
               download: 'https://example.com/doesntexist.ext',
               comment:
                 'No matches found. Could be bad or missing version info' +
                 ',' +
-                "Check query parameters. Should be something like '/api/releases/{package}@{version}.tab?os={macos|linux|windows|-}&arch={amd64|x86|aarch64|arm64|armv7l|-}&limit=100'",
+                "Check query parameters. Should be something like '/api/releases/{package}@{version}.tab?os={macos|linux|windows|-}&arch={amd64|x86|aarch64|arm64|armv7l|-}&libc={musl|gnu|msvc|libc|static}&limit=10'",
             },
           ];
         }
         return {
           oses: all.oses,
           arches: all.arches,
+          libcs: all.libcs,
           formats: all.formats,
           releases: releases,
         };
@@ -392,7 +391,7 @@ if (require.main === module) {
       os: 'macos',
       arch: 'amd64',
       lts: true,
-      libc: '',
+      libc: 'libc',
       channel: 'stable',
       formats: ['tar', 'exe', 'zip', 'xz', 'dmg', 'pkg'],
       limit: 10,

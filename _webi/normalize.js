@@ -13,6 +13,7 @@ var osMap = {
 var maps = {
   oses: {},
   arches: {},
+  libcs: {},
   formats: {},
 };
 
@@ -65,11 +66,18 @@ arches.forEach(function (name) {
   maps.arches[name] = true;
 });
 
+var libcs = ['none', 'musl', 'gnu', 'msvc', 'libc'];
+libcs.forEach(function (name) {
+  maps.libcs[name] = true;
+});
+
 function normalize(all) {
-  /* jshint maxcomplexity:26 */
+  /* jshint maxcomplexity:50 */
+  /* jshint maxdepth:10 */
   var supported = {
     oses: {},
     arches: {},
+    libcs: {},
     formats: {},
   };
 
@@ -94,16 +102,6 @@ function normalize(all) {
         }
       }
     }
-
-    // Hacky-doo for musl
-    // TODO 'libc' some sort of glibc vs musl tag?
-    if (!rel._musl_native) {
-      if (!rel._musl) {
-        if (/(\b|\.|_|-)(musl)(\b|\.|_|-)/.test(rel.download)) {
-          rel._musl = true;
-        }
-      }
-    }
     supported.oses[rel.os] = true;
 
     if (!rel.arch) {
@@ -122,6 +120,60 @@ function normalize(all) {
       }
     }
     supported.arches[rel.arch] = true;
+
+    // note: depends on rel.os
+    if (!rel.libc) {
+      let isMusl;
+      let isMsvc;
+      let isStatic;
+      let isGnu;
+
+      // extra blocks to prevent copy pasta errors
+
+      {
+        let muslRe = /(\b|_)(musl)(\b|_)/i;
+        isMusl = muslRe.test(rel.download) || muslRe.test(rel.name);
+      }
+
+      {
+        let msvcRe = /(\b|_)(msvc)(\b|_)/i;
+        isMsvc = msvcRe.test(rel.download) || msvcRe.test(rel.name);
+      }
+
+      {
+        let staticRe = /(\b|_)(static)(\b|_)/i;
+        isStatic = staticRe.test(rel.download) || staticRe.test(rel.name);
+      }
+
+      {
+        let gnuRe = /(\b|_)(gnu|glibc|libc)(\b|_)/i;
+        isGnu = gnuRe.test(rel.download) || gnuRe.test(rel.name);
+      }
+
+      if (isMusl) {
+        // we specifically tag things that need musl++ in their own releases
+        rel.libc = 'none';
+      } else if (isStatic) {
+        rel.libc = 'none';
+      } else if (isGnu) {
+        rel.libc = 'gnu';
+        if (rel.os === 'windows') {
+          // windows gnu is static
+          rel.libc = 'none';
+        } else if (rel.os === 'darwin') {
+          // if glibc is required on macos, it'll be static
+          rel.libc = 'none';
+        }
+      } else if (isMsvc) {
+        rel.libc = 'msvc';
+      } else {
+        // The default is no requirement for any particular libc
+        // (Go, Zig, POSIX Shell, JS, etc)
+        // and hopefully we never have to worry about mingw and friends
+        rel.libc = 'none';
+      }
+    }
+    supported.libcs[rel.libc] = true;
 
     var tarExt;
     if (!rel.ext) {
@@ -179,6 +231,9 @@ function normalize(all) {
   all.arches = Object.keys(supported.arches).filter(function (name) {
     return maps.arches[name];
   });
+  all.libcs = Object.keys(supported.libcs).filter(function (name) {
+    return maps.libcs[name];
+  });
   all.formats = Object.keys(supported.formats).filter(function (name) {
     return maps.formats[name];
   });
@@ -199,4 +254,5 @@ module.exports._debug = function (all) {
 // NOT in order of priority (which would be tar, xz, zip, ...)
 module.exports.formats = formats;
 module.exports.arches = arches;
+module.exports.libcs = libcs;
 module.exports.formatsMap = maps.formats;

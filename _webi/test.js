@@ -66,6 +66,7 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
   var pkgname = path.basename(pkgdir.replace(/\/$/, ''));
   var osrel = os.platform() + '-' + os.release();
   var arch = os.arch();
+  var libc = 'libc';
   var formats = ['exe', 'xz', 'tar', 'zip', 'git'];
 
   var rel;
@@ -85,6 +86,13 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
     if (_rel.os !== '*') {
       let curOs = uaDetect.os(osrel);
       if (_rel.os !== curOs) {
+        continue;
+      }
+    }
+
+    if (_rel.libc !== 'none') {
+      let curLibc = uaDetect.libc(libc);
+      if (_rel.libc !== curLibc) {
         continue;
       }
     }
@@ -118,9 +126,15 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
     return;
   }
 
-  rel.oses = all.oses;
-  rel.arches = all.arches;
-  rel.formats = all.formats;
+  rel = Object.assign(
+    {
+      oses: all.oses,
+      arches: all.arches,
+      libcs: all.libcs,
+      formats: all.formats,
+    },
+    rel,
+  );
 
   console.info('');
   console.info('Found release matching current os, arch, and tag:');
@@ -169,5 +183,9 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(function (all) {
       console.info('\tNEEDS MANUAL TEST: powershell.exe %s', ps1File);
     }
     console.info('');
+    setTimeout(function () {
+      console.warn(`[warn] dangling event loop handle`);
+      process.exit(0);
+    }, 300).unref();
   });
 });

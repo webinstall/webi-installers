@@ -13,9 +13,10 @@ var installersDir = path.join(__dirname, '..');
 
 serveInstaller.serveInstaller = serveInstaller;
 module.exports = serveInstaller;
-async function serveInstaller(baseurl, ua, pkg, tag, ext, formats) {
+async function serveInstaller(baseurl, ua, pkg, tag, ext, formats, libc) {
   // TODO put some of this in a middleware? or common function?
 
+  // TODO maybe move package/version/lts/channel detection into getReleases
   var ver = tag.replace(/^v/, '');
   var lts;
   var channel;
@@ -44,12 +45,21 @@ async function serveInstaller(baseurl, ua, pkg, tag, ext, formats) {
       break;
   }
 
-  // TODO maybe move package/version/lts/channel detection into getReleases
   var myOs = uaDetect.os(ua);
   var myArch = uaDetect.arch(ua);
-  var myLibc = uaDetect.libc(ua);
+  var myLibc;
+  if (libc) {
+    myLibc = uaDetect.libc(libc);
+  }
+  if (!myLibc) {
+    myLibc = uaDetect.libc(ua);
+  }
+  if (!myLibc) {
+    myLibc = 'libc';
+  }
+
   let cfg = await packages.get(pkg);
-  let rels = await getReleases({
+  let releaseQuery = {
     pkg: cfg.alias || pkg,
     ver,
     os: myOs,
@@ -57,9 +67,13 @@ async function serveInstaller(baseurl, ua, pkg, tag, ext, formats) {
     libc: myLibc,
     lts,
     channel,
+    // TODO use formats for sorting, not exclusion
+    // (it's better to install xz or report an error to install zip)
     formats,
     limit: 1,
-  });
+  };
+
+  let rels = await getReleases(releaseQuery);
 
   var rel = rels.releases[0];
   var pkgdir = path.join(installersDir, pkg);
@@ -70,14 +84,21 @@ async function serveInstaller(baseurl, ua, pkg, tag, ext, formats) {
     tag,
     os: myOs,
     arch: myArch,
+    libc: myLibc,
     lts,
     channel,
     formats,
     limit: 1,
   };
-  rel.oses = rels.oses;
-  rel.arches = rels.arches;
-  rel.formats = rels.formats;
+  rel = Object.assign(
+    {
+      oses: rels.oses,
+      arches: rels.arches,
+      libcs: rels.libcs,
+      formats: rels.formats,
+    },
+    rel,
+  );
 
   if ('ps1' === ext) {
     return Releases.renderPowerShell(pkgdir, rel, opts);

@@ -30,7 +30,7 @@ function padScript(txt) {
 Releases.renderBash = async function (
   pkgdir,
   rel,
-  { baseurl, pkg, tag, ver, os = '', arch = '', formats },
+  { baseurl, pkg, tag, ver, os = '', arch = '', libc = '', formats },
 ) {
   if (!Array.isArray(formats)) {
     formats = [];
@@ -70,6 +70,7 @@ Releases.renderBash = async function (
       .replace(/^\s*#?WEBI_HOST=.*/m, `WEBI_HOST='${baseurl}'`)
       .replace(/^\s*#?WEBI_OS=.*/m, `WEBI_OS='${os}'`)
       .replace(/^\s*#?WEBI_ARCH=.*/m, `WEBI_ARCH='${arch}'`)
+      .replace(/^\s*#?WEBI_LIBC=.*/m, `WEBI_LIBC='${libc}'`)
       .replace(/^\s*#?WEBI_TAG=.*/m, `WEBI_TAG='${tag}'`)
       .replace(
         /^\s*#?WEBI_RELEASES=.*/m,
@@ -83,6 +84,8 @@ Releases.renderBash = async function (
           rel.os +
           '&arch=' +
           rel.arch +
+          '&libc=' +
+          rel.libc +
           '&formats=' +
           formats.join(',') +
           '&pretty=true' +
@@ -143,6 +146,10 @@ Releases.renderBash = async function (
         "PKG_ARCHES='" + ((rel && rel.arches) || []).join(',') + "'",
       )
       .replace(
+        /^\s*#?PKG_LIBCS=.*/m,
+        "PKG_LIBCS='" + ((rel && rel.libcs) || []).join(',') + "'",
+      )
+      .replace(
         /^\s*#?PKG_FORMATS=.*/m,
         "PKG_FORMATS='" + ((rel && rel.formats) || []).join(',') + "'",
       )
@@ -157,7 +164,7 @@ Releases.renderBash = async function (
 Releases.renderPowerShell = async function (
   pkgdir,
   rel,
-  { baseurl, pkg, tag, ver, os, arch, formats },
+  { baseurl, pkg, tag, ver, os, arch, libc = '', formats },
 ) {
   if (!Array.isArray(formats)) {
     formats = [];
@@ -189,6 +196,10 @@ Releases.renderPowerShell = async function (
   var pkgver = pkg + '@' + ver;
   return (
     tplTxt
+      .replace(
+        /^(#)?\$Env:WEBI_LIBC\s*=.*/im,
+        "$Env:WEBI_LIBC = '" + libc + "'",
+      )
       .replace(
         /^(#)?\$Env:WEBI_HOST\s*=.*/im,
         "$Env:WEBI_HOST = '" + baseurl + "'",

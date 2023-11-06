@@ -2,10 +2,6 @@
 
 var uaDetect = module.exports;
 
-const MUSL_NATIVE = 'musl-native';
-
-uaDetect.MUSL_NATIVE = MUSL_NATIVE;
-
 function getRequest(req) {
   var ua = req.headers['user-agent'] || '';
   var os = req.query.os;
@@ -100,19 +96,55 @@ function getLibc(ua) {
     return '-';
   }
 
-  // Use native 'libc' information, if provided
-  //
+  // How to see a bunch of target host quadruples:
+  //     go tool dist list
+  //     rustup target list
+  //     zig targets | jq -r '.libc[]' | sort -
+
   // Generally, we prefer 'musl' builds because they DO work on glibc systems (Ubuntu),
   // but 'glibc' builds will NOT work on musl systems (Alpine / Docker).
   //
   // However, there are a few instances (ex: Node.js), where the 'musl' builds
   // DO NOT work on glibc systems.
-  if (ua.match(MUSL_NATIVE)) {
-    return MUSL_NATIVE;
+
+  {
+    let muslRe = /(\b|_)(musl)(\b|_)/i;
+    if (muslRe.test(ua)) {
+      return 'musl';
+    }
   }
 
-  // TODO handle explicit invalid different
-  return '';
+  {
+    let msvcRe = /(\b|_)(msvc|windows|microsoft)(\b|_)/i;
+    if (msvcRe.test(ua)) {
+      return 'msvc';
+    }
+  }
+
+  {
+    let gnuRe = /(\b|_)(gnu|glibc|linux)(\b|_)/i;
+    if (gnuRe.test(ua)) {
+      return 'gnu';
+    }
+  }
+
+  {
+    let libcRe = /(\b|_)(libc)(\b|_)/i;
+    if (libcRe.test(ua)) {
+      return 'libc';
+    }
+  }
+
+  {
+    let darwinRe = /(\b|_)(darwin)(\b|_)/i;
+    if (darwinRe.test(ua)) {
+      // not sure whether this should be "darwin" or "libc" or "none"
+      // https://opensource.apple.com/source/Libc/
+      return 'libc';
+    }
+  }
+
+  return 'libc';
 }
 
 uaDetect.os = getOs;

@@ -14,9 +14,18 @@ __install_webi() {
     #WEBI_HOST=https://webinstall.dev
     export WEBI_HOST
 
+    my_libc=''
+    if ldd /bin/ls 2> /dev/null | grep -q 'musl' 2> /dev/null; then
+        my_libc='musl'
+    elif uname -o | grep -q 'GNU' || uname -s | grep -q 'Linux'; then
+        my_libc='gnu'
+    else
+        my_libc='libc'
+    fi
+
     if test -z "$WEBI_WELCOME"; then
         echo ""
-        printf "Thanks for using webi to install '\e[32m%s\e[0m' on '\e[33m%s/%s\e[0m'.\n" "${WEBI_PKG-}" "$(uname -s)/$(uname -r)" "$(uname -m)"
+        printf "Thanks for using webi to install '\e[32m%s\e[0m' on '\e[33m%s (%s) %s\e[0m'.\n" "${WEBI_PKG:-"Unknown Package"}" "$(uname -s)" "${my_libc:-"Unknown Libc"}" "$(uname -m)"
         echo "Have a problem? Experience a bug? Please let us know:"
         printf "        \e[2m\e[36mhttps://github.com/webinstall/webi-installers/issues\e[0m\n"
         echo ""
@@ -104,7 +113,11 @@ __webi_main() {
 
     my_libc=''
     if ldd /bin/ls 2> /dev/null | grep -q 'musl' 2> /dev/null; then
-        my_libc=' musl-native'
+        my_libc='musl'
+    elif uname -o | grep -q 'GNU' || uname -s | grep -q 'Linux'; then
+        my_libc='gnu'
+    else
+        my_libc='libc'
     fi
 
     export WEBI_HOST="\${WEBI_HOST:-https://webinstall.dev}"

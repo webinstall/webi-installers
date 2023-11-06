@@ -8,13 +8,18 @@ __bootstrap_webi() {
 
     my_libc=''
     if ldd /bin/ls 2> /dev/null | grep -q 'musl' 2> /dev/null; then
-        my_libc=' musl-native'
+        my_libc='musl'
+    elif uname -o | grep -q 'GNU' || uname -s | grep -q 'Linux'; then
+        my_libc='gnu'
+    else
+        my_libc='libc'
     fi
 
     #WEBI_PKG=
     #PKG_NAME=
     #WEBI_OS=
     #WEBI_ARCH=
+    #WEBI_LIBC=
     #WEBI_HOST=
     #WEBI_RELEASES=
     #WEBI_CSV=
@@ -35,8 +40,9 @@ __bootstrap_webi() {
     #WEBI_PKG_PATHNAME=
     #PKG_OSES=
     #PKG_ARCHES=
+    #PKG_LIBCS=
     #PKG_FORMATS=
-    WEBI_UA="$(uname -s)/$(uname -r) $(uname -m)/unknown${my_libc}"
+    WEBI_UA="$(uname -s)/$(uname -r) $(uname -m)/unknown ${my_libc}"
     WEBI_PKG_DOWNLOAD=""
     WEBI_DOWNLOAD_DIR="${HOME}/Downloads"
     if command -v xdg-user-dir > /dev/null; then
@@ -164,15 +170,20 @@ __bootstrap_webi() {
             return 0
         fi
 
-        echo >&2 "Error: no '$PKG_NAME' release for '${WEBI_OS-}' on '$WEBI_ARCH' as one of '$WEBI_FORMATS' by the tag '${WEBI_TAG-}'"
-        echo >&2 "       '$PKG_NAME' is available for '$PKG_OSES' on '$PKG_ARCHES' as one of '$PKG_FORMATS'"
+        echo >&2 "Error: no '${PKG_NAME:-"Unknown Package"}@${WEBI_TAG:-"Unknown Tag"}' release for '${WEBI_OS:-"Unknown OS"}' (${WEBI_LIBC:-"Unknown Libc"}) on '${WEBI_ARCH:-"Unknown CPU"}' as one of '${WEBI_FORMATS:-"Unknown File Type"}'"
+        echo >&2 "       '$PKG_NAME' is available for '$PKG_OSES' ($PKG_LIBCS) on '$PKG_ARCHES' as one of '$PKG_FORMATS'"
         echo >&2 "       (check that the package name and version are correct)"
         echo >&2 ""
         my_release_url="$(
             echo "$WEBI_RELEASES" |
                 sed 's:?.*::'
         )"
+        my_release_params="$(
+            echo "$WEBI_RELEASES" |
+                sed 's:.*?:?:'
+        )"
         echo >&2 "       Double check at ${my_release_url}"
+        echo >&2 "           ${my_release_params}"
         echo >&2 ""
 
         exit 1
@@ -548,7 +559,7 @@ __bootstrap_webi() {
 
     if [ -z "${WEBI_WELCOME-}" ]; then
         echo ""
-        printf "Thanks for using webi to install '\e[32m%s\e[0m' on '\e[33m%s/%s\e[0m'.\n" "${WEBI_PKG-}" "$(uname -s)" "$(uname -m)"
+        printf "Thanks for using webi to install '\e[32m%s\e[0m' on '\e[33m%s (%s) %s\e[0m'.\n" "${WEBI_PKG:-"Unknown Package"}" "$(uname -s)" "${WEBI_LIBC:-"Unknown Libc"}" "$(uname -m)"
         echo "Have a problem? Experience a bug? Please let us know:"
         printf "        \e[2m\e[36mhttps://github.com/webinstall/webi-installers/issues\e[0m\n"
         echo ""
