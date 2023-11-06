@@ -14,6 +14,7 @@ __bootstrap_webi() {
     else
         my_libc='libc'
     fi
+    WEBI_UA="$(uname -s)/$(uname -r) $(uname -m)/unknown ${my_libc}"
 
     #WEBI_PKG=
     #PKG_NAME=
@@ -66,6 +67,20 @@ __bootstrap_webi() {
     mkdir -p "${WEBI_PKG_PATH}"
     mkdir -p "$HOME/.local/bin"
     mkdir -p "$HOME/.local/opt"
+
+    if test -e ~/.local/bin; then
+        echo "Found ~/.local/bin"
+    else
+        echo "Creating ~/.local/bin"
+        mkdir -p "$HOME/.local/bin"
+    fi
+
+    if test -e ~/.local/bin/webi; then
+        echo "Found ~/.local/bin/webi"
+    else
+        echo "Creating ~/.local/bin"
+        mkdir -p "$HOME/.local/bin"
+    fi
 
     ##
     ## Detect http client
@@ -192,14 +207,8 @@ __bootstrap_webi() {
     is_interactive_shell() {
         # $- shows shell flags (error,unset,interactive,etc)
         case $- in
-            *i*)
-                # true
-                return 0
-                ;;
-            *)
-                # false
-                return 1
-                ;;
+            *i*) return 0 ;;
+            *) return 1 ;;
         esac
     }
 
