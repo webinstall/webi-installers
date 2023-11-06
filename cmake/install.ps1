@@ -8,19 +8,19 @@
 $pkg_cmd_name = "cmake"
 
 $pkg_dst_cmd = "$Env:USERPROFILE\.local\opt\cmake\bin\cmake.exe"
+$pkg_dst_bin = "$Env:USERPROFILE\.local\opt\cmake\bin"
 $pkg_dst_dir = "$Env:USERPROFILE\.local\opt\cmake"
-$pkg_dst = "$pkg_dst_cmd"
+$pkg_dst = "$pkg_dst_dir"
 
 $pkg_src_cmd = "$Env:USERPROFILE\.local\opt\cmake-v$Env:WEBI_VERSION\bin\cmake.exe"
-$pkg_src_bin = "$Env:USERPROFILE\.local\opt\cmake-v$Env:WEBI_VERSION\bin"
 $pkg_src_dir = "$Env:USERPROFILE\.local\opt\cmake-v$Env:WEBI_VERSION"
-$pkg_src = "$pkg_src_cmd"
+$pkg_src = "$pkg_src_dir"
 
 New-Item "$Env:USERPROFILE\Downloads\webi" -ItemType Directory -Force | Out-Null
 $pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 
 # Fetch archive
-IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE")) {
+IF (!(Test-Path -Path "$pkg_download")) {
     Write-Output "Downloading cmake from $Env:WEBI_PKG_URL to $pkg_download"
     & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
     & Move-Item "$pkg_download.part" "$pkg_download"
@@ -49,6 +49,8 @@ IF (!(Test-Path -Path "$pkg_src_dir")) {
     Pop-Location
 }
 
-Write-Output "Copying into '$pkg_dst_cmd' from '$pkg_src_cmd'"
-Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore | Out-Null
+Write-Output "Copying into '$pkg_dst' from '$pkg_src'"
+Remove-Item -Path "$pkg_dst" -Recurse -ErrorAction Ignore | Out-Null
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse
+webi_path_add "$pkg_dst_bin"
+& "$pkg_dst_cmd" --version
