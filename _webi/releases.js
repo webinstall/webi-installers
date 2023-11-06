@@ -56,7 +56,7 @@ Releases.renderBash = async function (
   };
   var pkgFile = rel.filename || rel.name;
   let tplTxt = await fs.promises.readFile(
-    path.join(__dirname, 'template.sh'),
+    path.join(__dirname, 'install-package.tpl.sh'),
     'utf8',
   );
   // ex: 'node@lts' or 'node'
@@ -174,7 +174,7 @@ Releases.renderPowerShell = async function (
     };
   */
   let tplTxt = await fs.promises.readFile(
-    path.join(__dirname, 'template.ps1'),
+    path.join(__dirname, 'install-package.tpl.ps1'),
     'utf8',
   );
   var pkgver = pkg + '@' + ver;
