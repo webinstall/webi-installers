@@ -6,6 +6,35 @@ var repo = 'CMake';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
+    for (let rel of all.releases) {
+      {
+        let linuxRe = /(\b|_)(linux|gnu)(\b|_)/i;
+        let isLinux = linuxRe.test(rel.download) || linuxRe.test(rel.name);
+
+        if (isLinux) {
+          let muslRe = /(\b|_)(musl|alpine)(\b|_)/i;
+          let isMusl = muslRe.test(rel.download) || muslRe.test(rel.name);
+          if (isMusl) {
+            rel.libc = 'musl';
+          } else {
+            rel.libc = 'gnu';
+          }
+          continue;
+        }
+      }
+
+      {
+        let windowsRe = /(\b|_)(win\d*|windows\d*)(\b|_)/i;
+        let isWindows =
+          windowsRe.test(rel.download) || windowsRe.test(rel.name);
+
+        if (isWindows) {
+          rel.libc = 'msvc';
+          continue;
+        }
+      }
+    }
+
     return all;
   });
 };
