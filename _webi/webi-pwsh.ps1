@@ -28,7 +28,7 @@ IF ($my_arch -eq "AMD64") {
     }
 }
 
-$Env:WEBI_UA = "Windows/10 $my_arch"
+$Env:WEBI_UA = "Windows/10+ $my_arch msvc"
 $exename = $args[0]
 
 # Switch to userprofile
@@ -100,7 +100,7 @@ if ($exename -eq "-V" -or $exename -eq "--version" -or $exename -eq "version" -o
 
 # Fetch <whatever>.ps1
 # TODO detect formats
-$PKG_URL = "$Env:WEBI_HOST/api/installers/$exename.ps1?formats=zip,exe,tar,git"
+$PKG_URL = "$Env:WEBI_HOST/api/installers/$exename.ps1?formats=zip,exe,tar,git&libc=msvc"
 Write-Output "Downloading $PKG_URL"
 # Invoke-WebRequest -UserAgent "Windows amd64" "$PKG_URL" -OutFile ".\.local\tmp\$exename.install.ps1"
 & curl.exe -fsSL -A "$Env:WEBI_UA" "$PKG_URL" -o .\.local\tmp\$exename.install.ps1
