@@ -1,5 +1,9 @@
 'use strict';
 
+var Installers = module.exports;
+
+var Crypto = require('crypto');
+var Fs = require('fs/promises');
 var path = require('path');
 
 var uaDetect = require('./ua-detect.js');
@@ -122,4 +126,115 @@ Installers.helper = async function ({ ua, pkg, tag, formats, libc }) {
   );
 
   return [rel, opts];
+};
+
+var CURL_PIPE_PS1_BOOT = path.join(__dirname, 'bootstrap.ps1');
+var CURL_PIPE_SH_BOOT = path.join(__dirname, 'bootstrap.sh');
+var BAD_SH_RE = /[<>'"`$\\]/;
+
+Installers.getPosixCurlPipeBootstrap = async function ({ baseurl, pkg, ver }) {
+  let bootTxt = await Fs.readFile(CURL_PIPE_SH_BOOT, 'utf8');
+
+  var webiPkg = [pkg, ver].filter(Boolean).join('@');
+  var webiChecksum = await Installers.getWebiShChecksum();
+  var envReplacements = [
+    ['WEBI_PKG', webiPkg],
+    ['WEBI_HOST', baseurl],
+    ['WEBI_CHECKSUM', webiChecksum],
+  ];
+
+  for (let env of envReplacements) {
+    let name = env[0];
+    let value = env[1];
+
+    // TODO create REs once, in higher scope
+    let envRe = new RegExp(
+      `^[ \\t]*#?[ \\t]*(export\\s)?[ \\t]*(${name})=.*`,
+      'm',
+    );
+
+    if (BAD_SH_RE.test(value)) {
+      throw new Error(`key '${name}' has invalid value '${value}'`);
+    }
+
+    bootTxt = bootTxt.replace(envRe, `$1$2='${value}'`);
+  }
+  // TODO init config here
+  //bootTxt.replace(/CHEATSHEET_URL/g, `${Config.cheatUrl}/${pkg}`);
+
+  return bootTxt;
+};
+
+Installers.getPwshCurlPipeBootstrap = async function ({
+  baseurl,
+  pkg,
+  ver,
+  exename,
+}) {
+  let bootTxt = await Fs.readFile(CURL_PIPE_PS1_BOOT, 'utf8');
+
+  var webiPkg = [pkg, ver].filter(Boolean).join('@');
+  //var webiChecksum = await Installers.getWebiPs1Checksum();
+  var envReplacements = [
+    ['Env:WEBI_PKG', webiPkg],
+    ['Env:WEBI_HOST', baseurl],
+    //['Env:WEBI_CHECKSUM', webiChecksum],
+    ['baseurl', baseurl],
+    ['exename', exename],
+    ['version', ver],
+  ];
+
+  for (let env of envReplacements) {
+    let name = env[0];
+    let value = env[1];
+
+    if (BAD_SH_RE.test(value)) {
+      throw new Error(`key '${name}' has invalid value '${value}'`);
+    }
+
+    let tplRe = new RegExp(`{{ (${name}) }}`, 'g');
+    bootTxt = bootTxt.replace(tplRe, `${value}`);
+
+    // let envRe = new RegExp(`^[ \\t]*#?[ \\t]*($$${name})[ \\t]*=.*`, 'im');
+    // bootTxt = bootTxt.replace(envRe, `$$${name} = '${value}'`);
+
+    let setRe = new RegExp(
+      `(#[ \\t]*)?(\\$${name})[ \\t]*=[ \\t]['"].*['"][ \\t]`,
+      'im',
+    );
+    bootTxt = bootTxt.replace(setRe, `$$${name} = '${value}'`);
+  }
+  // TODO init config here
+  //bootTxt.replace(/CHEATSHEET_URL/g, `${Config.cheatUrl}/${pkg}`);
+
+  return bootTxt;
+};
+
+var _webiShMeta = {
+  stale: 10 * 1000,
+  updated_at: 0,
+  checksum: '',
+  mtime: 0,
+};
+Installers.getWebiShChecksum = async function () {
+  let now = Date.now();
+  let ago = now - _webiShMeta.updated_at;
+  if (ago <= _webiShMeta.stale) {
+    return _webiShMeta.checksum;
+  }
+
+  let webiPath = path.join(__dirname, '../webi/webi.sh');
+  let stat = await Fs.stat(webiPath);
+  if (stat.mtimeMs === _webiShMeta.mtime) {
+    return _webiShMeta.checksum;
+  }
+
+  let webiBuf = await Fs.readFile(webiPath, null);
+  let webiHash = Crypto.createHash('sha1').update(webiBuf).digest('hex');
+  let webiChecksum = webiHash.slice(0, 8);
+
+  _webiShMeta.mtime = stat.mtimeMs;
+  _webiShMeta.updated_at = now;
+  _webiShMeta.checksum = webiChecksum;
+  return _webiShMeta.checksum;
 };
