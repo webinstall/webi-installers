@@ -9,11 +9,17 @@ var Releases = require('./releases.js');
 // handlers caching and transformation, probably should be broken down
 var getReleases = require('./transform-releases.js');
 
-serveInstaller.serveInstaller = serveInstaller;
-serveInstaller.INSTALLERS_DIR = path.join(__dirname, '..');
-module.exports = serveInstaller;
-async function serveInstaller(baseurl, ua, pkg, tag, ext, formats, libc) {
-  let [rel, opts] = await serveInstaller.helper({
+Installers.INSTALLERS_DIR = path.join(__dirname, '..');
+Installers.serveInstaller = async function (
+  baseurl,
+  ua,
+  pkg,
+  tag,
+  ext,
+  formats,
+  libc,
+) {
+  let [rel, opts] = await Installers.helper({
     ua,
     pkg,
     tag,
@@ -24,13 +30,13 @@ async function serveInstaller(baseurl, ua, pkg, tag, ext, formats, libc) {
     baseurl,
   });
 
-  var pkgdir = path.join(serveInstaller.INSTALLERS_DIR, pkg);
+  var pkgdir = path.join(Installers.INSTALLERS_DIR, pkg);
   if ('ps1' === ext) {
     return Releases.renderPowerShell(pkgdir, rel, opts);
   }
   return Releases.renderBash(pkgdir, rel, opts);
-}
-serveInstaller.helper = async function ({ ua, pkg, tag, formats, libc }) {
+};
+Installers.helper = async function ({ ua, pkg, tag, formats, libc }) {
   // TODO put some of this in a middleware? or common function?
 
   // TODO maybe move package/version/lts/channel detection into getReleases
