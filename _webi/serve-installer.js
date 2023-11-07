@@ -128,8 +128,8 @@ Installers.helper = async function ({ ua, pkg, tag, formats, libc }) {
   return [rel, opts];
 };
 
-var CURL_PIPE_PS1_BOOT = path.join(__dirname, 'bootstrap.ps1');
-var CURL_PIPE_SH_BOOT = path.join(__dirname, 'bootstrap.sh');
+var CURL_PIPE_PS1_BOOT = path.join(__dirname, 'curl-pipe-bootstrap.tpl.ps1');
+var CURL_PIPE_SH_BOOT = path.join(__dirname, 'curl-pipe-bootstrap.tpl.sh');
 var BAD_SH_RE = /[<>'"`$\\]/;
 
 Installers.getPosixCurlPipeBootstrap = async function ({ baseurl, pkg, ver }) {
