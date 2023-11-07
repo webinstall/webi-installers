@@ -50,11 +50,10 @@ __init_goreleaser() {
         # This trims it down to just the version number:
         #       1.21.2
         # shellcheck disable=SC2046,SC2005 # unquoted echo trims whitespace
-        echo $(
-            goreleaser --version 2> /dev/null |
-                grep 'GitVersion:' |
-                cut -d':' -f2
-        )
+        goreleaser --version 2> /dev/null |
+            grep 'GitVersion:' |
+            cut -d':' -f2 |
+            tr -d ' '
     }
 
 }
