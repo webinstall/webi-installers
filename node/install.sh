@@ -40,5 +40,7 @@ pkg_link() {
 }
 
 pkg_done_message() {
-    echo "Installed 'node' and 'npm' at $pkg_dst"
+    b_dst="$(fn_sub_home "${pkg_dst}")"
+    echo ""
+    echo "    Installed $(t_pkg 'node') and $(t_pkg 'npm') at $(t_path "${b_dst}/")"
 }
