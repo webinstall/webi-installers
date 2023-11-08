@@ -213,7 +213,7 @@ __webi_main() {
     fi
 
     if echo "$1" | grep -q -E '^(-l|--list|list)$'; then
-        echo >&2 "[warn] the format of --list output may change"
+        #echo >&2 "[warn] the format of --list output may change"
 
         # because we don't have sitemap.xml for dev sites yet
         my_host="https://webinstall.dev"
@@ -280,6 +280,11 @@ __webi_main() {
         exit 0
     fi
 
+    if echo "$1" | grep -q -E '^(-i|--init|init)$'; then
+        webi_shell_init "$@"
+        exit 0
+    fi
+
     for pkgname in "$@"; do
         webinstall "$pkgname"
         export WEBI_WELCOME='shown'
@@ -288,5 +293,92 @@ __webi_main() {
     show_path_updates
 
 }
+
+webi_shell_init() { (
+    if [ $# -eq 1 ]; then
+        if [ ! -f ~/.bashrc ] || ! grep -q 'webi init' ~/.bashrc; then
+            # shellcheck disable=SC2016
+            {
+                echo ''
+                echo '# added by Webi for bash'
+                echo 'eval "$(webi init bash)"'
+            } >> ~/.bashrc
+        fi
+        if command -v zsh > /dev/null; then
+            touch ~/.zshrc
+            if ! grep -q 'webi init' ~/.zshrc; then
+                # shellcheck disable=SC2016
+                {
+                    echo ''
+                    echo '# added by Webi for zsh'
+                    echo 'eval "$(webi init zsh)"'
+                } >> ~/.zshrc
+            fi
+        fi
+        if command -v fish > /dev/null; then
+            mkdir -p ~/.config/fish
+            touch ~/.config/fish/config.fish
+            if ! grep -q 'webi init' ~/.config/fish/config.fish; then
+                # shellcheck disable=SC2016
+                {
+                    echo ''
+                    echo '# added by Webi for fish'
+                    echo 'webi init fish | source'
+                } >> ~/.config/fish/config.fish
+            fi
+        fi
+        exit 0
+    fi
+
+    case "$2" in
+        bash)
+            # shellcheck disable=SC2016
+            {
+                echo '_webi() {'
+                echo '    COMPREPLY=()'
+                echo '    local cur="${COMP_WORDS[COMP_CWORD]}"'
+                echo '    if [ "$COMP_CWORD" -eq 1 ]; then'
+                echo '        local completions=$(webi --list)'
+                echo '        COMPREPLY=( $(compgen -W "$completions" -- "$cur") )'
+                echo '    fi'
+                echo '}'
+                echo ''
+                echo 'complete -F _webi webi'
+            }
+            ;;
+        zsh)
+            # shellcheck disable=SC2016
+            {
+                echo '_webi() {'
+                echo '    local -a list completions'
+                echo '    list=$(webi --list)'
+                echo '    completions=(${(f)list})'
+                echo '    _describe -t commands "command" completions && ret=0'
+                echo '}'
+                echo ''
+                echo 'compdef _webi webi'
+            }
+            ;;
+        fish)
+            # shellcheck disable=SC2016
+            {
+                echo 'function __fish_webi_needs_command'
+                echo '    set cmd (commandline -opc)'
+                echo '    if [ (count $cmd) -eq 1 -a $cmd[1] = "webi" ]'
+                echo '        return 0'
+                echo '    end'
+                echo '    return 1'
+                echo 'end'
+                echo ''
+                echo 'set completions (webi --list)'
+                echo 'complete -f -c webi -n __fish_webi_needs_command -a "$completions"'
+            }
+            ;;
+        *)
+            echo >&2 "Unsupported shell: $2"
+            exit 1
+            ;;
+    esac
+) }
 
 __webi_main "$@"
