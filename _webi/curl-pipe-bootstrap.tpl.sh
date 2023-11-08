@@ -155,6 +155,7 @@ fn_download_to_path() { (
     a_url="${1}"
     a_path="${2}"
 
+    mkdir -p "$(dirname "${a_path}")"
     if command -v wget > /dev/null; then
         fn_wget "${a_url}" "${a_path}.part"
     elif command -v curl > /dev/null; then
