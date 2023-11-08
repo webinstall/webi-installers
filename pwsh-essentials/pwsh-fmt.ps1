@@ -11,64 +11,45 @@ $Bold = "${Esc}[1m"
 $Dim = "${Esc}[2m"
 $ResetWeight = "${Esc}[22m"
 $ResetColor = "${Esc}[39m"
+
 $PwshExts = "*.ps1", "*.psm1"
 
-function Walk($Root, $Entry) {
-    $HasChanged = $false
+function Format-All($Root) {
+    $WereDirty = $false
 
-    IF (Test-Path -PathType Leaf -Path $Entry) {
-        IF ($Entry.Extension -ne ".ps1") {
-            return $HasChanged
-        }
-
-        $HasChanged = Format-File -Filepath $Entry
-        $Style = $Dim
-        IF ($HasChanged) { $Style = $Bold }
-
-        $RelPath = [System.IO.Path]::GetRelativePath($Root, $Entry.FullName)
-        #$DirName = [System.IO.Path]::GetDirectoryName($Entry.FullName)
-        Write-Host "    ${Style}${RelPath}${ResetWeight}"
-
-        return $HasChanged
-    }
-
-    IF (-Not (Test-Path -PathType Container -Path $Entry)) {
-        $RelPath = [System.IO.Path]::GetRelativePath($Root, $Entry.FullName)
-        Write-Host "    ${Warn}SKIP${ResetColor} ${RelPath} (${Warn}not a regular file or directory${ResetColor})"
-        return $HasChanged
-    }
-
-    foreach ($Ext in $PwshExts) {
-        $Children = Get-ChildItem -Path $Entry.FullName -File -Filter $Ext
-        foreach ($Child in $Children) {
-            $ChildChanged = Walk $Root $Child
-            IF ($ChildChanged) { $HasChanged = $true }
-        }
-    }
-
-    $Children = Get-ChildItem -Path $Entry.FullName -Directory
+    $Children = Get-ChildItem -Path $Root -File -Recurse -Include $PwshExts
     foreach ($Child in $Children) {
-        $ChildChanged = Walk $Root $Child
-        IF ($ChildChanged) { $HasChanged = $true }
+        $Style = $Dim
+
+        $WasDirty = Format-File -Filepath $Child
+        IF ($WasDirty) {
+            $WereDirty = $true
+            $Style = $Bold
+        }
+        $RelPath = [System.IO.Path]::GetRelativePath($Root, $Child)
+        IF (Test-Path -PathType Leaf -Path $Root) {
+            $RelPath = $Root
+        }
+        Write-Host "    ${Style}${RelPath}${ResetWeight}"
     }
 
-    return $HasChanged
+    return $WereDirty
 }
 
 function Format-File {
     Param (
         [string]$Filepath
     )
-    $HasChanged = $false
+    $WasDirty = $false
 
     $Original = Get-Content -Path $Filepath -Raw
     $Formatted = Invoke-Formatter -ScriptDefinition $Original
 
     IF ($Original -eq $Formatted) {
-        $HasChanged = $false
-        return $HasChanged
+        $WasDirty = $false
+        return $WasDirty
     }
-    $HasChanged = $true
+    $WasDirty = $true
 
     # By default Set-Content unconditionally adds an *extra* newline every time
     # See
@@ -76,15 +57,34 @@ function Format-File {
     #   - <https://learn.microsoft.com/powershell/module/microsoft.powershell.management/set-content>
     Set-Content -Path $Filepath $Formatted -Encoding utf8NoBom -NoNewline
 
-    return $HasChanged
+    return $WasDirty
 }
 
-$CurDir = Get-Location
-$Root = $CurDir
-IF ($Args.Length -gt 0) {
-    $Root = $Args[0]
+function Format-Recursively($Paths) {
+    $Dirty = $false
+    IF ($Paths.Length -lt 1) {
+        $Paths = , (Get-Location)
+    }
+
+    foreach ($Root in $Paths) {
+        Write-Host "Formatting ${Root}"
+        $Entry = Get-Item $Root
+
+        IF (-Not ((Test-Path -PathType Container -Path $Entry) -Or (Test-Path -PathType Leaf -Path $Entry))) {
+            $RelPath = [System.IO.Path]::GetRelativePath($Root, $Entry.FullName)
+            Write-Host "    ${Warn}SKIP${ResetColor} ${RelPath} (${Warn}not a regular file or directory${ResetColor})"
+            exit 1
+        }
+
+        $WereDirty = Format-All $Root $Entry
+        IF ($WereDirty) {
+            $Dirty = $true
+        }
+    }
+
+    if ($Dirty) {
+        exit 1
+    }
 }
-Write-Host "Formatting ${Root}"
-$Entry = Get-Item $Root
-$Status = Walk $Root $Entry
-exit $Status
+
+Format-Recursively $Args
