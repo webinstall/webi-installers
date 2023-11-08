@@ -107,6 +107,8 @@ fn_wget() { (
 
     if ! $cmd_wget "${b_agent}" -c "${a_url}" -O "${a_path}"; then
         echo >&2 "    $(t_err "failed to download (wget)") '$(t_url "${a_url}")'"
+        echo >&2 "    $cmd_wget '${b_agent}' -c '${a_url}' -O '${a_path}'"
+        echo >&2 "    $(wget -V)"
         return 1
     fi
 ); }
@@ -130,6 +132,8 @@ fn_curl() { (
 
     if ! $cmd_curl -A "${b_agent}" "${a_url}" -o "${a_path}"; then
         echo >&2 "    $(t_err "failed to download (curl)") '$(t_url "${a_url}")'"
+        echo >&2 "    $cmd_curl -A '${b_agent}' '${a_url}' -o '${a_path}'"
+        echo >&2 "    $(curl -V)"
         return 1
     fi
 ); }
