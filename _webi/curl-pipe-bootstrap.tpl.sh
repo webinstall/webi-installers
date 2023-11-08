@@ -184,7 +184,7 @@ webi_upgrade() { (
         echo "    $(t_dim 'Found') $(t_path "${b_path_rel}")"
         b_checksum="$(fn_checksum "${a_path}")"
     fi
-    if test "$b_checksum" == "${WEBI_CHECKSUM}"; then
+    if test "$b_checksum" = "${WEBI_CHECKSUM}"; then
         sleep 0.1
         return 0
     fi
