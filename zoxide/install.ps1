@@ -21,7 +21,7 @@ $pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 # Fetch archive
 IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE")) {
     Write-Output "Downloading zoxide from $Env:WEBI_PKG_URL to $pkg_download"
-    & curl.exe -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
+    & curl.exe -A MS -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
     & Move-Item "$pkg_download.part" "$pkg_download"
 }
 

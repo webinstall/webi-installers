@@ -27,7 +27,7 @@ Set-Content -Path "$Env:USERPROFILE\.local\bin\$MY_CMD.bat" -Value "@echo off`r`
 
 $gpg_exists = Get-Command gpg 2> $null
 if (!$gpg_exists) {
-    curl.exe "$Env:WEBI_HOST/gpg" | powershell
+    curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_HOST/api/installers/gpg.ps1?formats=zip,exe,tar&libc=msvc" | powershell
     $gpg_exists = Get-Command gpg 2> $null
     if (!$gpg_exists) {
         Write-Output ""
