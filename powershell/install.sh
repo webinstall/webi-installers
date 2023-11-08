@@ -39,6 +39,7 @@ __init_powershell() {
 
     pkg_done_message() {
         echo "Installed 'pwsh' at $pkg_dst"
+        pwsh -V
     }
 }
 
