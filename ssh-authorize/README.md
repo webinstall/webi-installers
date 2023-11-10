@@ -14,6 +14,9 @@ install:
 ~/.config/envman/PATH.env
 ~/.local/bin/ssh-authorize
 ~/.ssh/authorized_keys
+
+# Windows
+$Env:ProgramData\ssh\administrators_authorized_keys
 ```
 
 ## Cheat Sheet
@@ -48,7 +51,7 @@ LOCAL IDENTIFY FILES
     /home/app/.ssh/id_rsa.pub
 ```
 
-### How to Add Manually
+### How to Add SSH Public Keys Manually
 
 For the simplest case it seems almost silly to even have a utility for this:
 
@@ -64,9 +67,20 @@ curl https://github.com/me.keys >> ~/.ssh/authorized_keys
 
 but... tedium, error checking... things are never as simple as they seem.
 
-### But really, why?
+### How to use on Windows
+
+You will need to run from an Elevated PowerShell, or use the
+[Windows sudo](../sudo/).
+
+### Why use ssh-authorize at all?
+
+At first blush it seems easy enough to just add download or add files to
+`~/.ssh/authorized_keys`, but there are complexities (especially on _Windows_).
+
+This just adds a layer of convenience, and a few benefits:
 
 - handles arbitrary files and URLs, failing bad key lines
-- sets permissions correctly, even if they were incorrect
+- sets permissions correctly, even if they were incorrect \
+  (which almost no one will to do successfully by hand on Windows on the first try)
 - works `curl` (macOS, Ubuntu) or `wget` (Docker, Alpine)
 - enforces `https`
