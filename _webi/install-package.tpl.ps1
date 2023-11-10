@@ -46,6 +46,73 @@ New-Item -Path "$Env:USERPROFILE\.local\opt" -ItemType Directory -Force | Out-Nu
 # {{ baseurl }}
 # {{ version }}
 
+# See
+#   - <https://superuser.com/q/1264444>
+#   - <https://stackoverflow.com/a/60572643/151312>
+$Esc = [char]27
+$TTask = "${Esc}[36m"
+$TName = "${Esc}[1m${Esc}[32m"
+$TUrl = "${Esc}[2m"
+$TPath = "${Esc}[2m${Esc}[32m"
+$TCmd = "${Esc}[2m${Esc}[35m"
+$TDim = "${Esc}[2m"
+$TReset = "${Esc}[0m"
+
+function Invoke-DownloadUrl {
+    Param (
+        [string]$URL,
+        [string]$Params,
+        [string]$Path,
+        [switch]$Force
+    )
+
+    IF (Test-Path -Path "$Path") {
+        IF (-Not $Force.IsPresent) {
+            Write-Host "    ${TDim}Found${TReset} $Path"
+            return
+        }
+        Write-Host "    Updating ${TDim}${Path}${TDim}"
+    }
+
+    $TmpPath = "${Path}.part"
+    Remove-Item -Path $TmpPath -Force -ErrorAction Ignore
+
+    Write-Host "    Downloading ${TDim}from${TReset}"
+    Write-Host "      ${TDim}${URL}${TReset}"
+    IF ($Params.Length -ne 0) {
+        Write-Host "        ?$Params"
+        $URL = "${URL}?${Params}"
+    }
+    curl.exe '-#' --fail-with-body -sS -A $Env:WEBI_UA $URL | Out-File $TmpPath
+
+    Remove-Item -Path $Path -Force -ErrorAction Ignore
+    Move-Item $TmpPath $Path
+    Write-Host "      Saved ${TPath}${Path}${TReset}"
+}
+
+function Get-UserAgent {
+    # This is the canonical CPU arch when the process is emulated
+    $my_arch = "$Env:PROCESSOR_ARCHITEW6432"
+
+    IF ($my_arch -eq $null -or $my_arch -eq "") {
+        # This is the canonical CPU arch when the process is native
+        $my_arch = "$Env:PROCESSOR_ARCHITECTURE"
+    }
+
+    IF ($my_arch -eq "AMD64") {
+        # Because PowerShell is sometimes AMD64 on Windows 10 ARM
+        # See https://oofhours.com/2020/02/04/powershell-on-windows-10-arm64/
+        $my_os_arch = wmic os get osarchitecture
+
+        # Using -clike because of the trailing newline
+        IF ($my_os_arch -clike "ARM 64*") {
+            $my_arch = "ARM64"
+        }
+    }
+
+    "PowerShell+curl Windows/10+ $my_arch msvc"
+}
+
 function webi_path_add($pathname) {
     # C:\Users\me => C:/Users/me
     $my_home = $Env:UserProfile
@@ -109,6 +176,8 @@ function Sync-EnvPath {
     $Env:Path = "${UserPath};${MachinePath}"
     "${UserPath};${MachinePath}"
 }
+
+$Env:WEBI_UA = Get-UserAgent
 
 #$has_local_bin = echo "$Env:PATH" | Select-String -Pattern '\.local.bin'
 #if (!$has_local_bin)
