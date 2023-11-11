@@ -88,18 +88,18 @@ function webi_path_add_followup($pathname) {
     Write-Host '*  (run the PATH commands below)  *' -ForegroundColor yellow -BackgroundColor black
     Write-Host '***********************************' -ForegroundColor yellow -BackgroundColor black
     Write-Host ''
-    Write-Output ""
-    Write-Output "Copy, paste, and run the appropriate commands to update your PATH:"
-    Write-Output ""
-    Write-Output "cmd.exe:"
+    Write-Host ""
+    Write-Host "Copy, paste, and run the appropriate commands to update your PATH:"
+    Write-Host ""
+    Write-Host "cmd.exe:"
     Write-Host "    (close and reopen the terminal)" -ForegroundColor yellow -BackgroundColor black
-    Write-Output ""
-    Write-Output "PowerShell:"
+    Write-Host ""
+    Write-Host "PowerShell:"
     Write-Host "    $UpdateUserPath" -ForegroundColor yellow -BackgroundColor black
     Write-Host "    $UpdateMachinePath" -ForegroundColor yellow -BackgroundColor black
     Write-Host "    `$Env:Path = `"`${UserPath};`${MachinePath}`"" -ForegroundColor yellow -BackgroundColor black
-    Write-Output "    (or close and reopen the terminal, or reboot)"
-    Write-Output ""
+    Write-Host "    (or close and reopen the terminal, or reboot)"
+    Write-Host ""
 }
 
 function Sync-EnvPath {
