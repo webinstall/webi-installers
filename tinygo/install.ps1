@@ -30,12 +30,7 @@ IF (!(Test-Path -Path "$pkg_download")) {
 Write-Output "Checking for Go compiler..."
 IF (-Not (Get-Command -Name "go" -ErrorAction Silent)) {
     & "$Env:USERPROFILE\.local\bin\webi-pwsh.ps1" go
-    $Env:Path = "$HOME\.local\opt\go\bin;$Env:Path"
-    $Env:Path = "$HOME\go\bin;$Env:Path"
-    [System.Environment]::SetEnvironmentVariable(
-        "Path",
-        $env:Path,
-        [System.EnvironmentVariableTarget]::User)
+    $null = Sync-EnvPath
 }
 
 IF (!(Test-Path -Path "$pkg_src")) {

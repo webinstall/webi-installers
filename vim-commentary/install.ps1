@@ -39,11 +39,7 @@ function fn_git_shallow_clone {
     Write-Output "Checking for Git..."
     IF (-Not (Get-Command -Name "git" -ErrorAction Silent)) {
         & "$HOME\.local\bin\webi-pwsh.ps1" git
-        $Env:Path = "$HOME\.local\opt\git\cmd;$Env:Path"
-        [System.Environment]::SetEnvironmentVariable(
-            "Path",
-            $env:Path,
-            [System.EnvironmentVariableTarget]::User)
+        $null = Sync-EnvPath
     }
 
     Write-Output "Cloning $Env:PKG_NAME from $Env:WEBI_PKG_URL to $pkg_src"
