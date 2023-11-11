@@ -1,11 +1,28 @@
 #!/usr/bin/env pwsh
 
-$MY_CMD = "ssh-pubkey"
+$ErrorActionPreference = 'stop'
 
-& curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_HOST/packages/$MY_CMD/$MY_CMD.ps1" -o "$Env:USERPROFILE\.local\bin\$MY_CMD.ps1.part"
-Remove-Item -Path "$Env:USERPROFILE\.local\bin\$MY_CMD.ps1" -Recurse -ErrorAction Ignore
-& Move-Item "$Env:USERPROFILE\.local\bin\$MY_CMD.ps1.part" "$Env:USERPROFILE\.local\bin\$MY_CMD.ps1"
-Set-Content -Path "$Env:USERPROFILE\.local\bin\$MY_CMD.bat" -Value "@echo off`r`npushd %USERPROFILE%`r`npowershell -ExecutionPolicy Bypass .local\bin\$MY_CMD.ps1 %1`r`npopd"
+function Install-WebiHostedScript () {
+    Param(
+        [string]$Package,
+        [string]$ScriptName
+    )
+    $PwshName = "_${ScriptName}.ps1"
+    $PwshUrl = "${Env:WEBI_HOST}/packages/${Package}/${ScriptName}.ps1"
+    $PwshPath = "$HOME\.local\bin\${PwshName}"
+    $OldPath = "$HOME\.local\bin\${ScriptName}.ps1"
 
-# run the command
-& "$Env:USERPROFILE\.local\bin\$MY_CMD.bat"
+    $BatPath = "$HOME\.local\bin\${ScriptName}.bat"
+    $PwshExec = "powershell -ExecutionPolicy Bypass"
+    $Bat = "@echo off`r`n$PwshExec %USERPROFILE%\.local\bin\${PwshName} %*"
+
+    Invoke-DownloadUrl -Force -URL $PwshUrl -Path $PwshPath
+    Set-Content -Path $BatPath -Value $Bat
+    Write-Host "    Created alias ${BatPath}"
+    Write-Host "      to run ${PwshPath}"
+
+    # fix for old installs
+    Remove-Item -Path $OldPath -Force -ErrorAction Ignore
+}
+
+Install-WebiHostedScript -Package "ssh-pubkey" -ScriptName "ssh-pubkey"
