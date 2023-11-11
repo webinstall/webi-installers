@@ -1,35 +1,83 @@
 #!/usr/bin/env pwsh
 
-# this allows us to call ps1 files, which allows us to have spaces in filenames
-# ('powershell "$Env:USERPROFILE\test.ps1" foo' will fail if it has a space in
-# the path but '& "$Env:USERPROFILE\test.ps1" foo' will work even with a space)
 Set-ExecutionPolicy -Scope Process Bypass
-
-# If a command returns an error, halt the script.
 $ErrorActionPreference = 'Stop'
-
-# Ignore progress events from cmdlets so Invoke-WebRequest is not painfully slow
 $ProgressPreference = 'SilentlyContinue'
 
-# This is the canonical CPU arch when the process is emulated
-$my_arch = "$Env:PROCESSOR_ARCHITEW6432"
-IF ($my_arch -eq $null -or $my_arch -eq "") {
-    # This is the canonical CPU arch when the process is native
-    $my_arch = "$Env:PROCESSOR_ARCHITECTURE"
-}
-IF ($my_arch -eq "AMD64") {
-    # Because PowerShell isn't ARM yet.
-    # See https://oofhours.com/2020/02/04/powershell-on-windows-10-arm64/
-    $my_os_arch = wmic os get osarchitecture
+$my_version = 'v1.1.16'
 
-    # Using -clike because of the trailing newline
-    IF ($my_os_arch -clike "ARM 64*") {
-        $my_arch = "ARM64"
-    }
+IF ($null -eq $Env:WEBI_HOST -or $Env:WEBI_HOST -eq "") {
+    $Env:WEBI_HOST = "https://webinstall.dev"
 }
 
-$Env:WEBI_UA = "Windows/10+ $my_arch msvc"
 $exename = $args[0]
+
+# See
+#   - <https://superuser.com/q/1264444>
+#   - <https://stackoverflow.com/a/60572643/151312>
+$Esc = [char]27
+$TTask = "${Esc}[36m"
+$TName = "${Esc}[1m${Esc}[32m"
+$TUrl = "${Esc}[2m"
+$TPath = "${Esc}[2m${Esc}[32m"
+$TCmd = "${Esc}[2m${Esc}[35m"
+$TDim = "${Esc}[2m"
+$TReset = "${Esc}[0m"
+
+function Invoke-DownloadUrl {
+    Param (
+        [string]$URL,
+        [string]$Params,
+        [string]$Path,
+        [switch]$Force
+    )
+
+    IF (Test-Path -Path "$Path") {
+        IF (-Not $Force.IsPresent) {
+            Write-Host "    ${TDim}Found${TReset} $Path"
+            return
+        }
+        Write-Host "    Updating ${TDim}${Path}${TDim}"
+    }
+
+    $TmpPath = "${Path}.part"
+    Remove-Item -Path $TmpPath -Force -ErrorAction Ignore
+
+    Write-Host "    Downloading ${TDim}from${TReset}"
+    Write-Host "      ${TDim}${URL}${TReset}"
+    IF ($Params.Length -ne 0) {
+        Write-Host "        ?$Params"
+        $URL = "${URL}?${Params}"
+    }
+    curl.exe '-#' --fail-with-body -sS -A $Env:WEBI_UA $URL | Out-File $TmpPath
+
+    Remove-Item -Path $Path -Force -ErrorAction Ignore
+    Move-Item $TmpPath $Path
+    Write-Host "      Saved ${TPath}${Path}${TReset}"
+}
+
+function Get-UserAgent {
+    # This is the canonical CPU arch when the process is emulated
+    $my_arch = "$Env:PROCESSOR_ARCHITEW6432"
+
+    IF ($my_arch -eq $null -or $my_arch -eq "") {
+        # This is the canonical CPU arch when the process is native
+        $my_arch = "$Env:PROCESSOR_ARCHITECTURE"
+    }
+
+    IF ($my_arch -eq "AMD64") {
+        # Because PowerShell is sometimes AMD64 on Windows 10 ARM
+        # See https://oofhours.com/2020/02/04/powershell-on-windows-10-arm64/
+        $my_os_arch = wmic os get osarchitecture
+
+        # Using -clike because of the trailing newline
+        IF ($my_os_arch -clike "ARM 64*") {
+            $my_arch = "ARM64"
+        }
+    }
+
+    "PowerShell+curl Windows/10+ $my_arch msvc"
+}
 
 # Switch to userprofile
 Push-Location $Env:USERPROFILE
@@ -49,17 +97,6 @@ if (!(Test-Path -Path .local\opt)) {
 if (!(Test-Path -Path .local\tmp)) {
     New-Item -Path .local\tmp -ItemType Directory -Force | Out-Null
 }
-
-# TODO SetStrictMode
-# TODO Test-Path variable:global:Env:WEBI_HOST ???
-IF ($null -eq $Env:WEBI_HOST -or $Env:WEBI_HOST -eq "") {
-    $Env:WEBI_HOST = "https://webinstall.dev"
-}
-
-# {{ baseurl }}
-# {{ version }}
-
-$my_version = 'v1.1.15'
 
 ## show help if no params given or help flags are used
 if ($null -eq $exename -or $exename -eq "-h" -or $exename -eq "--help" -or $exename -eq "help" -or $exename -eq "/?") {
@@ -97,14 +134,18 @@ if ($exename -eq "-V" -or $exename -eq "--version" -or $exename -eq "version" -o
     exit 0
 }
 
-# Fetch <whatever>.ps1
-# TODO detect formats
-$PKG_URL = "$Env:WEBI_HOST/api/installers/$exename.ps1?formats=zip,exe,tar,git&libc=msvc"
-Write-Output "Downloading $PKG_URL"
-# Invoke-WebRequest -UserAgent "Windows amd64" "$PKG_URL" -OutFile ".\.local\tmp\$exename.install.ps1"
-& curl.exe -A MS -fsSL -A "$Env:WEBI_UA" "$PKG_URL" -o .\.local\tmp\$exename.install.ps1
+$Env:WEBI_UA = Get-UserAgent
 
-# Run <whatever>.ps1
+Write-Host ""
+Write-Host "${TTask}Installing${TReset} ${TName}${exename}${TReset}"
+Write-Host "    ${TDim}Fetching install script ...${TReset}"
+
+$PKG_URL = "$Env:WEBI_HOST/api/installers/$exename.ps1"
+# TODO detect formats
+$UrlParams = "formats=zip,exe,tar,git&libc=msvc"
+$PkgInstallPwsh = "$HOME\.local\tmp\$exename.install.ps1"
+Invoke-DownloadUrl -Force -URL $PKG_URL -Params $UrlParams -Path $PkgInstallPwsh
+
 powershell .\.local\tmp\$exename.install.ps1
 
 # Done
