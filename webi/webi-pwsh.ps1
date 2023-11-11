@@ -4,7 +4,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
-$my_version = 'v1.1.16'
+$my_version = 'v1.2.0'
 
 IF ($null -eq $Env:WEBI_HOST -or $Env:WEBI_HOST -eq "") {
     $Env:WEBI_HOST = "https://webinstall.dev"
@@ -125,23 +125,25 @@ function Show-HowToUpdateEnv {
     Write-Host ""
 }
 
-# Switch to userprofile
-Push-Location $Env:USERPROFILE
+function Install-Webi {
+    # Make paths if needed
+    # TODO replace all bin with opt\bin\
+    $null = New-Item -Path "$HOME\.local\bin\" -ItemType Directory -Force
+    $null = New-Item -Path "$HOME\.local\opt\" -ItemType Directory -Force
 
-# Make paths if needed
-# TODO replace all bin with opt\bin\
-New-Item -Path "$HOME\.local\bin\" -ItemType Directory -Force | Out-Null
+    # See note on Set-ExecutionPolicy above
+    Set-Content -Path "$HOME\.local\bin\webi.bat" -Value "@echo off`r`npowershell -ExecutionPolicy Bypass %USERPROFILE%\.local\bin\webi-pwsh.ps1 %*"
 
-# See note on Set-ExecutionPolicy above
-Set-Content -Path "$HOME\.local\bin\webi.bat" -Value "@echo off`r`npowershell -ExecutionPolicy Bypass %USERPROFILE%\.local\bin\webi-pwsh.ps1 %*"
-# Backwards-compat bugfix: remove old webi-pwsh.ps1 location
-Remove-Item -Path "$HOME\.local\bin\webi.ps1" -Recurse -ErrorAction Ignore
-if (!(Test-Path -Path "$HOME\.local\opt")) {
-    New-Item -Path "$HOME\.local\opt" -ItemType Directory -Force | Out-Null
-}
-# TODO windows version of mktemp -d
-if (!(Test-Path -Path "$HOME\.local\tmp")) {
-    New-Item -Path "$HOME\.local\tmp" -ItemType Directory -Force | Out-Null
+    # Backwards-compat bugfix: remove old webi-pwsh.ps1 location
+    Remove-Item -Path "$HOME\.local\bin\webi.ps1" -Recurse -ErrorAction Ignore
+
+    # TODO windows version of mktemp -d
+    IF (Test-Path -Path "$HOME\.local\tmp") {
+        Write-Host "    Found $HOME\.local\tmp\"
+    } ELSE {
+        Write-Host "    Creating $HOME\.local\tmp\"
+        $null = New-Item -Path "$HOME\.local\tmp" -ItemType Directory -Force | Out-Null
+    }
 }
 
 ## show help if no params given or help flags are used
@@ -179,6 +181,9 @@ if ($exename -eq "-V" -or $exename -eq "--version" -or $exename -eq "version" -o
     Write-Host "  https://webinstall.dev/webi" -ForegroundColor blue
     exit 0
 }
+
+# Switch to userprofile
+Push-Location $Env:USERPROFILE
 
 $Env:WEBI_UA = Get-UserAgent
 
