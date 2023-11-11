@@ -3,18 +3,6 @@
 
 $OriginalPath = $Env:Path
 
-function Confirm-IsElevated {
-    $id = [System.Security.Principal.WindowsIdentity]::GetCurrent()
-    $p = New-Object System.Security.Principal.WindowsPrincipal($id)
-    if ($p.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator))
-    { Write-Output $true }
-    else
-    { Write-Output $false }
-}
-
-if (Confirm-IsElevated)
-{ throw "Webi MUST NOT be run with elevated privileges. Please run again as a normal user, NOT as administrator." }
-
 # this allows us to call ps1 files, which allows us to have spaces in filenames
 # ('powershell "$Env:USERPROFILE\test.ps1" foo' will fail if it has a space in
 # the path but '& "$Env:USERPROFILE\test.ps1" foo' will work even with a space)

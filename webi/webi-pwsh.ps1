@@ -24,6 +24,28 @@ $TCmd = "${Esc}[2m${Esc}[35m"
 $TDim = "${Esc}[2m"
 $TReset = "${Esc}[0m"
 
+$OriginalPath = $Env:Path
+$IsWebiParent = -Not (Test-Path Env:IsWebiChild)
+$Env:IsWebiChild = $true
+
+function Confirm-IsElevated {
+    $id = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+    $p = New-Object System.Security.Principal.WindowsPrincipal($id)
+    if ($p.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator))
+    { Write-Output $true }
+    else
+    { Write-Output $false }
+}
+
+IF (Confirm-IsElevated) {
+    IF ($IsWebiParent) {
+        Write-Host ""
+        Write-Host "Running Webi with elevated privileges is unsupported." -ForegroundColor Magenta -BackgroundColor black
+        Write-Host "Please run Webi as a normal user, NOT as administrator." -ForegroundColor Magenta -BackgroundColor black
+        Write-Host ""
+    }
+}
+
 function Invoke-DownloadUrl {
     Param (
         [string]$URL,
