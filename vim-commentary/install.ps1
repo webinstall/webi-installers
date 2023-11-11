@@ -58,7 +58,7 @@ function fn_git_shallow_clone {
 }
 
 function fn_remove_existing {
-    Remove-Item -Recurse -Force `
+    Remove-Item -Recurse -Force -ErrorAction Ignore `
         -Path "$pkg_dst" | Out-Null
 }
 
