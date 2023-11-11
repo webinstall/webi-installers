@@ -1,6 +1,8 @@
 #!/usr/bin/env pwsh
 #350 check if windows user run as admin
 
+$OriginalPath = $Env:Path
+
 function Confirm-IsElevated {
     $id = [System.Security.Principal.WindowsIdentity]::GetCurrent()
     $p = New-Object System.Security.Principal.WindowsPrincipal($id)
@@ -72,45 +74,40 @@ function webi_path_add($pathname) {
     if (-Not $exists_in_path) {
         $all_user_paths = $pathname + ";" + $all_user_paths
         [Environment]::SetEnvironmentVariable("Path", $all_user_paths, "User")
-    }
-
-    $session_paths = $Env:Path -Split (';')
-    $in_session_path = $false
-    foreach ($session_path in $session_paths) {
-        # C:\Users\me\bin => %USERPROFILE%/bin
-        $my_session_path = $session_path.replace('\\', '/')
-        $my_session_path = $my_session_path -ireplace $my_home_re, "%USERPROFILE%"
-
-        if ($my_session_path -ieq $my_pathname) {
-            $in_session_path = $true
-        }
-    }
-
-    if (-Not ($in_session_path)) {
-        webi_path_add_followup $pathname
+        $null = Sync-EnvPath
     }
 }
 
 function webi_path_add_followup($pathname) {
-    $my_cmd = 'PATH ' + "$pathname" + ';%PATH%'
-    $my_pwsh = '$Env:Path = "' + "$pathname" + ';$Env:Path"'
+    $UpdateUserPath = "`$UserPath = [Environment]::GetEnvironmentVariable('Path', 'User')"
+    $UpdateMachinePath = "`$MachinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')"
 
     Write-Host ''
-    Write-Host '**********************************' -ForegroundColor yellow -BackgroundColor black
-    Write-Host '*      IMPORTANT -- READ ME      *' -ForegroundColor yellow -BackgroundColor black
-    Write-Host '*  (run the PATH command below)  *' -ForegroundColor yellow -BackgroundColor black
-    Write-Host '**********************************' -ForegroundColor yellow -BackgroundColor black
+    Write-Host '***********************************' -ForegroundColor yellow -BackgroundColor black
+    Write-Host '*      IMPORTANT -- READ ME       *' -ForegroundColor yellow -BackgroundColor black
+    Write-Host '*  (run the PATH commands below)  *' -ForegroundColor yellow -BackgroundColor black
+    Write-Host '***********************************' -ForegroundColor yellow -BackgroundColor black
     Write-Host ''
     Write-Output ""
-    Write-Output "Copy, paste, and run the appropriate command to update your PATH:"
-    Write-Output "(or close and reopen the terminal, or reboot)"
+    Write-Output "Copy, paste, and run the appropriate commands to update your PATH:"
     Write-Output ""
     Write-Output "cmd.exe:"
-    Write-Host "    $my_cmd" -ForegroundColor yellow -BackgroundColor black
+    Write-Host "    (close and reopen the terminal)" -ForegroundColor yellow -BackgroundColor black
     Write-Output ""
     Write-Output "PowerShell:"
-    Write-Host "    $my_pwsh" -ForegroundColor yellow -BackgroundColor black
+    Write-Host "    $UpdateUserPath" -ForegroundColor yellow -BackgroundColor black
+    Write-Host "    $UpdateMachinePath" -ForegroundColor yellow -BackgroundColor black
+    Write-Host "    `$Env:Path = `"`${UserPath};`${MachinePath}`"" -ForegroundColor yellow -BackgroundColor black
+    Write-Output "    (or close and reopen the terminal, or reboot)"
     Write-Output ""
+}
+
+function Sync-EnvPath {
+    $UserPath = [Environment]::GetEnvironmentVariable("Path", "User")
+    $MachinePath = [Environment]::GetEnvironmentVariable("Path", "Machine")
+    $null = [Environment]::SetEnvironmentVariable("Path", "${UserPath};${MachinePath}")
+    $Env:Path = "${UserPath};${MachinePath}"
+    "${UserPath};${MachinePath}"
 }
 
 #$has_local_bin = echo "$Env:PATH" | Select-String -Pattern '\.local.bin'
@@ -122,6 +119,11 @@ webi_path_add ~/.local/bin
 # {{ installer }}
 
 webi_path_add ~/.local/bin
+
+$CurrentPath = Sync-EnvPath
+IF ($OriginalPath -ne $CurrentPath) {
+    webi_path_add_followup
+}
 
 # Done
 Pop-Location
