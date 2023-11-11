@@ -847,7 +847,7 @@ sudo serviceman add --system --name caddy -- \
    You can do this with _PowerShell_ by changing `YOUR_USER` in the script below
    and running it in `cmd.exe` as Administrator:
    ```pwsh
-   powershell.exe -WindowStyle Hidden -Command $r = Get-NetFirewallRule -DisplayName 'Caddy Web Server' 2> $null; if ($r) {write-host 'found rule';} else {New-NetFirewallRule -DisplayName 'Caddy Web Server' -Direction Inbound C:\\Users\\YOUR_USER\\.local\\bin\\caddy.exe -Action Allow}
+   powershell.exe -WindowStyle Hidden -Command $r = Get-NetFirewallRule -DisplayName 'Caddy Web Server' 2> $null; if ($r) {write-host 'found rule';} else {New-NetFirewallRule -DisplayName 'Caddy Web Server' -Direction Inbound $HOME\\.local\\bin\\caddy.exe -Action Allow}
    ```
 2. Install [`serviceman`](../serviceman/)
    ```sh
