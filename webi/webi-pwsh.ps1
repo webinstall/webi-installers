@@ -125,9 +125,6 @@ function Show-HowToUpdateEnv {
     Write-Host ""
 }
 
-# Switch to userprofile
-Push-Location $Env:USERPROFILE
-
 # Make paths if needed
 # TODO replace all bin with opt\bin\
 New-Item -Path "$HOME\.local\bin\" -ItemType Directory -Force | Out-Null
@@ -215,5 +212,3 @@ IF ($IsWebiParent) {
         Show-HowToUpdateEnv
     }
 }
-
-Pop-Location
