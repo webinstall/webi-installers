@@ -35,7 +35,7 @@ $exename = $args[0]
 Push-Location $Env:USERPROFILE
 
 # Make paths if needed
-# TODO replace all xbin with opt\bin\
+# TODO replace all bin with opt\bin\
 New-Item -Path .local\bin -ItemType Directory -Force | Out-Null
 
 # See note on Set-ExecutionPolicy above

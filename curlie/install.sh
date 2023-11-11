@@ -19,7 +19,7 @@ __init_curlie() {
     }
 
     pkg_install() {
-        # $HOME/.local/xbin
+        # $HOME/.local/bin
         mkdir -p "$pkg_src_bin"
 
         # mv ./curlie* "$HOME/.local/opt/curlie-v1.3.1/bin/curlie"

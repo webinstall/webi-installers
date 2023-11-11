@@ -19,7 +19,7 @@ __init_bat() {
     }
 
     pkg_install() {
-        # ~/.local/xbin
+        # ~/.local/bin
         mkdir -p "$pkg_src_bin"
 
         # mv ./bat-*/bat ~/.local/opt/bat-v0.15.4/bin/bat

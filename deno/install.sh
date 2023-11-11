@@ -23,13 +23,13 @@ pkg_get_current_version() {
 }
 
 pkg_install() {
-    # $HOME/.local/xbin
+    # $HOME/.local/bin
     mkdir -p "$pkg_src_bin"
 
-    # mv ./deno* "$HOME/.local/xbin/deno-v1.1.0"
+    # mv ./deno* "$HOME/.local/bin/deno-v1.1.0"
     mv ./"$pkg_cmd_name"* "$pkg_src_cmd"
 
-    # chmod a+x "$HOME/.local/xbin/deno-v1.1.0"
+    # chmod a+x "$HOME/.local/bin/deno-v1.1.0"
     chmod a+x "$pkg_src_cmd"
 }
 
@@ -37,6 +37,6 @@ pkg_link() {
     # rm -f "$HOME/.local/bin/deno"
     rm -f "$pkg_dst_cmd"
 
-    # ln -s "$HOME/.local/xbin/deno-v1.1.0" "$HOME/.local/bin/deno"
+    # ln -s "$HOME/.local/bin/deno-v1.1.0" "$HOME/.local/bin/deno"
     ln -s "$pkg_src_cmd" "$pkg_dst_cmd"
 }
