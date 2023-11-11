@@ -84,18 +84,18 @@ Push-Location $Env:USERPROFILE
 
 # Make paths if needed
 # TODO replace all bin with opt\bin\
-New-Item -Path .local\bin -ItemType Directory -Force | Out-Null
+New-Item -Path "$HOME\.local\bin\" -ItemType Directory -Force | Out-Null
 
 # See note on Set-ExecutionPolicy above
-Set-Content -Path .local\bin\webi.bat -Value "@echo off`r`npowershell -ExecutionPolicy Bypass %USERPROFILE%\.local\bin\webi-pwsh.ps1 %*"
+Set-Content -Path "$HOME\.local\bin\webi.bat" -Value "@echo off`r`npowershell -ExecutionPolicy Bypass %USERPROFILE%\.local\bin\webi-pwsh.ps1 %*"
 # Backwards-compat bugfix: remove old webi-pwsh.ps1 location
-Remove-Item -Path .local\bin\webi.ps1 -Recurse -ErrorAction Ignore
-if (!(Test-Path -Path .local\opt)) {
-    New-Item -Path .local\opt -ItemType Directory -Force | Out-Null
+Remove-Item -Path "$HOME\.local\bin\webi.ps1" -Recurse -ErrorAction Ignore
+if (!(Test-Path -Path "$HOME\.local\opt")) {
+    New-Item -Path "$HOME\.local\opt" -ItemType Directory -Force | Out-Null
 }
 # TODO windows version of mktemp -d
-if (!(Test-Path -Path .local\tmp)) {
-    New-Item -Path .local\tmp -ItemType Directory -Force | Out-Null
+if (!(Test-Path -Path "$HOME\.local\tmp")) {
+    New-Item -Path "$HOME\.local\tmp" -ItemType Directory -Force | Out-Null
 }
 
 ## show help if no params given or help flags are used
@@ -146,7 +146,6 @@ $UrlParams = "formats=zip,exe,tar,git&libc=msvc"
 $PkgInstallPwsh = "$HOME\.local\tmp\$exename.install.ps1"
 Invoke-DownloadUrl -Force -URL $PKG_URL -Params $UrlParams -Path $PkgInstallPwsh
 
-powershell .\.local\tmp\$exename.install.ps1
+& "$HOME\.local\tmp\${exename}.install.ps1"
 
-# Done
 Pop-Location
