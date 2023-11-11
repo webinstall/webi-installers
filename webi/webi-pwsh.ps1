@@ -35,9 +35,8 @@ $exename = $args[0]
 Push-Location $Env:USERPROFILE
 
 # Make paths if needed
-New-Item -Path .local\bin -ItemType Directory -Force | Out-Null
 # TODO replace all xbin with opt\bin\
-New-Item -Path .local\xbin -ItemType Directory -Force | Out-Null
+New-Item -Path .local\bin -ItemType Directory -Force | Out-Null
 
 # See note on Set-ExecutionPolicy above
 Set-Content -Path .local\bin\webi.bat -Value "@echo off`r`npushd %USERPROFILE%`r`npowershell -ExecutionPolicy Bypass .local\bin\webi-pwsh.ps1 %1`r`npopd"

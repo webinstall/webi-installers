@@ -15,7 +15,7 @@ IF (-not (Test-Path "\Windows\System32\vcruntime140.dll")) {
     & "$Env:USERPROFILE\.local\bin\webi-pwsh.ps1" vcruntime
 }
 
-IF (!(Test-Path -Path "$Env:USERPROFILE\.local\xbin\$VERNAME")) {
+IF (!(Test-Path -Path "$Env:USERPROFILE\.local\bin\$VERNAME")) {
     Write-Output "Installing $Env:PKG_NAME"
     # TODO: temp directory
 
@@ -36,7 +36,7 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\.local\xbin\$VERNAME")) {
     # Settle unpacked archive into place
     Write-Output "New Name: $VERNAME"
     Write-Output "New Location: $Env:USERPROFILE\.local\xbin\$VERNAME"
-    Move-Item -Path "$VERNAME" -Destination "$Env:USERPROFILE\.local\xbin"
+    Move-Item -Path "$VERNAME" -Destination "$Env:USERPROFILE\.local\bin"
 
     # Exit tmp
     Pop-Location
@@ -44,4 +44,4 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\.local\xbin\$VERNAME")) {
 
 Write-Output "Copying into '$Env:USERPROFILE\.local\bin\$EXENAME' from '$Env:USERPROFILE\.local\xbin\$VERNAME'"
 Remove-Item -Path "$Env:USERPROFILE\.local\bin\$EXENAME" -Recurse -ErrorAction Ignore
-Copy-Item -Path "$Env:USERPROFILE\.local\xbin\$VERNAME" -Destination "$Env:USERPROFILE\.local\bin\$EXENAME" -Recurse
+Copy-Item -Path "$Env:USERPROFILE\.local\bin\$VERNAME" -Destination "$Env:USERPROFILE\.local\bin\$EXENAME" -Recurse
