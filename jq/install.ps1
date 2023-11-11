@@ -26,13 +26,13 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\.local\bin\$VERNAME")) {
     # Settle unpacked archive into place
     Write-Output "New Name: $VERNAME"
     Get-ChildItem "$Env:PKG_NAME-v*" | Select-Object -f 1 | Rename-Item -NewName "$VERNAME"
-    Write-Output "New Location: $Env:USERPROFILE\.local\xbin\$VERNAME"
+    Write-Output "New Location: $Env:USERPROFILE\.local\bin\$VERNAME"
     Move-Item -Path "$VERNAME" -Destination "$Env:USERPROFILE\.local\bin"
 
     # Exit tmp
     Pop-Location
 }
 
-Write-Output "Copying into '$Env:USERPROFILE\.local\bin\$EXENAME' from '$Env:USERPROFILE\.local\xbin\$VERNAME'"
+Write-Output "Copying into '$Env:USERPROFILE\.local\bin\$EXENAME' from '$Env:USERPROFILE\.local\bin\$VERNAME'"
 Remove-Item -Path "$Env:USERPROFILE\.local\bin\$EXENAME" -Recurse -ErrorAction Ignore
 Copy-Item -Path "$Env:USERPROFILE\.local\bin\$VERNAME" -Destination "$Env:USERPROFILE\.local\bin\$EXENAME" -Recurse
