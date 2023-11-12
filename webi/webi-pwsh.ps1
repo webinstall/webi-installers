@@ -168,6 +168,6 @@ $UrlParams = "formats=zip,exe,tar,git&libc=msvc"
 $PkgInstallPwsh = "$HOME\.local\tmp\$exename.install.ps1"
 Invoke-DownloadUrl -Force -URL $PKG_URL -Params $UrlParams -Path $PkgInstallPwsh
 
-& "$HOME\.local\tmp\${exename}.install.ps1"
+powershell $HOME\.local\tmp\${exename}.install.ps1
 
 Pop-Location
