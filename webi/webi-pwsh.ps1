@@ -185,6 +185,7 @@ $Env:WEBI_UA = Get-UserAgent
 IF ($IsWebiParent) {
     Write-Host ""
     Write-Host "${TName}Welcome to${TReset} ${TTask}Webi${TReset}${TName}!${TReset} - Instant Installs, Easy to Remember URLs"
+    Write-Host "${TDim}($Env:WEBI_UA)${TReset}"
     Write-Host ""
 }
 
