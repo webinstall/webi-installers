@@ -50,7 +50,7 @@ var arches = [
 // https://git.com/org/foo/releases/v0.7.9/foo-x86_64-linux-musl.tar.gz
 //
 var archMap = {
-  armv7l: /(\b|_)(armv?7l?)/i,
+  armv7l: /(\b|_)(arm32|armv?7l?)/i,
   //amd64: /(amd.?64|x64|[_\-]64)/i,
   amd64:
     /(\b|_|amd|(dar)?win(dows)?|mac(os)?|linux|osx|x)64([_\-]?bit)?(\b|_)/i,
