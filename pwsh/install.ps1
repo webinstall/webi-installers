@@ -1,8 +1,8 @@
 #!/usr/bin/env pwsh
 
-#################
+################
 # Install pwsh #
-#################
+################
 
 # Every package should define these variables
 $pkg_cmd_name = "pwsh"
@@ -53,4 +53,5 @@ Write-Output "      into ${TPath}${pkg_dst}${TReset}"
 Remove-Item -Path "$pkg_dst" -Recurse -ErrorAction Ignore | Out-Null
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse
 webi_path_add "$pkg_dst_bin"
+
 & "$pkg_dst_cmd" -V

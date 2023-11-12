@@ -1,6 +1,6 @@
 ---
-title: Microsoft PowerShell
-homepage: https://docs.microsoft.com/en-us/powershell/
+title: Microsoft PowerShell Core
+homepage: https://docs.microsoft.com/powershell/
 tagline: |
   PowerShell Core is a cross-platform (Windows, Linux, and macOS) automation and configuration tool/framework.
 ---

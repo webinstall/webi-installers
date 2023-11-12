@@ -2,12 +2,18 @@
 set -e
 set -u
 
-__init_powershell() {
+__init_pwsh() {
 
     pkg_cmd_name="pwsh"
-    # no ./bin prefix
+
+    # note: no ./bin prefix
     pkg_src_cmd="$HOME/.local/opt/pwsh-v$WEBI_VERSION/pwsh"
+    pkg_src_dir="$HOME/.local/opt/pwsh-v$WEBI_VERSION/"
+    pkg_src="$HOME/.local/opt/pwsh-v$WEBI_VERSION/"
+
     pkg_dst_cmd="$HOME/.local/opt/pwsh/pwsh"
+    pkg_dst_dir="$HOME/.local/opt/pwsh/"
+    pkg_dst="$HOME/.local/opt/pwsh/"
 
     pkg_get_current_version() {
         # 'pwsh --version' has output in this format:
@@ -22,16 +28,17 @@ __init_powershell() {
         mkdir -p "$pkg_src"
         mv ./* "$pkg_src"
 
-        # symlink powershell to pwsh
+        # symlink pwsh as powershell
         (
             cd "$pkg_src" > /dev/null
+            rm -rf powershell
             ln -s pwsh powershell
         )
     }
 
     pkg_link() {
         # rm -f "$HOME/.local/opt/pwsh"
-        rm -f "$pkg_dst"
+        rm -rf "$pkg_dst"
 
         # ln -s "$HOME/.local/opt/pwsh-v7.0.2" "$HOME/.local/opt/pwsh"
         ln -s "$pkg_src" "$pkg_dst"
@@ -43,4 +50,4 @@ __init_powershell() {
     }
 }
 
-__init_powershell
+__init_pwsh
