@@ -101,6 +101,30 @@ function Get-UserAgent {
     "PowerShell+curl Windows/10+ $my_arch msvc"
 }
 
+function Show-HowToUpdateEnv {
+    $UpdateUserPath = "`$UserPath = [Environment]::GetEnvironmentVariable('Path', 'User')"
+    $UpdateMachinePath = "`$MachinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')"
+
+    Write-Host ''
+    Write-Host '***********************************' -ForegroundColor yellow -BackgroundColor black
+    Write-Host '*      IMPORTANT -- READ ME       *' -ForegroundColor yellow -BackgroundColor black
+    Write-Host '*  (run the PATH commands below)  *' -ForegroundColor yellow -BackgroundColor black
+    Write-Host '***********************************' -ForegroundColor yellow -BackgroundColor black
+    Write-Host ''
+    Write-Host ""
+    Write-Host "Copy, paste, and run the appropriate commands to update your PATH:"
+    Write-Host ""
+    Write-Host "cmd.exe:"
+    Write-Host "    (close and reopen the terminal)" -ForegroundColor yellow -BackgroundColor black
+    Write-Host ""
+    Write-Host "PowerShell:"
+    Write-Host "    $UpdateUserPath" -ForegroundColor yellow -BackgroundColor black
+    Write-Host "    $UpdateMachinePath" -ForegroundColor yellow -BackgroundColor black
+    Write-Host "    `$Env:Path = `"`${UserPath};`${MachinePath}`"" -ForegroundColor yellow -BackgroundColor black
+    Write-Host "    (or close and reopen the terminal)"
+    Write-Host ""
+}
+
 # Switch to userprofile
 Push-Location $Env:USERPROFILE
 
@@ -169,5 +193,14 @@ $PkgInstallPwsh = "$HOME\.local\tmp\$exename.install.ps1"
 Invoke-DownloadUrl -Force -URL $PKG_URL -Params $UrlParams -Path $PkgInstallPwsh
 
 powershell $HOME\.local\tmp\${exename}.install.ps1
+
+IF ($IsWebiParent) {
+    $UserPath = [Environment]::GetEnvironmentVariable("Path", "User").Trim(';')
+    $MachinePath = [Environment]::GetEnvironmentVariable("Path", "Machine").Trim(';')
+    $Env:Path = "${UserPath};${MachinePath}"
+    IF ($OriginalPath -ne $Env:Path) {
+        Show-HowToUpdateEnv
+    }
+}
 
 Pop-Location
