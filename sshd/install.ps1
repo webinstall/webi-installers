@@ -1,62 +1,52 @@
 #!/usr/bin/env pwsh
 
-$Esc = [char]27
-$Warn = "${Esc}[1m[33m"
-$ResetAll = "${Esc}[0m"
+$ErrorActionPreference = 'stop'
 
-# See
-#   - <https://gist.github.com/HacDan/026fa8d7d4130fbbc2409d84c2d04143#load-public-keys>
-#   - <https://techcommunity.microsoft.com/t5/itops-talk-blog/installing-and-configuring-openssh-on-windows-server-2019/ba-p/309540>
-#   - <https://learn.microsoft.com/windows-server/administration/openssh/openssh_install_firstuse>
+function Repair-MissingCommand {
+    Param(
+        [string]$Name,
+        [string]$Package,
+        [string]$Command
+    )
 
-function InstallOpenSSHServer {
-    $OpenSSHServer = Get-WindowsCapability -Online | `
-            Where-Object -Property Name -Like "OpenSSH.Server*"
-    IF (-Not ($OpenSSHServer.State -eq "Installed")) {
-        Add-WindowsCapability -Online -Name $sshd.Name
+    Write-Host "    Checking for $Name ..."
+    $HasCommand = Get-Command -Name $Command -ErrorAction Silent
+    IF ($HasCommand) {
+        Return
     }
 
-    $Sshd = Get-Service -Name "sshd"
-    IF (-Not ($Sshd.Status -eq "Running")) {
-        Start-Service "sshd"
-    }
-    IF (-Not ($Sshd.StartupType -eq "Automatic")) {
-        Set-Service -Name "sshd" -StartupType "Automatic"
-    }
-
-    $SshAgent = Get-Service -Name "ssh-agent"
-    IF (-Not ($SshAgent.Status -eq "Running")) {
-        Start-Service "ssh-agent"
-    }
-    IF (-Not ($SshAgent.StartupType -eq "Automatic")) {
-        Set-Service -Name "ssh-agent" -StartupType "Automatic"
-    }
-
-    Install-Module -Force OpenSSHUtils -Scope AllUsers
+    & $HOME\.local\bin\webi-pwsh.ps1 $Package
+    $null = Sync-EnvPath
 }
 
-function SelfElevate {
-    Write-Host "${Warn}Installing 'sshd' requires Admin privileges${ResetAll}"
-    Write-Host "Install will continue automatically in 5 seconds..."
-    Sleep 5.0
-
-    # Self-elevate the script if required
-    $CurUser = New-Object Security.Principal.WindowsPrincipal(
-        [Security.Principal.WindowsIdentity]::GetCurrent()
+function Install-WebiHostedScript () {
+    Param(
+        [string]$Package,
+        [string]$ScriptName
     )
-    $IsAdmin = $CurUser.IsInRole(
-        [Security.Principal.WindowsBuiltInRole]::Administrator
-    )
-    if ($IsAdmin) {
-        Return 0
-    }
+    $PwshName = "_${ScriptName}.ps1"
+    $PwshUrl = "${Env:WEBI_HOST}/packages/${Package}/${ScriptName}.ps1"
+    $PwshPath = "$HOME\.local\bin\${PwshName}"
+    $OldPath = "$HOME\.local\bin\${ScriptName}.ps1"
 
-    $CurLoc = Get-Location
-    $CommandLine = "-File `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.UnboundArguments
-    Start-Process -FilePath PowerShell.exe -Verb Runas -ArgumentList $CommandLine
-    Set-Location $CurLoc
-    Exit 0
+    $BatPath = "$HOME\.local\bin\${ScriptName}.bat"
+    $PwshExec = "powershell -ExecutionPolicy Bypass"
+    $Bat = "@echo off`r`n$PwshExec %USERPROFILE%\.local\bin\${PwshName} %*"
+
+    Invoke-DownloadUrl -Force -URL $PwshUrl -Path $PwshPath
+    Set-Content -Path $BatPath -Value $Bat
+    Write-Host "    Created alias ${BatPath}"
+    Write-Host "      to run ${PwshPath}"
+
+    # fix for old installs
+    Remove-Item -Path $OldPath -Force -ErrorAction Ignore
 }
 
-SelfElevate
-InstallOpenSSHServer
+
+Repair-MissingCommand -Name "sudo (RunAs alias)" -Package "sudo" -Command "sudo"
+Install-WebiHostedScript -Package "sshd" -ScriptName "sshd-service-install"
+
+Write-Output ""
+Write-Output "${TTask}Copy, paste, and run${TReset} the following to install sshd as a system service"
+Write-Output "    ${TCmd}sshd-service-install${TReset}"
+Write-Output ""
