@@ -201,6 +201,12 @@ Invoke-DownloadUrl -Force -URL $PKG_URL -Params $UrlParams -Path $PkgInstallPwsh
 powershell $HOME\.local\tmp\${exename}.install.ps1
 
 IF ($IsWebiParent) {
+    Write-Host ""
+    Write-Host "Checking for updates to Webi ..."
+    $WebiUrl = "${Env:WEBI_HOST}/packages/webi/webi-pwsh.ps1"
+    $WebiPath = "$HOME\.local\bin\webi-pwsh.ps1"
+    Invoke-DownloadUrl -Force -URL $WebiUrl -Path $WebiPath
+
     $UserPath = [Environment]::GetEnvironmentVariable("Path", "User").Trim(';')
     $MachinePath = [Environment]::GetEnvironmentVariable("Path", "Machine").Trim(';')
     $Env:Path = "${UserPath};${MachinePath}"
