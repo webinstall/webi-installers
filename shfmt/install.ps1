@@ -28,7 +28,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd")) {
 
     # TODO: create package-specific temp directory
     # Enter tmp
-    Push-Location .local\tmp
+    Push-Location $HOME\.local\tmp
 
     # Move single binary into root of temporary folder
     & Move-Item "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE" "shfmt.exe"

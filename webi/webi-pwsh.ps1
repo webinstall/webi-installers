@@ -137,8 +137,8 @@ if (!(Test-Path -Path "$HOME\.local\opt")) {
     New-Item -Path "$HOME\.local\opt" -ItemType Directory -Force | Out-Null
 }
 # TODO windows version of mktemp -d
-if (!(Test-Path -Path "$HOME\.local\tmp")) {
-    New-Item -Path "$HOME\.local\tmp" -ItemType Directory -Force | Out-Null
+if (!(Test-Path -Path "$HOME\$HOME\.local\tmp")) {
+    New-Item -Path "$HOME\$HOME\.local\tmp" -ItemType Directory -Force | Out-Null
 }
 
 ## show help if no params given or help flags are used
@@ -193,7 +193,7 @@ Write-Host "    ${TDim}Fetching install script ...${TReset}"
 $PKG_URL = "$Env:WEBI_HOST/api/installers/$exename.ps1"
 # TODO detect formats
 $UrlParams = "formats=zip,exe,tar,git&libc=msvc"
-$PkgInstallPwsh = "$HOME\.local\tmp\$exename.install.ps1"
+$PkgInstallPwsh = "$HOME\$HOME\.local\tmp\$exename.install.ps1"
 Invoke-DownloadUrl -Force -URL $PKG_URL -Params $UrlParams -Path $PkgInstallPwsh
 
 powershell $HOME\.local\tmp\${exename}.install.ps1

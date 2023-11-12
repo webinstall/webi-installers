@@ -14,7 +14,7 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\.local\opt\$Env:PKG_NAME-v$Env:WEBI_VERS
     # TODO: temp directory
 
     # Enter tmp
-    Push-Location .local\tmp
+    Push-Location $HOME\.local\tmp
 
     # Remove any leftover tmp cruft
     Remove-Item -Path "$Env:PKG_NAME-v*" -Recurse -ErrorAction Ignore

@@ -34,7 +34,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd")) {
 
     # TODO: create package-specific temp directory
     # Enter tmp
-    Push-Location .local\tmp
+    Push-Location $HOME\.local\tmp
 
     # Remove any leftover tmp cruft
     Remove-Item -Path ".\AtomicParsley-v*" -Recurse -ErrorAction Ignore

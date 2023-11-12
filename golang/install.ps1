@@ -27,7 +27,7 @@ IF (!(Test-Path -Path "$pkg_src")) {
     # TODO: temp directory
 
     # Enter opt
-    Push-Location .local\tmp
+    Push-Location $HOME\.local\tmp
 
     # Remove any leftover tmp cruft
     Remove-Item -Path "$pkg_cmd_name*" -Recurse -ErrorAction Ignore

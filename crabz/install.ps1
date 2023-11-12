@@ -31,7 +31,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd")) {
 
     # TODO: create package-specific temp directory
     # Enter tmp
-    Push-Location .local\tmp
+    Push-Location $HOME\.local\tmp
 
     # Settle unpacked archive into place
     Write-Output "Install Location: $pkg_src_cmd"

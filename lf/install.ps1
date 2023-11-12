@@ -26,7 +26,7 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE")) {
 IF (!(Test-Path -Path "$pkg_src_cmd")) {
     Write-Output "Installing lf"
 
-    Push-Location .local\tmp
+    Push-Location $HOME\.local\tmp
 
     Remove-Item -Path ".\lf.exe" -Recurse -ErrorAction Ignore
 

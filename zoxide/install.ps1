@@ -29,7 +29,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd")) {
     Write-Output "Installing zoxide"
 
     # Enter tmp
-    Push-Location ".local\tmp"
+    Push-Location "$HOME\.local\tmp"
 
     # Remove any leftover tmp cruft
     Remove-Item -Path ".\zoxide*" -Recurse -ErrorAction Ignore

@@ -29,7 +29,7 @@ IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE")) {
 IF (!(Test-Path -Path "$pkg_src_cmd")) {
     Write-Output "Installing sass (dart-sass)"
 
-    Push-Location .local\tmp
+    Push-Location $HOME\.local\tmp
 
     # Remove any leftover tmp cruft
     Remove-Item -Path ".\dart-sass-v*" -Recurse -ErrorAction Ignore
