@@ -11,14 +11,18 @@ To update or switch versions, run `webi pwsh@stable` (or `@v7.4`, `@beta`, etc).
 
 > The core benefit of running `pwsh` on Mac or Linux is that you get a way to
 > debug Windows scripts without having to boot up Windows.
+>
+> The core benefit of running `pwsh` on Windows is that it's years ahead of
+> pre-installed version.
 
-For example, if you want to create a `curl.exe -A "windows" | powershell` script
-for Windows (as we do), it's helpful to be able to do some level of debugging on
-other platforms.
+For example, if you want to create a `curl.exe | powershell` script for Windows
+(as we do), it's helpful to be able to do some level of debugging on other
+platforms.
 
 ## Table of Contents
 
 - Files
+- ProTips
 - vim
 - lint
 - fmt
@@ -35,6 +39,26 @@ install:
 ~/.local/opt/pwsh/Modules/
 ```
 
+### ProTip: pwsh-essentials
+
+Friends don't let friends PowerShell without
+[pwsh-essentials](../pwsh-essentials/):
+
+- [PSScriptAnalyzer](../psscriptanalyzer/)
+- [pwsh-fmt](../pwsh-essentials/)
+- [pwsh-lint](../pwsh-essentials/)
+- [pwsh-fix](../pwsh-essentials/)
+- [pwsh-run](../pwsh-essentials/)
+
+Plus, important information for anyone **Getting Started with PowerShell**:
+
+- Case-Sensitivity
+- Returns vs Pipeline Streams
+- Strict, Trace, & Verbose Modes
+- The Call Operator "&"
+- curl vs curl.exe
+- Script Policies & Preferences
+
 ### How to Use PowerShell with Vim
 
 Assuming you have [vim-ale](../vim-ale/) installed - which is included with
@@ -47,20 +71,17 @@ See the "Lint & Fmt" section below.
 
 _VS Code_ should also automatically recognize and use `PSScriptAnalyzer`.
 
-### How to Lint & Fmt ps1 Files
+### How to Lint, Fmt, & Fix ps1 Files
 
-You must install `PSScriptAnalyzer`. Then you can use `Invoke-ScriptAnalyzer`
-and `Invoke-Formatter`
+See [pwsh-essentials](../pwsh-essentials/) for more info but, in short:
 
 ```sh
 pwsh -Command "Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -AllowClobber"
 ```
 
-To lint:
-
 ```sh
 my_ps1='./my-file.ps1'
-pwsh -Command "Invoke-ScriptAnalyzer -Fix -ExcludeRule PSAvoidUsingWriteHost -Path \"$my_ps1\""
+pwsh -Command "Invoke-ScriptAnalyzer -Fix -ExcludeRule PSAvoidUsingWriteHost -Path '$my_ps1'"
 ```
 
 To fmt:
@@ -68,7 +89,7 @@ To fmt:
 ```sh
 my_ps1='./my-file.ps1'
 my_text="$(
-    pwsh -Command "Invoke-Formatter -ScriptDefinition (Get-Content -Path \"$my_ps1\" -Raw)"
+    pwsh -Command "Invoke-Formatter -ScriptDefinition (Get-Content -Path '$my_ps1' -Raw)"
 )"
 printf '%s\n' "${my_text}" > "${my_ps1}"
 ```
