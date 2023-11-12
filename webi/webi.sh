@@ -213,21 +213,7 @@ __webi_main() {
     fi
 
     if echo "$1" | grep -q -E '^(-l|--list|list)$'; then
-        #echo >&2 "[warn] the format of --list output may change"
-
-        # because we don't have sitemap.xml for dev sites yet
-        my_host="https://webinstall.dev"
-        my_len="${#my_host}"
-
-        # 6 because the field will looks like "loc>WEBI_HOST/PKG_NAME"
-        # and the count is 1-indexed
-        my_count="$((my_len + 6))"
-
-        curl -fsS "${my_host}/sitemap.xml" |
-            grep -F "${my_host}" |
-            cut -d'<' -f2 |
-            cut -c "${my_count}"-
-
+        webi_list
         exit 0
     fi
 
@@ -295,6 +281,9 @@ __webi_main() {
 }
 
 webi_shell_init() { (
+    # update completions now
+    webi_list > /dev/null
+
     if [ $# -eq 1 ]; then
         if [ ! -f ~/.bashrc ] || ! grep -q 'webi init' ~/.bashrc; then
             # shellcheck disable=SC2016
@@ -338,7 +327,7 @@ webi_shell_init() { (
                 echo '    COMPREPLY=()'
                 echo '    local cur="${COMP_WORDS[COMP_CWORD]}"'
                 echo '    if [ "$COMP_CWORD" -eq 1 ]; then'
-                echo '        local completions=$(webi --list)'
+                echo '        local completions=$(webi --list | cut -d" " -f1)'
                 echo '        COMPREPLY=( $(compgen -W "$completions" -- "$cur") )'
                 echo '    fi'
                 echo '}'
@@ -351,7 +340,7 @@ webi_shell_init() { (
             {
                 echo '_webi() {'
                 echo '    local -a list completions'
-                echo '    list=$(webi --list)'
+                echo '    list=$(webi --list | cut -d" " -f1)'
                 echo '    completions=(${(f)list})'
                 echo '    _describe -t commands "command" completions && ret=0'
                 echo '}'
@@ -371,7 +360,7 @@ webi_shell_init() { (
                 echo '    return 1'
                 echo 'end'
                 echo ''
-                echo 'set completions (webi --list)'
+                echo 'set completions (webi --list | cut -d" " -f1)'
                 echo 'complete -f -c webi -n __fish_webi_needs_command -a "$completions"'
             }
             ;;
@@ -381,5 +370,63 @@ webi_shell_init() { (
             ;;
     esac
 ) }
+
+webi_list() { (
+    # make sure there's always a cache dir and timestamp file
+    mkdir -p ~/.local/share/webi/var/
+
+    if ! test -r ~/.local/share/webi/var/list.txt; then
+        echo '0' > ~/.local/share/webi/var/last_update
+    elif ! test -r ~/.local/share/webi/var/last_update; then
+        echo '0' > ~/.local/share/webi/var/last_update
+    fi
+
+    # compare the timestamp in the timestamp file to now
+    # (in seconds since unix epoch)
+    my_stale_age=600
+    my_expire_age=900
+    my_now="$(date -u '+%s')"
+    my_then="$(cat ~/.local/share/webi/var/last_update)"
+    my_diff=$((my_now - my_then))
+
+    # show when the cache will update
+    my_stales_in=$((my_stale_age - my_diff))
+    my_expires_in=$((my_expire_age - my_diff))
+
+    # update if it's been longer than the staletime
+    if test "${my_stales_in}" -lt "0"; then
+        if test "${my_expires_in}" -lt "0"; then
+            fn_list_uncached
+        else
+            fn_list_uncached &
+        fi
+    fi
+
+    # give back the list
+    cat ~/.local/share/webi/var/list.txt
+); }
+
+fn_list_uncached() { (
+    # because we don't have sitemap.xml for dev sites yet
+    my_host="https://webinstall.dev"
+
+    my_len="${#my_host}"
+    # 6 because the field will looks like "loc>WEBI_HOST/PKG_NAME"
+    # and the count is 1-indexed
+    my_count="$((my_len + 6))"
+
+    my_now="$(date -u '+%s')"
+    echo "${my_now}" > ~/.local/share/webi/var/last_update
+
+    my_tmp="$(mktemp)"
+    curl -fsS "${my_host}/sitemap.xml" |
+        grep -F "${my_host}" |
+        cut -d'<' -f2 |
+        cut -c "${my_count}"- > "${my_tmp}"
+    mv "${my_tmp}" ~/.local/share/webi/var/list.txt
+
+    my_now="$(date -u '+%s')"
+    echo "${my_now}" > ~/.local/share/webi/var/last_update
+); }
 
 __webi_main "$@"
