@@ -173,6 +173,22 @@ pwsh -ExecutionPolicy Bypass $HOME\.local\bin\_webi.ps1 xz
 & ".\Foo Bar\foobar.exe" -baz
 ```
 
+To use it with multiple arguments:
+
+```pwsh
+# this can be just the name, or the full path
+$Cmd = 'curl.exe'
+
+# mind the leading ,
+$CmdArguments = , '--fail-with-body', '-sS'
+
+& $Cmd $CmdArguments -o example.html 'https://example.com'
+```
+
+As you can see, the array of options and arguments is flattened, which makes
+constructing commands with complex arrangements much easier than...
+<small>posix</small> (but don't tell my friends I said that).
+
 ### 4. PowerShell's curl vs Windows' curl.exe
 
 PowerShell has a built-in `curl` which is an alias for the `Invoke-WebRequest`
