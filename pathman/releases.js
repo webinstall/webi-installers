@@ -8,6 +8,7 @@ var baseurl = 'https://git.rootprojects.org';
 module.exports = function (request) {
   return github(request, owner, repo, baseurl).then(function (all) {
     all.releases = all.releases.filter(function (release) {
+      release._filename = release.name;
       return !/debug/.test(release.name);
     });
     return all;

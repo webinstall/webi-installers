@@ -41,7 +41,11 @@ var headers = {
 };
 
 module.exports = function (request) {
-  var all = { download: '', releases: [] };
+  var all = {
+    _names: ['InstallOS'],
+    download: '',
+    releases: [],
+  };
 
   return Promise.all(
     oses.map(function (os) {

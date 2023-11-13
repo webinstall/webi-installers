@@ -41,7 +41,6 @@ function transformReleases(links) {
 
   let releases = links
     .map(function (link) {
-      // strip 'go' prefix, standardize version
       let isLts = ltsRe.test(link);
       let parts = link.match(matcher);
       if (!parts || !parts[2]) {
@@ -52,10 +51,12 @@ function transformReleases(links) {
       if (segs.length > 3) {
         version += '+' + segs.slice(3);
       }
+      let fileversion = segs.join('.');
 
       return {
         name: parts[1],
         version: version,
+        _version: fileversion,
         // all go versions >= 1.0.0 are effectively LTS
         lts: isLts,
         channel: 'stable',
@@ -70,6 +71,7 @@ function transformReleases(links) {
     .filter(Boolean);
 
   return {
+    _names: ['GnuPG', 'gpgosx'],
     releases: releases,
   };
 }

@@ -6,6 +6,7 @@ var repo = 'ripgrep';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
+    all._names = ['ripgrep', 'rg'];
     return all;
   });
 };

@@ -6,6 +6,7 @@ var repo = 'kubectx';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
+    all._names = ['kubectx', 'kubens'];
     return all;
   });
 };

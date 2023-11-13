@@ -10,6 +10,9 @@ module.exports = function (request) {
     all.releases = all.releases.filter(function (rel) {
       return !/(\.txt)|(\.deb)|(\.asc)|(\.sha256)$/i.test(rel.name);
     });
+
+    // "windows-4.0" as a nod to Windows NT  ¯\_(ツ)_/¯
+    all._names = ['gitea', '-4.0-'];
     return all;
   });
 };

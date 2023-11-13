@@ -6,6 +6,7 @@ var repo = 'trippy';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
+    all._names = ['trippy', 'trip'];
     return all;
   });
 };

@@ -10,6 +10,11 @@ module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
     all.releases = all.releases
       .filter(function (rel) {
+        let isFfmpeg = rel.name.includes('ffmpeg');
+        if (!isFfmpeg) {
+          return;
+        }
+
         // remove README and LICENSE
         return !['.README', '.LICENSE'].includes(path.extname(rel.name));
       })

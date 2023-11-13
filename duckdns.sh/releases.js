@@ -17,6 +17,7 @@ module.exports = function (request) {
   ];
   let oses = ['freebsd', 'linux', 'macos', 'posix'];
   return githubSource(request, owner, repo, oses, arches).then(function (all) {
+    all._names = ['DuckDNS.sh', 'duckdns.sh', 'legacy'];
     return all;
   });
 };

@@ -6,6 +6,7 @@ var gitUrl = 'https://github.com/ziglang/zig.vim.git';
 module.exports = async function (request) {
   let all = await git(gitUrl);
 
+  all._names = ['zig.vim', 'vim-zig'];
   return all;
 };
 

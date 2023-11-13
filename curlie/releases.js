@@ -6,6 +6,7 @@ var repo = 'curlie';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
+    all._names = ['curlie', 'curl-httpie'];
     return all;
   });
 };

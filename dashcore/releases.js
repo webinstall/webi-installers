@@ -14,6 +14,7 @@ module.exports = function (request) {
         rel.os = 'macos';
       }
     });
+    all._names = ['dashd', 'dashcore'];
     return all;
   });
 };

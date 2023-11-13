@@ -19,6 +19,7 @@ module.exports = async function (request) {
   }
   all.releases = releases;
 
+  all._names = ['Ollama', 'ollama'];
   return all;
 };
 

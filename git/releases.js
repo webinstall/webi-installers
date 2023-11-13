@@ -12,12 +12,15 @@ module.exports = function (request) {
     all.releases = all.releases
       .filter(function (rel) {
         rel.os = 'windows';
+        rel._version = rel.version.replace(/\.windows.1.*/, '');
+        rel._version = rel._version.replace(/\.windows(\.\d)/, '$1');
         return (
           /MinGit/i.test(rel.name || rel.download) &&
           !/busybox/i.test(rel.name || rel.download)
         );
       })
       .slice(0, 20);
+    all._names = ['MinGit', 'git'];
     return all;
   });
 };

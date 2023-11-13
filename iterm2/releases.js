@@ -24,17 +24,24 @@ function transformReleases(links) {
   //console.log(links.length);
 
   return {
+    _names: ['iTerm2', 'iterm2'],
     releases: links
       .map(function (link) {
-        // strip 'go' prefix, standardize version
         var channel = /\/stable\//.test(link) ? 'stable' : 'beta';
+
         var parts = link
           .replace(/.*\/iTerm2[-_]v?(\d_.*)\.zip/, '$1')
           .split('_');
         var version = parts.join('.').replace(/([_-])?beta/, '-beta');
 
+        // ex: 3.5.0-beta17 => 3_5_0beta17
+        // ex: 3.0.2-preview => 3_0_2-preview
+        let fileversion = version.replace(/\./g, '_');
+        fileversion = fileversion.replace(/-beta/g, 'beta');
+
         return {
           version: version,
+          _version: fileversion,
           // all go versions >= 1.0.0 are effectively LTS
           lts: 'stable' === channel,
           channel: channel,

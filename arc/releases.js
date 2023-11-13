@@ -6,6 +6,7 @@ var repo = 'archiver';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
+    all._names = ['archiver', 'arc'];
     return all;
   });
 };

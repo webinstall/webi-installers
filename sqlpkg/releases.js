@@ -6,6 +6,7 @@ var repo = 'sqlpkg-cli';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
+    all._names = ['sqlpkg-cli', 'sqlpkg'];
     return all;
   });
 };

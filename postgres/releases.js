@@ -75,6 +75,7 @@ module.exports = async function () {
         download: '',
       },
     ].map(function (rel) {
+      rel._version = `${rel.version}-1`;
       rel.download =
         'https://get.enterprisedb.com/postgresql/' +
         rel.name +
@@ -82,6 +83,7 @@ module.exports = async function () {
       return rel;
     }),
     download: '',
+    _names: ['PostgreSQL', 'postgresql', 'Postgres', 'postgres', 'binaries'],
   };
 };
 

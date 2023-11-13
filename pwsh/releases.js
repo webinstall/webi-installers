@@ -15,6 +15,8 @@ module.exports = function (request) {
 
       return !/(alpine)|(fxdependent)|(\.deb)|(\.pkg)|(\.rpm)$/i.test(rel.name);
     });
+
+    all._names = ['PowerShell', 'powershell'];
     return all;
   });
 };

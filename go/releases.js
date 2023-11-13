@@ -43,6 +43,8 @@ function getAllReleases(request) {
         parts.push('0');
       }
       var version = parts.join('.');
+      // nix 'go' prefix
+      var fileversion = release.version.slice(2);
 
       release.files.forEach((asset) => {
         var filename = asset.filename;
@@ -50,6 +52,7 @@ function getAllReleases(request) {
         var arch = archMap[asset.arch] || asset.arch || '-';
         all.releases.push({
           version: version,
+          _version: fileversion,
           // all go versions >= 1.0.0 are effectively LTS
           lts: (parts[0] > 0 && release.stable) || false,
           channel: (release.stable && 'stable') || 'beta',

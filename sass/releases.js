@@ -6,6 +6,7 @@ var repo = 'dart-sass';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
+    all._names = ['dart-sass', 'sass'];
     return all;
   });
 };

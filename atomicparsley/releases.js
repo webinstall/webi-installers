@@ -65,6 +65,7 @@ module.exports = function (request) {
         continue;
       }
     }
+    all._names = ['AtomicParsley', 'atomicparsley'];
     return all;
   });
 };
