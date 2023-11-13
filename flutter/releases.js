@@ -23,8 +23,7 @@ module.exports = function (request) {
             map[asset.channel] = true;
           }
           all.releases.push({
-            // nix leading 'v'
-            version: asset.version.replace(/v/, ''),
+            version: asset.version,
             lts: false,
             channel: asset.channel,
             date: asset.release_date.replace(/T.*/, ''),
