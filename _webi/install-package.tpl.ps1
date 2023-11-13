@@ -69,7 +69,7 @@ function Invoke-DownloadUrl {
         Write-Host "        ?$Params"
         $URL = "${URL}?${Params}"
     }
-    curl.exe '-#' --fail-with-body -sS -A $Env:WEBI_UA $URL | Out-File $TmpPath
+    curl.exe '-#' --fail-with-body -sS -A $Env:WEBI_UA -L $URL | Out-File $TmpPath
 
     Remove-Item -Path $Path -Force -ErrorAction Ignore
     Move-Item $TmpPath $Path
