@@ -29,14 +29,14 @@ formats.forEach(function (name) {
 // evaluation order matters
 // (i.e. otherwise x86 and x64 can cross match)
 var arches = [
-  // arm 7 cannot be confused with arm64
-  'armv7l',
-  // amd64 is more likely than arm64
-  'amd64',
-  // arm6 has the same prefix as arm64
-  'armv6l',
-  // arm64 is more likely than arm6, and should be the default
+  // arm64/aarch64 has very high specificity, so it comes first
   'arm64',
+  // arm 7 is also generic aarch/arm/arm32
+  'armv7l',
+  // arm6 can run on armv7
+  'armv6l',
+  // amd64 is more likely and less often specified than arm64
+  'amd64',
   'x86',
   'ppc64le',
   'ppc64',
@@ -50,13 +50,13 @@ var arches = [
 // https://git.com/org/foo/releases/v0.7.9/foo-x86_64-linux-musl.tar.gz
 //
 var archMap = {
-  armv7l: /(\b|_)(arm32|armv?7l?)/i,
+  arm64: /(\b|_)(aarch64|arm64)/i,
+  armv7l: /(\b|_)(arm32|arm[_\-]?v?7l?)/i,
+  armv6l: /(\b|_)(arm|aarch32|arm[_\-]?v?6l?)(\b|_)/i,
   //amd64: /(amd.?64|x64|[_\-]64)/i,
   amd64:
     /(\b|_|amd|(dar)?win(dows)?|mac(os)?|linux|osx|x)64([_\-]?bit)?(\b|_)/i,
   //x86: /(86)(\b|_)/i,
-  armv6l: /(\b|_)(aarch32|armv?6l?)(\b|_)/i,
-  arm64: /(\b|_)((aarch|arm)64|arm)/i,
   x86: /(\b|_|amd|(dar)?win(dows)?|mac(os)?|linux|osx|x)(86|32)([_\-]?bit)(\b|_)/i,
   ppc64le: /(\b|_)(ppc64le)/i,
   ppc64: /(\b|_)(ppc64)(\b|_)/i,

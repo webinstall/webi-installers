@@ -278,7 +278,16 @@ module.exports = function getReleases({
         console.error(err);
       })
       .then(function (releases) {
-        if (!releases.length) {
+        if (releases.length) {
+          return {
+            oses: all.oses,
+            arches: all.arches,
+            libcs: all.libcs,
+            formats: all.formats,
+            releases: releases,
+          };
+        }
+        if (_count < 1) {
           // Apple Silicon M1 hacky-do workaround fix
           if ('macos' === os && 'arm64' === arch) {
             return getReleases({
@@ -307,23 +316,7 @@ module.exports = function getReleases({
               limit,
             });
           }
-          // Raspberry Pi 3+ on Raspbian x86 (not Ubuntu arm64)
-          if (!_count && 'linux' === os && 'armv7l' === arch) {
-            return getReleases({
-              _count: _count + 1,
-              pkg,
-              ver,
-              os,
-              arch: 'arm64',
-              libc,
-              lts,
-              channel,
-              formats,
-              limit,
-            });
-          }
           // Raspberry Pi 3+ on Ubuntu arm64 (via Bionic?)
-          // (this may be the same as the prior search, that's okay)
           if ('linux' === os && 'arm64' === arch) {
             return getReleases({
               _count: _count + 1,
@@ -338,7 +331,7 @@ module.exports = function getReleases({
               limit,
             });
           }
-          // Raspberry Pi 3+ on Ubuntu arm64 (via Bionic?)
+          // armv7 can run armv6
           if ('linux' === os && 'armv7l' === arch) {
             return getReleases({
               _count: _count + 1,
@@ -353,25 +346,43 @@ module.exports = function getReleases({
               limit,
             });
           }
-          releases = [
-            {
-              name: 'doesntexist.ext',
-              version: '0.0.0',
-              lts: '-',
-              channel: 'error',
-              date: '1970-01-01',
-              os: os || '-',
-              arch: arch || '-',
-              libc: libc || '-',
-              ext: 'err',
-              download: 'https://example.com/doesntexist.ext',
-              comment:
-                'No matches found. Could be bad or missing version info' +
-                ',' +
-                "Check query parameters. Should be something like '/api/releases/{package}@{version}.tab?os={macos|linux|windows|-}&arch={amd64|x86|aarch64|arm64|armv7l|-}&libc={musl|gnu|msvc|libc|static}&limit=10'",
-            },
-          ];
         }
+        if (_count < 2) {
+          // Raspberry Pi 3+ on Raspbian arm7 (not Ubuntu arm64)
+          // hail mary
+          if ('linux' === os && 'armv7l' === arch) {
+            return getReleases({
+              _count: _count + 1,
+              pkg,
+              ver,
+              os,
+              arch: 'arm64',
+              libc,
+              lts,
+              channel,
+              formats,
+              limit,
+            });
+          }
+        }
+        releases = [
+          {
+            name: 'doesntexist.ext',
+            version: '0.0.0',
+            lts: '-',
+            channel: 'error',
+            date: '1970-01-01',
+            os: os || '-',
+            arch: arch || '-',
+            libc: libc || '-',
+            ext: 'err',
+            download: 'https://example.com/doesntexist.ext',
+            comment:
+              'No matches found. Could be bad or missing version info' +
+              ',' +
+              "Check query parameters. Should be something like '/api/releases/{package}@{version}.tab?os={macos|linux|windows|-}&arch={amd64|x86|aarch64|arm64|armv7l|-}&libc={musl|gnu|msvc|libc|static}&limit=10'",
+          },
+        ];
         return {
           oses: all.oses,
           arches: all.arches,
