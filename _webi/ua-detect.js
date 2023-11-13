@@ -69,7 +69,7 @@ function getArch(ua) {
     return 'arm64';
   } else if (/aarch|arm7|armv7|arm32/i.test(ua)) {
     return 'armv7l';
-  } else if (/arm6|armv6/i.test(ua)) {
+  } else if (/arm6|armv6|arm(\b|_)/i.test(ua)) {
     return 'armv6l';
   } else if (/ppc64le/i.test(ua)) {
     return 'ppc64le';
