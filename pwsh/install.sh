@@ -12,8 +12,8 @@ __init_pwsh() {
     pkg_src="$HOME/.local/opt/pwsh-v$WEBI_VERSION/"
 
     pkg_dst_cmd="$HOME/.local/opt/pwsh/pwsh"
-    pkg_dst_dir="$HOME/.local/opt/pwsh/"
-    pkg_dst="$HOME/.local/opt/pwsh/"
+    pkg_dst_dir="$HOME/.local/opt/pwsh"
+    pkg_dst="$HOME/.local/opt/pwsh"
 
     pkg_get_current_version() {
         # 'pwsh --version' has output in this format:
