@@ -61,7 +61,7 @@ main() {
     sudo -i -u "$my_new_user" sh -c "curl -fsSL '$WEBI_HOST/ssh-pubkey' | sh > /dev/null" ||
         sudo -i -u "$my_new_user" sh -c "wget -q -O - '$WEBI_HOST/ssh-pubkey' | sh > /dev/null"
 
-    if test -z "${SSH_ADDUSER_AUTO}"; then
+    if test -z "${SSH_ADDUSER_AUTO:-}"; then
         echo ""
         echo "!! BREAKING CHANGE !!"
         echo ""
