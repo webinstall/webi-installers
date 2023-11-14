@@ -16,9 +16,26 @@ _install_iterm2() {
         exit 1
     fi
 
+    if test -d /Applications/iTerm.app; then
+        my_curver="$(
+            grep -A 2 CFBundleShortVersionString \
+                /Applications/iTerm.app/Contents/Info.plist |
+                tr '<> \t' '\n' |
+                grep -E '\d\.\d\.\d'
+        )"
+        if test "${my_curver}" = "${WEBI_VERSION}"; then
+            echo "    Found /Applications/iTerm.app/ (${my_curver})"
+            return 0
+        fi
+
+        echo "    Replacing /Applications/iTerm.app/ (${my_curver})"
+        mv /Applications/iTerm.app "${WEBI_TMP}/iTerm.app-webi.bak"
+    fi
+
     webi_download \
         "${WEBI_PKG_URL}" \
         "${WEBI_PKG_PATH}/${WEBI_PKG_FILE}"
+
     webi_extract
 
     if [ ! -d "${WEBI_TMP}/iTerm.app" ]; then
@@ -27,11 +44,9 @@ _install_iterm2() {
         exit 1
     fi
 
-    if [ -d /Applications/iTerm.app ]; then
-        mv /Applications/iTerm.app "${WEBI_TMP}/iTerm.app-webi.bak"
-    fi
     mkdir -p /Applications/
     mv "${WEBI_TMP}/iTerm.app" /Applications/
+    echo "    Installed to /Applications/iTerm.app/"
 }
 
 _install_iterm2
