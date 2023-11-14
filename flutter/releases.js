@@ -10,10 +10,7 @@ module.exports = function (request) {
   return Promise.all(
     ['macos', 'linux', 'windows'].map(function (osname) {
       return request({
-        url:
-          'https://storage.googleapis.com/flutter_infra/releases/releases_' +
-          osname +
-          '.json',
+        url: `https://storage.googleapis.com/flutter_infra_release/releases/releases_${osname}.json`,
         json: true,
       }).then(function (resp) {
         var body = resp.body;
