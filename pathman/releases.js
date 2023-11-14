@@ -9,7 +9,13 @@ module.exports = function (request) {
   return github(request, owner, repo, baseurl).then(function (all) {
     all.releases = all.releases.filter(function (release) {
       release._filename = release.name;
-      return !/debug/.test(release.name);
+
+      let isOldAlias = release.name.includes('armv8');
+      if (isOldAlias) {
+        return false;
+      }
+
+      return true;
     });
     return all;
   });

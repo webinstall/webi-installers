@@ -47,6 +47,11 @@ function getAllReleases(request) {
       var fileversion = release.version.slice(2);
 
       release.files.forEach((asset) => {
+        let isArtifact = asset.filename.includes('bootstrap');
+        if (isArtifact) {
+          return;
+        }
+
         var filename = asset.filename;
         var os = osMap[asset.os] || asset.os || '-';
         var arch = archMap[asset.arch] || asset.arch || '-';

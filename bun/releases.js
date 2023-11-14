@@ -8,10 +8,17 @@ module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
     all.releases = all.releases
       .filter(function (r) {
-        let isDebug = /-profile/.test(r.name);
-        if (!isDebug) {
-          return true;
+        let isDebug = r.name.includes('-profile');
+        if (isDebug) {
+          return false;
         }
+
+        let isAncient = r.name.includes('-baseline');
+        if (isAncient) {
+          return false;
+        }
+
+        return true;
       })
       .map(function (r) {
         // bun-v0.5.1 => v0.5.1

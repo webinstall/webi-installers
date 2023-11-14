@@ -13,12 +13,9 @@ module.exports = async function (request) {
       return false;
     }
 
-    // remove checksums and .deb
-    for (let ignorableExt of ['.txt', '.deb']) {
-      let isIgnorable = rel.name.endsWith(ignorableExt);
-      if (isIgnorable) {
-        return false;
-      }
+    let isOldAlias = rel.name.includes('Linux-64bit');
+    if (isOldAlias) {
+      return false;
     }
 
     return true;

@@ -4,8 +4,28 @@ var github = require('../_common/github.js');
 var owner = 'kivikakk';
 var repo = 'comrak';
 
+var ODDITIES = ['-musleabihf.1-'];
+
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
+    let builds = [];
+
+    loopBuilds: for (let build of all.releases) {
+      let isOddity;
+      for (let oddity of ODDITIES) {
+        isOddity = build.name.includes(oddity);
+        if (isOddity) {
+          break;
+        }
+      }
+      if (isOddity) {
+        continue;
+      }
+
+      builds.push(build);
+    }
+
+    all.releases = builds;
     return all;
   });
 };

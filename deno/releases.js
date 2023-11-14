@@ -11,7 +11,12 @@ module.exports = function (request) {
     // remove checksums and .deb
     all.releases = all.releases
       .filter(function (rel) {
-        return !/(\.txt)|(\.deb)$/i.test(rel.name);
+        let isMeta = rel.name.endsWith('.d.ts');
+        if (isMeta) {
+          return false;
+        }
+
+        return true;
       })
       .map(function (rel) {
         var ext;

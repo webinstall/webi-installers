@@ -4,10 +4,19 @@ var github = require('../_common/github.js');
 var owner = 'fish-shell';
 var repo = 'fish-shell';
 
+var ODDITIES = ['bundledpcre'];
+
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
     all.releases = all.releases
       .map(function (rel) {
+        for (let oddity of ODDITIES) {
+          let isOddity = rel.name.includes(oddity);
+          if (isOddity) {
+            return;
+          }
+        }
+
         // We can extract the macos bins from the .app
         if (/\.app\.zip$/.test(rel.name)) {
           rel.os = 'macos';

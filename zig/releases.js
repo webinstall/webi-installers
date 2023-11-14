@@ -1,5 +1,7 @@
 'use strict';
 
+var NON_BUILDS = ['bootstrap', 'src'];
+
 module.exports = function (request) {
   return request({
     url: 'https://ziglang.org/download/index.json',
@@ -22,6 +24,11 @@ module.exports = function (request) {
         // at the same level as platform releases
         let isNotPackage = !pkg || 'object' !== typeof pkg || !pkg.tarball;
         if (isNotPackage) {
+          return;
+        }
+
+        let isNonBuild = NON_BUILDS.includes(platform);
+        if (isNonBuild) {
           return;
         }
 

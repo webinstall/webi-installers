@@ -4,11 +4,20 @@ var github = require('../_common/github.js');
 var owner = 'go-gitea';
 var repo = 'gitea';
 
+var ODDITIES = ['-gogit-', '-docs-'];
+
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
     // remove checksums and .deb
     all.releases = all.releases.filter(function (rel) {
-      return !/(\.txt)|(\.deb)|(\.asc)|(\.sha256)$/i.test(rel.name);
+      for (let oddity of ODDITIES) {
+        let isOddity = rel.name.includes(oddity);
+        if (isOddity) {
+          return false;
+        }
+      }
+
+      return true;
     });
 
     // "windows-4.0" as a nod to Windows NT  ¯\_(ツ)_/¯
