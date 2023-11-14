@@ -11,6 +11,7 @@ module.exports = function (request) {
     let refs = Object.keys(versions);
     refs.forEach(function (ref) {
       let pkgs = versions[ref];
+      let version = pkgs.version || ref;
 
       // "platform" = arch + os combo
       let platforms = Object.keys(pkgs);
@@ -36,7 +37,7 @@ module.exports = function (request) {
         }
 
         let p = {
-          version: ref,
+          version: version,
           date: pkgs.date,
           channel: 'stable',
           // linux, macos, windows
