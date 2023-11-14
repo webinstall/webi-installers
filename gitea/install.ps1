@@ -18,6 +18,12 @@ $pkg_src = "$pkg_src_cmd"
 New-Item "$Env:USERPROFILE\Downloads\webi" -ItemType Directory -Force | Out-Null
 $pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 
+Write-Output "Checking for Git..."
+IF (-Not (Get-Command -Name "git" -ErrorAction Silent)) {
+    & "$HOME\.local\bin\webi-pwsh.ps1" git
+    $null = Sync-EnvPath
+}
+
 # Fetch archive
 IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE")) {
     Write-Output "Downloading gitea from $Env:WEBI_PKG_URL to $pkg_download"
