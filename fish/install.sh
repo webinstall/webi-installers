@@ -3,17 +3,51 @@ set -e
 set -u
 
 if command -v fish > /dev/null; then
-    if [ ! -e ~/.config/fish/config.fish ]; then
+    if ! test -r ~/.config/fish/config.fish; then
         mkdir -p ~/.config/fish
         touch ~/.config/fish/config.fish
         chmod 0600 ~/.config/fish/config.fish
     fi
-fi
+else
+    if command -v sudo > /dev/null; then
+        my_answer='n'
+        if command -v apt > /dev/null; then
+            echo ""
+            echo "ERROR"
+            echo "    No Webi installer for fish on Linux yet."
+            echo ""
+            echo "SOLUTION"
+            echo "    Would you like to install with apt?"
+            echo "    sudo apt install -y fish"
+            echo ""
+            printf "Install with sudo and apt [Y/n]? "
+        elif command -v apk > /dev/null; then
+            echo ""
+            echo "ERROR"
+            echo "    No Webi installer for fish on Alpine yet."
+            echo ""
+            echo "SOLUTION"
+            echo "    Would you like to install with apk?"
+            echo "    sudo apk add --no-cache fish"
+            echo ""
+            printf "Install with sudo and apk [Y/n]? "
+        elif test "Darwin" != "$(uname -s)"; then
+            echo "No fish installer for Linux yet."
+            exit 1
+        fi
 
-if [ "Darwin" != "$(uname -s)" ]; then
-    echo "No fish installer for Linux yet. Try this instead:"
-    echo "    sudo apt install -y fish"
-    exit 1
+        read -r my_answer < /dev/tty
+        if test -z "${my_answer}" ||
+            test "${my_answer}" = "Y" ||
+            test "${my_answer}" = "y"; then
+            sudo apt install -y fish
+        else
+            exit 1
+        fi
+    elif test "Darwin" != "$(uname -s)"; then
+        echo "No fish installer for Linux yet."
+        exit 1
+    fi
 fi
 
 ################
@@ -37,6 +71,10 @@ pkg_src="$pkg_src_cmd"
 # pkg_install must be defined by every package
 
 _macos_post_install() {
+    if test "Darwin" != "$(uname -s)"; then
+        return 0
+    fi
+
     if ! [ -e "$HOME/.local/bin/fish" ]; then
         return 0
     fi
@@ -71,8 +109,10 @@ _macos_post_install() {
     killall cfprefsd
 }
 
-# always try to reset the default shells
-_macos_post_install
+if test "Darwin" = "$(uname -s)"; then
+    # always try to reset the default shells
+    _macos_post_install
+fi
 
 pkg_install() {
     mv fish.app/Contents/Resources/base/usr/local "$HOME/.local/opt/fish-v${WEBI_VERSION}"
@@ -84,7 +124,10 @@ pkg_post_install() {
     webi_post_install
 
     # try again to update default shells, now that all files should exist
-    _macos_post_install
+    if test "Darwin" = "$(uname -s)"; then
+        # always try to reset the default shells
+        _macos_post_install
+    fi
 
     if [ ! -e ~/.config/fish/config.fish ]; then
         mkdir -p ~/.config/fish
