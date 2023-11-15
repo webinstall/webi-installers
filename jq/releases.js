@@ -4,11 +4,32 @@ var github = require('../_common/github.js');
 var owner = 'stedolan';
 var repo = 'jq';
 
+let ODDITIES = ['-no-oniguruma'];
+
+function isOdd(build) {
+  for (let oddity of ODDITIES) {
+    let isOddity = build.name.includes(oddity);
+    if (isOddity) {
+      return true;
+    }
+  }
+}
+
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
-    all.releases.forEach(function (rel) {
-      rel.version = String(rel.version).replace(/^jq\-/, '');
-    });
+    let builds = [];
+
+    for (let build of all.releases) {
+      let odd = isOdd(build);
+      if (odd) {
+        continue;
+      }
+
+      build.version = build.version.replace(/^jq\-/, '');
+      builds.push(build);
+    }
+
+    all.releases = builds;
     return all;
   });
 };
