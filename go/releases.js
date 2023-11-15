@@ -7,6 +7,17 @@ var archMap = {
   386: 'x86',
 };
 
+let ODDITIES = ['bootstrap', '-arm6.'];
+
+function isOdd(filename) {
+  for (let oddity of ODDITIES) {
+    let isOddity = filename.includes(oddity);
+    if (isOddity) {
+      return true;
+    }
+  }
+}
+
 function getAllReleases(request) {
   /*
   {
@@ -47,8 +58,8 @@ function getAllReleases(request) {
       var fileversion = release.version.slice(2);
 
       release.files.forEach((asset) => {
-        let isArtifact = asset.filename.includes('bootstrap');
-        if (isArtifact) {
+        let odd = isOdd(asset.filename);
+        if (odd) {
           return;
         }
 
