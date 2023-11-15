@@ -6,7 +6,23 @@ var repo = 'kubectx';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
-    all._names = ['kubectx', 'kubens'];
+    let builds = [];
+
+    for (let build of all.releases) {
+      // this installs separately
+      if (build.name.includes('kubens')) {
+        continue;
+      }
+
+      // this is the legacy bash script
+      if (build.name === 'kubectx') {
+        continue;
+      }
+
+      builds.push(build);
+    }
+
+    all.releases = builds;
     return all;
   });
 };
