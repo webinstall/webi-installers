@@ -287,6 +287,9 @@ __bootstrap_webi() {
         if ! test -e ~/.config/envman/load.sh; then
             # shellcheck disable=SC2016
             {
+                echo 'if [ -z "$ENVMAN_LOADED" ]; then'
+                echo '    ENVMAN_LOADED=1'
+
                 echo '# Generated for envman. Do not edit.'
                 echo 'for x in ~/.config/envman/*.env; do'
                 echo '    my_basename="$(basename "${x}")"'
@@ -297,6 +300,8 @@ __bootstrap_webi() {
                 echo '    # shellcheck source=/dev/null'
                 echo '    . "${x}"'
                 echo 'done'
+
+                echo 'fi'
             } > ~/.config/envman/load.sh
         fi
 
