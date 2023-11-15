@@ -20,20 +20,28 @@ __init_chromedriver() {
 
     # pkg_install must be defined by every package
     pkg_install() {
-        # ~/.local/opt/chromedriver-v88.0.4324.96/bin
+        # ~/.local/opt/chromedriver-v121.0.6130.0/bin
         mkdir -p "$(dirname "$pkg_src_cmd")"
 
-        # mv ./chromedriver-*/chromedriver ~/.local/opt/chromedriver-v88.0.4324.96/bin/chromedriver
-        mv ./chromedriver* "$pkg_src_cmd"
+        # mv ./chromedriver-macos-arm64/chromedriver \
+        #     ~/.local/opt/chromedriver-v121.0.6130.0/bin/chromedriver
+        mv ./chromedriver-*/chromedriver "$pkg_src_cmd"
+
+        echo ""
+        echo "    $(t_warn 'MANUAL STEPS TO FINISH:') you may need to install libnss3:"
+        echo "        $(t_cmd 'sudo apt install -y') $(t_warn 'libnss3')"
     }
 
     # pkg_get_current_version is recommended, but (soon) not required
     pkg_get_current_version() {
         # 'chromedriver --version' has output in this format:
-        #       ChromeDriver 88.0.4324.96 (68dba2d8a0b149a1d3afac56fa74648032bcf46b-refs/branch-heads/4324@{#1784})
+        #       ChromeDriver 121.0.6130.0 (5fc19c7ab5e88bb674c2efc65db4b7890a52a4ec-refs/branch-heads/6130@{#1})
         # This trims it down to just the version number:
-        #       88.0.4324.96
-        chromedriver --version 2> /dev/null | head -n 1 | cut -d ' ' -f 2
+        #       121.0.6130.0
+        chromedriver --version 2> /dev/null |
+            head -n 1 |
+            tr -s ' ' |
+            cut -d' ' -f2
     }
 
 }

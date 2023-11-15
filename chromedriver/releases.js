@@ -1,81 +1,77 @@
 'use strict';
 
-var matchers = {
-  key: /.*Key>(.*)<\/Key.*/,
-  generation: /.*Generation>(.*)<\/Generation.*/,
-  metaGeneration: /.*MetaGeneration>(.*)<\/MetaGeneration.*/,
-  lastModified: /.*LastModified>(.*)<\/LastModified.*/,
-  etag: /.*ETag>(.*)<\/ETag.*/,
-  size: /.*Size>(.*)<\/Size.*/,
-};
-var baseUrl = 'https://chromedriver.storage.googleapis.com';
+// See <https://googlechromelabs.github.io/chrome-for-testing/>
+var releaseApiUrl =
+  'https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json';
 
-module.exports = function (request) {
-  var all = {
+// {
+//   "timestamp": "2023-11-15T21:08:56.730Z",
+//   "versions": [
+//     {
+//       "version": "121.0.6120.0",
+//       "revision": "1222902",
+//       "downloads": {
+//         "chrome": [],
+//         "chromedriver": [
+//           {
+//             "platform": "linux64",
+//             "url": "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/121.0.6120.0/linux64/chromedriver-linux64.zip"
+//           },
+//           {
+//             "platform": "mac-arm64",
+//             "url": "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/121.0.6120.0/mac-arm64/chromedriver-mac-arm64.zip"
+//           },
+//           {
+//             "platform": "mac-x64",
+//             "url": "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/121.0.6120.0/mac-x64/chromedriver-mac-x64.zip"
+//           },
+//           {
+//             "platform": "win32",
+//             "url": "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/121.0.6120.0/win32/chromedriver-win32.zip"
+//           },
+//           {
+//             "platform": "win64",
+//             "url": "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/121.0.6120.0/win64/chromedriver-win64.zip"
+//           }
+//         ],
+//         "chrome-headless-shell": []
+//       }
+//     }
+//   ]
+// }
+
+module.exports = async function (request) {
+  let resp = await request({
+    url: releaseApiUrl,
+    json: true,
+  });
+
+  let builds = [];
+  for (let release of resp.body.versions) {
+    if (!release.downloads.chromedriver) {
+      continue;
+    }
+
+    let version = release.version;
+    for (let asset of release.downloads.chromedriver) {
+      let build = {
+        version: version,
+        download: asset.url,
+        // I' not sure that this is actually statically built but it
+        // seems to be and at worst we'll just get bug reports for Apline
+        libc: 'none',
+      };
+
+      builds.push(build);
+    }
+  }
+
+  let all = {
     download: '',
-    releases: [],
+    releases: builds,
   };
 
-  // XML
-  return request({
-    url: 'https://chromedriver.storage.googleapis.com/',
-    json: false,
-  })
-    .then(function (resp) {
-      var body = resp.body;
-      var groups = body.split(/<\/?Contents>/g);
-      // get rid of leading and trailing junk
-      groups.shift();
-      groups.pop();
-      var metas = groups.map(function (group) {
-        return {
-          key: group.replace(matchers.key, '$1'),
-          //generation: group.replace(matchers.generation, '$1'),
-          //metaGeneration: group.replace(matchers.metaGeneration, '$1'),
-          lastModified: group.replace(matchers.lastModified, '$1'),
-          //etag: group.replace(matchers.etag, '$1'),
-          //size: group.replace(matchers.size, '$1')
-        };
-      });
-      all.download = baseUrl + '/{{ download }}';
-      metas.forEach(function (asset) {
-        if (!asset.key.includes('chromedriver')) {
-          // skip the indexes, images, etc
-          return null;
-        }
-
-        var osname = asset.key.replace(/.*(win|mac|linux)/, '$1');
-        var arch;
-        if (asset.key.includes('linux')) {
-          osname = 'linux';
-        } else if (asset.key.includes('mac64')) {
-          osname = 'macos';
-          if (asset.key.includes('_m1.')) {
-            arch = 'arm64';
-          }
-        } else if (asset.key.includes('win')) {
-          osname = 'windows';
-          arch = 'amd64';
-        }
-        all.releases.push({
-          // 87.0.4280.88/chromedriver_win32.zip => 87.0.4280.88
-          version: asset.key.replace(/(.*)\/.*/, '$1'),
-          lts: false,
-          channel: 'stable',
-          date: asset.lastModified.replace(/T.*/, '$1'),
-          os: osname,
-          arch: arch,
-          hash: '-', // not sure about including etag as hash yet
-          download: asset.key,
-        });
-      });
-    })
-    .then(function () {
-      all.releases.sort(function (a, b) {
-        return new Date(b.date).valueOf() - new Date(a.date).valueOf();
-      });
-      return all;
-    });
+  return all;
 };
 
 if (module === require.main) {
