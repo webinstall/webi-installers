@@ -17,10 +17,10 @@ else
             echo "    No Webi installer for fish on Linux yet."
             echo ""
             echo "SOLUTION"
-            echo "    Would you like to install from apt?"
+            echo "    Would you like to install with apt?"
             echo "    sudo apt install -y fish"
             echo ""
-            printf "Install with sudo and apt [Y/n]?"
+            printf "Install with sudo and apt [Y/n]? "
         elif command -v apk > /dev/null; then
             echo ""
             echo "ERROR"
@@ -30,7 +30,7 @@ else
             echo "    Would you like to install with apk?"
             echo "    sudo apk add --no-cache fish"
             echo ""
-            printf "Install with sudo and apk [Y/n]?"
+            printf "Install with sudo and apk [Y/n]? "
         elif test "Darwin" != "$(uname -s)"; then
             echo "No fish installer for Linux yet."
             exit 1
