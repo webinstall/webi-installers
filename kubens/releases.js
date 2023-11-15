@@ -6,10 +6,23 @@ var repo = 'kubectx';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
-    // remove kubectx, etc. from kubens list
-    all.releases = all.releases.filter(function (rel) {
-      return !/(\.txt)|(kubectx)|(kubectx_)$/i.test(rel.name);
-    });
+    let builds = [];
+
+    for (let build of all.releases) {
+      // this installs separately
+      if (build.name.includes('kubectx')) {
+        continue;
+      }
+
+      // this is the legacy bash script
+      if (build.name === 'kubens') {
+        continue;
+      }
+
+      builds.push(build);
+    }
+
+    all.releases = builds;
     return all;
   });
 };
