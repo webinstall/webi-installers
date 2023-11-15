@@ -1,15 +1,5 @@
 'use strict';
 
-let convert = {
-  freebsd: 'freebsd',
-  macos: 'darwin',
-  linux: 'linux',
-  windows: 'windows',
-  amd64: 'amd64',
-  arm: 'arm64',
-  386: 'x86',
-};
-
 function getAllReleases(request) {
   return request({
     url: 'https://releases.hashicorp.com/terraform/index.json',
@@ -26,9 +16,11 @@ function getAllReleases(request) {
         let r = {
           version: build.version,
           download: build.url,
-          os: convert[build.os],
-          arch: convert[build.arch],
-          channel: 'stable', // No other channels
+          // These are generic enough for the autodetect,
+          // and the per-file logic has proven to get outdated sooner
+          //os: convert[build.os],
+          //arch: convert[build.arch],
+          //channel: 'stable|-rc|-beta|-alpha',
         };
         all.releases.push(r);
       });
