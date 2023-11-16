@@ -6,9 +6,6 @@ var repo = 'dash';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
-    all.releases = all.releases.filter(function (rel) {
-      return !rel.name.endsWith('.asc');
-    });
     all.releases.forEach(function (rel) {
       if (rel.name.includes('osx64')) {
         rel.os = 'macos';
@@ -18,6 +15,7 @@ module.exports = function (request) {
         rel._version = rel.version.slice(1);
       }
     });
+
     all._names = ['dashd', 'dashcore'];
     return all;
   });
