@@ -13,6 +13,10 @@ module.exports = function (request) {
       if (rel.name.includes('osx64')) {
         rel.os = 'macos';
       }
+
+      if (rel.version.startsWith('v')) {
+        rel._version = rel.version.slice(1);
+      }
     });
     all._names = ['dashd', 'dashcore'];
     return all;
