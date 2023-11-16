@@ -6,6 +6,17 @@ var repo = 'fd';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
+    let builds = [];
+
+    for (let build of all.releases) {
+      if (build.name === 'fd') {
+        continue;
+      }
+
+      builds.push(build);
+    }
+
+    all.releases = builds;
     return all;
   });
 };
