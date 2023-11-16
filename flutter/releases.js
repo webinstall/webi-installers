@@ -76,6 +76,7 @@ module.exports = async function (request) {
 
       all.releases.push({
         version: asset.version,
+        _version: `${asset.version}-${asset.channel}`,
         lts: false,
         channel: asset.channel,
         date: asset.release_date.replace(/T.*/, ''),
