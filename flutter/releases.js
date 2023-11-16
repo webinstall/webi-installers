@@ -79,9 +79,7 @@ module.exports = async function (request) {
         lts: false,
         channel: asset.channel,
         date: asset.release_date.replace(/T.*/, ''),
-        os: osname,
-        arch: 'amd64',
-        hash: asset.hash,
+        //sha256: asset.sha256,
         download: asset.archive,
       });
     }
