@@ -7,6 +7,10 @@ var repo = 'CMake';
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
     for (let rel of all.releases) {
+      if (rel.version.startsWith('v')) {
+        rel._version = rel.version.slice(1);
+      }
+
       {
         let linuxRe = /(\b|_)(linux|gnu)(\b|_)/i;
         let isLinux = linuxRe.test(rel.download) || linuxRe.test(rel.name);
