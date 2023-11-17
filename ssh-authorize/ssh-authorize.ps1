@@ -166,7 +166,7 @@ function Add-AuthorizedKey($UrlOrPath) {
 
     $TmpKeys = "new_authorized_keys.tmp.txt"
 
-    curl.exe --fail-with-body -sS $UrlOrPath | Out-File -Force "${TmpKeys}.partial"
+    curl.exe -f -sS $UrlOrPath | Out-File -Force "${TmpKeys}.partial"
     $null = Move-Item -Force "${TmpKeys}.partial" $TmpKeys
 
     IF ($IsHttp) {

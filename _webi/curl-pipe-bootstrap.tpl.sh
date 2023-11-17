@@ -119,9 +119,9 @@ fn_curl() { (
     a_url="${1}"
     a_path="${2}"
 
-    cmd_curl="curl --fail-with-body -sSL -#"
+    cmd_curl="curl -f -sSL -#"
     if fn_is_interactive; then
-        cmd_curl="curl --fail-with-body sSL"
+        cmd_curl="curl -f sSL"
     fi
 
     b_triple_ua="$(fn_get_target_triple_user_agent)"
