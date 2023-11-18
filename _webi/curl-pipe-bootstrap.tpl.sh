@@ -121,7 +121,7 @@ fn_curl() { (
 
     cmd_curl="curl -f -sSL -#"
     if fn_is_interactive; then
-        cmd_curl="curl -f sSL"
+        cmd_curl="curl -f -sSL"
     fi
 
     b_triple_ua="$(fn_get_target_triple_user_agent)"
