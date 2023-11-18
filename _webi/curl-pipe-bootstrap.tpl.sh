@@ -16,39 +16,50 @@ export WEBI_CHECKSUM=06a7fb9f
 #                                       #
 #########################################
 
-# shellcheck disable=SC2005
 fn_show_welcome() { (
     echo ""
+    # invert t_task and t_pkg for top-level welcome message
     printf "%s %s\n" \
-        "$(t_strong 'Welcome to') $(t_stronger 'Webi')$(t_strong '!')" \
+        "$(t_pkg 'Welcome to') $(t_task 'Webi')$(t_pkg '!')" \
         "$(t_dim "- Modern tools, instant installs.")"
     echo "We expect your experience to be $(t_em 'absolutely perfect')!"
     echo ""
-    echo "    $(t_yellow 'Have a problem?') Please $(t_em 'let us know'):"
+    echo "    $(t_attn 'Problem?') Please $(t_em 'let us know'):"
     echo "        $(t_url 'https://github.com/webinstall/webi-installers/issues')"
-    echo "        $(t_dim "(your system is $(t_yellow "$(uname -s)")/$(t_yellow "$(uname -m)") with $(t_yellow "$(fn_get_libc)") & $(t_yellow "$(fn_get_http)"))")"
+    echo "        $(t_dim "(your system is $(t_host "$(uname -s)")/$(t_host "$(uname -m)") with $(t_host "$(fn_get_libc)") & $(t_host "$(fn_get_http)"))")"
     echo ""
-    echo "    $(t_yellow 'Love it?') Star it!"
+    echo "    $(t_attn 'Love') $(t_dim 'it?') Star it!"
     echo "        $(t_url 'https://github.com/webinstall/webi-installers')"
 
     sleep 0.2
 ); }
 
-t_strong() { (fn_printf '\e[36m%s\e[39m' "${1}"); }
-t_stronger() { (fn_printf '\e[1m\e[32m%s\e[39m\e[22m' "${1}"); }
-t_url() { (fn_printf '\e[2m%s\e[22m' "${1}"); }
-t_path() { (fn_printf '\e[2m\e[32m%s\e[39m\e[22m' "${1}"); }
+# Term Types
 t_cmd() { (fn_printf '\e[2m\e[35m%s\e[39m\e[22m' "${1}"); }
+t_host() { (fn_printf '\e[2m\e[33m%s\e[39m\e[22m' "${1}"); }
+t_link() { (fn_printf '\e[1m\e[36m%s\e[39m\e[22m' "${1}"); }
+t_path() { (fn_printf '\e[2m\e[32m%s\e[39m\e[22m' "${1}"); }
+t_pkg() { (fn_printf '\e[1m\e[32m%s\e[39m\e[22m' "${1}"); }
+t_task() { (fn_printf '\e[36m%s\e[39m' "${1}"); }
+t_url() { (fn_printf '\e[2m%s\e[22m' "${1}"); }
+
+# Levels
+t_info() { (fn_printf '\e[1m\e[36m%s\e[39m\e[22m' "${1}"); }
+t_attn() { (fn_printf '\e[1m\e[33m%s\e[39m\e[22m' "${1}"); }
+t_warn() { (fn_printf '\e[1m\e[33m%s\e[39m\e[22m' "${1}"); }
 t_err() { (fn_printf '\e[31m%s\e[39m' "${1}"); }
 
+# Styles
 t_bold() { (fn_printf '\e[1m%s\e[22m' "${1}"); }
 t_dim() { (fn_printf '\e[2m%s\e[22m' "${1}"); }
 t_em() { (fn_printf '\e[3m%s\e[23m' "${1}"); }
 t_under() { (fn_printf '\e[4m%s\e[24m' "${1}"); }
-t_green() { (fn_printf '\e[32m%s\e[39m' "${1}"); }
-t_yellow() { (fn_printf '\e[33m%s\e[39m' "${1}"); }
-t_magenta() { (fn_printf '\e[35m%s\e[39m' "${1}"); }
+
+# FG Colors
 t_cyan() { (fn_printf '\e[36m%s\e[39m' "${1}"); }
+t_green() { (fn_printf '\e[32m%s\e[39m' "${1}"); }
+t_magenta() { (fn_printf '\e[35m%s\e[39m' "${1}"); }
+t_yellow() { (fn_printf '\e[33m%s\e[39m' "${1}"); }
 
 fn_printf() { (
     a_style="${1}"
@@ -192,7 +203,7 @@ webi_upgrade() { (
     a_path="${1}"
 
     echo ""
-    echo "$(t_strong 'Bootstrapping') $(t_stronger 'Webi')"
+    echo "$(t_task 'Bootstrapping') $(t_pkg 'Webi')"
 
     b_path_rel="$(fn_sub_home "${a_path}")"
     b_checksum=""
@@ -271,7 +282,7 @@ main() { (
     fi
 
     echo ""
-    echo "$(t_strong 'Installing') $(t_stronger "${WEBI_PKG}") $(t_strong '...')"
+    echo "$(t_task 'Installing') $(t_pkg "${WEBI_PKG}") $(t_task '...')"
     echo "    Running $(t_cmd "${b_webi_path_rel} ${WEBI_PKG}")"
     "${b_webi_path}" "${WEBI_PKG}"
 ); }
