@@ -596,8 +596,11 @@ __bootstrap_webi() {
 #                                       #
 #########################################
 
-fn_show_welcome() { (
-    echo ""
+fn_show_welcome_back() { (
+    if test -n "${WEBI_WELCOME:-}"; then
+        return 0
+    fi
+
     echo ""
     # invert t_task and t_pkg for top-level welcome message
     printf -- ">>> %s %s  <<<\n" \
@@ -779,11 +782,8 @@ fn_download_to_path() { (
 #                                            #
 ##############################################
 
-webi_bootstrap() { (
+webi_upgrade() { (
     a_path="${1}"
-
-    echo ""
-    echo "$(t_task 'Bootstrapping') $(t_pkg 'Webi')"
 
     b_path_rel="$(fn_sub_home "${a_path}")"
     b_checksum=""
@@ -791,7 +791,6 @@ webi_bootstrap() { (
         b_checksum="$(fn_checksum "${a_path}")"
     fi
     if test "$b_checksum" = "${WEBI_CHECKSUM}"; then
-        echo "    $(t_dim 'Found') $(t_path "${b_path_rel}")"
         sleep 0.1
         return 0
     fi
@@ -802,7 +801,8 @@ webi_bootstrap() { (
         b_ts="$(date -u '+%s')"
         b_tmp="${a_path}.${b_ts}.bak"
         mv "${a_path}" "${b_tmp}"
-        echo "    Updating $(t_path "${b_path_rel}")"
+        echo ""
+        echo "$(t_task 'Updating') $(t_pkg 'Webi')"
     fi
 
     echo "    Downloading $(t_url "${b_webi_file_url}")"
@@ -869,7 +869,7 @@ main() { (
     fi
 
     if test -z "${WEBI_WELCOME:-}"; then
-        fn_show_welcome
+        fn_show_welcome_back
     fi
     export WEBI_WELCOME='shown'
 
@@ -879,7 +879,7 @@ main() { (
 
     WEBI_CURRENT="${WEBI_CURRENT:-}"
     if test "${WEBI_CURRENT}" != "${WEBI_CHECKSUM}"; then
-        webi_bootstrap "${b_webi_path}"
+        webi_upgrade "${b_webi_path}"
         export WEBI_CURRENT="${WEBI_CHECKSUM}"
     fi
 
