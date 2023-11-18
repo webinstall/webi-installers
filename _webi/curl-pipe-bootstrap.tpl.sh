@@ -34,21 +34,32 @@ fn_show_welcome() { (
     sleep 0.2
 ); }
 
-t_strong() { (printf '\e[36m%s\e[39m' "${1}"); }
-t_stronger() { (printf '\e[1m\e[32m%s\e[39m\e[22m' "${1}"); }
-t_url() { (printf '\e[2m%s\e[22m' "${1}"); }
-t_path() { (printf '\e[2m\e[32m%s\e[39m\e[22m' "${1}"); }
-t_cmd() { (printf '\e[2m\e[35m%s\e[39m\e[22m' "${1}"); }
-t_err() { (printf '\e[31m%s\e[39m' "${1}"); }
+t_strong() { (fn_printf '\e[36m%s\e[39m' "${1}"); }
+t_stronger() { (fn_printf '\e[1m\e[32m%s\e[39m\e[22m' "${1}"); }
+t_url() { (fn_printf '\e[2m%s\e[22m' "${1}"); }
+t_path() { (fn_printf '\e[2m\e[32m%s\e[39m\e[22m' "${1}"); }
+t_cmd() { (fn_printf '\e[2m\e[35m%s\e[39m\e[22m' "${1}"); }
+t_err() { (fn_printf '\e[31m%s\e[39m' "${1}"); }
 
-t_bold() { (printf '\e[1m%s\e[22m' "${1}"); }
-t_dim() { (printf '\e[2m%s\e[22m' "${1}"); }
-t_em() { (printf '\e[3m%s\e[23m' "${1}"); }
-t_under() { (printf '\e[4m%s\e[24m' "${1}"); }
-t_green() { (printf '\e[32m%s\e[39m' "${1}"); }
-t_yellow() { (printf '\e[33m%s\e[39m' "${1}"); }
-t_magenta() { (printf '\e[35m%s\e[39m' "${1}"); }
-t_cyan() { (printf '\e[36m%s\e[39m' "${1}"); }
+t_bold() { (fn_printf '\e[1m%s\e[22m' "${1}"); }
+t_dim() { (fn_printf '\e[2m%s\e[22m' "${1}"); }
+t_em() { (fn_printf '\e[3m%s\e[23m' "${1}"); }
+t_under() { (fn_printf '\e[4m%s\e[24m' "${1}"); }
+t_green() { (fn_printf '\e[32m%s\e[39m' "${1}"); }
+t_yellow() { (fn_printf '\e[33m%s\e[39m' "${1}"); }
+t_magenta() { (fn_printf '\e[35m%s\e[39m' "${1}"); }
+t_cyan() { (fn_printf '\e[36m%s\e[39m' "${1}"); }
+
+fn_printf() { (
+    a_style="${1}"
+    a_text="${2}"
+    if test -n "${WEBI_TTY}"; then
+        #shellcheck disable=SC2059
+        printf "${a_style}" "${a_text}"
+    else
+        printf '%s' "${a_text}"
+    fi
+); }
 
 fn_get_libc() { (
     # Ex:
@@ -221,7 +232,27 @@ fn_sub_home() { (
     echo "${my_abs}" | sed "s:^${my_rel}:~:"
 ); }
 
+fn_detect_tty() { (
+    # stdin will NOT be a tty if it's being piped
+    # stdout & stderr WILL be a tty even when piped
+    # they are not a tty if being captured or redirected
+    # 'set -i' is NOT available in sh
+    if test -t 1 && test -t 2; then
+        return 0
+    fi
+
+    return 1
+); }
+
 main() { (
+    WEBI_TTY="${WEBI_TTY:-}"
+    if test -z "${WEBI_TTY}"; then
+        if fn_detect_tty; then
+            WEBI_TTY="tty"
+        fi
+        export WEBI_TTY
+    fi
+
     if test -z "${WEBI_WELCOME:-}"; then
         fn_show_welcome
     fi
