@@ -64,7 +64,7 @@ t_yellow() { (fn_printf '\e[33m%s\e[39m' "${1}"); }
 fn_printf() { (
     a_style="${1}"
     a_text="${2}"
-    if test -n "${WEBI_TTY}"; then
+    if fn_is_tty; then
         #shellcheck disable=SC2059
         printf "${a_style}" "${a_text}"
     else
@@ -117,7 +117,7 @@ fn_wget() { (
     a_path="${2}"
 
     cmd_wget="wget -q --user-agent"
-    if fn_is_interactive; then
+    if fn_is_tty; then
         cmd_wget="wget -q --show-progress --user-agent"
     fi
 
@@ -142,7 +142,7 @@ fn_curl() { (
     a_path="${2}"
 
     cmd_curl="curl -f -sSL -#"
-    if fn_is_interactive; then
+    if fn_is_tty; then
         cmd_curl="curl -f -sSL"
     fi
 
@@ -159,16 +159,6 @@ fn_curl() { (
         return 1
     fi
 ); }
-
-fn_is_interactive() {
-    # Ex:
-    #     himBH
-    #     hBc
-    case $- in
-        *i*) return 0 ;;
-        *) return 1 ;;
-    esac
-}
 
 fn_get_target_triple_user_agent() { (
     # Ex:
@@ -242,6 +232,13 @@ fn_sub_home() { (
     my_abs=${1}
     echo "${my_abs}" | sed "s:^${my_rel}:~:"
 ); }
+
+fn_is_tty() {
+    if test "${WEBI_TTY}" = 'tty'; then
+        return 0
+    fi
+    return 1
+}
 
 fn_detect_tty() { (
     # stdin will NOT be a tty if it's being piped
