@@ -1,8 +1,10 @@
 'use strict';
 
-var fs = require('node:fs');
+var Crypto = require('crypto');
+var Fs = require('node:fs/promises');
 var path = require('node:path');
 var request = require('@root/request');
+
 var _normalize = require('../_webi/normalize.js');
 
 var reInstallTpl = /\s*#?\s*{{ installer }}/;
@@ -39,10 +41,7 @@ Releases.renderBash = async function (
   if (!tag) {
     tag = '';
   }
-  let installTxt = await fs.promises.readFile(
-    path.join(pkgdir, 'install.sh'),
-    'utf8',
-  );
+  let installTxt = await Fs.readFile(path.join(pkgdir, 'install.sh'), 'utf8');
   installTxt = padScript(installTxt);
   var vers = rel.version.split('.');
   var v = {
@@ -55,7 +54,7 @@ Releases.renderBash = async function (
       .replace(/^-/, ''),
   };
   var pkgFile = rel.filename || rel.name;
-  let tplTxt = await fs.promises.readFile(
+  let tplTxt = await Fs.readFile(
     path.join(__dirname, 'install-package.tpl.sh'),
     'utf8',
   );
@@ -90,7 +89,10 @@ Releases.renderBash = async function (
   ]
     .join(',')
     .replace(/'/g, '');
+
+  let webiChecksum = await Releases.getWebiShChecksum();
   let envReplacements = [
+    ['WEBI_CHECKSUM', webiChecksum],
     ['WEBI_PKG', webiPkg],
     ['WEBI_HOST', baseurl],
     ['WEBI_OS', os],
@@ -127,7 +129,7 @@ Releases.renderBash = async function (
     // #export WEBI_FOO=xyz => export WEBI_FOO='123'
     // export WEBI_FOO=     => export WEBI_FOO='123'
     let envRe = new RegExp(
-      `^[ \\t]*#?[ \\t]*(export\\s)?[ \\t]*(${name})=.*`,
+      `^[ \\t]*#?[ \\t]*(export[ \\t])?[ \\t]*(${name})=.*`,
       'm',
     );
     if (BAD_SH_RE.test(value)) {
@@ -156,10 +158,7 @@ Releases.renderPowerShell = async function (
   if (!tag) {
     tag = '';
   }
-  let installTxt = await fs.promises.readFile(
-    path.join(pkgdir, 'install.ps1'),
-    'utf8',
-  );
+  let installTxt = await Fs.readFile(path.join(pkgdir, 'install.ps1'), 'utf8');
   installTxt = padScript(installTxt);
   /*
     var vers = rel.version.split('.');
@@ -173,7 +172,7 @@ Releases.renderPowerShell = async function (
         .replace(/^-/, '')
     };
   */
-  let tplTxt = await fs.promises.readFile(
+  let tplTxt = await Fs.readFile(
     path.join(__dirname, 'install-package.tpl.ps1'),
     'utf8',
   );
@@ -217,4 +216,33 @@ Releases.renderPowerShell = async function (
       )
       .replace(reInstallTpl, '\n' + installTxt)
   );
+};
+
+var _webiShMeta = {
+  stale: 10 * 1000,
+  updated_at: 0,
+  checksum: '',
+  mtime: 0,
+};
+Releases.getWebiShChecksum = async function () {
+  let now = Date.now();
+  let ago = now - _webiShMeta.updated_at;
+  if (ago <= _webiShMeta.stale) {
+    return _webiShMeta.checksum;
+  }
+
+  let webiPath = path.join(__dirname, '../webi/webi.sh');
+  let stat = await Fs.stat(webiPath);
+  if (stat.mtimeMs === _webiShMeta.mtime) {
+    return _webiShMeta.checksum;
+  }
+
+  let webiBuf = await Fs.readFile(webiPath, null);
+  let webiHash = Crypto.createHash('sha1').update(webiBuf).digest('hex');
+  let webiChecksum = webiHash.slice(0, 8);
+
+  _webiShMeta.mtime = stat.mtimeMs;
+  _webiShMeta.updated_at = now;
+  _webiShMeta.checksum = webiChecksum;
+  return _webiShMeta.checksum;
 };

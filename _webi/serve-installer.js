@@ -2,7 +2,6 @@
 
 var Installers = module.exports;
 
-var Crypto = require('crypto');
 var Fs = require('fs/promises');
 var path = require('path');
 
@@ -136,7 +135,7 @@ Installers.getPosixCurlPipeBootstrap = async function ({ baseurl, pkg, ver }) {
   let bootTxt = await Fs.readFile(CURL_PIPE_SH_BOOT, 'utf8');
 
   var webiPkg = [pkg, ver].filter(Boolean).join('@');
-  var webiChecksum = await Installers.getWebiShChecksum();
+  var webiChecksum = await Releases.getWebiShChecksum();
   var envReplacements = [
     ['WEBI_PKG', webiPkg],
     ['WEBI_HOST', baseurl],
@@ -149,7 +148,7 @@ Installers.getPosixCurlPipeBootstrap = async function ({ baseurl, pkg, ver }) {
 
     // TODO create REs once, in higher scope
     let envRe = new RegExp(
-      `^[ \\t]*#?[ \\t]*(export\\s)?[ \\t]*(${name})=.*`,
+      `^[ \\t]*#?[ \\t]*(export[ \\t])?[ \\t]*(${name})=.*`,
       'm',
     );
 
@@ -174,7 +173,7 @@ Installers.getPwshCurlPipeBootstrap = async function ({
   let bootTxt = await Fs.readFile(CURL_PIPE_PS1_BOOT, 'utf8');
 
   var webiPkg = [pkg, ver].filter(Boolean).join('@');
-  //var webiChecksum = await Installers.getWebiPs1Checksum();
+  //var webiChecksum = await Releases.getWebiPs1Checksum();
   var envReplacements = [
     ['Env:WEBI_PKG', webiPkg],
     ['Env:WEBI_HOST', baseurl],
@@ -208,33 +207,4 @@ Installers.getPwshCurlPipeBootstrap = async function ({
   //bootTxt.replace(/CHEATSHEET_URL/g, `${Config.cheatUrl}/${pkg}`);
 
   return bootTxt;
-};
-
-var _webiShMeta = {
-  stale: 10 * 1000,
-  updated_at: 0,
-  checksum: '',
-  mtime: 0,
-};
-Installers.getWebiShChecksum = async function () {
-  let now = Date.now();
-  let ago = now - _webiShMeta.updated_at;
-  if (ago <= _webiShMeta.stale) {
-    return _webiShMeta.checksum;
-  }
-
-  let webiPath = path.join(__dirname, '../webi/webi.sh');
-  let stat = await Fs.stat(webiPath);
-  if (stat.mtimeMs === _webiShMeta.mtime) {
-    return _webiShMeta.checksum;
-  }
-
-  let webiBuf = await Fs.readFile(webiPath, null);
-  let webiHash = Crypto.createHash('sha1').update(webiBuf).digest('hex');
-  let webiChecksum = webiHash.slice(0, 8);
-
-  _webiShMeta.mtime = stat.mtimeMs;
-  _webiShMeta.updated_at = now;
-  _webiShMeta.checksum = webiChecksum;
-  return _webiShMeta.checksum;
 };
