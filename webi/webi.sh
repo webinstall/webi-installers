@@ -87,39 +87,38 @@ __webi_main() {
 
     webinstall() {
 
-        my_package="${1:-}"
-        if [ -z "$my_package" ]; then
+        b_package="${1:-}"
+        if test -z "${b_package}"; then
             echo >&2 "Usage: webi <package>@<version> ..."
             echo >&2 "Example: webi node@lts rg"
             exit 1
         fi
 
-        WEBI_BOOT="$(
-            mktemp -d -t "$my_package-bootstrap.$WEBI_TIMESTAMP.XXXXXXXX"
+        b_install_tmpdir="$(
+            mktemp -d -t "${b_package}-install.${WEBI_TIMESTAMP}.XXXXXXXX"
         )"
-        export WEBI_BOOT
 
-        my_installer_url="$WEBI_HOST/api/installers/$my_package.sh?formats=$my_ext"
+        my_installer_url="$WEBI_HOST/api/installers/${b_package}.sh?formats=${my_ext}"
         if [ -n "$WEBI_CURL" ]; then
             if ! curl -fsSL "$my_installer_url" -H "User-Agent: curl $WEBI_UA" \
-                -o "$WEBI_BOOT/$my_package-bootstrap.sh"; then
+                -o "${b_install_tmpdir}/${b_package}-install.sh"; then
                 echo >&2 "error fetching '$my_installer_url'"
                 exit 1
             fi
         else
             if ! wget -q "$my_installer_url" --user-agent="wget $WEBI_UA" \
-                -O "$WEBI_BOOT/$my_package-bootstrap.sh"; then
+                -O "${b_install_tmpdir}/${b_package}-install.sh"; then
                 echo >&2 "error fetching '$my_installer_url'"
                 exit 1
             fi
         fi
 
         (
-            cd "$WEBI_BOOT"
-            sh "$my_package-bootstrap.sh"
+            cd "${b_install_tmpdir}"
+            sh "${b_package}-install.sh"
         )
 
-        rm -rf "$WEBI_BOOT"
+        rm -rf "${b_install_tmpdir}"
 
     }
 
