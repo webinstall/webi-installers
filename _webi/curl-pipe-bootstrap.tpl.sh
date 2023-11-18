@@ -66,9 +66,9 @@ fn_printf() { (
     a_text="${2}"
     if fn_is_tty; then
         #shellcheck disable=SC2059
-        printf "${a_style}" "${a_text}"
+        printf -- "${a_style}" "${a_text}"
     else
-        printf '%s' "${a_text}"
+        printf -- '%s' "${a_text}"
     fi
 ); }
 
