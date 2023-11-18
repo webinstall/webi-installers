@@ -18,18 +18,16 @@ export WEBI_CHECKSUM=06a7fb9f
 
 fn_show_welcome() { (
     echo ""
+    echo ""
     # invert t_task and t_pkg for top-level welcome message
-    printf "%s %s\n" \
+    printf -- ">>> %s %s  <<<\n" \
         "$(t_pkg 'Welcome to') $(t_task 'Webi')$(t_pkg '!')" \
-        "$(t_dim "- Modern tools, instant installs.")"
-    echo "We expect your experience to be $(t_em 'absolutely perfect')!"
+        "$(t_dim "- modern tools, instant installs.")"
+    echo "    We expect your experience to be $(t_em 'absolutely perfect')!"
     echo ""
-    echo "    $(t_attn 'Problem?') Please $(t_em 'let us know'):"
-    echo "        $(t_url 'https://github.com/webinstall/webi-installers/issues')"
-    echo "        $(t_dim "(your system is $(t_host "$(uname -s)")/$(t_host "$(uname -m)") with $(t_host "$(fn_get_libc)") & $(t_host "$(fn_get_http)"))")"
-    echo ""
-    echo "    $(t_attn 'Love') $(t_dim 'it?') Star it!"
-    echo "        $(t_url 'https://github.com/webinstall/webi-installers')"
+    echo "    $(t_attn 'Success')? Star it!   $(t_url 'https://github.com/webinstall/webi-installers')"
+    echo "    $(t_attn 'Problem')? Report it: $(t_url 'https://github.com/webinstall/webi-installers/issues')"
+    echo "                        $(t_dim "(your system is") $(t_host "$(uname -s)")/$(t_host "$(uname -m)") $(t_dim "with") $(t_host "$(fn_get_libc)") $(t_dim "&") $(t_host "$(fn_get_http_client_name)")$(t_dim ")")"
 
     sleep 0.2
 ); }
@@ -85,7 +83,7 @@ fn_get_libc() { (
     fi
 ); }
 
-fn_get_http() { (
+fn_get_http_client_name() { (
     # Ex:
     #     curl
     #     curl+wget
@@ -189,7 +187,7 @@ fn_download_to_path() { (
 #                                            #
 ##############################################
 
-webi_upgrade() { (
+webi_bootstrap() { (
     a_path="${1}"
 
     echo ""
@@ -198,10 +196,10 @@ webi_upgrade() { (
     b_path_rel="$(fn_sub_home "${a_path}")"
     b_checksum=""
     if test -r "${a_path}"; then
-        echo "    $(t_dim 'Found') $(t_path "${b_path_rel}")"
         b_checksum="$(fn_checksum "${a_path}")"
     fi
     if test "$b_checksum" = "${WEBI_CHECKSUM}"; then
+        echo "    $(t_dim 'Found') $(t_path "${b_path_rel}")"
         sleep 0.1
         return 0
     fi
@@ -283,13 +281,13 @@ main() { (
 
     WEBI_CURRENT="${WEBI_CURRENT:-}"
     if test "${WEBI_CURRENT}" != "${WEBI_CHECKSUM}"; then
-        webi_upgrade "${b_webi_path}"
+        webi_bootstrap "${b_webi_path}"
         export WEBI_CURRENT="${WEBI_CHECKSUM}"
     fi
 
-    echo ""
-    echo "$(t_task 'Installing') $(t_pkg "${WEBI_PKG}") $(t_task '...')"
     echo "    Running $(t_cmd "${b_webi_path_rel} ${WEBI_PKG}")"
+    echo ""
+
     "${b_webi_path}" "${WEBI_PKG}"
 ); }
 
