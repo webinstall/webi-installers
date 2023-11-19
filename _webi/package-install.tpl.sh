@@ -577,13 +577,11 @@ __bootstrap_webi() {
 
             rm -f "$_webi_tmp/.PATH.env"
 
-            echo ">>> $(t_attn 'ACTION REQUIRED') <<<"
-            echo ""
+            echo ">>> $(t_info 'ACTION REQUIRED') <<<"
             echo "        Copy, paste & run the following command:"
             echo "        $(t_attn 'source ~/.config/envman/PATH.env')"
             echo "        (newly opened terminal windows will update automatically)"
             echo ""
-            echo "^^^ $(t_attn 'ACTION REQUIRED') ^^^"
         fi
     fi
 
