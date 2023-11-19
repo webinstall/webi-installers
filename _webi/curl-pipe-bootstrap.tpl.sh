@@ -222,8 +222,10 @@ fn_sub_home() { (
 ); }
 
 main() { (
-    fn_show_welcome
-    export WEBI_WELCOME=true
+    if test -z "${WEBI_WELCOME:-}"; then
+        fn_show_welcome
+    fi
+    export WEBI_WELCOME='shown'
 
     # note: we may support custom locations in the future
     export WEBI_HOME="${HOME}/.local"
