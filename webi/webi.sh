@@ -285,6 +285,7 @@ __webi_main() {
 
     for pkgname in "$@"; do
         webinstall "$pkgname"
+        export WEBI_WELCOME='shown'
     done
 
     show_path_updates
