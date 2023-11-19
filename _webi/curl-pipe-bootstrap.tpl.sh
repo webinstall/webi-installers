@@ -207,13 +207,22 @@ webi_upgrade() { (
     fi
 
     b_webi_file_url="${WEBI_HOST}/packages/webi/webi.sh"
+    b_tmp=''
     if test -r "${a_path}"; then
+        b_ts="$(date -u '+%s')"
+        b_tmp="${a_path}.${b_ts}.bak"
+        mv "${a_path}" "${b_tmp}"
         echo "    Updating $(t_path "${b_path_rel}")"
     fi
+
     echo "    Downloading $(t_url "${b_webi_file_url}")"
     echo "        to $(t_path "${b_path_rel}")"
     fn_download_to_path "${b_webi_file_url}" "${a_path}"
     chmod u+x "${a_path}"
+
+    if test -r "${b_tmp}"; then
+        rm -f "${b_tmp}"
+    fi
 ); }
 
 fn_checksum() {
