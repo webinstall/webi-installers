@@ -61,8 +61,6 @@ __webi_main() {
     set +e
     WEBI_CURL="$(command -v curl)"
     export WEBI_URL
-    WEBI_WGET="$(command -v wget)"
-    export WEBI_WGET
     set -e
 
     my_libc=''

@@ -126,9 +126,14 @@ fn_wget() { (
     a_url="${1}"
     a_path="${2}"
 
-    cmd_wget="wget -q --user-agent"
+    cmd_wget="wget -c -q --user-agent"
     if fn_is_tty; then
-        cmd_wget="wget -q --show-progress --user-agent"
+        cmd_wget="wget -c -q --show-progress --user-agent"
+    fi
+    # busybox wget doesn't support --show-progress
+    # See <https://github.com/webinstall/webi-installers/pull/772>
+    if readlink "$(command -v wget)" | grep -q busybox; then
+        cmd_wget="wget --user-agent"
     fi
 
     b_triple_ua="$(fn_get_target_triple_user_agent)"
@@ -137,9 +142,9 @@ fn_wget() { (
         b_agent="webi/wget+curl ${b_triple_ua}"
     fi
 
-    if ! $cmd_wget "${b_agent}" -c "${a_url}" -O "${a_path}"; then
+    if ! $cmd_wget "${b_agent}" "${a_url}" -O "${a_path}"; then
         echo >&2 "    $(t_err "failed to download (wget)") '$(t_url "${a_url}")'"
-        echo >&2 "    $cmd_wget '${b_agent}' -c '${a_url}' -O '${a_path}'"
+        echo >&2 "    $cmd_wget '${b_agent}' '${a_url}' -O '${a_path}'"
         echo >&2 "    $(wget -V)"
         return 1
     fi
@@ -182,10 +187,10 @@ fn_download_to_path() { (
     a_path="${2}"
 
     mkdir -p "$(dirname "${a_path}")"
-    if command -v wget > /dev/null; then
-        fn_wget "${a_url}" "${a_path}.part"
-    elif command -v curl > /dev/null; then
+    if command -v curl > /dev/null; then
         fn_curl "${a_url}" "${a_path}.part"
+    elif command -v wget > /dev/null; then
+        fn_wget "${a_url}" "${a_path}.part"
     else
         echo >&2 "    $(t_err "failed to detect HTTP client (curl, wget)")"
         return 1
