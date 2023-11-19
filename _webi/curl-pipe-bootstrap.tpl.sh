@@ -232,7 +232,12 @@ main() { (
     b_home="$(fn_sub_home "${WEBI_HOME}")"
     b_webi_path="${WEBI_HOME}/bin/webi"
     b_webi_path_rel="${b_home}/bin/webi"
-    webi_upgrade "${b_webi_path}"
+
+    WEBI_CURRENT="${WEBI_CURRENT:-}"
+    if test "${WEBI_CURRENT}" != "${WEBI_CHECKSUM}"; then
+        webi_upgrade "${b_webi_path}"
+        export WEBI_CURRENT="${WEBI_CHECKSUM}"
+    fi
 
     echo ""
     echo "$(t_strong 'Installing') $(t_stronger "${WEBI_PKG}") $(t_strong '...')"
