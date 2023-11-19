@@ -32,6 +32,44 @@ fn_show_welcome() { (
     sleep 0.2
 ); }
 
+fn_get_libc() { (
+    # Ex:
+    #     musl
+    #     libc
+    if ldd /bin/ls 2> /dev/null | grep -q 'musl' 2> /dev/null; then
+        echo 'musl'
+    elif uname -o | grep -q 'GNU' || uname -s | grep -q 'Linux'; then
+        echo 'gnu'
+    else
+        echo 'libc'
+    fi
+); }
+
+fn_get_http_client_name() { (
+    # Ex:
+    #     curl
+    #     curl+wget
+    b_client=""
+    if command -v curl > /dev/null; then
+        b_client="curl"
+    fi
+    if command -v wget > /dev/null; then
+        if test -z "${b_client}"; then
+            b_client="wget"
+        else
+            b_client="curl+wget"
+        fi
+    fi
+
+    echo "${b_client}"
+); }
+
+#########################################
+#                                       #
+#      For Making the Display Nice      #
+#                                       #
+#########################################
+
 # Term Types
 t_cmd() { (fn_printf '\e[2m\e[35m%s\e[39m\e[22m' "${1}"); }
 t_host() { (fn_printf '\e[2m\e[33m%s\e[39m\e[22m' "${1}"); }
@@ -70,36 +108,10 @@ fn_printf() { (
     fi
 ); }
 
-fn_get_libc() { (
-    # Ex:
-    #     musl
-    #     libc
-    if ldd /bin/ls 2> /dev/null | grep -q 'musl' 2> /dev/null; then
-        echo 'musl'
-    elif uname -o | grep -q 'GNU' || uname -s | grep -q 'Linux'; then
-        echo 'gnu'
-    else
-        echo 'libc'
-    fi
-); }
-
-fn_get_http_client_name() { (
-    # Ex:
-    #     curl
-    #     curl+wget
-    b_client=""
-    if command -v curl > /dev/null; then
-        b_client="curl"
-    fi
-    if command -v wget > /dev/null; then
-        if test -z "${b_client}"; then
-            b_client="wget"
-        else
-            b_client="curl+wget"
-        fi
-    fi
-
-    echo "${b_client}"
+fn_sub_home() { (
+    my_rel=${HOME}
+    my_abs=${1}
+    echo "${my_abs}" | sed "s:^${my_rel}:~:"
 ); }
 
 ###################################
@@ -234,11 +246,11 @@ fn_checksum() {
     $cmd_shasum "${a_filepath}" | cut -d' ' -f1 | cut -c 1-8
 }
 
-fn_sub_home() { (
-    my_rel=${HOME}
-    my_abs=${1}
-    echo "${my_abs}" | sed "s:^${my_rel}:~:"
-); }
+##############################################
+#                                            #
+#          Detect TTY and run main           #
+#                                            #
+##############################################
 
 fn_is_tty() {
     if test "${WEBI_TTY}" = 'tty'; then
@@ -260,6 +272,9 @@ fn_detect_tty() { (
 ); }
 
 main() { (
+    set -e
+    set -u
+
     WEBI_TTY="${WEBI_TTY:-}"
     if test -z "${WEBI_TTY}"; then
         if fn_detect_tty; then
@@ -291,6 +306,4 @@ main() { (
     "${b_webi_path}" "${WEBI_PKG}"
 ); }
 
-set -e
-set -u
 main
