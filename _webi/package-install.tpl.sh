@@ -278,90 +278,6 @@ __bootstrap_webi() {
         fi
     }
 
-    fn_envman_init() {
-        mkdir -p ~/.config/envman/
-        if ! test -e ~/.config/envman/PATH.env; then
-            touch ~/.config/envman/PATH.env
-        fi
-
-        if ! test -e ~/.config/envman/load.sh; then
-            cat << LOADENVMAN > ~/.config/envman/load.sh
-if [ -z "\$ENVMAN_LOADED" ]; then
-    ENVMAN_LOADED=1
-
-    # Generated for envman. Do not edit.
-    for x in ~/.config/envman/*.env; do
-        my_basename="\$(basename "\${x}")"
-        if [ "*.env" = "\${my_basename}" ]; then
-            continue
-        fi
-
-        # shellcheck source=/dev/null
-        . "\${x}"
-    done
-
-fi
-LOADENVMAN
-
-        fi
-
-        if command -v sh > /dev/null; then
-            if test -e ~/.profile; then
-                if ! grep -q -F '/.config/envman/load.sh' ~/.profile; then
-                    fn_echo_load_sh >> ~/.profile
-                fi
-            fi
-        fi
-        if command -v bash > /dev/null; then
-            if test -e ~/.bashrc; then
-                if ! grep -q -F '/.config/envman/load.sh' ~/.bashrc; then
-                    fn_echo_load_sh >> ~/.bashrc
-                fi
-            fi
-        fi
-        if command -v zsh > /dev/null; then
-            if test -e ~/.zshrc; then
-                if ! grep -q -F '/.config/envman/load.sh' ~/.zshrc; then
-                    fn_echo_load_sh >> ~/.zshrc
-                fi
-            fi
-        fi
-
-        if command -v fish > /dev/null; then
-            if test ! -e ~/.config/envman/load.fish; then
-                # shellcheck disable=SC2016
-                {
-                    echo '# Generated for envman. Do not edit.'
-                    echo 'for x in ~/.config/envman/*.env'
-                    echo '	  source "$x"'
-                    echo 'end'
-                } > ~/.config/envman/load.fish
-            fi
-
-            mkdir -p ~/.config/fish
-            if test -e ~/.config/fish/config.fish; then
-                touch ~/.config/fish/config.fish
-            fi
-            if ! grep -q -F '/.config/envman/load.fish' ~/.config/fish/config.fish; then
-                fn_echo_load_fish >> ~/.config/fish/config.fish
-            fi
-        fi
-    }
-
-    fn_echo_load_fish() {
-        echo ''
-        echo '# Generated for envman. Do not edit.'
-        # shellcheck disable=SC2016
-        echo 'test -s "$HOME/.config/envman/load.fish"; and source "$HOME/.config/envman/load.fish"'
-    }
-
-    fn_echo_load_sh() {
-        echo ''
-        echo '# Generated for envman. Do not edit.'
-        # shellcheck disable=SC2016
-        echo '[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"'
-    }
-
     fn_is_defined_in_all_shells() {
         my_path="${1}"
 
@@ -389,10 +305,12 @@ LOADENVMAN
             echo "${HOME}/.config/fish/config.fish"
         )"
         for my_conf in $my_confs; do
-            if test -e "${my_conf}"; then
-                if ! grep -q -F "${my_paths}" "${my_conf}"; then
-                    return 1
-                fi
+            if ! test -e "${my_conf}"; then
+                continue
+            fi
+
+            if ! grep -q -F "${my_paths}" "${my_conf}"; then
+                return 1
             fi
         done
     }
@@ -896,5 +814,134 @@ main() { (
     echo "$(t_task 'Installing') $(t_pkg "${WEBI_PKG}") $(t_task '...')"
     __bootstrap_webi
 ); }
+
+##############################################
+#                                            #
+#          envman helper functions           #
+#                                            #
+##############################################
+
+fn_envman_init() { (
+    if ! test -r ~/.config/envman/; then
+        echo "    Initializing ~/.config/envman/"
+        mkdir -p ~/.config/envman/
+    fi
+
+    fn_envman_init_load_sh
+    fn_envman_init_shell sh .profile
+    fn_envman_init_shell bash .bashrc
+    fn_envman_init_shell zsh .zshrc
+
+    if command -v fish > /dev/null; then
+        fn_envman_init_load_fish
+        fn_envman_init_fish
+    fi
+); }
+
+fn_envman_init_load_sh() { (
+    touch -a ~/.config/envman/load.sh
+    if grep -q -F 'ENVMAN_LOAD' ~/.config/envman/load.sh; then
+        return 0
+    fi
+
+    cat << LOAD_SH > ~/.config/envman/load.sh
+# Generated for envman. Do not edit.
+# shellcheck disable=SC1090
+
+touch -a ~/.config/envman/PATH.env
+touch -a ~/.config/envman/ENV.env
+touch -a ~/.config/envman/alias.env
+touch -a ~/.config/envman/function.env
+
+# ENV first because we may use it in PATH
+test -z "\${ENVMAN_LOAD:-}" && . ~/.config/envman/ENV.env
+test -z "\${ENVMAN_LOAD:-}" && . ~/.config/envman/PATH.env
+
+export ENVMAN_LOAD='loaded'
+
+# function first because we may use it in alias
+test -z "\${g_envman_load_sh:-}" && . ~/.config/envman/function.env
+test -z "\${g_envman_load_sh:-}" && . ~/.config/envman/alias.env
+
+g_envman_load_sh='loaded'
+LOAD_SH
+
+); }
+
+fn_envman_init_shell() { (
+    a_shell="${1}"
+    a_rc="${2}"
+
+    if ! command -v "${a_shell}" > /dev/null; then
+        return 0
+    fi
+
+    if ! test -e ~/"${a_rc}"; then
+        return 0
+    fi
+
+    if grep -q -F '/.config/envman/load.sh' ~/"${a_rc}"; then
+        return 0
+    fi
+
+    # shellcheck disable=SC2088 # ~ should not expand here
+    echo >&2 "    Edit $(t_path "~/${a_rc}") to $(t_cmd "source ~/.config/envman/load.sh")"
+    {
+        echo ''
+        echo '# Generated for envman. Do not edit.'
+        #shellcheck disable=SC2016 # vars should not expand here
+        echo '[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"'
+    } >> ~/"${a_rc}"
+); }
+
+fn_envman_init_load_fish() { (
+    mkdir -p ~/.config/envman/
+
+    touch -a ~/.config/envman/load.fish
+    if grep -q -F 'ENVMAN_LOAD' ~/.config/envman/load.fish; then
+        return 0
+    fi
+
+    echo >&2 "    Create ~/.config/envman/load.fish"
+
+    cat << EOF > ~/.config/envman/load.fish
+# Generated for envman. Do not edit.
+
+touch -a ~/.config/envman/PATH.env
+touch -a ~/.config/envman/ENV.env
+touch -a ~/.config/envman/alias.env
+touch -a ~/.config/envman/function.env
+
+not set -q ENVMAN_LOAD; and source ~/.config/envman/ENV.env
+not set -q ENVMAN_LOAD; and source ~/.config/envman/PATH.env
+
+set -x ENVMAN_LOAD 'loaded'
+
+not set -q g_envman_load_fish; and source ~/.config/envman/function.env
+not set -q g_envman_load_fish; and source ~/.config/envman/alias.env
+
+set -g g_envman_load_fish 'loaded'
+EOF
+
+); }
+
+fn_envman_init_fish() {
+    mkdir -p ~/.config/fish/
+
+    touch -a ~/.config/fish/config.fish
+    if grep -q -F '/.config/envman/load.fish' ~/.config/fish/config.fish; then
+        return 0
+    fi
+
+    # shellcheck disable=SC2088 # ~ should not expand here
+    echo >&2 "    Edit $(t_path "~/.config/fish/config.fish") to $(t_cmd "source ~/.config/envman/load.fish")"
+
+    cat << EOF >> ~/.config/fish/config.fish
+
+# Generated for envman. Do not edit.
+test -s ~/.config/envman/load.fish; and source ~/.config/envman/load.fish
+EOF
+
+}
 
 main
