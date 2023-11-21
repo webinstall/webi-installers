@@ -24,8 +24,8 @@ fn_install_webi_essentials_macos() { (
     if ! xcode-select -p > /dev/null 2> /dev/null; then
         cmd_xcode_cli_tools_install="xcode-select --install"
         echo "    Running $(t_cmd "${cmd_xcode_cli_tools_install}")"
-        echo ""
         $cmd_xcode_cli_tools_install 2> /dev/null
+        echo ""
         echo ">>> $(t_attn 'ACTION REQUIRED') <<<"
         echo ""
         echo "        $(t_attn "Click") '$(t_bold 'Install')' $(t_attn "in the pop-up")"
@@ -45,8 +45,10 @@ fn_install_webi_essentials_macos() { (
     if test "$(uname -m)" = 'arm64'; then
         # Also pkgutil --pkg-info com.apple.pkg.RosettaUpdateAuto
         # See <https://apple.stackexchange.com/q/427970/27465>
+        cmd_install_rosetta="softwareupdate --install-rosetta --agree-to-license"
         if ! arch -arch x86_64 uname -m > /dev/null 2>&1; then
-            softwareupdate --install-rosetta --agree-to-license
+            echo "    Running $(t_cmd "${cmd_install_rosetta}")"
+            $cmd_install_rosetta
         fi
     fi
     #tar - built-in
