@@ -571,7 +571,7 @@ __bootstrap_webi() {
     if [ -z "${_WEBI_CHILD-}" ] && [ -f "$_webi_tmp/.PATH.env" ]; then
         if test -s "$_webi_tmp/.PATH.env"; then
             # shellcheck disable=SC2088 # ~ should not expand here
-            echo "    Updated $(t_path '~/.config/envman/PATH.env') updated with:"
+            echo "    Edit $(t_path '~/.config/envman/PATH.env') to add:"
             sort -u "$_webi_tmp/.PATH.env" | while read -r my_new_path; do
                 echo "        $(t_path "${my_new_path}")"
             done
