@@ -356,6 +356,7 @@ webi_shell_init() { (
                 echo '    _describe -t commands "command" completions && ret=0'
                 echo '}'
                 echo ''
+                echo 'autoload -Uz compinit && compinit'
                 echo 'compdef _webi webi'
             }
             ;;
