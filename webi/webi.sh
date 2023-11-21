@@ -220,51 +220,7 @@ __webi_main() {
     fi
 
     if echo "${1}" | grep -q -E '^(--info|info)$'; then
-        if test -z "${2}"; then
-            echo >&2 "Usage: webi --info <package>"
-            exit 1
-        fi
-
-        echo >&2 "[warn] the output of --info is completely half-baked and will change"
-        my_pkg="${2}"
-        # TODO need a way to check that it exists at all (readme, win, lin)
-        echo ""
-        echo "    Cheat Sheet: ${WEBI_HOST}/${my_pkg}"
-        echo "          POSIX: curl -sS ${WEBI_HOST}/${my_pkg} | sh"
-        echo "        Windows: curl.exe -A MS ${WEBI_HOST}/${my_pkg} | powershell"
-        echo "Releases (JSON): ${WEBI_HOST}/api/releases/${my_pkg}.json"
-        echo " Releases (tsv): ${WEBI_HOST}/api/releases/${my_pkg}.tab"
-        echo " (query params):     ?channel=stable&limit=10"
-        echo "                     &os=${my_os}&arch=${my_arch}"
-        echo " Install Script: ${WEBI_HOST}/api/installers/${my_pkg}.sh?formats=tar,zip,xz,git,dmg,pkg"
-        echo "  Static Assets: ${WEBI_HOST}/packages/${my_pkg}/README.md"
-        echo ""
-
-        # TODO os=linux,macos,windows (limit to tagged releases)
-        my_releases="$(
-            curl -fsS "${WEBI_HOST}/api/releases/${my_pkg}.json?channel=stable&limit=1&pretty=true"
-        )"
-
-        if printf '%s\n' "${my_releases}" | grep -q "error"; then
-            my_releases_beta="$(
-                curl -fsS "${WEBI_HOST}/api/releases/${my_pkg}.json?&limit=1&pretty=true"
-            )"
-            if printf '%s\n' "${my_releases_beta}" | grep -q "error"; then
-                echo >&2 "'${my_pkg}' is a special case that does not have releases"
-            else
-                echo >&2 "ERROR no stable releases for '${my_pkg}'!"
-            fi
-            exit 0
-        fi
-
-        echo >&2 "Stable '${my_pkg}' releases:"
-        if command -v jq > /dev/null; then
-            printf '%s\n' "${my_releases}" |
-                jq
-        else
-            printf '%s\n' "${my_releases}"
-        fi
-
+        webi_info "$@"
         exit 0
     fi
 
@@ -439,6 +395,53 @@ fn_list_uncached() { (
 
     my_now="$(date -u '+%s')"
     echo "${my_now}" > ~/.local/share/webi/var/last_update
+); }
+
+webi_info() { (
+    if test -z "${2}"; then
+        echo >&2 "Usage: webi --info <package>"
+        exit 1
+    fi
+
+    echo >&2 "[warn] the output of --info is completely half-baked and will change"
+    my_pkg="${2}"
+    # TODO need a way to check that it exists at all (readme, win, lin)
+    echo ""
+    echo "    Cheat Sheet: ${WEBI_HOST}/${my_pkg}"
+    echo "          POSIX: curl -sS ${WEBI_HOST}/${my_pkg} | sh"
+    echo "        Windows: curl.exe -A MS ${WEBI_HOST}/${my_pkg} | powershell"
+    echo "Releases (JSON): ${WEBI_HOST}/api/releases/${my_pkg}.json"
+    echo " Releases (tsv): ${WEBI_HOST}/api/releases/${my_pkg}.tab"
+    echo " (query params):     ?channel=stable&limit=10"
+    echo "                     &os=${my_os}&arch=${my_arch}"
+    echo " Install Script: ${WEBI_HOST}/api/installers/${my_pkg}.sh?formats=tar,zip,xz,git,dmg,pkg"
+    echo "  Static Assets: ${WEBI_HOST}/packages/${my_pkg}/README.md"
+    echo ""
+
+    # TODO os=linux,macos,windows (limit to tagged releases)
+    my_releases="$(
+        curl -fsS "${WEBI_HOST}/api/releases/${my_pkg}.json?channel=stable&limit=1&pretty=true"
+    )"
+
+    if printf '%s\n' "${my_releases}" | grep -q "error"; then
+        my_releases_beta="$(
+            curl -fsS "${WEBI_HOST}/api/releases/${my_pkg}.json?&limit=1&pretty=true"
+        )"
+        if printf '%s\n' "${my_releases_beta}" | grep -q "error"; then
+            echo >&2 "'${my_pkg}' is a special case that does not have releases"
+        else
+            echo >&2 "ERROR no stable releases for '${my_pkg}'!"
+        fi
+        exit 0
+    fi
+
+    echo >&2 "Stable '${my_pkg}' releases:"
+    if command -v jq > /dev/null; then
+        printf '%s\n' "${my_releases}" |
+            jq
+    else
+        printf '%s\n' "${my_releases}"
+    fi
 ); }
 
 __webi_main "$@"
