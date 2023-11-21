@@ -827,10 +827,12 @@ fn_envman_init() { (
         mkdir -p ~/.config/envman/
     fi
 
+    # Note: the variables $BASH, $ZSH_NAME, etc are always empty
+    # because the active shell is always sh when this script runs
     fn_envman_init_load_sh
-    fn_envman_init_shell sh .profile
-    fn_envman_init_shell bash .bashrc
-    fn_envman_init_shell zsh .zshrc
+    fn_envman_init_shell sh '.profile' '.ash_history'
+    fn_envman_init_shell bash '.bashrc' '.bash_history'
+    fn_envman_init_shell zsh '.zshrc' '.zsh_sessions'
 
     if command -v fish > /dev/null; then
         fn_envman_init_load_fish
@@ -871,15 +873,21 @@ LOAD_SH
 fn_envman_init_shell() { (
     a_shell="${1}"
     a_rc="${2}"
+    a_history="${3:-_history_file_doesnt_exist}"
+    a_login_shell="$(basename "${SHELL:-}")"
 
     if ! command -v "${a_shell}" > /dev/null; then
         return 0
     fi
 
-    if ! test -e ~/"${a_rc}"; then
-        return 0
+    # .bashrc and .zshrc no longer exist by default on macOS
+    if ! test -e ~/"${a_rc}" && ! test -e ~/"${a_history}"; then
+        if test "${a_login_shell}" != "${a_shell}"; then
+            return 0
+        fi
     fi
 
+    touch -a ~/"${a_rc}"
     if grep -q -F '/.config/envman/load.sh' ~/"${a_rc}"; then
         return 0
     fi
