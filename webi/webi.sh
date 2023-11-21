@@ -188,6 +188,8 @@ __webi_main() {
         echo "               Output the version number of webi and exit."
         echo ""
         echo "    Helper Utilities"
+        echo "        --init Register command line completions with shell"
+        echo ""
         echo "        --list Show everything webi has to offer."
         echo ""
         echo "        --info <package>"
@@ -212,7 +214,7 @@ __webi_main() {
         exit 0
     fi
 
-    if echo "$1" | grep -q -E '^(-l|--list|list)$'; then
+    if echo "$1" | grep -q -E '^(--list|list)$'; then
         webi_list
         exit 0
     fi
@@ -222,7 +224,7 @@ __webi_main() {
         exit 0
     fi
 
-    if echo "$1" | grep -q -E '^(-i|--init|init)$'; then
+    if echo "$1" | grep -q -E '^(--init|init)$'; then
         webi_shell_init "$@"
         exit 0
     fi
@@ -241,34 +243,34 @@ webi_shell_init() { (
     webi_list > /dev/null
 
     if [ $# -eq 1 ]; then
-        if [ ! -f ~/.bashrc ] || ! grep -q 'webi init' ~/.bashrc; then
+        if [ ! -f ~/.bashrc ] || ! grep -q 'webi --init' ~/.bashrc; then
             # shellcheck disable=SC2016
             {
                 echo ''
                 echo '# added by Webi for bash'
-                echo 'eval "$(webi init bash)"'
+                echo 'eval "$(webi --init bash)"'
             } >> ~/.bashrc
         fi
         if command -v zsh > /dev/null; then
             touch ~/.zshrc
-            if ! grep -q 'webi init' ~/.zshrc; then
+            if ! grep -q 'webi --init' ~/.zshrc; then
                 # shellcheck disable=SC2016
                 {
                     echo ''
                     echo '# added by Webi for zsh'
-                    echo 'eval "$(webi init zsh)"'
+                    echo 'eval "$(webi --init zsh)"'
                 } >> ~/.zshrc
             fi
         fi
         if command -v fish > /dev/null; then
             mkdir -p ~/.config/fish
             touch ~/.config/fish/config.fish
-            if ! grep -q 'webi init' ~/.config/fish/config.fish; then
+            if ! grep -q 'webi --init' ~/.config/fish/config.fish; then
                 # shellcheck disable=SC2016
                 {
                     echo ''
                     echo '# added by Webi for fish'
-                    echo 'webi init fish | source'
+                    echo 'webi --init fish | source'
                 } >> ~/.config/fish/config.fish
             fi
         fi
@@ -375,10 +377,20 @@ fn_list_uncached() { (
     echo "${my_now}" > ~/.local/share/webi/var/last_update
 
     my_tmp="$(mktemp)"
+    {
+        echo "help"
+        echo "--help"
+        echo "version"
+        echo "-V"
+        echo "--version"
+        echo "--init" # <shell>
+        echo "--list"
+        echo "--info" # <package>
+    } > "${my_tmp}"
     curl -fsS "${my_host}/sitemap.xml" |
         grep -F "${my_host}" |
         cut -d'<' -f2 |
-        cut -c "${my_count}"- > "${my_tmp}"
+        cut -c "${my_count}"- >> "${my_tmp}"
     mv "${my_tmp}" ~/.local/share/webi/var/list.txt
 
     my_now="$(date -u '+%s')"
