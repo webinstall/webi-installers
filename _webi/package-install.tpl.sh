@@ -258,6 +258,8 @@ __bootstrap_webi() {
         )"
 
         my_export="export PATH=\"$my_path_export:\$PATH\""
+
+        touch -a ~/.config/envman/PATH.env
         if grep -q -F "${my_export}" ~/.config/envman/PATH.env; then
             return 0
         fi
