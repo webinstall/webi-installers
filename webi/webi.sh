@@ -152,7 +152,7 @@ __webi_main() {
         my_checksum="$(
             fn_checksum
         )"
-        my_version=v1.2.0
+        my_version=v1.2.7
         printf "\e[35mwebi\e[32m %s\e[0m Copyright 2020+ AJ ONeal\n" "${my_version} (${my_checksum})"
         printf "    \e[36mhttps://webinstall.dev/webi\e[0m\n"
     }
