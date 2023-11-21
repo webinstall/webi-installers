@@ -118,7 +118,7 @@ fn_polite_sudo() { (
     # this is user interactive, ask the user,defaulting to yes
     echo ""
     #shellcheck disable=SC2005 # echo for newline
-    echo "$(t_attn 'Use sudo for the following? [Y/n])')"
+    echo "$(t_attn 'Use sudo for the following? [Y/n]')"
     echo "${a_cmds}"
     read -r b_yes < /dev/tty
 
