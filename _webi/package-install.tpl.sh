@@ -853,7 +853,7 @@ fn_envman_init_load_sh() { (
 touch -a ~/.config/envman/PATH.env
 touch -a ~/.config/envman/ENV.env
 touch -a ~/.config/envman/alias.env
-touch -a ~/.config/envman/function.env
+touch -a ~/.config/envman/function.sh
 
 # ENV first because we may use it in PATH
 test -z "\${ENVMAN_LOAD:-}" && . ~/.config/envman/ENV.env
@@ -862,7 +862,7 @@ test -z "\${ENVMAN_LOAD:-}" && . ~/.config/envman/PATH.env
 export ENVMAN_LOAD='loaded'
 
 # function first because we may use it in alias
-test -z "\${g_envman_load_sh:-}" && . ~/.config/envman/function.env
+test -z "\${g_envman_load_sh:-}" && . ~/.config/envman/function.sh
 test -z "\${g_envman_load_sh:-}" && . ~/.config/envman/alias.env
 
 g_envman_load_sh='loaded'
@@ -918,14 +918,14 @@ fn_envman_init_load_fish() { (
 touch -a ~/.config/envman/PATH.env
 touch -a ~/.config/envman/ENV.env
 touch -a ~/.config/envman/alias.env
-touch -a ~/.config/envman/function.env
+touch -a ~/.config/envman/function.fish
 
 not set -q ENVMAN_LOAD; and source ~/.config/envman/ENV.env
 not set -q ENVMAN_LOAD; and source ~/.config/envman/PATH.env
 
 set -x ENVMAN_LOAD 'loaded'
 
-not set -q g_envman_load_fish; and source ~/.config/envman/function.env
+not set -q g_envman_load_fish; and source ~/.config/envman/function.fish
 not set -q g_envman_load_fish; and source ~/.config/envman/alias.env
 
 set -g g_envman_load_fish 'loaded'
