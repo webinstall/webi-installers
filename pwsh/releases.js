@@ -32,7 +32,7 @@ module.exports = function (request) {
       let isMusl = rel.download.match(/(\b|_)(musl|alpine)(\b|_)/i);
       if (isMusl) {
         // not a fully static build, not gnu-compatible
-        rel.arch = 'musl';
+        rel.libc = 'musl';
       }
 
       return true;
