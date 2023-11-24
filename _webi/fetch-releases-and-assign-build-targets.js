@@ -195,6 +195,7 @@ let LEGACY_ARCH_MAP = {
   '*': 'ANYARCH',
   arm64: 'aarch64',
   armv6l: 'armv6',
+  armv7l: 'armv7',
   amd64: 'x86_64',
   386: 'x86',
 };
@@ -383,6 +384,8 @@ function trimNameAndVersionWrapper(allTermsMap, name, build, pkg) {
   for (let term of terms) {
     allTermsMap[term] = true;
   }
+
+  return pattern;
 }
 
 async function main() {
@@ -396,6 +399,7 @@ async function main() {
 
   let dirs = await getPackages(INSTALLERS_DIR);
   showDirs(dirs);
+  console.info('');
 
   freshenRandomPackage(600 * 1000);
 
@@ -406,6 +410,7 @@ async function main() {
   let triples = [];
   let rows = [];
   let valids = Object.keys(dirs.valid);
+  console.info(`Fetching builds for`);
   for (let name of valids) {
     if (name === 'webi') {
       // TODO fix the webi faux package
@@ -413,6 +418,7 @@ async function main() {
       continue;
     }
 
+    console.info(`    ${name}`);
     let pkg = await getBuilds({
       caches: CACHE_DIR,
       installers: INSTALLERS_DIR,
@@ -423,12 +429,10 @@ async function main() {
     let nStr = pkg.releases.length.toString();
     let n = nStr.padStart(5, ' ');
     let row = `##### ${n}\t${name}\tv`;
-    // TODO get by next-most-recent version
-    let samples = pkg.releases; // .slice(0, 100);
     rows.push(row);
 
     // ignore known, non-package extensions
-    for (let build of samples) {
+    for (let build of pkg.releases) {
       let maybeInstallable = Triplet.looksInstallable(name, build, pkg);
       if (!maybeInstallable) {
         continue;
@@ -452,10 +456,13 @@ async function main() {
 
       triples.push(triplet);
       rows.push(`${triplet}\t${name}\t${build.version}`);
+
+      build.triplet = triplet;
     }
   }
   let tsv = rows.join('\n');
-  console.log('#rows', rows.length);
+  console.info('');
+  console.info('#rows', rows.length);
   await Fs.writeFile('builds.tsv', tsv, 'utf8');
 
   let terms = Object.keys(allTermsMap);
@@ -479,7 +486,10 @@ async function main() {
     );
   }
 
+  console.info('');
+  console.info('Triples Detected:');
   for (let triple of triples) {
+    console.info(`    ${triple}`);
     let unknowns = triple.split('.');
     for (let unknown of unknowns) {
       if (!unknown) {
