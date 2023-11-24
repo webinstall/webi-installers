@@ -348,19 +348,19 @@ async function pkgToTriples(name) {
   });
 
   for (let build of pkg.releases) {
-    let maybeInstallable = Triplet.looksInstallable(name, build, pkg);
+    let maybeInstallable = Triplet.maybeInstallable(name, build, pkg);
     if (!maybeInstallable) {
       continue;
     }
 
-    let triplish = Triplet.trimNameAndVersion(name, build, pkg);
+    let triplish = Triplet.toPattern(name, build, pkg);
     if (!triplish) {
       continue;
     }
 
     // {NAME}/{NAME}-{VER}-Windows-x86_64_v2-musl.exe =>
     //     {NAME}.windows.x86_64v2.musl.exe
-    let triplet = Triplet.normalizeTriplet(triplish);
+    let triplet = Triplet.normalize(triplish);
 
     triplet = Triplet.replaceTriples(name, build, triplet);
 
@@ -370,8 +370,8 @@ async function pkgToTriples(name) {
   return triples;
 }
 
-function trimNameAndVersionWrapper(allTermsMap, name, build, pkg) {
-  let pattern = Triplet.trimNameAndVersion(name, build, pkg);
+function mustClassifyBuild(allTermsMap, name, build, pkg) {
+  let pattern = Triplet.toPattern(name, build, pkg);
   if (!pattern) {
     console.warn(`>>> no pattern generated for ${name} <<<`);
     console.warn(pkg);
@@ -385,7 +385,15 @@ function trimNameAndVersionWrapper(allTermsMap, name, build, pkg) {
     allTermsMap[term] = true;
   }
 
-  return pattern;
+  // {NAME}/{NAME}-{VER}-Windows-x86_64_v2-musl.exe =>
+  //     {NAME}.windows.x86_64v2.musl.exe
+  let triplet = Triplet.normalizePattern(pattern);
+  if (!triplet) {
+    throw new Error(`'${pattern}' was trimmed to ''`);
+  }
+
+  triplet = Triplet.replaceTriples(name, build, triplet);
+  return triplet;
 }
 
 async function main() {
@@ -433,31 +441,16 @@ async function main() {
 
     // ignore known, non-package extensions
     for (let build of pkg.releases) {
-      let maybeInstallable = Triplet.looksInstallable(name, build, pkg);
+      let maybeInstallable = Triplet.maybeInstallable(name, build, pkg);
       if (!maybeInstallable) {
         continue;
       }
 
-      let triplish = trimNameAndVersionWrapper(allTermsMap, name, build, pkg);
-      if (!triplish) {
-        continue;
-      }
-
-      // {NAME}/{NAME}-{VER}-Windows-x86_64_v2-musl.exe =>
-      //     {NAME}.windows.x86_64v2.musl.exe
-      let triplet = Triplet.normalizeTriplet(triplish);
-      if (!triplet) {
-        console.error('ERROR');
-        console.error(`    '${triplish}' was trimmed to ''`);
-        process.exit(1);
-      }
-
-      triplet = Triplet.replaceTriples(name, build, triplet);
-
+      let triplet = mustClassifyBuild(allTermsMap, name, build, pkg);
       triples.push(triplet);
-      rows.push(`${triplet}\t${name}\t${build.version}`);
 
-      build.triplet = triplet;
+      rows.push(`${triplet}\t${name}\t${build.version}`);
+      Object.assign(build, { triplet });
     }
   }
   let tsv = rows.join('\n');
