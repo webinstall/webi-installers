@@ -6,11 +6,6 @@ var repo = 'zoxide';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
-    all.releases.forEach(function (rel) {
-      if (/-arm-/.test(rel.download)) {
-        rel.arch = 'armv6l';
-      }
-    });
     return all;
   });
 };
