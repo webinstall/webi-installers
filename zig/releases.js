@@ -1,6 +1,7 @@
 'use strict';
 
 var NON_BUILDS = ['bootstrap', 'src'];
+var ODDITIES = NON_BUILDS.concat(['armv6kz-linux']);
 
 module.exports = function (request) {
   return request({
@@ -27,8 +28,8 @@ module.exports = function (request) {
           return;
         }
 
-        let isNonBuild = NON_BUILDS.includes(platform);
-        if (isNonBuild) {
+        let isOdd = ODDITIES.includes(platform);
+        if (isOdd) {
           return;
         }
 
