@@ -288,7 +288,7 @@ async function getLatestBuildsInner(Releases, cacheDir, name) {
   let dirPath = Path.dirname(dataFile);
   await Fs.mkdir(dirPath, { recursive: true });
 
-  let json = JSON.stringify(data);
+  let json = JSON.stringify(data, null, 2);
   await Fs.writeFile(dataFile, json, 'utf8');
 
   let seconds = date.valueOf();
