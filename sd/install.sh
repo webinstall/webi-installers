@@ -20,10 +20,22 @@ __init_sd() {
 
     # pkg_install must be defined by every package
     pkg_install() {
-        # ~/.local/opt/sd-v0.99.9/bin
-        mkdir -p "$(dirname "$pkg_src_cmd")"
         # mv ./sd-*/sd "$pkg_src_cmd"
-        mv sd-* "$pkg_src_cmd"
+        if test -f sd-*; then
+            # ~/.local/opt/sd-v0.99.9/bin
+            mkdir -p "$(dirname "$pkg_src_cmd")"
+            mv sd-* "$pkg_src_cmd"
+        elif test -f sd-*/sd; then
+            # ~/.local/opt/sd-v0.99.9/bin
+            mkdir -p "$(dirname "$pkg_src_cmd")"
+            mv sd-*/sd "$pkg_src_cmd"
+            if test -f sd-*/sd.1; then
+                mkdir -p "$pkg_src_dir/share/man/man1"
+                mv sd-*/sd.1 "$pkg_src_dir/share/man/man1"
+            fi
+        elif test -d sd-*/bin; then
+            mv sd-* "$pkg_src_dir"
+        fi
     }
 
     # pkg_get_current_version is recommended, but (soon) not required
