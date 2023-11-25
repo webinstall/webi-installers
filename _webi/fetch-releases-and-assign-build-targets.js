@@ -208,75 +208,19 @@ let LEGACY_OS_MAP = {
   macos: 'darwin',
   posix: 'posix_2017',
 };
-BuildsCache.getBuilds = async function ({ caches, installers, name, date }) {
-  let cacheDir = caches;
-  let installerDir = installers;
-  if (!date) {
-    date = new Date();
-  }
-  let isoDate = date.toISOString();
-  let yearMonth = isoDate.slice(0, 7);
-  let dataFile = `${cacheDir}/${yearMonth}/${name}.json`;
-
-  // let secondsStr = await Fs.readFile(tsFile, 'ascii').catch(function (err) {
-  //   if (err.code !== 'ENOENT') {
-  //     throw err;
-  //   }
-  //   return '0';
-  // });
-  // secondsStr = secondsStr.trim();
-  // let seconds = parseFloat(secondsStr) || 0;
-
-  // let age = now - seconds;
-
-  let json = await Fs.readFile(dataFile, 'ascii').catch(async function (err) {
-    if (err.code !== 'ENOENT') {
-      throw err;
-    }
-
-    return null;
-  });
-
-  let data;
-  try {
-    data = JSON.parse(json);
-  } catch (e) {
-    console.error(`error: ${dataFile}:\n\t${e.message}`);
-    data = null;
-  }
-
-  if (!data) {
-    data = await getLatestBuilds(installerDir, cacheDir, name);
-  }
-
-  for (let build of data.releases) {
-    if (LEGACY_OS_MAP[build.os]) {
-      build.os = LEGACY_OS_MAP[build.os];
-    }
-    if (LEGACY_ARCH_MAP[build.arch]) {
-      build.arch = LEGACY_ARCH_MAP[build.arch];
-    }
-  }
-
-  return data;
-};
 
 let promises = {};
-async function getLatestBuilds(installerDir, cacheDir, name) {
-  let Releases = require(`${installerDir}/${name}/releases.js`);
-  if (!Releases.latest) {
-    Releases.latest = Releases;
+async function getLatestBuilds(Releases, installerDir, cacheDir, name) {
+  let id = `${cacheDir}/${name}`;
+  if (!promises[id]) {
+    promises[id] = Promise.resolve();
   }
 
-  if (!promises[name]) {
-    promises[name] = Promise.resolve();
-  }
-
-  promises[name] = promises[name].then(async function () {
+  promises[id] = promises[id].then(async function () {
     return await getLatestBuildsInner(Releases, cacheDir, name);
   });
 
-  return await promises[name];
+  return await promises[id];
 }
 
 async function getLatestBuildsInner(Releases, cacheDir, name) {
@@ -286,6 +230,7 @@ async function getLatestBuildsInner(Releases, cacheDir, name) {
   let isoDate = date.toISOString();
   let yearMonth = isoDate.slice(0, 7);
 
+  // TODO hash file
   let dataFile = `${cacheDir}/${yearMonth}/${name}.json`;
   // TODO fsstat releases.js vs require-ing time as well
   let tsFile = `${cacheDir}/${yearMonth}/${name}.updated.txt`;
@@ -304,107 +249,14 @@ async function getLatestBuildsInner(Releases, cacheDir, name) {
   return data;
 }
 
-// Makes sure that packages are updated once an hour, on average
-let staleNames = [];
-let freshenTimeout;
-BuildsCache.freshenRandomPackage = async function (minDelay) {
-  if (!minDelay) {
-    minDelay = 15 * 1000;
-  }
+BuildsCache.create = function ({ ALL_TERMS, installers, caches }) {
+  let bc = {};
 
-  if (staleNames.length === 0) {
-    let dirs = await BuildsCache.getPackages(INSTALLERS_DIR);
-    staleNames = Object.keys(dirs.valid);
-    staleNames.sort(function () {
-      return 0.5 - Math.random();
-    });
-  }
+  bc.usedTerms = {};
+  bc.orphanTerms = Object.assign({}, ALL_TERMS);
+  bc.unknownTerms = {};
+  bc._triplets = {};
 
-  let name = staleNames.pop();
-  await BuildsCache.getBuilds({
-    caches: CACHE_DIR,
-    installers: INSTALLERS_DIR,
-    name: name,
-    date: new Date(),
-  });
-
-  let hour = 60 * 60 * 1000;
-  let delay = minDelay;
-  let spread = hour / staleNames.length;
-  let seed = Math.random();
-  delay += seed * spread;
-
-  clearTimeout(freshenTimeout);
-  freshenTimeout = setTimeout(BuildsCache.freshenRandomPackage, delay);
-  freshenTimeout.unref();
-};
-
-// TODO packages have many releases which have many builds
-// go has 1.20 and 1.21 which have go1.20-darwin-arm64.tar.gz, etc
-async function pkgToTriples(name) {
-  let triples = [];
-
-  let pkg = await BuildsCache.getBuilds({
-    caches: CACHE_DIR,
-    installers: INSTALLERS_DIR,
-    name,
-    date: new Date(),
-  });
-
-  for (let build of pkg.releases) {
-    let maybeInstallable = Triplet.maybeInstallable(name, build, pkg);
-    if (!maybeInstallable) {
-      continue;
-    }
-
-    let pattern = Triplet.toPattern(name, build, pkg);
-    if (!pattern) {
-      continue;
-    }
-
-    // {NAME}/{NAME}-{VER}-Windows-x86_64_v2-musl.exe =>
-    //     {NAME}.windows.x86_64v2.musl.exe
-    let terms = Triplet.patternToTerms(pattern);
-
-    // {NAME}.windows.x86_64v2.musl.exe
-    //     windows-x86_64_v2-musl
-    let triplet = Triplet.replaceTriples(name, build, terms);
-
-    triples.push(triplet);
-  }
-
-  return triples;
-}
-
-function mustClassifyBuild(allTermsMap, termsUnusedMap, name, build, pkg) {
-  let pattern = Triplet.toPattern(name, build, pkg);
-  if (!pattern) {
-    console.warn(`>>> no pattern generated for ${name} <<<`);
-    console.warn(pkg);
-    console.warn(build);
-    console.warn(`^^^ no pattern generated for ${name} ^^^`);
-    process.exit(1);
-  }
-
-  let rawTerms = pattern.split(/[_\{\}\/\.\-]+/g);
-  for (let term of rawTerms) {
-    delete termsUnusedMap[term];
-    allTermsMap[term] = true;
-  }
-
-  // {NAME}/{NAME}-{VER}-Windows-x86_64_v2-musl.exe =>
-  //     {NAME}.windows.x86_64v2.musl.exe
-  let terms = Triplet.patternToTerms(pattern);
-  if (!terms.length) {
-    throw new Error(`'${terms}' was trimmed to ''`);
-  }
-
-  let triplet = Triplet.termsToTriplet(name, build, terms);
-  return triplet;
-}
-
-async function main() {
-  let termsUnusedMap = Object.assign({}, Triplet.TERMS_PRIMARY_MAP);
   let termsMeta = [
     '{ARCH}',
     '{EXT}',
@@ -421,8 +273,159 @@ async function main() {
     'stable',
   ];
   for (let term of termsMeta) {
-    delete termsUnusedMap[term];
+    delete bc.orphanTerms[term];
   }
+
+  // Typically a package is organized by release (ex: go has 1.20, 1.21, etc),
+  // but we will organize by the build (ex: go1.20-darwin-arm64.tar.gz, etc).
+  bc.getBuilds = async function ({ name, date }) {
+    let cacheDir = caches;
+    let installerDir = installers;
+    if (!date) {
+      date = new Date();
+    }
+    let isoDate = date.toISOString();
+    let yearMonth = isoDate.slice(0, 7);
+    let dataFile = `${cacheDir}/${yearMonth}/${name}.json`;
+
+    // let secondsStr = await Fs.readFile(tsFile, 'ascii').catch(function (err) {
+    //   if (err.code !== 'ENOENT') {
+    //     throw err;
+    //   }
+    //   return '0';
+    // });
+    // secondsStr = secondsStr.trim();
+    // let seconds = parseFloat(secondsStr) || 0;
+
+    // let age = now - seconds;
+
+    let json = await Fs.readFile(dataFile, 'ascii').catch(async function (err) {
+      if (err.code !== 'ENOENT') {
+        throw err;
+      }
+
+      return null;
+    });
+
+    let data;
+    try {
+      data = JSON.parse(json);
+    } catch (e) {
+      console.error(`error: ${dataFile}:\n\t${e.message}`);
+      data = null;
+    }
+
+    if (!data) {
+      let Releases = require(`${installerDir}/${name}/releases.js`);
+      // TODO update all releases files with object export
+      if (!Releases.latest) {
+        Releases.latest = Releases;
+      }
+      data = await getLatestBuilds(Releases, installerDir, cacheDir, name);
+    }
+    Object.assign(data, { name });
+
+    for (let build of data.releases) {
+      if (LEGACY_OS_MAP[build.os]) {
+        build.os = LEGACY_OS_MAP[build.os];
+      }
+      if (LEGACY_ARCH_MAP[build.arch]) {
+        build.arch = LEGACY_ARCH_MAP[build.arch];
+      }
+    }
+
+    return data;
+  };
+
+  // Makes sure that packages are updated once an hour, on average
+  bc._staleNames = [];
+  bc._freshenTimeout = null;
+  bc.freshenRandomPackage = async function (minDelay) {
+    if (!minDelay) {
+      minDelay = 15 * 1000;
+    }
+
+    if (bc._staleNames.length === 0) {
+      let dirs = await BuildsCache.getPackages(INSTALLERS_DIR);
+      bc._staleNames = Object.keys(dirs.valid);
+      bc._staleNames.sort(function () {
+        return 0.5 - Math.random();
+      });
+    }
+
+    let name = bc._staleNames.pop();
+    void (await bc.getBuilds({
+      name: name,
+      date: new Date(),
+    }));
+
+    let hour = 60 * 60 * 1000;
+    let delay = minDelay;
+    let spread = hour / bc._staleNames.length;
+    let seed = Math.random();
+    delay += seed * spread;
+
+    clearTimeout(bc._freshenTimeout);
+    bc._freshenTimeout = setTimeout(bc.freshenRandomPackage, delay);
+    bc._freshenTimeout.unref();
+  };
+
+  bc.classify = function (pkg, build) {
+    let maybeInstallable = Triplet.maybeInstallable(pkg, build);
+    if (!maybeInstallable) {
+      return;
+    }
+
+    let pattern = Triplet.toPattern(pkg, build);
+    if (!pattern) {
+      let err = new Error(`no pattern generated for ${name}`);
+      err.code = 'E_BUILD_NO_PATTERN';
+      throw err;
+    }
+
+    let rawTerms = pattern.split(/[_\{\}\/\.\-]+/g);
+    for (let term of rawTerms) {
+      delete bc.orphanTerms[term];
+      bc.usedTerms[term] = true;
+    }
+
+    // {NAME}/{NAME}-{VER}-Windows-x86_64_v2-musl.exe =>
+    //     {NAME}.windows.x86_64v2.musl.exe
+    let terms = Triplet.patternToTerms(pattern);
+    if (!terms.length) {
+      throw new Error(`'${terms}' was trimmed to ''`);
+    }
+
+    for (let term of terms) {
+      if (!term) {
+        continue;
+      }
+
+      if (ALL_TERMS[term]) {
+        delete bc.orphanTerms[term];
+        continue;
+      }
+
+      bc.unknownTerms[term] = true;
+    }
+
+    // {NAME}.windows.x86_64v2.musl.exe
+    //     windows-x86_64_v2-musl
+    let triplet = Triplet.termsToTriplet(pkg, build, terms);
+    bc._triplets[triplet] = true;
+
+    return triplet;
+  };
+
+  return bc;
+};
+
+async function main() {
+  let bc = BuildsCache.create({
+    ALL_TERMS: Triplet.TERMS_PRIMARY_MAP,
+    caches: CACHE_DIR,
+    installers: INSTALLERS_DIR,
+  });
 
   // let names = ['{NAME}-win32.exe'];
   // for (let name of names) {
@@ -436,12 +439,22 @@ async function main() {
   showDirs(dirs);
   console.info('');
 
-  BuildsCache.freshenRandomPackage(600 * 1000);
+  bc.freshenRandomPackage(600 * 1000);
 
-  // await pkgToTriples('git');
-  // process.exit(1)
+  // let pkg = await bc.getBuilds({
+  //   name: name,
+  //   date: new Date(),
+  //   installers: INSTALLERS_DIR,
+  //   caches: CACHE_DIR,
+  // });
+  // let triples = [];
+  // for (let build of pkg.releases) {
+  //   let triplet = await pkgToTriples('git', pkg, build);
+  //   triples.push(triplet);
+  // }
+  // return triples;
+  // // process.exit(1)
 
-  var allTermsMap = {};
   let triples = [];
   let rows = [];
   let valids = Object.keys(dirs.valid);
@@ -454,10 +467,8 @@ async function main() {
     }
 
     console.info(`    ${name}`);
-    let pkg = await BuildsCache.getBuilds({
-      caches: CACHE_DIR,
-      installers: INSTALLERS_DIR,
-      name,
+    let pkg = await bc.getBuilds({
+      name: name,
       date: new Date(),
     });
 
@@ -468,18 +479,28 @@ async function main() {
 
     // ignore known, non-package extensions
     for (let build of pkg.releases) {
-      let maybeInstallable = Triplet.maybeInstallable(name, build, pkg);
+      let maybeInstallable = Triplet.maybeInstallable(pkg, build);
       if (!maybeInstallable) {
         continue;
       }
 
-      let triplet = mustClassifyBuild(
-        allTermsMap,
-        termsUnusedMap,
-        name,
-        build,
-        pkg,
-      );
+      let triplet = build.triplet;
+      if (triplet) {
+        continue;
+      }
+
+      try {
+        triplet = bc.classify(pkg, build);
+      } catch (e) {
+        if (e.code === 'E_BUILD_NO_PATTERN') {
+          console.warn(`>>> ${e.message} <<<`);
+          console.warn(pkg);
+          console.warn(build);
+          console.warn(`^^^ ${e.message} ^^^`);
+          continue;
+        }
+        throw e;
+      }
       triples.push(triplet);
 
       rows.push(`${triplet}\t${name}\t${build.version}`);
@@ -491,54 +512,40 @@ async function main() {
   console.info('#rows', rows.length);
   await Fs.writeFile('builds.tsv', tsv, 'utf8');
 
-  let terms = Object.keys(allTermsMap);
-  terms.sort();
-  console.log(terms.join('\n'));
-  // console.log(terms);
-  for (; terms.length; ) {
-    let a = terms.shift() || '';
-    let b = terms.shift() || '';
-    let c = terms.shift() || '';
-    let d = terms.shift() || '';
-    let e = terms.shift() || '';
-    console.log(
-      [
-        a.padEnd(15, ' ').padStart(16, ' '),
-        b.padEnd(15, ' ').padStart(16, ' '),
-        c.padEnd(15, ' ').padStart(16, ' '),
-        d.padEnd(15, ' ').padStart(16, ' '),
-        e.padEnd(15, ' ').padStart(16, ' '),
-      ].join(' '),
-    );
-  }
+  // let terms = Object.keys(allTermsMap);
+  // terms.sort();
+  // console.log(terms.join('\n'));
+  // // console.log(terms);
+  // for (; terms.length; ) {
+  //   let a = terms.shift() || '';
+  //   let b = terms.shift() || '';
+  //   let c = terms.shift() || '';
+  //   let d = terms.shift() || '';
+  //   let e = terms.shift() || '';
+  //   console.log(
+  //     [
+  //       a.padEnd(15, ' ').padStart(16, ' '),
+  //       b.padEnd(15, ' ').padStart(16, ' '),
+  //       c.padEnd(15, ' ').padStart(16, ' '),
+  //       d.padEnd(15, ' ').padStart(16, ' '),
+  //       e.padEnd(15, ' ').padStart(16, ' '),
+  //     ].join(' '),
+  //   );
+  // }
 
   console.info('');
-  console.info('Triples Detected:');
-  let triplesMap = {};
-  for (let triple of triples) {
-    if (!triplesMap[triple]) {
-      triplesMap[triple] = true;
-    }
-    let terms = triple.split('-');
-    for (let term of terms) {
-      if (!term) {
-        continue;
-      }
-      if (Triplet.TERMS_PRIMARY_MAP[term]) {
-        delete termsUnusedMap[term];
-        continue;
-      }
-      unknownMap[term] = true;
-    }
+  console.info('Triplets Detected:');
+  let triplets = Object.keys(bc._triplets);
+  if (triplets.length) {
+    triplets.sort();
+    console.info('   ', triplets.join('\n    '));
+  } else {
+    console.info('    (none)');
   }
-  let triplesSorted = Object.keys(triplesMap);
-  triplesSorted.sort();
-  let triplesList = triplesSorted.join('\n    ');
-  console.info(`    ${triplesList}`);
 
   console.info('');
   console.info('New / Unknown Terms:');
-  let unknowns = Object.keys(unknownMap);
+  let unknowns = Object.keys(bc.unknownTerms);
   if (unknowns.length) {
     unknowns.sort();
     console.warn('   ', unknowns.join('\n    '));
@@ -548,7 +555,7 @@ async function main() {
 
   console.info('');
   console.info('Unused Terms:');
-  let unuseds = Object.keys(termsUnusedMap);
+  let unuseds = Object.keys(bc.orphanTerms);
   if (unuseds.length) {
     unuseds.sort();
     console.warn('   ', unuseds.join('\n    '));
