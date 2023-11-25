@@ -1,5 +1,7 @@
 'use strict';
 
+var BuildsCache = module.exports;
+
 let Fs = require('node:fs/promises');
 let Path = require('node:path');
 
@@ -12,7 +14,7 @@ var CACHE_DIR = Path.join(__dirname, '../_cache');
 
 var unknownMap = {};
 
-async function getPackages(dir) {
+BuildsCache.getPackages = async function (dir) {
   let dirs = {
     hidden: {},
     errors: {},
@@ -89,14 +91,16 @@ async function getPackages(dir) {
       console.error('SOLUTION');
       console.error('    npm clean-install');
       console.error('');
-      process.exit(1);
+      throw new Error(
+        '[SANITY FAIL] should never have missing modules in prod',
+      );
     }
 
     dirs.valid[entry.name] = true;
   }
 
   return dirs;
-}
+};
 
 function showDirs(dirs) {
   {
@@ -204,7 +208,7 @@ let LEGACY_OS_MAP = {
   macos: 'darwin',
   posix: 'posix_2017',
 };
-async function getBuilds({ caches, installers, name, date }) {
+BuildsCache.getBuilds = async function ({ caches, installers, name, date }) {
   let cacheDir = caches;
   let installerDir = installers;
   if (!date) {
@@ -255,7 +259,7 @@ async function getBuilds({ caches, installers, name, date }) {
   }
 
   return data;
-}
+};
 
 let promises = {};
 async function getLatestBuilds(installerDir, cacheDir, name) {
@@ -303,13 +307,13 @@ async function getLatestBuildsInner(Releases, cacheDir, name) {
 // Makes sure that packages are updated once an hour, on average
 let staleNames = [];
 let freshenTimeout;
-async function freshenRandomPackage(minDelay) {
+BuildsCache.freshenRandomPackage = async function (minDelay) {
   if (!minDelay) {
     minDelay = 15 * 1000;
   }
 
   if (staleNames.length === 0) {
-    let dirs = await getPackages(INSTALLERS_DIR);
+    let dirs = await BuildsCache.getPackages(INSTALLERS_DIR);
     staleNames = Object.keys(dirs.valid);
     staleNames.sort(function () {
       return 0.5 - Math.random();
@@ -317,7 +321,7 @@ async function freshenRandomPackage(minDelay) {
   }
 
   let name = staleNames.pop();
-  await getBuilds({
+  await BuildsCache.getBuilds({
     caches: CACHE_DIR,
     installers: INSTALLERS_DIR,
     name: name,
@@ -331,16 +335,16 @@ async function freshenRandomPackage(minDelay) {
   delay += seed * spread;
 
   clearTimeout(freshenTimeout);
-  freshenTimeout = setTimeout(freshenRandomPackage, delay);
+  freshenTimeout = setTimeout(BuildsCache.freshenRandomPackage, delay);
   freshenTimeout.unref();
-}
+};
 
 // TODO packages have many releases which have many builds
 // go has 1.20 and 1.21 which have go1.20-darwin-arm64.tar.gz, etc
 async function pkgToTriples(name) {
   let triples = [];
 
-  let pkg = await getBuilds({
+  let pkg = await BuildsCache.getBuilds({
     caches: CACHE_DIR,
     installers: INSTALLERS_DIR,
     name,
@@ -428,11 +432,11 @@ async function main() {
   // }
   // process.exit(0);
 
-  let dirs = await getPackages(INSTALLERS_DIR);
+  let dirs = await BuildsCache.getPackages(INSTALLERS_DIR);
   showDirs(dirs);
   console.info('');
 
-  freshenRandomPackage(600 * 1000);
+  BuildsCache.freshenRandomPackage(600 * 1000);
 
   // await pkgToTriples('git');
   // process.exit(1)
@@ -450,7 +454,7 @@ async function main() {
     }
 
     console.info(`    ${name}`);
-    let pkg = await getBuilds({
+    let pkg = await BuildsCache.getBuilds({
       caches: CACHE_DIR,
       installers: INSTALLERS_DIR,
       name,
