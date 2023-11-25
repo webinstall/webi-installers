@@ -122,7 +122,7 @@ async function getCachedReleases(pkg) {
           cache[pkg].all = all;
           complete = true;
         }),
-      sleep(5000).then(function () {
+      sleep(15000).then(function () {
         if (complete) {
           return;
         }
@@ -242,7 +242,7 @@ async function filterReleases(
   return sortedRels.slice(0, limit || 1000);
 }
 
-module.exports = function getReleases({
+function getReleases({
   _count,
   pkg,
   ver,
@@ -392,7 +392,9 @@ module.exports = function getReleases({
         };
       });
   });
-};
+}
+module.exports = getReleases;
+module.exports.getReleases = getReleases;
 
 if (require.main === module) {
   return module
