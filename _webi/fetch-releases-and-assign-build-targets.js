@@ -12,8 +12,6 @@ var ALIAS_RE = /^alias: (\w+)$/m;
 var INSTALLERS_DIR = Path.join(__dirname, '..');
 var CACHE_DIR = Path.join(__dirname, '../_cache');
 
-var unknownMap = {};
-
 BuildsCache.getPackages = async function (dir) {
   let dirs = {
     hidden: {},
@@ -256,17 +254,22 @@ BuildsCache.create = function ({ ALL_TERMS, installers, caches }) {
   bc.orphanTerms = Object.assign({}, ALL_TERMS);
   bc.unknownTerms = {};
   bc._triplets = {};
+  bc._downloadTriplets = {};
 
   let termsMeta = [
+    // pattern
     '{ARCH}',
     '{EXT}',
     '{LIBC}',
     '{NAME}',
     '{OS}',
     '{VENDOR}',
+    // // os-/arch-indepedent
     // 'ANYARCH',
     // 'ANYOS',
+    // // libc
     // 'none',
+    // channel
     'beta',
     'dev',
     'preview',
@@ -376,6 +379,13 @@ BuildsCache.create = function ({ ALL_TERMS, installers, caches }) {
       return;
     }
 
+    let buildId = `${pkg.name}${build.download}`;
+    let triplet = bc._downloadTriplets[buildId];
+    if (triplet) {
+      Object.assign(build, { triplet });
+      return triplet;
+    }
+
     let pattern = Triplet.toPattern(pkg, build);
     if (!pattern) {
       let err = new Error(`no pattern generated for ${name}`);
@@ -403,6 +413,7 @@ BuildsCache.create = function ({ ALL_TERMS, installers, caches }) {
 
       if (ALL_TERMS[term]) {
         delete bc.orphanTerms[term];
+        bc.usedTerms[term] = true;
         continue;
       }
 
@@ -411,8 +422,21 @@ BuildsCache.create = function ({ ALL_TERMS, installers, caches }) {
 
     // {NAME}.windows.x86_64v2.musl.exe
     //     windows-x86_64_v2-musl
-    let triplet = Triplet.termsToTriplet(pkg, build, terms);
+    triplet = Triplet.termsToTriplet(pkg, build, terms);
     bc._triplets[triplet] = true;
+    bc._downloadTriplets[buildId] = triplet;
+
+    let triple = triplet.split('-');
+    for (let term of triple) {
+      if (!ALL_TERMS[term]) {
+        throw new Error(
+          `[SANITY FAIL] '${pkg.name}' '${triplet}' generated unknown term '${term}'`,
+        );
+      }
+
+      delete bc.orphanTerms[term];
+      bc.usedTerms[term] = true;
+    }
 
     return triplet;
   };
@@ -479,16 +503,7 @@ async function main() {
 
     // ignore known, non-package extensions
     for (let build of pkg.releases) {
-      let maybeInstallable = Triplet.maybeInstallable(pkg, build);
-      if (!maybeInstallable) {
-        continue;
-      }
-
-      let triplet = build.triplet;
-      if (triplet) {
-        continue;
-      }
-
+      let triplet;
       try {
         triplet = bc.classify(pkg, build);
       } catch (e) {
@@ -501,10 +516,12 @@ async function main() {
         }
         throw e;
       }
-      triples.push(triplet);
+      if (!triplet) {
+        continue;
+      }
 
+      triples.push(triplet);
       rows.push(`${triplet}\t${name}\t${build.version}`);
-      Object.assign(build, { triplet });
     }
   }
   let tsv = rows.join('\n');
