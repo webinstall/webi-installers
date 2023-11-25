@@ -370,7 +370,7 @@ async function pkgToTriples(name) {
   return triples;
 }
 
-function mustClassifyBuild(allTermsMap, name, build, pkg) {
+function mustClassifyBuild(allTermsMap, termsUnusedMap, name, build, pkg) {
   let pattern = Triplet.toPattern(name, build, pkg);
   if (!pattern) {
     console.warn(`>>> no pattern generated for ${name} <<<`);
@@ -382,6 +382,7 @@ function mustClassifyBuild(allTermsMap, name, build, pkg) {
 
   let terms = pattern.split(/[_\{\}\/\.\-]+/g);
   for (let term of terms) {
+    delete termsUnusedMap[term];
     allTermsMap[term] = true;
   }
 
@@ -397,6 +398,26 @@ function mustClassifyBuild(allTermsMap, name, build, pkg) {
 }
 
 async function main() {
+  let termsUnusedMap = Object.assign({}, Triplet.TERMS_PRIMARY_MAP);
+  let termsMeta = [
+    '{ARCH}',
+    '{EXT}',
+    '{LIBC}',
+    '{NAME}',
+    '{OS}',
+    '{VENDOR}',
+    // 'ANYARCH',
+    // 'ANYOS',
+    // 'none',
+    'beta',
+    'dev',
+    'preview',
+    'stable',
+  ];
+  for (let term of termsMeta) {
+    delete termsUnusedMap[term];
+  }
+
   // let names = ['{NAME}-win32.exe'];
   // for (let name of names) {
   //   console.log(name);
@@ -446,7 +467,13 @@ async function main() {
         continue;
       }
 
-      let triplet = mustClassifyBuild(allTermsMap, name, build, pkg);
+      let triplet = mustClassifyBuild(
+        allTermsMap,
+        termsUnusedMap,
+        name,
+        build,
+        pkg,
+      );
       triples.push(triplet);
 
       rows.push(`${triplet}\t${name}\t${build.version}`);
@@ -481,46 +508,66 @@ async function main() {
 
   console.info('');
   console.info('Triples Detected:');
+  let triplesMap = {};
   for (let triple of triples) {
-    console.info(`    ${triple}`);
-    let unknowns = triple.split('.');
-    for (let unknown of unknowns) {
-      if (!unknown) {
+    if (!triplesMap[triple]) {
+      triplesMap[triple] = true;
+    }
+    let terms = triple.split('-');
+    for (let term of terms) {
+      if (!term) {
         continue;
       }
-      if (Triplet.TERMS_PRIMARY_MAP[unknown]) {
+      if (Triplet.TERMS_PRIMARY_MAP[term]) {
+        delete termsUnusedMap[term];
         continue;
       }
-      unknownMap[unknown] = true;
+      unknownMap[term] = true;
     }
   }
+  let triplesSorted = Object.keys(triplesMap);
+  triplesSorted.sort();
+  let triplesList = triplesSorted.join('\n    ');
+  console.info(`    ${triplesList}`);
 
   console.info('');
   console.info('New / Unknown Terms:');
-  console.info('');
   let unknowns = Object.keys(unknownMap);
   if (unknowns.length) {
     unknowns.sort();
-    console.log(unknowns.join('\n'));
+    console.warn('   ', unknowns.join('\n    '));
   } else {
-    console.info('(none)');
+    console.info('    (none)');
   }
+
+  console.info('');
+  console.info('Unused Terms:');
+  let unuseds = Object.keys(termsUnusedMap);
+  if (unuseds.length) {
+    unuseds.sort();
+    console.warn('   ', unuseds.join('\n    '));
+  } else {
+    console.info('    (none)');
+  }
+
   console.info('');
 
   // sort -u -k1 builds.tsv | rg -v '^#|^https?:' | rg -i arm
   // cut -f1 builds.tsv | sort -u -k1 | rg -v '^#|^https?:' | rg -i arm
 }
 
-main()
-  .then(function () {
-    function forceExit() {
-      console.warn(`warn: dangling event loop reference`);
-      process.exit(0);
-    }
-    let exitTimeout = setTimeout(forceExit, 250);
-    exitTimeout.unref();
-  })
-  .catch(function (err) {
-    console.error(err);
-    process.exit(1);
-  });
+if (module === require.main) {
+  main()
+    .then(function () {
+      function forceExit() {
+        console.warn(`warn: dangling event loop reference`);
+        process.exit(0);
+      }
+      let exitTimeout = setTimeout(forceExit, 250);
+      exitTimeout.unref();
+    })
+    .catch(function (err) {
+      console.error(err);
+      process.exit(1);
+    });
+}
