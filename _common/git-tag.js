@@ -11,7 +11,7 @@ var Path = require('node:path');
 
 var repoBaseDir = process.env.REPO_BASE_DIR || '';
 if (!repoBaseDir) {
-  repoBaseDir = Path.resolve('./repos');
+  repoBaseDir = Path.resolve('./_repos');
   // for stderr
   console.error(`[Warn] REPO_BASE_DIR= not set, ${repoBaseDir}`);
 }
