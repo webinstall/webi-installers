@@ -353,18 +353,20 @@ async function pkgToTriples(name) {
       continue;
     }
 
-    let triplish = Triplet.toPattern(name, build, pkg);
-    if (!triplish) {
+    let pattern = Triplet.toPattern(name, build, pkg);
+    if (!pattern) {
       continue;
     }
 
     // {NAME}/{NAME}-{VER}-Windows-x86_64_v2-musl.exe =>
     //     {NAME}.windows.x86_64v2.musl.exe
-    let triplet = Triplet.normalize(triplish);
+    let terms = Triplet.patternToTerms(pattern);
 
-    triplet = Triplet.replaceTriples(name, build, triplet);
+    // {NAME}.windows.x86_64v2.musl.exe
+    //     windows-x86_64_v2-musl
+    let triplet = Triplet.replaceTriples(name, build, terms);
 
-    triples.push(triplish);
+    triples.push(triplet);
   }
 
   return triples;
@@ -380,20 +382,20 @@ function mustClassifyBuild(allTermsMap, termsUnusedMap, name, build, pkg) {
     process.exit(1);
   }
 
-  let terms = pattern.split(/[_\{\}\/\.\-]+/g);
-  for (let term of terms) {
+  let rawTerms = pattern.split(/[_\{\}\/\.\-]+/g);
+  for (let term of rawTerms) {
     delete termsUnusedMap[term];
     allTermsMap[term] = true;
   }
 
   // {NAME}/{NAME}-{VER}-Windows-x86_64_v2-musl.exe =>
   //     {NAME}.windows.x86_64v2.musl.exe
-  let triplet = Triplet.normalizePattern(pattern);
-  if (!triplet) {
-    throw new Error(`'${pattern}' was trimmed to ''`);
+  let terms = Triplet.patternToTerms(pattern);
+  if (!terms.length) {
+    throw new Error(`'${terms}' was trimmed to ''`);
   }
 
-  triplet = Triplet.replaceTriples(name, build, triplet);
+  let triplet = Triplet.termsToTriplet(name, build, terms);
   return triplet;
 }
 
