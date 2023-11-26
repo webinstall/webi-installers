@@ -27,9 +27,33 @@ fn_show_welcome() { (
     echo ""
     echo "    $(t_attn 'Success')? Star it!   $(t_url 'https://github.com/webinstall/webi-installers')"
     echo "    $(t_attn 'Problem')? Report it: $(t_url 'https://github.com/webinstall/webi-installers/issues')"
-    echo "                        $(t_dim "(your system is") $(t_host "$(uname -s)")/$(t_host "$(uname -m)") $(t_dim "with") $(t_host "$(fn_get_libc)") $(t_dim "&") $(t_host "$(fn_get_http_client_name)")$(t_dim ")")"
+    echo "                        $(t_dim "(your system is") $(t_host "$(fn_get_os)")/$(t_host "$(uname -m)") $(t_dim "with") $(t_host "$(fn_get_libc)") $(t_dim "&") $(t_host "$(fn_get_http_client_name)")$(t_dim ")")"
 
     sleep 0.2
+); }
+
+fn_get_os() { (
+    # Ex:
+    #     GNU/Linux
+    #     Android
+    #     Linux (often Alpine, musl)
+    #     Darwin
+    b_os="$(uname -o 2> /dev/null || echo '')"
+    b_sys="$(uname -s)"
+    if test -z "${b_os}" || test "${b_os}" = "${b_sys}"; then
+        # ex: 'Darwin' (and plain, non-GNU 'Linux')
+        echo "${b_sys}"
+        return 0
+    fi
+
+    if echo "${b_os}" | grep -q "${b_sys}"; then
+        # ex: 'GNU/Linux'
+        echo "${b_os}"
+        return 0
+    fi
+
+    # ex: 'Android/Linux'
+    echo "${b_os}/${b_sys}"
 ); }
 
 fn_get_libc() { (
@@ -38,7 +62,7 @@ fn_get_libc() { (
     #     libc
     if ldd /bin/ls 2> /dev/null | grep -q 'musl' 2> /dev/null; then
         echo 'musl'
-    elif uname -o | grep -q 'GNU' || uname -s | grep -q 'Linux'; then
+    elif fn_get_os | grep -q 'GNU|Linux'; then
         echo 'gnu'
     else
         echo 'libc'
@@ -177,9 +201,9 @@ fn_curl() { (
 
 fn_get_target_triple_user_agent() { (
     # Ex:
-    #     x86_64/unknown Linux/5.15.107-2-pve gnu
+    #     x86_64/unknown GNU/Linux/5.15.107-2-pve gnu
     #     arm64/unknown Darwin/22.6.0 libc
-    echo "$(uname -m)/unknown $(uname -s)/$(uname -r) $(fn_get_libc)"
+    echo "$(uname -m)/unknown $(fn_get_os)/$(uname -r) $(fn_get_libc)"
 ); }
 
 fn_download_to_path() { (
