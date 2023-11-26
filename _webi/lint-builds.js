@@ -5,6 +5,7 @@ let Fs = require('node:fs/promises');
 let Path = require('node:path');
 
 let BuildsCacher = require('./builds-cacher.js');
+let Parallel = require('./parallel.js');
 
 var INSTALLERS_DIR = Path.join(__dirname, '..');
 var CACHE_DIR = Path.join(__dirname, '../_cache');
@@ -110,15 +111,17 @@ async function main() {
   // return triples;
   // // process.exit(1)
 
-  let triples = [];
   let rows = [];
+  let triples = [];
   let valids = Object.keys(dirs.valid);
   console.info(`Fetching builds for`);
-  for (let name of valids) {
+  let limit = 25;
+  //let limit = 1;
+  await Parallel.run(limit, valids, async function (name, i) {
     if (name === 'webi') {
       // TODO fix the webi faux package
       // (not sure why I even created it)
-      continue;
+      return;
     }
 
     console.info(`    ${name}`);
@@ -152,9 +155,9 @@ async function main() {
       }
 
       triples.push(triplet);
-      rows.push(`${triplet}\t${name}\t${build.version}`);
+      rows.push(`${triplet}\t${pkg.name}\t${build.version}`);
     }
-  }
+  });
   let tsv = rows.join('\n');
   console.info('');
   console.info('#rows', rows.length);
