@@ -10,93 +10,39 @@ let Triplet = require('./build-classifier/triplet.js');
 
 var ALIAS_RE = /^alias: (\w+)$/m;
 
-BuildsCacher.getPackages = async function (dir) {
-  let dirs = {
-    hidden: {},
-    errors: {},
-    alias: {},
-    invalid: {},
-    selfhosted: {},
-    valid: {},
-  };
-
-  let entries = await Fs.readdir(dir, { withFileTypes: true });
-  for (let entry of entries) {
-    // skip non-installer dirs
-    if (entry.isSymbolicLink()) {
-      dirs.alias[entry.name] = 'symlink';
-      continue;
-    }
-    if (!entry.isDirectory()) {
-      dirs.hidden[entry.name] = '!directory';
-      continue;
-    }
-    if (entry.name === 'node_modules') {
-      dirs.hidden[entry.name] = 'node_modules';
-      continue;
-    }
-    if (entry.name.startsWith('_')) {
-      dirs.hidden[entry.name] = '_*';
-      continue;
-    }
-    if (entry.name.startsWith('.')) {
-      dirs.hidden[entry.name] = '.*';
-      continue;
-    }
-    if (entry.name.startsWith('~')) {
-      dirs.hidden[entry.name] = '~*';
-      continue;
-    }
-    if (entry.name.endsWith('~')) {
-      dirs.hidden[entry.name] = '*~';
-      continue;
-    }
-
-    // skip invalid installers
-    let path = Path.join(dir, entry.name);
-    let head = await getPartialHeader(path);
-    if (!head) {
-      dirs.invalid[entry.name] = '!README.md';
-      continue;
-    }
-
-    let alias = head.match(ALIAS_RE);
-    if (alias) {
-      dirs.alias[entry.name] = true;
-      continue;
-    }
-
-    let releasesPath = Path.join(path, 'releases.js');
-    let releases;
-    try {
-      releases = require(releasesPath);
-    } catch (err) {
-      if (err.code !== 'MODULE_NOT_FOUND') {
-        dirs.errors[entry.name] = err;
-        continue;
-      }
-      if (err.requireStack.length === 2) {
-        dirs.selfhosted[entry.name] = true;
-        continue;
-      }
-      // err.requireStack.length > 1
-      console.error('');
-      console.error('PROBLEM');
-      console.error(`    ${err.message}`);
-      console.error('');
-      console.error('SOLUTION');
-      console.error('    npm clean-install');
-      console.error('');
-      throw new Error(
-        '[SANITY FAIL] should never have missing modules in prod',
-      );
-    }
-
-    dirs.valid[entry.name] = true;
-  }
-
-  return dirs;
+var LEGACY_ARCH_MAP = {
+  '*': 'ANYARCH',
+  arm64: 'aarch64',
+  armv6l: 'armv6',
+  armv7l: 'armv7',
+  amd64: 'x86_64',
+  386: 'x86',
 };
+var LEGACY_OS_MAP = {
+  '*': 'ANYOS',
+  macos: 'darwin',
+  posix: 'posix_2017',
+};
+
+var TERMS_META = [
+  // pattern
+  '{ARCH}',
+  '{EXT}',
+  '{LIBC}',
+  '{NAME}',
+  '{OS}',
+  '{VENDOR}',
+  // // os-/arch-indepedent
+  // 'ANYARCH',
+  // 'ANYOS',
+  // // libc
+  // 'none',
+  // channel
+  'beta',
+  'dev',
+  'preview',
+  'stable',
+];
 
 async function getPartialHeader(path) {
   let readme = `${path}/README.md`;
@@ -124,22 +70,8 @@ async function readFirstBytes(path) {
   return str;
 }
 
-let LEGACY_ARCH_MAP = {
-  '*': 'ANYARCH',
-  arm64: 'aarch64',
-  armv6l: 'armv6',
-  armv7l: 'armv7',
-  amd64: 'x86_64',
-  386: 'x86',
-};
-let LEGACY_OS_MAP = {
-  '*': 'ANYOS',
-  macos: 'darwin',
-  posix: 'posix_2017',
-};
-
 let promises = {};
-async function getLatestBuilds(Releases, installerDir, cacheDir, name) {
+async function getLatestBuilds(Releases, cacheDir, name) {
   let id = `${cacheDir}/${name}`;
   if (!promises[id]) {
     promises[id] = Promise.resolve();
@@ -190,28 +122,97 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
   bc._triplets = {};
   bc._downloadTriplets = {};
 
-  let termsMeta = [
-    // pattern
-    '{ARCH}',
-    '{EXT}',
-    '{LIBC}',
-    '{NAME}',
-    '{OS}',
-    '{VENDOR}',
-    // // os-/arch-indepedent
-    // 'ANYARCH',
-    // 'ANYOS',
-    // // libc
-    // 'none',
-    // channel
-    'beta',
-    'dev',
-    'preview',
-    'stable',
-  ];
-  for (let term of termsMeta) {
+  for (let term of TERMS_META) {
     delete bc.orphanTerms[term];
   }
+
+  bc.getPackages = async function () {
+    let dirs = {
+      hidden: {},
+      errors: {},
+      alias: {},
+      invalid: {},
+      selfhosted: {},
+      valid: {},
+    };
+
+    let entries = await Fs.readdir(installers, { withFileTypes: true });
+    for (let entry of entries) {
+      // skip non-installer dirs
+      if (entry.isSymbolicLink()) {
+        dirs.alias[entry.name] = 'symlink';
+        continue;
+      }
+      if (!entry.isDirectory()) {
+        dirs.hidden[entry.name] = '!directory';
+        continue;
+      }
+      if (entry.name === 'node_modules') {
+        dirs.hidden[entry.name] = 'node_modules';
+        continue;
+      }
+      if (entry.name.startsWith('_')) {
+        dirs.hidden[entry.name] = '_*';
+        continue;
+      }
+      if (entry.name.startsWith('.')) {
+        dirs.hidden[entry.name] = '.*';
+        continue;
+      }
+      if (entry.name.startsWith('~')) {
+        dirs.hidden[entry.name] = '~*';
+        continue;
+      }
+      if (entry.name.endsWith('~')) {
+        dirs.hidden[entry.name] = '*~';
+        continue;
+      }
+
+      // skip invalid installers
+      let path = Path.join(installers, entry.name);
+      let head = await getPartialHeader(path);
+      if (!head) {
+        dirs.invalid[entry.name] = '!README.md';
+        continue;
+      }
+
+      let alias = head.match(ALIAS_RE);
+      if (alias) {
+        dirs.alias[entry.name] = true;
+        continue;
+      }
+
+      let releasesPath = Path.join(path, 'releases.js');
+      let releases;
+      try {
+        releases = require(releasesPath);
+      } catch (err) {
+        if (err.code !== 'MODULE_NOT_FOUND') {
+          dirs.errors[entry.name] = err;
+          continue;
+        }
+        if (err.requireStack.length === 2) {
+          dirs.selfhosted[entry.name] = true;
+          continue;
+        }
+        // err.requireStack.length > 1
+        console.error('');
+        console.error('PROBLEM');
+        console.error(`    ${err.message}`);
+        console.error('');
+        console.error('SOLUTION');
+        console.error('    npm clean-install');
+        console.error('');
+        throw new Error(
+          '[SANITY FAIL] should never have missing modules in prod',
+        );
+      }
+
+      dirs.valid[entry.name] = true;
+    }
+
+    return dirs;
+  };
 
   // Typically a package is organized by release (ex: go has 1.20, 1.21, etc),
   // but we will organize by the build (ex: go1.20-darwin-arm64.tar.gz, etc).
@@ -258,7 +259,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
       if (!Releases.latest) {
         Releases.latest = Releases;
       }
-      data = await getLatestBuilds(Releases, installerDir, cacheDir, name);
+      data = await getLatestBuilds(Releases, cacheDir, name);
     }
     Object.assign(data, { name });
 
@@ -283,7 +284,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     }
 
     if (bc._staleNames.length === 0) {
-      let dirs = await BuildsCacher.getPackages(installers);
+      let dirs = await bc.getPackages();
       bc._staleNames = Object.keys(dirs.valid);
       bc._staleNames.sort(function () {
         return 0.5 - Math.random();
