@@ -77,12 +77,12 @@ function showDirs(dirs) {
   }
 }
 
-async function main() {
-  let bc = BuildsCacher.create({
-    caches: CACHE_DIR,
-    installers: INSTALLERS_DIR,
-  });
+let bc = BuildsCacher.create({
+  caches: CACHE_DIR,
+  installers: INSTALLERS_DIR,
+});
 
+async function main() {
   // let names = ['{NAME}-win32.exe'];
   // for (let name of names) {
   //   console.log(name);
@@ -125,7 +125,9 @@ async function main() {
     }
 
     console.info(`    ${name}`);
+    let Releases = require(`${INSTALLERS_DIR}/${name}/releases.js`);
     let pkg = await bc.getBuilds({
+      Releases: Releases,
       name: name,
       date: new Date(),
     });
@@ -221,8 +223,27 @@ async function main() {
 }
 
 if (module === require.main) {
+  let times = [];
+  let now = Date.now();
   main()
+    .then(async function () {
+      let then = Date.now();
+      let delta = then - now;
+      times.push(delta);
+      now = then;
+      await main();
+      then = Date.now();
+      delta = then - now;
+      times.push(delta);
+    })
     .then(function () {
+      console.info('');
+      console.info('Run times');
+      for (let delta of times) {
+        let s = delta / 1000;
+        console.info(`    ${s}`);
+      }
+
       function forceExit() {
         console.warn(`warn: dangling event loop reference`);
         process.exit(0);

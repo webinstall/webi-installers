@@ -71,23 +71,25 @@ async function readFirstBytes(path) {
 }
 
 let promises = {};
-async function getLatestBuilds(Releases, cacheDir, name) {
+async function getLatestBuilds(Releases, cacheDir, name, date) {
   let id = `${cacheDir}/${name}`;
   if (!promises[id]) {
     promises[id] = Promise.resolve();
   }
 
   promises[id] = promises[id].then(async function () {
-    return await getLatestBuildsInner(Releases, cacheDir, name);
+    return await getLatestBuildsInner(Releases, cacheDir, name, date);
   });
 
   return await promises[id];
 }
 
-async function getLatestBuildsInner(Releases, cacheDir, name) {
+async function getLatestBuildsInner(Releases, cacheDir, name, date) {
   let data = await Releases.latest(request);
 
-  let date = new Date();
+  if (!date) {
+    date = new Date();
+  }
   let isoDate = date.toISOString();
   let yearMonth = isoDate.slice(0, 7);
 
@@ -121,6 +123,8 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
   bc.unknownTerms = {};
   bc._triplets = {};
   bc._downloadTriplets = {};
+  bc._caches = {};
+  bc._staleAge = 15 * 60 * 1000;
 
   for (let term of TERMS_META) {
     delete bc.orphanTerms[term];
@@ -216,9 +220,18 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
 
   // Typically a package is organized by release (ex: go has 1.20, 1.21, etc),
   // but we will organize by the build (ex: go1.20-darwin-arm64.tar.gz, etc).
-  bc.getBuilds = async function ({ name, date }) {
+  bc.getBuilds = async function ({ Releases, name, date }) {
     let cacheDir = caches;
     let installerDir = installers;
+
+    if (!Releases) {
+      Releases = require(`${installerDir}/${name}/releases.js`);
+    }
+    // TODO update all releases files with object export
+    if (!Releases.latest) {
+      Releases.latest = Releases;
+    }
+
     if (!date) {
       date = new Date();
     }
@@ -237,6 +250,22 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
 
     // let age = now - seconds;
 
+    let data = bc._caches[name];
+    let now = date.valueOf();
+    if (data) {
+      process.nextTick(async function () {
+        let age = now - data.updated;
+        if (age < bc._staleAge) {
+          return;
+        }
+        data = await getLatestBuilds(Releases, cacheDir, name);
+        let updated = date.valueOf();
+        Object.assign(data, { name, updated });
+        bc._caches[name] = data;
+      });
+      return data;
+    }
+
     let json = await Fs.readFile(dataFile, 'ascii').catch(async function (err) {
       if (err.code !== 'ENOENT') {
         throw err;
@@ -245,7 +274,6 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
       return null;
     });
 
-    let data;
     try {
       data = JSON.parse(json);
     } catch (e) {
@@ -254,14 +282,11 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     }
 
     if (!data) {
-      let Releases = require(`${installerDir}/${name}/releases.js`);
-      // TODO update all releases files with object export
-      if (!Releases.latest) {
-        Releases.latest = Releases;
-      }
       data = await getLatestBuilds(Releases, cacheDir, name);
     }
-    Object.assign(data, { name });
+    let updated = date.valueOf();
+    Object.assign(data, { name, updated });
+    bc._caches[name] = data;
 
     for (let build of data.releases) {
       if (LEGACY_OS_MAP[build.os]) {
@@ -292,7 +317,10 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     }
 
     let name = bc._staleNames.pop();
+    let Releases = require(`${installers}/${name}/releases.js`);
+    //data = await getLatestBuilds(Releases, cacheDir, name);
     void (await bc.getBuilds({
+      Releases: Releases,
       name: name,
       date: new Date(),
     }));
