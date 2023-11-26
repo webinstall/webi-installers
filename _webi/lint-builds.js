@@ -90,7 +90,7 @@ async function main() {
   // }
   // process.exit(0);
 
-  let dirs = await BuildsCacher.getPackages(INSTALLERS_DIR);
+  let dirs = await bc.getPackages();
   showDirs(dirs);
   console.info('');
 
