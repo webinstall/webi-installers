@@ -17,6 +17,9 @@ var LEGACY_ARCH_MAP = {
   armv7l: 'armv7',
   amd64: 'x86_64',
   mipsle: 'mipsel',
+  mips64le: 'mips64el',
+  mipsr6le: 'mipsr6el',
+  mips64r6le: 'mips64r6el',
   // yes... el for arm and mips, but le for ppc
   // (perhaps the joke got old?)
   ppc64el: 'ppc64le',
