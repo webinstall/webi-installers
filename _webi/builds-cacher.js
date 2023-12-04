@@ -16,6 +16,10 @@ var LEGACY_ARCH_MAP = {
   armv6l: 'armv6',
   armv7l: 'armv7',
   amd64: 'x86_64',
+  mipsle: 'mipsel',
+  // yes... el for arm and mips, but le for ppc
+  // (perhaps the joke got old?)
+  ppc64el: 'ppc64le',
   386: 'x86',
 };
 var LEGACY_OS_MAP = {
