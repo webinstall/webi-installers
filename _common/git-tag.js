@@ -6,6 +6,7 @@ var Crypto = require('crypto');
 var util = require('util');
 var exec = util.promisify(require('child_process').exec);
 var Fs = require('node:fs/promises');
+var FsSync = require('node:fs');
 var Path = require('node:path');
 
 var repoBaseDir = process.env.REPO_BASE_DIR || '';
@@ -20,8 +21,29 @@ var Repos = {};
 Repos.clone = async function (repoPath, gitUrl) {
   let uuid = Crypto.randomUUID();
   let tmpPath = `${repoPath}.${uuid}.tmp`;
+  let bakPath = `${repoPath}.${uuid}.dup`;
   await exec(`git clone --bare --filter=tree:0 ${gitUrl} ${tmpPath}`);
-  await Fs.rename(tmpPath, repoPath);
+
+  try {
+    FsSync.accessSync(repoPath);
+    return;
+  } catch (e) {
+    if (e.code !== 'ENOENT') {
+      throw e;
+    }
+  }
+
+  // sync to avoid race conditions
+  try {
+    FsSync.renameSync(repoPath, bakPath);
+  } catch (e) {
+    if (e.code !== 'ENOENT') {
+      throw e;
+    }
+  }
+  FsSync.renameSync(tmpPath, repoPath);
+
+  await Fs.rm(bakPath, { force: true, recursive: true });
 };
 
 Repos.checkExists = async function (repoPath) {
