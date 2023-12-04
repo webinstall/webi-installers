@@ -252,7 +252,7 @@ if (module === require.main) {
       exitTimeout.unref();
     })
     .catch(function (err) {
-      console.error(err);
+      console.error(err.stack || err);
       process.exit(1);
     });
 }
