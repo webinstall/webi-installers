@@ -349,7 +349,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
       return;
     }
 
-    let buildId = `${pkg.name}${build.download}`;
+    let buildId = `${pkg.name}@${build.download}`;
     let triplet = bc._downloadTriplets[buildId];
     if (triplet) {
       Object.assign(build, { triplet });
