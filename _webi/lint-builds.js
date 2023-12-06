@@ -139,9 +139,9 @@ async function main() {
 
     // ignore known, non-package extensions
     for (let build of pkg.releases) {
-      let triplet;
+      let target;
       try {
-        triplet = bc.classify(pkg, build);
+        target = bc.classify(pkg, build);
       } catch (e) {
         if (e.code === 'E_BUILD_NO_PATTERN') {
           console.warn(`>>> ${e.message} <<<`);
@@ -152,12 +152,12 @@ async function main() {
         }
         throw e;
       }
-      if (!triplet) {
+      if (!target) {
         continue;
       }
 
-      triples.push(triplet);
-      rows.push(`${triplet}\t${pkg.name}\t${build.version}`);
+      triples.push(target.triplet);
+      rows.push(`${target.triplet}\t${pkg.name}\t${build.version}`);
     }
   });
   let tsv = rows.join('\n');

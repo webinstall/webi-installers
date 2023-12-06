@@ -392,15 +392,18 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
 
     // {NAME}.windows.x86_64v2.musl.exe
     //     windows-x86_64_v2-musl
-    triplet = Triplet.termsToTriplet(pkg, build, terms);
-    bc._triplets[triplet] = true;
-    bc._downloadTriplets[buildId] = triplet;
+    let target = { triplet: '' };
+    void Triplet.termsToTarget(target, pkg, build, terms);
 
-    let triple = triplet.split('-');
+    target.triplet = `${target.arch}-${target.vendor}-${target.os}-${target.libc}`;
+    bc._triplets[target.triplet] = true;
+    bc._downloadTriplets[buildId] = target.triplet;
+
+    let triple = [target.arch, target.vendor, target.os, target.libc];
     for (let term of triple) {
       if (!ALL_TERMS[term]) {
         throw new Error(
-          `[SANITY FAIL] '${pkg.name}' '${triplet}' generated unknown term '${term}'`,
+          `[SANITY FAIL] '${pkg.name}' '${target.triplet}' generated unknown term '${term}'`,
         );
       }
 
@@ -408,7 +411,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
       bc.usedTerms[term] = true;
     }
 
-    return triplet;
+    return target;
   };
 
   return bc;
