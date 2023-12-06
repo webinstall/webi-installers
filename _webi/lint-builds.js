@@ -132,6 +132,8 @@ async function main() {
       date: new Date(),
     });
 
+    // TODO organize by OS, then by arch, libc
+
     let nStr = pkg.releases.length.toString();
     let n = nStr.padStart(5, ' ');
     let row = `##### ${n}\t${name}\tv`;
