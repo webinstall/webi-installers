@@ -99,7 +99,7 @@ Releases.renderBash = async function (
     ['WEBI_ARCH', arch],
     ['WEBI_LIBC', libc],
     ['WEBI_TAG', tag],
-    ['WEBI_RELEASES', `${baseurl}/${releaseUrl}`],
+    ['WEBI_RELEASES', `${baseurl}${releaseUrl}`],
     ['WEBI_CSV', releaseCsv],
     ['WEBI_VERSION', rel.version],
     ['WEBI_MAJOR', v.major],
