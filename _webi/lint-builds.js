@@ -159,14 +159,6 @@ function getBuildsByRelease(buildsByOs, target) {
 async function main() {
   let packagesByName = {};
 
-  // let names = ['{NAME}-win32.exe'];
-  // for (let name of names) {
-  //   console.log(name);
-  //   name = replaceTriples('TEST', {}, name);
-  //   console.log(name);
-  // }
-  // process.exit(0);
-
   let dirs = await bc.getPackages();
   showDirs(dirs);
   console.info('');
@@ -238,27 +230,6 @@ async function main() {
   console.info('');
   console.info('#rows', rows.length);
   await Fs.writeFile('builds.tsv', tsv, 'utf8');
-
-  // let terms = Object.keys(allTermsMap);
-  // terms.sort();
-  // console.log(terms.join('\n'));
-  // // console.log(terms);
-  // for (; terms.length; ) {
-  //   let a = terms.shift() || '';
-  //   let b = terms.shift() || '';
-  //   let c = terms.shift() || '';
-  //   let d = terms.shift() || '';
-  //   let e = terms.shift() || '';
-  //   console.log(
-  //     [
-  //       a.padEnd(15, ' ').padStart(16, ' '),
-  //       b.padEnd(15, ' ').padStart(16, ' '),
-  //       c.padEnd(15, ' ').padStart(16, ' '),
-  //       d.padEnd(15, ' ').padStart(16, ' '),
-  //       e.padEnd(15, ' ').padStart(16, ' '),
-  //     ].join(' '),
-  //   );
-  // }
 
   console.info('');
   console.info('Triplets Detected:');
