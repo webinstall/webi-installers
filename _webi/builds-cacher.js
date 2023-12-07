@@ -349,7 +349,11 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
       return null;
     }
 
-    let buildId = `${pkg.name}@${build.download}`;
+    // because some packages are shimmed to match a single download against
+    let preTarget = Object.assign({ os: '', arch: '', libc: '' }, build);
+
+    let targetId = `${preTarget.os}:${preTarget.arch}:${preTarget.libc}`;
+    let buildId = `${pkg.name}:${targetId}@${build.download}`;
     let target = bc._targetsByBuildIdCache[buildId];
     if (target) {
       Object.assign(build, { target: target, triplet: target.triplet });
