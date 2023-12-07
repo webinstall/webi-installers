@@ -5,10 +5,39 @@ let Fs = require('node:fs/promises');
 let Path = require('node:path');
 
 let BuildsCacher = require('./builds-cacher.js');
+let HostTargets = require('./build-classifier/host-targets.js');
 let Parallel = require('./parallel.js');
 
 var INSTALLERS_DIR = Path.join(__dirname, '..');
 var CACHE_DIR = Path.join(__dirname, '../_cache');
+
+let UserAgentsMap = require('./build-classifier/uas.json');
+let uas = Object.keys(UserAgentsMap);
+let uaTargetsMap = {};
+for (let ua of uas) {
+  let terms = ua.split(/[\s\/]+/g);
+  let target = {};
+  void HostTargets.termsToTarget(target, terms);
+  if (!target) {
+    continue;
+  }
+  if (target.errors.length) {
+    throw target.errors[0];
+  }
+  if (!target.os) {
+    // TODO make target null, or create error for this
+    //throw new Error(`terms: ${terms}`);
+    continue;
+  }
+  let triplet = `${target.os}-${target.arch}-${target.libc}`;
+  uaTargetsMap[triplet] = target;
+}
+let uaTargets = [];
+let triplets = Object.keys(uaTargetsMap);
+for (let triplet of triplets) {
+  let target = uaTargetsMap[triplet];
+  uaTargets.push(target);
+}
 
 function showDirs(dirs) {
   {
@@ -157,8 +186,6 @@ function getBuildsByRelease(buildsByOs, target) {
 }
 
 async function main() {
-  let packagesByName = {};
-
   let dirs = await bc.getPackages();
   showDirs(dirs);
   console.info('');
@@ -177,19 +204,12 @@ async function main() {
   }
 
   let parallel = 25;
+  valids = ['caddy'];
   let packages = await getPackagesWithBuilds(INSTALLERS_DIR, valids, parallel);
-  let packagesTree = getBuildsByTarget(packages);
-  //console.log(`c`);
 
   console.info(`Fetching builds for`);
   for (let pkg of packages) {
     console.info(`    ${pkg.name}`);
-    if (!packagesByName[pkg.name]) {
-      let buildsByOs = {};
-      packagesByName[pkg.name] = buildsByOs;
-    }
-
-    // TODO organize by OS, then by arch, libc
 
     let nStr = pkg.releases.length.toString();
     let n = nStr.padStart(5, ' ');
@@ -214,16 +234,61 @@ async function main() {
         }
         throw e;
       }
-      if (!target) {
-        continue;
-      }
 
       triples.push(target.triplet);
       rows.push(`${target.triplet}\t${pkg.name}\t${build.version}`);
     }
+  }
 
-    let buildsByOs = getBuildsByOs(pkg);
-    packagesByName[pkg.name] = buildsByOs;
+  let packagesTree = getBuildsByTarget(packages);
+  console.log(`packagesTree`, packagesTree);
+
+  for (let pkg of packages) {
+    console.log('pkg', pkg.name);
+    for (let target of uaTargets) {
+      console.log('');
+      console.log(`target: ${target.os}-${target.arch}-${target.libc}`);
+      let buildsTree = packagesTree[pkg.name];
+      let buildsByOs;
+      if (target.os === 'windows') {
+        buildsByOs = buildsTree.ANYOS || buildsTree[target.os];
+      } else if (target.os === 'android') {
+        buildsByOs =
+          buildsTree.ANYOS ||
+          buildsTree.posix_2017 ||
+          buildsTree[target.os] ||
+          buildsTree.linux;
+      } else {
+        buildsByOs =
+          buildsTree.ANYOS || buildsTree.posix_2017 || buildsTree[target.os];
+      }
+      if (!buildsByOs) {
+        console.log(
+          `    pkg: ${pkg.name}: missing build for os '${target.os}'`,
+        );
+        continue;
+      }
+
+      // TODO can we move sortByOsAndArchLibc(builds, anything) down to the lib?
+      //     and then the matcher
+      //     and make the waterfall more optional?
+
+      // TODO waterfall
+      let duplets = [
+        `${target.arch}-ANYARCH`,
+        `${target.arch}-none`,
+        `${target.arch}-${target.libc}`,
+      ];
+
+      let targetBuilds;
+      for (let duplet of duplets) {
+        targetBuilds = buildsByOs[duplet] || [];
+        if (targetBuilds.length) {
+          break;
+        }
+      }
+      console.log('    targetBuilds:', targetBuilds.length);
+    }
   }
 
   let tsv = rows.join('\n');
@@ -262,7 +327,6 @@ async function main() {
   }
 
   console.info('');
-
   // sort -u -k1 builds.tsv | rg -v '^#|^https?:' | rg -i arm
   // cut -f1 builds.tsv | sort -u -k1 | rg -v '^#|^https?:' | rg -i arm
 }
