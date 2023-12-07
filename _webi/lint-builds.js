@@ -82,6 +82,8 @@ let bc = BuildsCacher.create({
   installers: INSTALLERS_DIR,
 });
 
+let packagesByName = {};
+
 async function main() {
   // let names = ['{NAME}-win32.exe'];
   // for (let name of names) {
@@ -131,6 +133,10 @@ async function main() {
       name: name,
       date: new Date(),
     });
+    if (!packagesByName[pkg.name]) {
+      let buildsByOs = {};
+      packagesByName[pkg.name] = buildsByOs;
+    }
 
     // TODO organize by OS, then by arch, libc
 
@@ -157,6 +163,21 @@ async function main() {
       if (!target) {
         continue;
       }
+
+      let buildsByOs = packagesByName[pkg.name];
+      let buildsByArchLibc = buildsByOs[target.os];
+      if (!buildsByArchLibc) {
+        buildsByArchLibc = {};
+        buildsByOs[target.os] = buildsByArchLibc;
+      }
+
+      let archLibc = `${target.arch}-${target.libc}`;
+      let buildsByRelease = buildsByArchLibc[archLibc];
+      if (!buildsByRelease) {
+        buildsByRelease = [];
+        buildsByArchLibc[archLibc] = buildsByRelease;
+      }
+      buildsByRelease.push(build);
 
       triples.push(target.triplet);
       rows.push(`${target.triplet}\t${pkg.name}\t${build.version}`);
