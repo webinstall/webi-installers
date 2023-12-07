@@ -129,7 +129,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
   bc.orphanTerms = Object.assign({}, ALL_TERMS);
   bc.unknownTerms = {};
   bc._triplets = {};
-  bc._downloadTriplets = {};
+  bc._targetsByBuildIdCache = {};
   bc._caches = {};
   bc._staleAge = 15 * 60 * 1000;
 
@@ -346,21 +346,23 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
   bc.classify = function (pkg, build) {
     let maybeInstallable = Triplet.maybeInstallable(pkg, build);
     if (!maybeInstallable) {
-      return;
+      return null;
     }
 
     let buildId = `${pkg.name}@${build.download}`;
-    let triplet = bc._downloadTriplets[buildId];
-    if (triplet) {
-      Object.assign(build, { triplet });
-      return triplet;
+    let target = bc._targetsByBuildIdCache[buildId];
+    if (target) {
+      Object.assign(build, { target: target, triplet: target.triplet });
+      return target;
     }
 
     let pattern = Triplet.toPattern(pkg, build);
     if (!pattern) {
       let err = new Error(`no pattern generated for ${name}`);
       err.code = 'E_BUILD_NO_PATTERN';
-      throw err;
+      target = { error: err };
+      bc._targetsByBuildIdCache[buildId] = target;
+      return target;
     }
 
     let rawTerms = pattern.split(/[_\{\}\/\.\-]+/g);
@@ -373,7 +375,10 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     //     {NAME}.windows.x86_64v2.musl.exe
     let terms = Triplet.patternToTerms(pattern);
     if (!terms.length) {
-      throw new Error(`'${terms}' was trimmed to ''`);
+      let err = new Error(`'${terms}' was trimmed to ''`);
+      target = { error: err };
+      bc._targetsByBuildIdCache[buildId] = target;
+      return target;
     }
 
     for (let term of terms) {
@@ -392,12 +397,12 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
 
     // {NAME}.windows.x86_64v2.musl.exe
     //     windows-x86_64_v2-musl
-    let target = { triplet: '' };
+    target = { triplet: '' };
     void Triplet.termsToTarget(target, pkg, build, terms);
 
     target.triplet = `${target.arch}-${target.vendor}-${target.os}-${target.libc}`;
     bc._triplets[target.triplet] = true;
-    bc._downloadTriplets[buildId] = target.triplet;
+    bc._targetsByBuildIdCache[buildId] = target;
 
     let triple = [target.arch, target.vendor, target.os, target.libc];
     for (let term of triple) {

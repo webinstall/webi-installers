@@ -82,9 +82,83 @@ let bc = BuildsCacher.create({
   installers: INSTALLERS_DIR,
 });
 
-let packagesByName = {};
+async function getPackagesWithBuilds(installersDir, pkgNames, parallel = 25) {
+  let packages = [];
+
+  await Parallel.run(parallel, pkgNames, getAll);
+
+  async function getAll(name, i) {
+    let Releases = require(`${installersDir}/${name}/releases.js`);
+    let pkg = await bc.getBuilds({
+      Releases: Releases,
+      name: name,
+      date: new Date(),
+    });
+    packages[i] = pkg;
+  }
+
+  return packages;
+}
+
+function getBuildsByTarget(packages) {
+  let packagesByName = {};
+
+  for (let pkg of packages) {
+    let buildsByOs = getBuildsByOs(pkg);
+    packagesByName[pkg.name] = buildsByOs;
+  }
+
+  return packagesByName;
+}
+
+function getBuildsByOs(pkg) {
+  let buildsByOs = {};
+
+  for (let build of pkg.releases) {
+    // TODO check targets cache
+    let target = bc.classify(pkg, build);
+    if (!target) {
+      // ignore known, non-package extensions
+      continue;
+    }
+
+    if (target.error) {
+      let err = target.error;
+      let code = err.code || '';
+      console.error(`[ERROR]: ${code} ${pkg.name}: ${build.name}`);
+      console.error(`>>> ${err.message} <<<`);
+      console.error(pkg);
+      console.error(build);
+      console.error(`^^^ ${err.message} ^^^`);
+      console.error(err.stack);
+      continue;
+    }
+
+    let buildsByRelease = getBuildsByRelease(buildsByOs, target);
+    buildsByRelease.push(build);
+  }
+
+  return buildsByOs;
+}
+
+function getBuildsByRelease(buildsByOs, target) {
+  if (!buildsByOs[target.os]) {
+    buildsByOs[target.os] = {};
+  }
+  let buildsByArchLibc = buildsByOs[target.os];
+
+  let archLibc = `${target.arch}-${target.libc}`;
+  if (!buildsByArchLibc[archLibc]) {
+    buildsByArchLibc[archLibc] = [];
+  }
+  let buildsByRelease = buildsByArchLibc[archLibc];
+
+  return buildsByRelease;
+}
 
 async function main() {
+  let packagesByName = {};
+
   // let names = ['{NAME}-win32.exe'];
   // for (let name of names) {
   //   console.log(name);
@@ -99,40 +173,25 @@ async function main() {
 
   bc.freshenRandomPackage(600 * 1000);
 
-  // let pkg = await bc.getBuilds({
-  //   name: name,
-  //   date: new Date(),
-  //   installers: INSTALLERS_DIR,
-  //   caches: CACHE_DIR,
-  // });
-  // let triples = [];
-  // for (let build of pkg.releases) {
-  //   let triplet = await pkgToTriples('git', pkg, build);
-  //   triples.push(triplet);
-  // }
-  // return triples;
-  // // process.exit(1)
-
   let rows = [];
   let triples = [];
   let valids = Object.keys(dirs.valid);
-  console.info(`Fetching builds for`);
-  let limit = 25;
-  //let limit = 1;
-  await Parallel.run(limit, valids, async function (name, i) {
-    if (name === 'webi') {
-      // TODO fix the webi faux package
-      // (not sure why I even created it)
-      return;
-    }
 
-    console.info(`    ${name}`);
-    let Releases = require(`${INSTALLERS_DIR}/${name}/releases.js`);
-    let pkg = await bc.getBuilds({
-      Releases: Releases,
-      name: name,
-      date: new Date(),
-    });
+  let index = valids.indexOf('webi');
+  if (index >= 0) {
+    // TODO fix the webi faux package
+    // (not sure why I even created it)
+    void valids.splice(index, 1);
+  }
+
+  let parallel = 25;
+  let packages = await getPackagesWithBuilds(INSTALLERS_DIR, valids, parallel);
+  let packagesTree = getBuildsByTarget(packages);
+  //console.log(`c`);
+
+  console.info(`Fetching builds for`);
+  for (let pkg of packages) {
+    console.info(`    ${pkg.name}`);
     if (!packagesByName[pkg.name]) {
       let buildsByOs = {};
       packagesByName[pkg.name] = buildsByOs;
@@ -142,21 +201,24 @@ async function main() {
 
     let nStr = pkg.releases.length.toString();
     let n = nStr.padStart(5, ' ');
-    let row = `##### ${n}\t${name}\tv`;
+    let row = `##### ${n}\t${pkg.name}\tv`;
     rows.push(row);
 
     // ignore known, non-package extensions
     for (let build of pkg.releases) {
       let target;
-      try {
-        target = bc.classify(pkg, build);
-      } catch (e) {
+      target = bc.classify(pkg, build);
+      if (!target) {
+        // non-build file
+        continue;
+      }
+      if (target.error) {
+        let e = target.error;
         if (e.code === 'E_BUILD_NO_PATTERN') {
           console.warn(`>>> ${e.message} <<<`);
           console.warn(pkg);
           console.warn(build);
           console.warn(`^^^ ${e.message} ^^^`);
-          continue;
         }
         throw e;
       }
@@ -164,25 +226,14 @@ async function main() {
         continue;
       }
 
-      let buildsByOs = packagesByName[pkg.name];
-      let buildsByArchLibc = buildsByOs[target.os];
-      if (!buildsByArchLibc) {
-        buildsByArchLibc = {};
-        buildsByOs[target.os] = buildsByArchLibc;
-      }
-
-      let archLibc = `${target.arch}-${target.libc}`;
-      let buildsByRelease = buildsByArchLibc[archLibc];
-      if (!buildsByRelease) {
-        buildsByRelease = [];
-        buildsByArchLibc[archLibc] = buildsByRelease;
-      }
-      buildsByRelease.push(build);
-
       triples.push(target.triplet);
       rows.push(`${target.triplet}\t${pkg.name}\t${build.version}`);
     }
-  });
+
+    let buildsByOs = getBuildsByOs(pkg);
+    packagesByName[pkg.name] = buildsByOs;
+  }
+
   let tsv = rows.join('\n');
   console.info('');
   console.info('#rows', rows.length);
