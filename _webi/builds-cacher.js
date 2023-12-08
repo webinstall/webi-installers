@@ -258,6 +258,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     // let age = now - seconds;
 
     let data = bc._caches[name];
+    let versions = data?.versions || [];
     let now = date.valueOf();
     if (data) {
       process.nextTick(async function () {
@@ -267,7 +268,8 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
         }
         data = await getLatestBuilds(Releases, cacheDir, name);
         let updated = date.valueOf();
-        Object.assign(data, { name, updated });
+        updateVersions(data, versions);
+        Object.assign(data, { name, updated, versions });
         bc._caches[name] = data;
       });
       return data;
@@ -292,6 +294,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
       data = await getLatestBuilds(Releases, cacheDir, name);
     }
     let updated = date.valueOf();
+    updateVersions(data, versions);
     Object.assign(data, { name, updated });
     bc._caches[name] = data;
 
@@ -306,6 +309,19 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
 
     return data;
   };
+
+  // TODO
+  //   - sort version
+  //   - tag channels
+  //   - @beta not install older than stable
+  function updateVersions(data, versions) {
+    for (let release of data.releases) {
+      let hasVersion = versions.includes(release.version);
+      if (!hasVersion) {
+        versions.push(release.version);
+      }
+    }
+  }
 
   // Makes sure that packages are updated once an hour, on average
   bc._staleNames = [];
