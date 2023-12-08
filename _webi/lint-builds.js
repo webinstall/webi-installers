@@ -269,6 +269,7 @@ function matchBuildsByTarget(pkg, buildsTree, target) {
         targetBuilds = versionBuilds[_duplet];
         //console.log(`    duplet: ${_duplet}`, versionBuilds, targetBuilds);
         if (targetBuilds?.length > 0) {
+          targetOs = os;
           duplet = _duplet;
           break;
         }
@@ -311,7 +312,7 @@ async function main() {
 
   let parallel = 25;
   //valids = ['atomicparsley', 'caddy', 'macos'];
-  valids = ['atomicparsley'];
+  //valids = ['atomicparsley'];
   let packages = await getPackagesWithBuilds(INSTALLERS_DIR, valids, parallel);
 
   console.info(`Fetching builds for`);
