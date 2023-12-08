@@ -259,6 +259,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
 
     let data = bc._caches[name];
     let versions = data?.versions || [];
+    let triplets = [];
     let now = date.valueOf();
     if (data) {
       process.nextTick(async function () {
@@ -269,7 +270,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
         data = await getLatestBuilds(Releases, cacheDir, name);
         let updated = date.valueOf();
         updateVersions(data, versions);
-        Object.assign(data, { name, updated, versions });
+        Object.assign(data, { name, updated, versions, triplets });
         bc._caches[name] = data;
       });
       return data;
@@ -295,7 +296,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     }
     let updated = date.valueOf();
     updateVersions(data, versions);
-    Object.assign(data, { name, updated, versions });
+    Object.assign(data, { name, updated, versions, triplets });
     bc._caches[name] = data;
 
     for (let build of data.releases) {
@@ -421,6 +422,14 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     void Triplet.termsToTarget(target, pkg, build, terms);
 
     target.triplet = `${target.arch}-${target.vendor}-${target.os}-${target.libc}`;
+    let hasTriplet = pkg.triplets.includes(target.triplet);
+    if (!hasTriplet) {
+      // TODO I don't love this hidden behavior
+      // perhaps classify should just happen when the package is loaded
+      // (and the sanity error should be removed, or thrown after the loop is complete)
+      pkg.triplets.push(target.triplet);
+    }
+
     bc._triplets[target.triplet] = true;
     bc._targetsByBuildIdCache[buildId] = target;
 
