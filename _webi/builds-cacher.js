@@ -318,7 +318,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     for (let release of data.releases) {
       let hasVersion = versions.includes(release.version);
       if (!hasVersion) {
-        versions.push(release.version);
+        versions.unshift(release.version);
       }
     }
   }
