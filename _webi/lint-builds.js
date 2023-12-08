@@ -176,46 +176,52 @@ function getBuildsByOs(pkg) {
       continue;
     }
 
-    let buildsByRelease = getBuildsByRelease(buildsByOs, target);
+    let buildsByRelease = getBuildsByRelease(build, buildsByOs, target);
     buildsByRelease.push(build);
   }
 
   return buildsByOs;
 }
 
-function getBuildsByRelease(buildsByOs, target) {
+function getBuildsByRelease(build, buildsByOs, target) {
+  let archLibc = `${target.arch}-${target.libc}`;
+
   if (!buildsByOs[target.os]) {
     buildsByOs[target.os] = {};
   }
-  let buildsByArchLibc = buildsByOs[target.os];
 
-  let archLibc = `${target.arch}-${target.libc}`;
+  let buildsByVersion = buildsByOs[target.os];
+  if (!buildsByVersion[build.version]) {
+    buildsByVersion[build.version] = {};
+  }
+
+  let buildsByArchLibc = buildsByVersion[build.version];
   if (!buildsByArchLibc[archLibc]) {
     buildsByArchLibc[archLibc] = [];
   }
-  let buildsByRelease = buildsByArchLibc[archLibc];
 
+  let buildsByRelease = buildsByArchLibc[archLibc];
   return buildsByRelease;
 }
 
 function matchBuildsByTarget(pkg, buildsTree, target) {
+  let oses = [];
   let targetOs = target.os;
-  let buildsByOs;
   if (target.os === 'windows') {
-    buildsByOs = buildsTree.ANYOS || buildsTree[target.os];
+    oses = ['ANYOS', 'windows'];
+    //buildsByOs = buildsTree.ANYOS || buildsTree[target.os];
   } else if (target.os === 'android') {
-    buildsByOs =
-      buildsTree.ANYOS || buildsTree.posix_2017 || buildsTree[target.os];
-    if (!buildsByOs) {
-      targetOs = 'linux';
-      buildsByOs = buildsTree.linux;
-    }
+    oses = ['ANYOS', 'posix_2017', 'android', 'linux'];
+    // buildsByOs =
+    //   buildsTree.ANYOS || buildsTree.posix_2017 || buildsTree[target.os];
+    // if (!buildsByOs) {
+    //   targetOs = 'linux';
+    //   buildsByOs = buildsTree.linux;
+    // }
   } else {
-    buildsByOs =
-      buildsTree.ANYOS || buildsTree.posix_2017 || buildsTree[target.os];
-  }
-  if (!buildsByOs) {
-    return null;
+    oses = ['ANYOS', 'posix_2017', target.os];
+    // buildsByOs =
+    //   buildsTree.ANYOS || buildsTree.posix_2017 || buildsTree[target.os];
   }
 
   // TODO can we move sortByOsAndArchLibc(builds, anything) down to the lib?
@@ -230,26 +236,55 @@ function matchBuildsByTarget(pkg, buildsTree, target) {
     HostTargets.WATERFALL.ANYOS[target.libc] || [target.libc];
 
   console.log('waterfalls', arches, libcs);
-  let duplet;
-  let targetBuilds;
-  // TODO flatten and cache
+
+  // TODO flatten earlier and precache?
+  let duplets = [];
   for (let arch of arches) {
     for (let libc of libcs) {
-      duplet = `${arch}-${libc}`;
-      // console.log(`    duplet: ${duplet}`);
-      targetBuilds = buildsByOs[duplet] || [];
-      if (targetBuilds.length > 0) {
+      let duplet = `${arch}-${libc}`;
+      duplets.push(duplet);
+    }
+  }
+
+  let duplet;
+  let targetBuilds;
+  for (let os of oses) {
+    let buildsByOs = buildsTree[os];
+    if (!buildsByOs) {
+      continue;
+    }
+
+    // TODO
+    //   - latest supported triplets
+    //   - historical supported triplets
+
+    // TODO sort versions first, get channel (or 'stable' or 'latest') from user
+    for (let version of pkg.versions) {
+      let versionBuilds = buildsByOs[version];
+      if (!versionBuilds?.length) {
+        continue;
+      }
+
+      for (let duplet of duplets) {
+        // console.log(`    duplet: ${duplet}`);
+        targetBuilds = versionBuilds[duplet];
+        if (targetBuilds?.length > 0) {
+          break;
+        }
+      }
+      if (targetBuilds?.length > 0) {
         break;
       }
     }
-    if (targetBuilds.length > 0) {
+    if (targetBuilds?.length > 0) {
       break;
     }
   }
 
-  // if (!targetBuilds.length) {
-  //   console.log('    no builds:', buildsByOs);
-  // }
+  if (!targetBuilds?.length) {
+    // console.log('    no builds:', buildsByOs);
+    targetBuilds = [];
+  }
 
   let match = { triplet: `${targetOs}-${duplet}`, builds: targetBuilds };
   return match;
@@ -275,7 +310,7 @@ async function main() {
 
   let parallel = 25;
   //valids = ['atomicparsley', 'caddy', 'macos'];
-  valids = ['atomicparsley'];
+  //valids = ['atomicparsley'];
   let packages = await getPackagesWithBuilds(INSTALLERS_DIR, valids, parallel);
 
   console.info(`Fetching builds for`);
@@ -289,8 +324,7 @@ async function main() {
 
     // ignore known, non-package extensions
     for (let build of pkg.releases) {
-      let target;
-      target = bc.classify(pkg, build);
+      let target = bc.classify(pkg, build);
       if (!target) {
         // non-build file
         continue;
@@ -307,6 +341,11 @@ async function main() {
       }
 
       triples.push(target.triplet);
+      // if (!build.version) {
+      //   throw new Error(`no version for ${pkg.name} ${build.name}`);
+      // }
+      // // For debug printing versions
+      // console.error(build.version);
       rows.push(`${target.triplet}\t${pkg.name}\t${build.version}`);
     }
   }
