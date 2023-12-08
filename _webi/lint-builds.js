@@ -293,6 +293,12 @@ function matchBuildsByTarget(pkg, buildsTree, target) {
 }
 
 async function main() {
+  // TODO
+  //     node ./_webi/lint-builds.js caddy@beta 'x86_64/unknown Darwin libc'
+  //
+  // let [pkgName, userAgent] = process.argv[2].slice(0);
+  // create test case for zoxide, caddy, rg
+
   let dirs = await bc.getPackages();
   showDirs(dirs);
   console.info('');
