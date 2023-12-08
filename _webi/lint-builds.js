@@ -26,6 +26,19 @@ for (let ua of uas) {
   }
   if (!target.os) {
     // TODO make target null, or create error for this
+    console.log(`no os for terms: ${terms}`);
+    //throw new Error(`terms: ${terms}`);
+    continue;
+  }
+  if (!target.arch) {
+    // TODO make target null, or create error for this
+    console.log(`no arch for terms: ${terms}`);
+    //throw new Error(`terms: ${terms}`);
+    continue;
+  }
+  if (!target.libc) {
+    // TODO make target null, or create error for this
+    console.log(`no libc for terms: ${terms}`);
     //throw new Error(`terms: ${terms}`);
     continue;
   }
@@ -185,6 +198,63 @@ function getBuildsByRelease(buildsByOs, target) {
   return buildsByRelease;
 }
 
+function matchBuildsByTarget(pkg, buildsTree, target) {
+  let targetOs = target.os;
+  let buildsByOs;
+  if (target.os === 'windows') {
+    buildsByOs = buildsTree.ANYOS || buildsTree[target.os];
+  } else if (target.os === 'android') {
+    buildsByOs =
+      buildsTree.ANYOS || buildsTree.posix_2017 || buildsTree[target.os];
+    if (!buildsByOs) {
+      targetOs = 'linux';
+      buildsByOs = buildsTree.linux;
+    }
+  } else {
+    buildsByOs =
+      buildsTree.ANYOS || buildsTree.posix_2017 || buildsTree[target.os];
+  }
+  if (!buildsByOs) {
+    return null;
+  }
+
+  // TODO can we move sortByOsAndArchLibc(builds, anything) down to the lib?
+  //     and then the matcher
+  //     and make the waterfall more optional?
+
+  let waterfall = HostTargets.WATERFALL[target.os] || {};
+  let arches = waterfall[target.arch] ||
+    HostTargets.WATERFALL.ANYOS[target.arch] || [target.arch];
+  arches = ['ANYARCH'].concat(arches);
+  let libcs = waterfall[target.libc] ||
+    HostTargets.WATERFALL.ANYOS[target.libc] || [target.libc];
+
+  console.log('waterfalls', arches, libcs);
+  let duplet;
+  let targetBuilds;
+  // TODO flatten and cache
+  for (let arch of arches) {
+    for (let libc of libcs) {
+      duplet = `${arch}-${libc}`;
+      // console.log(`    duplet: ${duplet}`);
+      targetBuilds = buildsByOs[duplet] || [];
+      if (targetBuilds.length > 0) {
+        break;
+      }
+    }
+    if (targetBuilds.length > 0) {
+      break;
+    }
+  }
+
+  // if (!targetBuilds.length) {
+  //   console.log('    no builds:', buildsByOs);
+  // }
+
+  let match = { triplet: `${targetOs}-${duplet}`, builds: targetBuilds };
+  return match;
+}
+
 async function main() {
   let dirs = await bc.getPackages();
   showDirs(dirs);
@@ -204,7 +274,8 @@ async function main() {
   }
 
   let parallel = 25;
-  valids = ['caddy'];
+  //valids = ['atomicparsley', 'caddy', 'macos'];
+  valids = ['atomicparsley'];
   let packages = await getPackagesWithBuilds(INSTALLERS_DIR, valids, parallel);
 
   console.info(`Fetching builds for`);
@@ -244,50 +315,30 @@ async function main() {
   console.log(`packagesTree`, packagesTree);
 
   for (let pkg of packages) {
+    console.log('');
+    console.log('');
     console.log('pkg', pkg.name);
+    let buildsTree = packagesTree[pkg.name];
+    console.log(buildsTree);
     for (let target of uaTargets) {
+      let libc = target.libc || 'libc';
       console.log('');
-      console.log(`target: ${target.os}-${target.arch}-${target.libc}`);
-      let buildsTree = packagesTree[pkg.name];
-      let buildsByOs;
-      if (target.os === 'windows') {
-        buildsByOs = buildsTree.ANYOS || buildsTree[target.os];
-      } else if (target.os === 'android') {
-        buildsByOs =
-          buildsTree.ANYOS ||
-          buildsTree.posix_2017 ||
-          buildsTree[target.os] ||
-          buildsTree.linux;
-      } else {
-        buildsByOs =
-          buildsTree.ANYOS || buildsTree.posix_2017 || buildsTree[target.os];
-      }
-      if (!buildsByOs) {
+      console.log(`target: ${target.os}-${target.arch}-${libc}`);
+      let match = matchBuildsByTarget(pkg, buildsTree, target);
+      if (!match) {
         console.log(
           `    pkg: ${pkg.name}: missing build for os '${target.os}'`,
         );
         continue;
       }
 
-      // TODO can we move sortByOsAndArchLibc(builds, anything) down to the lib?
-      //     and then the matcher
-      //     and make the waterfall more optional?
-
-      // TODO waterfall
-      let duplets = [
-        `${target.arch}-ANYARCH`,
-        `${target.arch}-none`,
-        `${target.arch}-${target.libc}`,
-      ];
-
-      let targetBuilds;
-      for (let duplet of duplets) {
-        targetBuilds = buildsByOs[duplet] || [];
-        if (targetBuilds.length) {
-          break;
-        }
+      if (match.builds.length === 0) {
+        console.log(
+          `    pkg: ${pkg.name}: missing build for os '${target.os}-${target.arch}-${libc}'`,
+        );
+      } else {
+        console.log(`    ${match.builds.length} (${match.triplet})`);
       }
-      console.log('    targetBuilds:', targetBuilds.length);
     }
   }
 
