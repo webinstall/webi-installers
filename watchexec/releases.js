@@ -6,6 +6,13 @@ var repo = 'watchexec';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
+    let builds = [];
+    for (let build of all.releases) {
+      build.version = build.version.replace(/^cli-/, '');
+      builds.push(build);
+    }
+    all.releases = builds;
+
     return all;
   });
 };
