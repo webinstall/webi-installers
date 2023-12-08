@@ -26,19 +26,19 @@ for (let ua of uas) {
   }
   if (!target.os) {
     // TODO make target null, or create error for this
-    console.log(`no os for terms: ${terms}`);
+    console.warn(`no os for terms: ${terms}`);
     //throw new Error(`terms: ${terms}`);
     continue;
   }
   if (!target.arch) {
     // TODO make target null, or create error for this
-    console.log(`no arch for terms: ${terms}`);
+    console.warn(`no arch for terms: ${terms}`);
     //throw new Error(`terms: ${terms}`);
     continue;
   }
   if (!target.libc) {
     // TODO make target null, or create error for this
-    console.log(`no libc for terms: ${terms}`);
+    console.warn(`no libc for terms: ${terms}`);
     //throw new Error(`terms: ${terms}`);
     continue;
   }
@@ -235,7 +235,7 @@ function matchBuildsByTarget(pkg, buildsTree, target) {
   let libcs = waterfall[target.libc] ||
     HostTargets.WATERFALL.ANYOS[target.libc] || [target.libc];
 
-  console.log('waterfalls', arches, libcs);
+  //console.log('waterfalls', arches, libcs);
 
   // TODO flatten earlier and precache?
   let duplets = [];
@@ -261,14 +261,15 @@ function matchBuildsByTarget(pkg, buildsTree, target) {
     // TODO sort versions first, get channel (or 'stable' or 'latest') from user
     for (let version of pkg.versions) {
       let versionBuilds = buildsByOs[version];
-      if (!versionBuilds?.length) {
+      if (!versionBuilds) {
         continue;
       }
 
-      for (let duplet of duplets) {
-        // console.log(`    duplet: ${duplet}`);
-        targetBuilds = versionBuilds[duplet];
+      for (let _duplet of duplets) {
+        targetBuilds = versionBuilds[_duplet];
+        //console.log(`    duplet: ${_duplet}`, versionBuilds, targetBuilds);
         if (targetBuilds?.length > 0) {
+          duplet = _duplet;
           break;
         }
       }
@@ -310,7 +311,7 @@ async function main() {
 
   let parallel = 25;
   //valids = ['atomicparsley', 'caddy', 'macos'];
-  //valids = ['atomicparsley'];
+  valids = ['atomicparsley'];
   let packages = await getPackagesWithBuilds(INSTALLERS_DIR, valids, parallel);
 
   console.info(`Fetching builds for`);
@@ -351,7 +352,7 @@ async function main() {
   }
 
   let packagesTree = getBuildsByTarget(packages);
-  console.log(`packagesTree`, packagesTree);
+  //console.log(`packagesTree`, packagesTree);
 
   for (let pkg of packages) {
     console.log('');
@@ -361,8 +362,9 @@ async function main() {
     console.log(buildsTree);
     for (let target of uaTargets) {
       let libc = target.libc || 'libc';
+      let hostTriplet = `${target.os}-${target.arch}-${libc}`;
       console.log('');
-      console.log(`target: ${target.os}-${target.arch}-${libc}`);
+      console.log(`target: ${hostTriplet}`);
       let match = matchBuildsByTarget(pkg, buildsTree, target);
       if (!match) {
         console.log(
@@ -375,8 +377,12 @@ async function main() {
         console.log(
           `    pkg: ${pkg.name}: missing build for os '${target.os}-${target.arch}-${libc}'`,
         );
+      } else if (match.triplet === hostTriplet) {
+        console.log(`    selected ${match.builds.length}`);
       } else {
-        console.log(`    ${match.builds.length} (${match.triplet})`);
+        console.log(
+          `    selected ${match.builds.length} (${match.triplet} fallback)`,
+        );
       }
     }
   }
