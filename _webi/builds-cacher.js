@@ -295,7 +295,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     }
     let updated = date.valueOf();
     updateVersions(data, versions);
-    Object.assign(data, { name, updated });
+    Object.assign(data, { name, updated, versions });
     bc._caches[name] = data;
 
     for (let build of data.releases) {
