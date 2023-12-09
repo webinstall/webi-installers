@@ -6,6 +6,7 @@ var repo = 'goreleaser';
 
 module.exports = function (request) {
   return github(request, owner, repo).then(function (all) {
+    all._names = ['goreleaser', '1'];
     return all;
   });
 };
