@@ -32,7 +32,8 @@ if (/\b-?-h(elp)?\b/.test(process.argv.join(' '))) {
 var os = require('os');
 var fs = require('fs');
 var path = require('path');
-var Releases = require('./releases.js');
+var Releases = require('./transform-releases.js');
+var Installers = require('./installers.js');
 var ServeInstaller = require('./serve-installer.js');
 
 var pkg = process.argv[2].split('@');
@@ -116,8 +117,8 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(async function (all) {
   console.info('');
 
   return Promise.all([
-    Releases.renderBash(pkgdir, rel, opts).catch(function () {}),
-    Releases.renderPowerShell(pkgdir, rel, opts).catch(function () {}),
+    Installers.renderBash(pkgdir, rel, opts).catch(function () {}),
+    Installers.renderPowerShell(pkgdir, rel, opts).catch(function () {}),
   ]).then(function (scripts) {
     var bashTxt = scripts[0];
     var ps1Txt = scripts[1];

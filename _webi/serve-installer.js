@@ -1,19 +1,19 @@
 'use strict';
 
-var Installers = module.exports;
+var InstallerServer = module.exports;
 
 var Fs = require('fs/promises');
 var path = require('path');
 
 var uaDetect = require('./ua-detect.js');
 var Projects = require('./projects.js');
-var Releases = require('./releases.js');
+var Installers = require('./installers.js');
 
 // handlers caching and transformation, probably should be broken down
-var getReleases = require('./transform-releases.js');
+var Releases = require('./transform-releases.js');
 
-Installers.INSTALLERS_DIR = path.join(__dirname, '..');
-Installers.serveInstaller = async function (
+InstallerServer.INSTALLERS_DIR = path.join(__dirname, '..');
+InstallerServer.serveInstaller = async function (
   baseurl,
   ua,
   pkg,
@@ -22,7 +22,7 @@ Installers.serveInstaller = async function (
   formats,
   libc,
 ) {
-  let [rel, opts] = await Installers.helper({
+  let [rel, opts] = await InstallerServer.helper({
     ua,
     pkg,
     tag,
@@ -33,13 +33,13 @@ Installers.serveInstaller = async function (
     baseurl,
   });
 
-  var pkgdir = path.join(Installers.INSTALLERS_DIR, pkg);
+  var pkgdir = path.join(InstallerServer.INSTALLERS_DIR, pkg);
   if ('ps1' === ext) {
-    return Releases.renderPowerShell(pkgdir, rel, opts);
+    return Installers.renderPowerShell(pkgdir, rel, opts);
   }
-  return Releases.renderBash(pkgdir, rel, opts);
+  return Installers.renderBash(pkgdir, rel, opts);
 };
-Installers.helper = async function ({ ua, pkg, tag, formats, libc }) {
+InstallerServer.helper = async function ({ ua, pkg, tag, formats, libc }) {
   // TODO put some of this in a middleware? or common function?
 
   // TODO maybe move package/version/lts/channel detection into getReleases
@@ -99,7 +99,7 @@ Installers.helper = async function ({ ua, pkg, tag, formats, libc }) {
     limit: 1,
   };
 
-  let rels = await getReleases(releaseQuery);
+  let rels = await Releases.getReleases(releaseQuery);
 
   var rel = rels.releases[0];
   var opts = {
@@ -131,11 +131,15 @@ var CURL_PIPE_PS1_BOOT = path.join(__dirname, 'curl-pipe-bootstrap.tpl.ps1');
 var CURL_PIPE_SH_BOOT = path.join(__dirname, 'curl-pipe-bootstrap.tpl.sh');
 var BAD_SH_RE = /[<>'"`$\\]/;
 
-Installers.getPosixCurlPipeBootstrap = async function ({ baseurl, pkg, ver }) {
+InstallerServer.getPosixCurlPipeBootstrap = async function ({
+  baseurl,
+  pkg,
+  ver,
+}) {
   let bootTxt = await Fs.readFile(CURL_PIPE_SH_BOOT, 'utf8');
 
   var webiPkg = [pkg, ver].filter(Boolean).join('@');
-  var webiChecksum = await Releases.getWebiShChecksum();
+  var webiChecksum = await Installers.getWebiShChecksum();
   var envReplacements = [
     ['WEBI_PKG', webiPkg],
     ['WEBI_HOST', baseurl],
@@ -164,7 +168,7 @@ Installers.getPosixCurlPipeBootstrap = async function ({ baseurl, pkg, ver }) {
   return bootTxt;
 };
 
-Installers.getPwshCurlPipeBootstrap = async function ({
+InstallerServer.getPwshCurlPipeBootstrap = async function ({
   baseurl,
   pkg,
   ver,
@@ -173,7 +177,7 @@ Installers.getPwshCurlPipeBootstrap = async function ({
   let bootTxt = await Fs.readFile(CURL_PIPE_PS1_BOOT, 'utf8');
 
   var webiPkg = [pkg, ver].filter(Boolean).join('@');
-  //var webiChecksum = await Releases.getWebiPs1Checksum();
+  //var webiChecksum = await InstallerServer.getWebiPs1Checksum();
   var envReplacements = [
     ['Env:WEBI_PKG', webiPkg],
     ['Env:WEBI_HOST', baseurl],

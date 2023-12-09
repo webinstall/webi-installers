@@ -1,7 +1,10 @@
 'use strict';
 
+var Releases = module.exports;
+
 var path = require('path');
-var Releases = require('./releases.js');
+var request = require('@root/request');
+var _normalize = require('./normalize.js');
 
 var cache = {};
 //var staleAge = 5 * 1000;
@@ -10,6 +13,21 @@ var staleAge = 5 * 60 * 1000;
 var expiredAge = 15 * 60 * 1000;
 
 let installerDir = path.join(__dirname, '..');
+
+Releases.get = async function (pkgdir) {
+  let get;
+  try {
+    get = require(path.join(pkgdir, 'releases.js'));
+  } catch (e) {
+    let err = new Error('no releases.js for', pkgdir.split(/[\/\\]+/).pop());
+    err.code = 'E_NO_RELEASE';
+    throw err;
+  }
+
+  let all = await get(request);
+
+  return _normalize(all);
+};
 
 // TODO needs a proper test, and more accurate (though perhaps far less simple) code
 function createFormatsSorter(formats) {
@@ -242,7 +260,7 @@ async function filterReleases(
   return sortedRels.slice(0, limit || 1000);
 }
 
-function getReleases({
+Releases.getReleases = function ({
   _count,
   pkg,
   ver,
@@ -290,7 +308,7 @@ function getReleases({
         if (_count < 1) {
           // Apple Silicon M1 hacky-do workaround fix
           if ('macos' === os && 'arm64' === arch) {
-            return getReleases({
+            return Releases.getReleases({
               pkg,
               ver,
               os,
@@ -304,7 +322,7 @@ function getReleases({
           }
           // Windows ARM hacky-do workaround fix
           if ('windows' === os && 'arm64' === arch) {
-            return getReleases({
+            return Releases.getReleases({
               pkg,
               ver,
               os,
@@ -318,7 +336,7 @@ function getReleases({
           }
           // Raspberry Pi 3+ on Ubuntu arm64 (via Bionic?)
           if ('linux' === os && 'arm64' === arch) {
-            return getReleases({
+            return Releases.getReleases({
               _count: _count + 1,
               pkg,
               ver,
@@ -333,7 +351,7 @@ function getReleases({
           }
           // armv7 can run armv6
           if ('linux' === os && 'armv7l' === arch) {
-            return getReleases({
+            return Releases.getReleases({
               _count: _count + 1,
               pkg,
               ver,
@@ -351,7 +369,7 @@ function getReleases({
           // Raspberry Pi 3+ on Raspbian arm7 (not Ubuntu arm64)
           // hail mary
           if ('linux' === os && 'armv7l' === arch) {
-            return getReleases({
+            return Releases.getReleases({
               _count: _count + 1,
               pkg,
               ver,
@@ -392,9 +410,7 @@ function getReleases({
         };
       });
   });
-}
-module.exports = getReleases;
-module.exports.getReleases = getReleases;
+};
 
 if (require.main === module) {
   return module

@@ -1,36 +1,19 @@
 'use strict';
 
+var Installers = module.exports;
+
 var Crypto = require('crypto');
 var Fs = require('node:fs/promises');
 var path = require('node:path');
-var request = require('@root/request');
-
-var _normalize = require('../_webi/normalize.js');
 
 var reInstallTpl = /\s*#?\s*{{ installer }}/;
-
-var Releases = module.exports;
-Releases.get = async function (pkgdir) {
-  let get;
-  try {
-    get = require(path.join(pkgdir, 'releases.js'));
-  } catch (e) {
-    let err = new Error('no releases.js for', pkgdir.split(/[\/\\]+/).pop());
-    err.code = 'E_NO_RELEASE';
-    throw err;
-  }
-
-  let all = await get(request);
-
-  return _normalize(all);
-};
 
 function padScript(txt) {
   return txt.replace(/^/g, '        ');
 }
 
 var BAD_SH_RE = /[<>'"`$\\]/;
-Releases.renderBash = async function (
+Installers.renderBash = async function (
   pkgdir,
   rel,
   { baseurl, pkg, tag, ver, os = '', arch = '', libc = '', formats },
@@ -90,7 +73,7 @@ Releases.renderBash = async function (
     .join(',')
     .replace(/'/g, '');
 
-  let webiChecksum = await Releases.getWebiShChecksum();
+  let webiChecksum = await Installers.getWebiShChecksum();
   let envReplacements = [
     ['WEBI_CHECKSUM', webiChecksum],
     ['WEBI_PKG', webiPkg],
@@ -147,7 +130,7 @@ Releases.renderBash = async function (
   return tplTxt;
 };
 
-Releases.renderPowerShell = async function (
+Installers.renderPowerShell = async function (
   pkgdir,
   rel,
   { baseurl, pkg, tag, ver, os, arch, libc = '', formats },
@@ -224,7 +207,7 @@ var _webiShMeta = {
   checksum: '',
   mtime: 0,
 };
-Releases.getWebiShChecksum = async function () {
+Installers.getWebiShChecksum = async function () {
   let now = Date.now();
   let ago = now - _webiShMeta.updated_at;
   if (ago <= _webiShMeta.stale) {
