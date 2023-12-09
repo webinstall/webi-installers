@@ -6,7 +6,7 @@ var Fs = require('fs/promises');
 var path = require('path');
 
 var uaDetect = require('./ua-detect.js');
-var packages = require('./packages.js');
+var Projects = require('./projects.js');
 var Releases = require('./releases.js');
 
 // handlers caching and transformation, probably should be broken down
@@ -84,7 +84,7 @@ Installers.helper = async function ({ ua, pkg, tag, formats, libc }) {
     myLibc = 'libc';
   }
 
-  let cfg = await packages.get(pkg);
+  let cfg = await Projects.get(pkg);
   let releaseQuery = {
     pkg: cfg.alias || pkg,
     ver,
