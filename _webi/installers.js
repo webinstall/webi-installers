@@ -103,6 +103,7 @@ Installers.renderBash = async function (
     ['PKG_ARCHES', (rel.arches || []).join(' ')],
     ['PKG_LIBCS', (rel.libcs || []).join(' ')],
     ['PKG_FORMATS', (rel.formats || []).join(' ')],
+    ['PKG_CHANNELS', (rel.channels || []).join(' ')],
     ['PKG_LATEST', latest],
   ];
 
