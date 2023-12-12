@@ -26,6 +26,7 @@ __bootstrap_webi() {
     #PKG_ARCHES=
     #PKG_LIBCS=
     #PKG_FORMATS=
+    #PKG_LATEST=
     WEBI_PKG_DOWNLOAD=""
     WEBI_DOWNLOAD_DIR="${HOME}/Downloads"
     if command -v xdg-user-dir > /dev/null; then
@@ -125,8 +126,12 @@ __bootstrap_webi() {
         {
             echo ""
             echo "    $(t_err "Error: no '${PKG_NAME:-"Unknown Package"}@${WEBI_TAG:-"Unknown Tag"}' release for '${WEBI_OS:-"Unknown OS"}' (${WEBI_LIBC:-"Unknown Libc"}) on '${WEBI_ARCH:-"Unknown CPU"}' as one of '${WEBI_FORMATS:-"Unknown File Type"}'")"
-            echo "      '$PKG_NAME' is available for '$PKG_OSES' ($PKG_LIBCS) on '$PKG_ARCHES' as one of '$PKG_FORMATS'"
-            echo "      (check that the package name and version are correct)"
+            echo ""
+            echo "        CPUs: $PKG_ARCHES"
+            echo "        OSes: $PKG_OSES"
+            echo "        libcs: $PKG_LIBCS"
+            echo "        Package Formats: $PKG_FORMATS"
+            echo "        (check that the package name and version are correct)"
 
             echo ""
             my_release_url="$(echo "$WEBI_RELEASES" | sed 's:?.*::')"
