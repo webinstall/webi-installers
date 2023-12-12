@@ -127,6 +127,7 @@ __bootstrap_webi() {
             echo ""
             echo "    $(t_err "Error: no '${PKG_NAME:-"Unknown Package"}@${WEBI_TAG:-"Unknown Tag"}' release for '${WEBI_OS:-"Unknown OS"}' (${WEBI_LIBC:-"Unknown Libc"}) on '${WEBI_ARCH:-"Unknown CPU"}' as one of '${WEBI_FORMATS:-"Unknown File Type"}'")"
             echo ""
+            echo "        Latest Version: ${PKG_LATEST}"
             echo "        CPUs: $PKG_ARCHES"
             echo "        OSes: $PKG_OSES"
             echo "        libcs: $PKG_LIBCS"
