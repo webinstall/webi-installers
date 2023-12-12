@@ -82,8 +82,8 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(async function (all) {
   var formats = ['exe', 'xz', 'tar', 'zip', 'git'];
 
   let [rel, opts] = await ServeInstaller.helper({
-    ua: `${nodeOs}/${nodeOsRelease} ${nodeArch}/unknown ${nodeLibc}`,
-    pkg: pkgname,
+    unameAgent: `${nodeOs}/${nodeOsRelease} ${nodeArch}/unknown ${nodeLibc}`,
+    projectName: pkgname,
     tag: pkgtag || '',
     formats: formats,
     libc: nodeLibc,
