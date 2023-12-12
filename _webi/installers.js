@@ -99,10 +99,10 @@ Installers.renderBash = async function (
     ['WEBI_PKG_PATHNAME', pkgFile],
     ['WEBI_PKG_FILE', pkgFile], // TODO replace with pathname
     ['PKG_NAME', pkg],
-    ['PKG_OSES', rel.oses],
-    ['PKG_ARCHES', rel.arches],
-    ['PKG_LIBCS', rel.libcs],
-    ['PKG_FORMATS', (rel.formats || []).join(',')],
+    ['PKG_OSES', (rel.oses || []).join(' ')],
+    ['PKG_ARCHES', (rel.arches || []).join(' ')],
+    ['PKG_LIBCS', (rel.libcs || []).join(' ')],
+    ['PKG_FORMATS', (rel.formats || []).join(' ')],
   ];
 
   for (let env of envReplacements) {
