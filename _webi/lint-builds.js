@@ -6,6 +6,7 @@ let Path = require('node:path');
 
 let BuildsCacher = require('./builds-cacher.js');
 let HostTargets = require('./build-classifier/host-targets.js');
+let Parallel = require('./parallel.js');
 
 var INSTALLERS_DIR = Path.join(__dirname, '..');
 var CACHE_DIR = Path.join(__dirname, '../_cache');
@@ -161,15 +162,17 @@ async function main() {
 
   console.info('');
   console.info(`Fetching project release assets`);
+  let parallel = 25;
   let projects = [];
-  for (let name of valids) {
+  await Parallel.run(parallel, valids, getAll);
+  async function getAll(name, i) {
     console.info(`    ${name}`);
     let projInfo = await bc.getPackages({
       //Releases: Releases,
       name: name,
       date: new Date(),
     });
-    projects.push(projInfo);
+    projects[i] = projInfo;
   }
 
   console.info(`Classifying build assets for...`);
