@@ -16,7 +16,7 @@ var BAD_SH_RE = /[<>'"`$\\]/;
 Installers.renderBash = async function (
   pkgdir,
   rel,
-  { baseurl, pkg, tag, ver, os = '', arch = '', libc = '', formats },
+  { baseurl, pkg, tag, ver, os = '', arch = '', libc = '', formats, latest },
 ) {
   if (!Array.isArray(formats)) {
     formats = [];
@@ -103,6 +103,7 @@ Installers.renderBash = async function (
     ['PKG_ARCHES', (rel.arches || []).join(' ')],
     ['PKG_LIBCS', (rel.libcs || []).join(' ')],
     ['PKG_FORMATS', (rel.formats || []).join(' ')],
+    ['PKG_LATEST', latest],
   ];
 
   for (let env of envReplacements) {
