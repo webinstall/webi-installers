@@ -490,7 +490,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
 
     let pattern = Triplet.toPattern(projInfo, build);
     if (!pattern) {
-      let err = new Error(`no pattern generated for ${name}`);
+      let err = new Error(`no pattern generated for ${projInfo.name}`);
       err.code = 'E_BUILD_NO_PATTERN';
       target = { error: err };
       bc._targetsByBuildIdCache[buildId] = target;
