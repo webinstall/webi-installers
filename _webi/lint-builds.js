@@ -125,6 +125,7 @@ let bc = BuildsCacher.create({
 });
 
 async function main() {
+  /* jshint maxcomplexity: 25 */
   // TODO
   //     node ./_webi/lint-builds.js caddy@beta 'x86_64/unknown Darwin libc'
   //
@@ -184,6 +185,7 @@ async function main() {
         // non-build file
         continue;
       }
+
       if (target.error) {
         let e = target.error;
         if (e.code === 'E_BUILD_NO_PATTERN') {
@@ -193,6 +195,12 @@ async function main() {
           console.warn(`^^^ ${e.message} ^^^`);
         }
         throw e;
+      }
+
+      if (target.unknownTerms?.length) {
+        let msg = `${projInfo.name}: unrecognized term(s) '${target.unknownTerms}' in '${build.download}'`;
+        let err = new Error(msg);
+        throw err;
       }
 
       triples.push(target.triplet);

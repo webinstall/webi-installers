@@ -54,6 +54,54 @@ var TERMS_META = [
   'stable',
 ];
 
+/** @typedef {String} TripletString - {arch}-{vendor}-{os}-{libc} */
+/** @typedef {String} VersionString */
+/** @typedef {Object.<VersionString, Array<BuildAsset>>} PackagesByRelease */
+
+/**
+ * @typedef ProjectInfo
+ * @prop {Array<BuildAsset>} releases
+ * @prop {Array<BuildAsset>} packages
+ * @prop {Object.<TripletString, PackagesByRelease>} releasesByTriplet
+ * @prop {Array<import('./build-classifier/types.js').ArchString>} arches
+ * @prop {Array<import('./build-classifier/types.js').OsString>} oses
+ * @prop {Array<import('./build-classifier/types.js').LibcString>} libcs
+ * @prop {Array<String>} channels
+ * @prop {Array<String>} formats
+ * @prop {Array<String>} triplets
+ * @prop {Array<String>} versions
+ * @prop {Array<String>} lexvers
+ * @prop {Object.<String, String>} lexversMap
+ */
+
+/**
+ * @typedef BuildAsset
+ * @prop {String} name
+ * @prop {String} version
+ * @prop {Boolean} lts
+ * @prop {String} date
+ * @prop {String} arch
+ * @prop {String} os
+ * @prop {String} libc
+ * @prop {String} ext
+ * @prop {String} download
+ */
+
+/**
+ * @typedef VersionTarget
+ * @prop {String} version
+ * @prop {Boolean} lts
+ * @prop {String} channel
+ */
+
+/** @typedef {TargetTriplet & HostTargetPartial} HostTarget */
+/** @typedef {import('./build-classifier/types.js').TargetTriplet} TargetTriplet */
+/**
+ * @typedef HostTargetPartial
+ * @prop {String} target.triplet - os-vendor-arch-libc
+ * @prop {Error} target.error
+ */
+
 async function getPartialHeader(path) {
   let readme = `${path}/README.md`;
   let head = await readFirstBytes(readme).catch(function (err) {
@@ -72,7 +120,7 @@ async function readFirstBytes(path) {
   let start = 0;
   let n = 1024;
   let fh = await Fs.open(path, 'r');
-  let buf = new Buffer.alloc(n);
+  let buf = Buffer.alloc(n);
   let result = await fh.read(buf, start, n);
   let str = result.buffer.toString('utf8');
   await fh.close();
@@ -734,21 +782,35 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
   };
 
   /**
-   * @param {Object} target
-   * @param {String} target.os - linux, darwin, windows, *bsd
-   * @param {String} target.arch - arm64, x86_64, ppc64le
-   * @param {String} target.libc - none, libc, gnu, musl, bionic, msvc
-   * @param {String} target.triplet - os-vendor-arch-libc
-   * @param {Error} target.error
+   * @param {ProjectInfo} projInfo
+   * @param {HostTarget} hostTarget
    */
-  bc.findMatchingPackages = function (pkgInfo, hostTarget, verTarget) {
-    let matchInfo = bc._enumerateVersions(pkgInfo, verTarget.version);
+  bc.enumerateLatestVersions = function (projInfo, hostTarget) {
+    let lexPrefix = '';
+    let matchInfo = Lexver.matchSorted(projInfo.lexvers, lexPrefix);
+    let verInfo = {
+      default: projInfo.lexversMap[matchInfo.default],
+      previous: projInfo.lexversMap[matchInfo.previous],
+      stable: projInfo.lexversMap[matchInfo.stable],
+      latest: projInfo.lexversMap[matchInfo.latest],
+    };
+
+    return verInfo;
+  };
+
+  /**
+   * @param {ProjectInfo} projInfo
+   * @param {HostTarget} hostTarget
+   * @param {VersionTarget} verTarget
+   */
+  bc.findMatchingPackages = function (projInfo, hostTarget, verTarget) {
+    let matchInfo = bc._enumerateVersions(projInfo, verTarget.version);
     let triplets = bc._enumerateTriplets(hostTarget);
     //console.log('dbg: matchInfo', matchInfo);
 
     if (matchInfo) {
       for (let _triplet of triplets) {
-        let targetReleases = pkgInfo.releasesByTriplet[_triplet];
+        let targetReleases = projInfo.releasesByTriplet[_triplet];
         if (!targetReleases) {
           continue;
         }
@@ -756,7 +818,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
         // Make sure that these releases are the expected version
         // (ex: jq1.7 => darwin-arm64-libc, jq1.6 => darwin-x86_64-libc)
         for (let matchver of matchInfo.matches) {
-          let ver = pkgInfo.lexversMap[matchver] || matchver;
+          let ver = projInfo.lexversMap[matchver] || matchver;
           let packages = targetReleases[ver];
           if (!packages) {
             continue;
@@ -765,7 +827,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
           let match = {
             triplet: _triplet,
             packages: packages,
-            latest: pkgInfo.versions[0],
+            latest: projInfo.versions[0],
             version: ver,
             versions: matchInfo,
           };
@@ -777,7 +839,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     }
 
     for (let _triplet of triplets) {
-      let targetReleases = pkgInfo.releasesByTriplet[_triplet];
+      let targetReleases = projInfo.releasesByTriplet[_triplet];
       if (!targetReleases) {
         continue;
       }
@@ -796,7 +858,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
       // Make sure that these releases are the expected version
       // (ex: jq1.7 => darwin-arm64-libc, jq1.6 => darwin-x86_64-libc)
       for (let matchver of lexvers) {
-        let ver = pkgInfo.lexversMap[matchver] || matchver;
+        let ver = projInfo.lexversMap[matchver] || matchver;
         let packages = targetReleases[ver];
         //console.log('dbg: packages', packages);
         if (!packages) {
@@ -812,7 +874,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
           let match = {
             triplet: _triplet,
             packages: packages,
-            latest: pkgInfo.versions[0],
+            latest: projInfo.versions[0],
             version: ver,
             versions: matchInfo,
           };
@@ -831,7 +893,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
         let match = {
           triplet: _triplet,
           packages: packages,
-          latest: pkgInfo.versions[0],
+          latest: projInfo.versions[0],
           version: ver,
           versions: matchInfo,
         };
@@ -878,12 +940,12 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     return triplets;
   };
 
-  bc._enumerateVersions = function (pkgInfo, ver) {
+  bc._enumerateVersions = function (projInfo, ver) {
     if (!ver) {
       return null;
     }
     let lexPrefix = Lexver.parsePrefix(ver);
-    let matchInfo = Lexver.matchSorted(pkgInfo.lexvers, lexPrefix);
+    let matchInfo = Lexver.matchSorted(projInfo.lexvers, lexPrefix);
 
     return matchInfo;
   };

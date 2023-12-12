@@ -32,7 +32,7 @@ if (/\b-?-h(elp)?\b/.test(process.argv.join(' '))) {
 var os = require('os');
 var fs = require('fs');
 var path = require('path');
-var Releases = require('./transform-releases.js');
+var Builds = require('./builds.js');
 var Installers = require('./installers.js');
 var ServeInstaller = require('./serve-installer.js');
 
@@ -65,7 +65,8 @@ console.info('Has the necessary files?');
   });
 
 console.info('');
-Releases.get(path.join(process.cwd(), pkgdir)).then(async function (all) {
+let projName = pkgdir.split('/').filter(Boolean).pop();
+Builds.getPackage({ name: projName }).then(async function (/*projInfo*/) {
   var pkgname = path.basename(pkgdir.replace(/\/$/, ''));
   var nodeOs = os.platform();
   var nodeOsRelease = os.release();
@@ -82,8 +83,8 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(async function (all) {
   var formats = ['exe', 'xz', 'tar', 'zip', 'git'];
 
   let [rel, opts] = await ServeInstaller.helper({
-    ua: `${nodeOs}/${nodeOsRelease} ${nodeArch}/unknown ${nodeLibc}`,
-    pkg: pkgname,
+    unameAgent: `${nodeOs}/${nodeOsRelease} ${nodeArch}/unknown ${nodeLibc}`,
+    projectName: pkgname,
     tag: pkgtag || '',
     formats: formats,
     libc: nodeLibc,
