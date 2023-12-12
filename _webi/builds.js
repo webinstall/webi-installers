@@ -22,7 +22,10 @@ Builds.init = async function () {
 
   let dirs = await bc.getProjects();
   let projNames = Object.keys(dirs.valid);
-  for (let name of projNames) {
+
+  let parallel = 25;
+  await Parallel.run(parallel, projNames, getAll);
+  async function getAll(name) {
     void (await bc.getPackages({
       //Releases: Releases,
       name: name,

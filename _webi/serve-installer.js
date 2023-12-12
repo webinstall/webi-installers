@@ -2,17 +2,14 @@
 
 var InstallerServer = module.exports;
 
-var Fs = require('fs/promises');
-var path = require('path');
+let Fs = require('fs/promises');
+let Path = require('path');
 
-var uaDetect = require('./ua-detect.js');
-var Projects = require('./projects.js');
-var Installers = require('./installers.js');
+let HostTargets = require('./build-classifier/host-targets.js');
+let Builds = require('./builds.js');
+let Installers = require('./installers.js');
 
-// handlers caching and transformation, probably should be broken down
-var Releases = require('./transform-releases.js');
-
-InstallerServer.INSTALLERS_DIR = path.join(__dirname, '..');
+InstallerServer.INSTALLERS_DIR = Path.join(__dirname, '..');
 InstallerServer.serveInstaller = async function (
   baseurl,
   ua,
@@ -22,113 +19,191 @@ InstallerServer.serveInstaller = async function (
   formats,
   libc,
 ) {
-  let [rel, opts] = await InstallerServer.helper({
-    ua,
-    pkg,
+  let unameAgent = ua;
+  let projectName = pkg;
+  let [rel, tmplParams] = await InstallerServer.helper({
+    unameAgent,
+    projectName,
     tag,
     formats,
     libc,
   });
-  Object.assign(opts, {
+  Object.assign(tmplParams, {
     baseurl,
   });
 
-  var pkgdir = path.join(InstallerServer.INSTALLERS_DIR, pkg);
+  var pkgdir = Path.join(InstallerServer.INSTALLERS_DIR, projectName);
   if ('ps1' === ext) {
-    return Installers.renderPowerShell(pkgdir, rel, opts);
+    return Installers.renderPowerShell(pkgdir, rel, tmplParams);
   }
-  return Installers.renderBash(pkgdir, rel, opts);
+  return Installers.renderBash(pkgdir, rel, tmplParams);
 };
-InstallerServer.helper = async function ({ ua, pkg, tag, formats, libc }) {
-  // TODO put some of this in a middleware? or common function?
 
-  // TODO maybe move package/version/lts/channel detection into getReleases
-  var ver = tag.replace(/^v/, '');
-  var lts;
-  var channel;
+// TODO put some of this in a middleware? or common function?
+// TODO maybe move package/version/lts/channel detection into getReleases
+InstallerServer.helper = async function ({
+  unameAgent,
+  projectName,
+  tag,
+  formats,
+  libc,
+}) {
+  console.log(`dbg: Installer User-Agent: ${unameAgent}`);
 
-  switch (ver) {
-    case 'latest':
-      ver = '';
-      channel = 'stable';
-      break;
-    case 'lts':
-      lts = true;
-      channel = 'stable';
-      ver = '';
-      break;
-    case 'stable':
-      channel = 'stable';
-      ver = '';
-      break;
-    case 'beta':
-      channel = 'beta';
-      ver = '';
-      break;
-    case 'dev':
-      channel = 'dev';
-      ver = '';
-      break;
+  let releaseTarget = toReleaseTarget(tag);
+  let hostFormats = formats;
+  let terms = unameAgent.split(/[\s\/]+/g);
+  let hostTarget = {};
+  try {
+    void HostTargets.termsToTarget(hostTarget, terms);
+  } catch (e) {
+    // if we can't guarantee the results...
+    // "in the face of ambiguity, refuse the temptation to guess"
+    throw e;
+  }
+  console.log(`dbg: Installer Host Target:`);
+  console.log(hostTarget);
+
+  if (!hostTarget.os) {
+    throw new Error(`OS could not be identified by User-Agent '${unameAgent}'`);
   }
 
-  var myOs = uaDetect.os(ua);
-  var myArch = uaDetect.arch(ua);
-  var myLibc;
-  if (libc) {
-    myLibc = uaDetect.libc(libc);
+  console.log(`dbg: Get Project Installer Type for '${projectName}':`);
+  let proj = await Builds.getProjectType(projectName);
+  console.log(proj);
+
+  let validTypes = ['alias', 'selfhosted', 'valid'];
+  if (!validTypes.includes(proj.type)) {
+    throw new Error(
+      `'${projectName}' doesn't have an installer: '${proj.type}': '${proj.detail}'`,
+    );
   }
-  if (!myLibc) {
-    myLibc = uaDetect.libc(ua);
-  }
-  if (!myLibc) {
-    myLibc = 'libc';
+  if (proj.type === 'alias') {
+    projectName = proj.detail;
   }
 
-  let cfg = await Projects.get(pkg);
-  let releaseQuery = {
-    pkg: cfg.alias || pkg,
-    ver,
-    os: myOs,
-    arch: myArch,
-    libc: myLibc,
-    lts,
-    channel,
-    // TODO use formats for sorting, not exclusion
-    // (it's better to install xz or report an error to install zip)
-    formats,
-    limit: 1,
+  let projInfo = await Builds.getPackage({
+    name: projectName,
+    date: new Date(),
+  });
+  //console.log('projInfo', projInfo);
+
+  let buildTargetInfo = {
+    triplets: projInfo.triplets,
+    oses: projInfo.oses,
+    arches: projInfo.arches,
+    libcs: projInfo.libcs,
+    formats: projInfo.formats,
   };
 
-  let rels = await Releases.getReleases(releaseQuery);
-
-  var rel = rels.releases[0];
-  var opts = {
-    pkg: cfg.alias || pkg,
-    ver,
-    tag,
-    os: myOs,
-    arch: myArch,
-    libc: myLibc,
-    lts,
-    channel,
-    formats,
+  let tmplParams = {
+    pkg: projectName,
+    tag: tag,
+    os: hostTarget.os,
+    arch: hostTarget.arch,
+    libc: hostTarget.libc,
+    formats: hostFormats,
     limit: 1,
   };
-  rel = Object.assign(
-    {
-      oses: rels.oses,
-      arches: rels.arches,
-      libcs: rels.libcs,
-      formats: rels.formats,
-    },
-    rel,
+  let latest = projInfo.versions[0];
+  Object.assign(tmplParams, { latest });
+  Object.assign(tmplParams, releaseTarget);
+  console.log('tmplParams', tmplParams);
+
+  let errPackage = {
+    name: 'doesntexist.ext',
+    version: '0.0.0',
+    lts: '-',
+    channel: 'error',
+    date: '1970-01-01',
+    os: hostTarget.os || '-',
+    arch: hostTarget.arch || '-',
+    libc: hostTarget.libc || '-',
+    ext: 'err',
+    download: 'https://example.com/doesntexist.ext',
+    comment:
+      'No matches found. Could be bad or missing version info' +
+      ',' +
+      "Check query parameters. Should be something like '/api/releases/{package}@{version}.tab?os={macos|linux|windows|-}&arch={amd64|x86|aarch64|arm64|armv7l|-}&libc={musl|gnu|msvc|libc|static}&limit=10'",
+  };
+
+  let hasOs = projInfo.oses.includes(hostTarget.os);
+  if (!hasOs) {
+    let pkg1 = Object.assign(buildTargetInfo, errPackage);
+    return [pkg1, tmplParams];
+  }
+
+  let targetRelease = Builds.findMatchingPackages(
+    projInfo,
+    hostTarget,
+    releaseTarget,
   );
+  // { triplet: `${os}-${arch}-${libc}`, packages: targetPackages
+  // , latest: projInfo.versions[0], versions: matchInfo
+  // }
 
-  return [rel, opts];
+  if (!targetRelease?.packages) {
+    let pkg1 = Object.assign(buildTargetInfo, errPackage);
+    return [pkg1, tmplParams];
+  }
+
+  if (!targetRelease.packages) {
+    let pkg1 = Object.assign(buildTargetInfo, errPackage);
+    return [pkg1, tmplParams];
+  }
+
+  let buildPkg = Builds.selectPackage(targetRelease.packages, hostFormats);
+  let ext = buildPkg.ext || '.exe';
+  if (ext.startsWith('.')) {
+    ext = ext.slice(1);
+  }
+
+  let version = targetRelease.version;
+  if (version.startsWith('v')) {
+    version = version.slice(1);
+  }
+
+  buildPkg = Object.assign(buildTargetInfo, buildPkg, { ext, version });
+  console.log('dbg: buildPkg', buildPkg);
+  console.log('dbg: tmplParams', tmplParams);
+  return [buildPkg, tmplParams];
 };
 
-var CURL_PIPE_PS1_BOOT = path.join(__dirname, 'curl-pipe-bootstrap.tpl.ps1');
-var CURL_PIPE_SH_BOOT = path.join(__dirname, 'curl-pipe-bootstrap.tpl.sh');
+let channelNames = [
+  'stable',
+  // 'hotfix',
+  'latest',
+  'rc',
+  'preview',
+  'pre',
+  'dev',
+  'beta',
+  'alpha',
+];
+
+function toReleaseTarget(tag) {
+  tag = tag.replace(/^v/, '');
+
+  let releaseTarget = {
+    channel: '',
+    lts: false,
+    version: '',
+  };
+
+  if (tag === 'lts') {
+    releaseTarget.lts = true;
+    releaseTarget.channel = 'stable';
+  } else if (channelNames.includes(tag)) {
+    releaseTarget.channel = tag;
+  } else {
+    releaseTarget.version = tag;
+  }
+
+  return releaseTarget;
+}
+
+var CURL_PIPE_PS1_BOOT = Path.join(__dirname, 'curl-pipe-bootstrap.tpl.ps1');
+var CURL_PIPE_SH_BOOT = Path.join(__dirname, 'curl-pipe-bootstrap.tpl.sh');
 var BAD_SH_RE = /[<>'"`$\\]/;
 
 InstallerServer.getPosixCurlPipeBootstrap = async function ({
@@ -150,7 +225,6 @@ InstallerServer.getPosixCurlPipeBootstrap = async function ({
     let name = env[0];
     let value = env[1];
 
-    // TODO create REs once, in higher scope
     let envRe = new RegExp(
       `^[ \\t]*#?[ \\t]*(export[ \\t])?[ \\t]*(${name})=.*`,
       'm',
@@ -197,9 +271,6 @@ InstallerServer.getPwshCurlPipeBootstrap = async function ({
 
     let tplRe = new RegExp(`{{ (${name}) }}`, 'g');
     bootTxt = bootTxt.replace(tplRe, `${value}`);
-
-    // let envRe = new RegExp(`^[ \\t]*#?[ \\t]*($$${name})[ \\t]*=.*`, 'im');
-    // bootTxt = bootTxt.replace(envRe, `$$${name} = '${value}'`);
 
     let setRe = new RegExp(
       `(#[ \\t]*)?(\\$${name})[ \\t]*=[ \\t]['"].*['"][ \\t]`,
