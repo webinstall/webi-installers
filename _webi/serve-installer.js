@@ -74,9 +74,10 @@ InstallerServer.helper = async function ({
 
   let validTypes = ['alias', 'selfhosted', 'valid'];
   if (!validTypes.includes(proj.type)) {
-    throw new Error(
-      `'${projectName}' doesn't have an installer: '${proj.type}': '${proj.detail}'`,
-    );
+    let msg = `'${projectName}' doesn't have an installer: '${proj.type}': '${proj.detail}'`;
+    let err = new Error(msg);
+    err.code = 'ENOENT';
+    throw err;
   }
   if (proj.type === 'alias') {
     projectName = proj.detail;
