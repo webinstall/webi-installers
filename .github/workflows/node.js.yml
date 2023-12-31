@@ -23,6 +23,9 @@ jobs:
           sh ./_scripts/install-ci-deps
           echo "${HOME}/.local/bin" >> $GITHUB_PATH
           echo "${HOME}/.local/opt/pwsh" >> $GITHUB_PATH
+      - run: |
+          git submodule init
+          git submodule update
       - run: shfmt --version
       - run: shellcheck -V
       - run: node --version
