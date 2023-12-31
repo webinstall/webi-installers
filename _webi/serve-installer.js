@@ -148,11 +148,6 @@ InstallerServer.helper = async function ({
     return [pkg1, tmplParams];
   }
 
-  if (!targetRelease.packages) {
-    let pkg1 = Object.assign(buildTargetInfo, errPackage);
-    return [pkg1, tmplParams];
-  }
-
   let buildPkg = Builds.selectPackage(targetRelease.packages, hostFormats);
   let ext = buildPkg.ext || '.exe';
   if (ext.startsWith('.')) {
