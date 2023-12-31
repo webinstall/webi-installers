@@ -81,20 +81,29 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(async function (all) {
   }
   var formats = ['exe', 'xz', 'tar', 'zip', 'git'];
 
+  let unameAgent = `${nodeOs}/${nodeOsRelease} ${nodeArch}/unknown ${nodeLibc}`;
+  console.log(`DEBUG: ${unameAgent}`);
   let [rel, opts] = await ServeInstaller.helper({
-    ua: `${nodeOs}/${nodeOsRelease} ${nodeArch}/unknown ${nodeLibc}`,
-    pkg: pkgname,
+    unameAgent: unameAgent,
+    projectName: pkgname,
     tag: pkgtag || '',
     formats: formats,
     libc: nodeLibc,
   });
+  console.log('DEBUG opts:');
+  console.log(opts);
   Object.assign(
+    rel,
     {
-      ver: '',
+      version: '{test-version}',
+      git_tag: '{test-git-tag}',
+      git_commit_hash: '{test-git-commit-hash}',
       lts: null,
-      channel: '',
-      os: '',
-      arch: '',
+      channel: '{test-channel}',
+      date: '1970-01-01T00:00:00Z',
+      os: '{test-os}',
+      arch: '{test-arch}',
+      ext: '{test-ext}',
       limit: 0,
     },
     opts,

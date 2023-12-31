@@ -14,16 +14,11 @@ function padScript(txt) {
 
 var BAD_SH_RE = /[<>'"`$\\]/;
 Installers.renderBash = async function (
-  pkgdir,
-  rel,
-  { baseurl, pkg, tag, ver, os = '', arch = '', libc = '', formats, latest },
+  baseurl,
+  posixTemplate,
+  buildRequest,
+  buildMatch,
 ) {
-  if (!Array.isArray(formats)) {
-    formats = [];
-  }
-  if (!tag) {
-    tag = '';
-  }
   let installTxt = await Fs.readFile(path.join(pkgdir, 'install.sh'), 'utf8');
   installTxt = padScript(installTxt);
   var vers = rel.version.split('.');
@@ -131,17 +126,18 @@ Installers.renderBash = async function (
   return tplTxt;
 };
 
+/**
+ * @param {String} pkgdir
+ * @param {String} baseurl
+ * @param {BuildRequest} buildRequest
+ * @param {BuildMatch} buildMatch
+ */
 Installers.renderPowerShell = async function (
-  pkgdir,
-  rel,
-  { baseurl, pkg, tag, ver, os, arch, libc = '', formats },
+  baseurl,
+  pwshTemplate,
+  buildRequest,
+  buildMatch,
 ) {
-  if (!Array.isArray(formats)) {
-    formats = [];
-  }
-  if (!tag) {
-    tag = '';
-  }
   let installTxt = await Fs.readFile(path.join(pkgdir, 'install.ps1'), 'utf8');
   installTxt = padScript(installTxt);
   /*

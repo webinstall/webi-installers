@@ -10,27 +10,53 @@ let Builds = require('./builds.js');
 let Installers = require('./installers.js');
 
 InstallerServer.INSTALLERS_DIR = Path.join(__dirname, '..');
+
+/**
+ * @typedef BuildRequest
+ * @prop {String} unameAgent
+ * @prop {String} projectName
+ * @prop {String} tag
+ * @prop {Array<String>} formats
+ */
+
 InstallerServer.serveInstaller = async function (
   baseurl,
-  ua,
-  pkg,
+  ua, // TODO nix
+  unameAgent,
+  pkg, // TODO nix
+  projectName,
   tag,
-  ext,
+  ext, // TODO nix
+  installerType,
   formats,
-  libc,
 ) {
-  let unameAgent = ua;
-  let projectName = pkg;
-  let [rel, tmplParams] = await InstallerServer.helper({
-    unameAgent,
+  if (!unameAgent) {
+    unameAgent = ua;
+  }
+  if (!projectName) {
+    projectName = pkg;
+  }
+  if (!installerType) {
+    installerType = ext;
+  }
+  let buildRequest = {
     projectName,
     tag,
+    unameAgent,
     formats,
-    libc,
-  });
-  Object.assign(tmplParams, {
-    baseurl,
-  });
+  };
+
+  let hostTarget = {};
+  let buildMatch;
+  {
+    let terms = unameAgent.split(/[\s\/]+/g);
+    void HostTargets.termsToTarget(hostTarget, terms);
+    buildMatch = await InstallerServer.getBuild(buildRequest, hostTarget);
+  }
+  Object.assign(tmplParams, { baseurl, });
+
+  console.log('dbg: buildPkg', rel);
+  console.log('dbg: tmplParams', tmplParams);
 
   var pkgdir = Path.join(InstallerServer.INSTALLERS_DIR, projectName);
   if ('ps1' === ext) {
@@ -41,12 +67,15 @@ InstallerServer.serveInstaller = async function (
 
 // TODO put some of this in a middleware? or common function?
 // TODO maybe move package/version/lts/channel detection into getReleases
+/**
+ * @param {BuildRequest}
+ * @returns {BuildMatch}
+ */
 InstallerServer.helper = async function ({
   unameAgent,
   projectName,
   tag,
   formats,
-  libc,
 }) {
   console.log(`dbg: Installer User-Agent: ${unameAgent}`);
 
@@ -162,10 +191,11 @@ InstallerServer.helper = async function ({
   if (version.startsWith('v')) {
     version = version.slice(1);
   }
+  let ver = version;
 
-  buildPkg = Object.assign(buildTargetInfo, buildPkg, { ext, version });
-  console.log('dbg: buildPkg', buildPkg);
-  console.log('dbg: tmplParams', tmplParams);
+  buildPkg = Object.assign(buildTargetInfo, buildPkg, { ext, version, tag });
+  Object.assign(tmplParams, { tag, ext, ver, version });
+  //console.log(`VERSION: ${version}`, ext);
   return [buildPkg, tmplParams];
 };
 
