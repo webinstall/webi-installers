@@ -83,20 +83,6 @@ InstallerServer.helper = async function ({
     projectName = proj.detail;
   }
 
-  let projInfo = await Builds.getPackage({
-    name: projectName,
-    date: new Date(),
-  });
-  //console.log('projInfo', projInfo);
-
-  let buildTargetInfo = {
-    triplets: projInfo.triplets,
-    oses: projInfo.oses,
-    arches: projInfo.arches,
-    libcs: projInfo.libcs,
-    formats: projInfo.formats,
-  };
-
   let tmplParams = {
     pkg: projectName,
     tag: tag,
@@ -106,8 +92,6 @@ InstallerServer.helper = async function ({
     formats: hostFormats,
     limit: 1,
   };
-  let latest = projInfo.versions[0];
-  Object.assign(tmplParams, { latest });
   Object.assign(tmplParams, releaseTarget);
   console.log('tmplParams', tmplParams);
 
@@ -126,6 +110,26 @@ InstallerServer.helper = async function ({
       'No matches found. Could be bad or missing version info' +
       ',' +
       "Check query parameters. Should be something like '/api/releases/{package}@{version}.tab?os={macos|linux|windows|-}&arch={amd64|x86|aarch64|arm64|armv7l|-}&libc={musl|gnu|msvc|libc|static}&limit=10'",
+  };
+
+  if (proj.type === 'selfhosted') {
+    return [errPackage, tmplParams];
+  }
+
+  let projInfo = await Builds.getPackage({
+    name: projectName,
+    date: new Date(),
+  });
+  let latest = projInfo.versions[0];
+  Object.assign(tmplParams, { latest });
+  //console.log('projInfo', projInfo);
+
+  let buildTargetInfo = {
+    triplets: projInfo.triplets,
+    oses: projInfo.oses,
+    arches: projInfo.arches,
+    libcs: projInfo.libcs,
+    formats: projInfo.formats,
   };
 
   let hasOs = projInfo.oses.includes(hostTarget.os);
