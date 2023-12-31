@@ -134,6 +134,9 @@ InstallerServer.helper = async function ({
 
   let hasOs = projInfo.oses.includes(hostTarget.os);
   if (!hasOs) {
+    hasOs = projInfo.oses.includes('ANYOS');
+  }
+  if (!hasOs) {
     let pkg1 = Object.assign(buildTargetInfo, errPackage);
     return [pkg1, tmplParams];
   }
