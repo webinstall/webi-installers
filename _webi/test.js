@@ -82,11 +82,10 @@ Releases.get(path.join(process.cwd(), pkgdir)).then(async function (all) {
   var formats = ['exe', 'xz', 'tar', 'zip', 'git'];
 
   let [rel, opts] = await ServeInstaller.helper({
-    unameAgent: `${nodeOs}/${nodeOsRelease} ${nodeArch}/unknown ${nodeLibc}`,
     projectName: pkgname,
     tag: pkgtag || '',
+    unameAgent: `${nodeOs}/${nodeOsRelease} ${nodeArch}/unknown ${nodeLibc}`,
     formats: formats,
-    libc: nodeLibc,
   });
   Object.assign(
     {

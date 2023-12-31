@@ -17,16 +17,14 @@ InstallerServer.serveInstaller = async function (
   tag,
   ext,
   formats,
-  libc,
 ) {
   let unameAgent = ua;
   let projectName = pkg;
   let [rel, tmplParams] = await InstallerServer.helper({
-    unameAgent,
     projectName,
     tag,
+    unameAgent,
     formats,
-    libc,
   });
   Object.assign(tmplParams, {
     baseurl,
@@ -46,7 +44,6 @@ InstallerServer.helper = async function ({
   projectName,
   tag,
   formats,
-  libc,
 }) {
   console.log(`dbg: Installer User-Agent: ${unameAgent}`);
 
