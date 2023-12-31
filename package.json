@@ -7,18 +7,20 @@
   "scripts": {
     "bump": "npm version -m \"chore(release): bump to v%s\"",
     "fmt": "npm run prettier && npm run shfmt && npm run pwsh-fmt",
-    "lint": "npm run shellcheck && npm run jshint && npm run pwsh-lint",
+    "lint": "npm run shellcheck && npm run jshint && npm run pwsh-lint && npm run tsc",
     "prepare": "npm run tooling-init && npm run git-hooks-init",
     "test": "node _webi/test.js ./node/",
     "----": "------------------------------------",
     "git-hooks-init": "node ./_scripts/git-hooks-init.js",
-    "jshint": "npx -p jshint@2.x -- jshint -c ./.jshintrc --exclude 'node_modules/**/*' */*.js */*/*.js",
+    "jshint": "npx -p jshint@2.x -- jshint -c ./.jshintrc --exclude 'node_modules/**/*' *.js */*.js",
     "prettier": "npx -p prettier@3.x -- prettier -w '**/*.{js,md,html}'",
     "pwsh-fmt": "pwsh ./_scripts/pwsh-fmt.ps1",
     "pwsh-lint": "pwsh ./_scripts/pwsh-lint.ps1",
     "shellcheck": "shellcheck -s sh -S style --exclude=SC2154,SC2034 */*.sh",
     "shfmt": "shfmt -w -i 4 -sr -ci -s ./",
-    "tooling-init": "node ./_scripts/tooling-init.js"
+    "tsc": "npx -p typescript@5.x -- tsc -p ./jsconfig.json",
+    "tooling-init": "node ./_scripts/tooling-init.js",
+    "prepublish": "npx -p jswt@1.x -- reexport"
   },
   "repository": {
     "type": "git",
