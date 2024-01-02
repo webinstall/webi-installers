@@ -17,6 +17,9 @@ install:
 ```text
 ~/.config/envman/PATH.env
 ~/.local/opt/node/
+~/.node/
+~/.node_repl_history
+~/.npm/
 ~/.npmrc
 ```
 
