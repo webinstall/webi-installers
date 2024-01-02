@@ -594,9 +594,8 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
 
   /**
    * @param {ProjectInfo} projInfo
-   * @param {HostTarget} hostTarget
    */
-  bc.enumerateLatestVersions = function (projInfo, hostTarget) {
+  bc.enumerateLatestVersions = function (projInfo) {
     let lexPrefix = '';
     let matchInfo = Lexver.matchSorted(projInfo.lexvers, lexPrefix);
     let verInfo = {
