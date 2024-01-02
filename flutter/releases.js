@@ -82,6 +82,7 @@ module.exports = async function (request) {
         date: asset.release_date.replace(/T.*/, ''),
         //sha256: asset.sha256,
         download: `${osBaseUrl}/${asset.archive}`,
+        _filename: asset.archive,
       });
     }
   }
