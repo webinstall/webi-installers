@@ -1,7 +1,7 @@
 {
   "name": "@webinstall/webi-installers",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "webinstall script repository",
   "main": "_webi/",
   "scripts": {
