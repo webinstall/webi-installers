@@ -32,4 +32,6 @@ jobs:
       - run: npm run fmt
       - run: npm ci
       - run: npm run lint
-      - run: npm run test
+      - env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: npm run test
