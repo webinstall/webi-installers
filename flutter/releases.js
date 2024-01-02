@@ -66,10 +66,10 @@ module.exports = async function (request) {
       json: true,
     });
 
-    let body = resp.body;
-    all.download = `${body.base_url}/{{ download }}`;
+    let osBaseUrl = resp.body.base_url;
+    let osReleases = resp.body.releases;
 
-    for (let asset of body.releases) {
+    for (let asset of osReleases) {
       if (!channelMap[asset.channel]) {
         channelMap[asset.channel] = true;
       }
@@ -81,7 +81,7 @@ module.exports = async function (request) {
         channel: asset.channel,
         date: asset.release_date.replace(/T.*/, ''),
         //sha256: asset.sha256,
-        download: asset.archive,
+        download: `${osBaseUrl}/${asset.archive}`,
       });
     }
   }
