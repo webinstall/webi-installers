@@ -36,7 +36,7 @@ __bootstrap_webi() {
         fi
     fi
 
-    WEBI_PKG_PATH="${WEBI_DOWNLOAD_DIR}/webi/${PKG_NAME:-error}/${WEBI_VERSION:-latest}"
+    WEBI_PKG_PATH="${WEBI_DOWNLOAD_DIR}/webi/${PKG_NAME:-error}/${WEBI_VERSION:-stable}"
 
     # get the special formatted version
     # (i.e. "go is go1.14" while node is "node v12.10.8")
@@ -127,7 +127,10 @@ __bootstrap_webi() {
             echo ""
             echo "    $(t_err "Error: no '${PKG_NAME:-"Unknown Package"}@${WEBI_TAG:-"Unknown Tag"}' release for '${WEBI_OS:-"Unknown OS"}' (${WEBI_LIBC:-"Unknown Libc"}) on '${WEBI_ARCH:-"Unknown CPU"}' as one of '${WEBI_FORMATS:-"Unknown File Type"}'")"
             echo ""
-            echo "        Latest Version: ${PKG_LATEST}"
+            echo "        Latest Stable: ${PKG_STABLE}"
+            if test "${PKG_LATEST}" != "${PKG_STABLE}"; then
+                echo "        Next Version: ${PKG_LATEST}"
+            fi
             echo "        CPUs: $PKG_ARCHES"
             echo "        OSes: $PKG_OSES"
             echo "        libcs: $PKG_LIBCS"

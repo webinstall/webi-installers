@@ -120,8 +120,7 @@ InstallerServer.helper = async function ({
     name: projectName,
     date: new Date(),
   });
-  let latest = projInfo.versions[0];
-  Object.assign(tmplParams, { latest });
+  let latestVersions = Builds.enumerateLatestVersions(projInfo);
   //console.log('projInfo', projInfo);
 
   let buildTargetInfo = {
@@ -130,6 +129,8 @@ InstallerServer.helper = async function ({
     arches: projInfo.arches,
     libcs: projInfo.libcs,
     formats: projInfo.formats,
+    latest: latestVersions.latest,
+    stable: latestVersions.stable,
   };
 
   // TODO .findMatchingPackages() should probably account for this
