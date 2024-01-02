@@ -415,6 +415,10 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
         continue;
       }
 
+      if (!build.name) {
+        build.name = build.download.replace(/.*\//, '');
+      }
+
       build.target = buildTarget;
       meta.packages.push(build);
     }
