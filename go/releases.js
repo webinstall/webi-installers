@@ -44,7 +44,7 @@ function getAllReleases(request) {
     var goReleases = resp.body;
     var all = {
       releases: [],
-      download: 'https://dl.google.com/go/{{ download }}',
+      download: '',
     };
 
     goReleases.forEach((release) => {
@@ -77,7 +77,7 @@ function getAllReleases(request) {
           arch: arch,
           ext: '', // let normalize run the split/test/join
           hash: '-', // not ready to standardize this yet
-          download: filename,
+          download: `https://dl.google.com/go/${filename}`,
         });
       });
     });
