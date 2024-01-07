@@ -130,6 +130,8 @@ async function readFirstBytes(path) {
 
 let promises = {};
 async function getLatestBuilds(Releases, installersDir, cacheDir, name, date) {
+  console.info(`[INFO] getLatestBuilds: ${name}`);
+
   if (!Releases) {
     Releases = require(`${installersDir}/${name}/releases.js`);
   }
@@ -323,17 +325,21 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     let isoDate = date.toISOString();
     let yearMonth = isoDate.slice(0, 7);
     let dataFile = `${cacheDir}/${yearMonth}/${name}.json`;
+    let tsFile = `${cacheDir}/${yearMonth}/${name}.updated.txt`;
 
-    // let secondsStr = await Fs.readFile(tsFile, 'ascii').catch(function (err) {
-    //   if (err.code !== 'ENOENT') {
-    //     throw err;
-    //   }
-    //   return '0';
-    // });
-    // secondsStr = secondsStr.trim();
-    // let seconds = parseFloat(secondsStr) || 0;
-
-    // let age = now - seconds;
+    let tsDate;
+    {
+      let secondsStr = await Fs.readFile(tsFile, 'ascii').catch(function (err) {
+        if (err.code !== 'ENOENT') {
+          throw err;
+        }
+        return '0';
+      });
+      secondsStr = secondsStr.trim();
+      let seconds = parseFloat(secondsStr) || 0;
+      let ms = seconds * 1000;
+      tsDate = new Date(ms);
+    }
 
     let projInfo = bc._caches[name];
 
@@ -375,11 +381,14 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     if (!projInfo) {
       projInfo = await getLatestBuilds(Releases, installersDir, cacheDir, name);
     }
+    transformAndUpdate(name, projInfo, meta, tsDate);
 
     process.nextTick(async function () {
       let now = date.valueOf();
       let age = now - projInfo.updated;
-      if (age < bc._staleAge) {
+
+      let fresh = age < bc._staleAge;
+      if (fresh) {
         return;
       }
 
@@ -387,7 +396,6 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
       transformAndUpdate(name, projInfo, meta, date);
     });
 
-    transformAndUpdate(name, projInfo, meta, date);
     return projInfo;
   };
 
@@ -395,6 +403,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     meta.packages = [];
 
     let updated = date.valueOf();
+
     Object.assign(projInfo, { name, updated }, meta);
     for (let build of projInfo.releases) {
       let buildTarget = bc.classify(projInfo, build);
@@ -503,6 +512,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
       name: name,
       date: new Date(),
     }));
+    console.info(`[INFO] freshenRandomPackage: ${name}`);
 
     let hour = 60 * 60 * 1000;
     let delay = minDelay;

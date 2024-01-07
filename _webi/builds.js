@@ -20,7 +20,7 @@ bc.freshenRandomPackage(600 * 1000);
 Builds.init = async function () {
   bc.freshenRandomPackage(600 * 1000);
 
-  let dirs = await bc.getProjects();
+  let dirs = await bc.getProjectsByType();
   let projNames = Object.keys(dirs.valid);
 
   let parallel = 25;
