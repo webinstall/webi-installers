@@ -1,7 +1,6 @@
 #!/bin/sh
 set -e
 set -u
-#set -x
 
 fn_install_webi_essentials_macos() { (
     # streamline the output to be pretty
@@ -235,7 +234,7 @@ _install_webi_essentials_webi() { (
     cmd_sudo="${1}"
     b_pkgs="${2}"
 
-    if test "${b_pkgs}" == 'xz'; then
+    if test "${b_pkgs}" = 'xz'; then
         ~/.local/bin/webi xz
         return 0
     fi
