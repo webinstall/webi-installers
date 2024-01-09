@@ -7,22 +7,6 @@ tagline: |
 
 To update run `pyenv update`.
 
-### Files
-
-These are the files / directories that are created and/or modified with this
-install:
-
-```sh
-~/.config/envman/PATH.env
-~/.pyenv/bin/
-~/.pyenv/shims/
-
-# pyenv also loads shell hooks via
-~/.bashrc
-~/.config/fish/config.fish
-~/.zshrc
-```
-
 ### How to Install pyenv on macOS
 
 Install Xcode tools first:
@@ -38,11 +22,21 @@ Make sure that you already have the necessary build tools installed:
 ```sh
 # required
 sudo apt update
-sudo apt install -y build-essential zlib1g-dev libssl-dev
+sudo apt install -y build-essential zlib1g-dev libssl-dev \
+                    libreadline-dev liblzma-dev
 
 # recommended
-sudo apt install -y libreadline-dev libsqlite3-dev \
-                    libffi-dev libbz2-dev liblzma-dev
+sudo apt install -y libsqlite3-dev libffi-dev libbz2-dev
+```
+
+### How to Install pyenv on Alpine
+
+```sh
+sudo apk add \
+    bash \
+    build-base \
+    git \
+    zlib-dev
 ```
 
 ## Cheat Sheet
@@ -80,6 +74,34 @@ Revert back to your system python:
 
 ```sh
 pyenv global system
+```
+
+## Table of Contents
+
+- Files
+- List Installable Versions
+- Install a Specific Version
+- Install Local to a Project
+- `virtualenv`s
+  - List Existing
+  - Create New
+  - Activate / Deactivate
+  - Delete
+
+### Files
+
+These are the files / directories that are created and/or modified with this
+install:
+
+```sh
+~/.config/envman/PATH.env
+~/.pyenv/bin/
+~/.pyenv/shims/
+
+# pyenv also loads shell hooks via
+~/.bashrc
+~/.config/fish/config.fish
+~/.zshrc
 ```
 
 ### List all available python version
