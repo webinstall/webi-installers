@@ -6,15 +6,23 @@ main() { (
     sed '1,/^#~\/.local\/bin\/brew-updater/d' "${0}" > ~/.local/bin/brew-update-hourly
     chmod a+x ~/.local/bin/brew-update-hourly
 
+    echo "Checking for serviceman..."
+    if ! command -v serviceman > /dev/null; then
+        "$HOME/.local/bin/webi" serviceman
+        export PATH="$HOME/.local/bin:$PATH"
+        serviceman --version
+    fi
+
     env PATH="$PATH" serviceman add --user \
         --workdir ~/.local/opt/brew/ \
         --name sh.brew.updater -- \
         ~/.local/bin/brew-update-hourly
 ); }
 
-if main; then
-    exit 0
+if ! main; then
+    exit 1
 fi
+exit 0
 
 #~/.local/bin/brew-updater
 #!/bin/sh
