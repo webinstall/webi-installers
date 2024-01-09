@@ -4,6 +4,13 @@ __init_pyenv() {
     set -e
     set -u
 
+    b_os="$(uname -s)"
+    if test "${b_os}" = 'Darwin'; then
+        if ! test -x /Library/Developer/CommandLineTools/usr/bin/git; then
+            "$HOME/.local/bin/webi" commandlinetools
+        fi
+    fi
+
     curl -fsSL https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 
     if [ ! -f ~/.bashrc ] || ! grep -q 'pyenv init' ~/.bashrc; then
