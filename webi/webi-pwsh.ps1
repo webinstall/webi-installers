@@ -199,7 +199,7 @@ $UrlParams = "formats=zip,exe,tar,git&libc=msvc"
 $PkgInstallPwsh = "$HOME\.local\tmp\$exename.install.ps1"
 Invoke-DownloadUrl -Force -URL $PKG_URL -Params $UrlParams -Path $PkgInstallPwsh
 
-powershell $HOME\.local\tmp\${exename}.install.ps1
+powershell -File "$HOME\.local\tmp\${exename}.install.ps1"
 
 IF ($IsWebiParent) {
     Write-Host ""

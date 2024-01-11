@@ -13,7 +13,7 @@ function Repair-MissingCommand {
         Return
     }
 
-    & $HOME\.local\bin\webi-pwsh.ps1 $Package
+    & "$HOME\.local\bin\webi-pwsh.ps1" $Package
     $null = Sync-EnvPath
 }
 

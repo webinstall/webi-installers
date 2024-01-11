@@ -15,7 +15,7 @@ function Repair-MissingCommand {
         Return
     }
 
-    & $HOME\.local\bin\webi-pwsh.ps1 $Package
+    & "$HOME\.local\bin\webi-pwsh.ps1" $Package
     $null = Sync-EnvPath
 }
 
@@ -47,7 +47,7 @@ function Install-PwshEssential {
     Repair-MissingCommand -Name "PowerShell Core" -Package "pwsh" -Command "pwsh"
 
     # Fetch PSScriptAnalyzer (fmt, lint, fix)
-    & $HOME\.local\bin\webi-pwsh.ps1 psscriptanalyzer
+    & "$HOME\.local\bin\webi-pwsh.ps1" psscriptanalyzer
 
     # Fetch shorthand commands to fmt, lint, & fix
     $ScriptNames = , "pwsh-fmt", "pwsh-fix", "pwsh-lint"
