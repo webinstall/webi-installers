@@ -45,7 +45,7 @@ IF (!(Test-Path -Path "$pkg_src_cmd")) {
     # Settle unpacked archive into place
     Write-Output "Install Location: $pkg_src_cmd"
     New-Item "$pkg_src_bin" -ItemType Directory -Force | Out-Null
-    Move-Item -Path "b\*\release\sd.exe" -Destination "$pkg_src_bin"
+    Move-Item -Path "sd-*\sd.exe" -Destination "$pkg_src_bin"
     # Exit tmp
     Pop-Location
 }
