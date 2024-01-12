@@ -24,7 +24,7 @@ install:
 ~/.config/envman/PATH.env
 ~/.dashcore/dash.conf
 ~/.dashcore/wallets/
-~/.local/bin/bin/dashd-hd-service-install
+~/.local/bin/dashd-hd-service-install
 ~/.local/opt/dashcore/
 /mnt/<BLK_VOL>/dashcore/
 ```
