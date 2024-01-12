@@ -17,7 +17,7 @@ fn_usage() { (
 ); }
 
 fn_datadir_help() { (
-    my_vol="${1:-}"
+    my_vol="${1}"
     my_user="$(
         id -n -u
     )"
@@ -25,6 +25,7 @@ fn_datadir_help() { (
         id -n -g
     )"
 
+    my_mount="$(dirname "${my_vol}")"
     echo >&2 ""
     echo >&2 "ERROR"
     echo >&2 "        '${my_vol}' is not writable"
@@ -32,8 +33,8 @@ fn_datadir_help() { (
     echo >&2 "SOLUTION"
     echo >&2 "        1. Mount a large (50gb+) volume"
     echo >&2 ""
-    echo >&2 "              sudo mkdir -p /mnt/EXAMPLE"
-    echo >&2 "              sudo mount /dev/sdx1 /mnt/EXAMPLE"
+    echo >&2 "              sudo mkdir -p ${my_mount}"
+    echo >&2 "              sudo mount /dev/sdx1 ${my_mount}"
     echo >&2 ""
     echo >&2 "        2. Create a 'dashcore' inside of it"
     echo >&2 ""
