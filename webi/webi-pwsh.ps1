@@ -133,7 +133,7 @@ Push-Location $Env:USERPROFILE
 New-Item -Path "$HOME\.local\bin\" -ItemType Directory -Force | Out-Null
 
 # See note on Set-ExecutionPolicy above
-Set-Content -Path "$HOME\.local\bin\webi.bat" -Value "@echo off`r`npowershell -ExecutionPolicy Bypass %USERPROFILE%\.local\bin\webi-pwsh.ps1 %*"
+Set-Content -Path "$HOME\.local\bin\webi.bat" -Value "@echo off`r`npowershell -ExecutionPolicy Bypass -File `"%USERPROFILE%\.local\bin\webi-pwsh.ps1`" %*"
 # Backwards-compat bugfix: remove old webi-pwsh.ps1 location
 Remove-Item -Path "$HOME\.local\bin\webi.ps1" -Recurse -ErrorAction Ignore
 if (!(Test-Path -Path "$HOME\.local\opt")) {
