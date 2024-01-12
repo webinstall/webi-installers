@@ -111,7 +111,7 @@ fn_srv_install() { (
         echo "Installing 'serviceman'..."
         echo ""
         {
-            curl -fsSL "${WEBI_HOST}/serviceman" | sh
+            "$HOME/.local/bin/webi" serviceman
         } > /dev/null
 
         # shellcheck disable=SC1090
