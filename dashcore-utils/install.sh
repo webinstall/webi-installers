@@ -5,32 +5,38 @@ set -u
 __install_dashcore_utils() {
     webi_download \
         "$WEBI_HOST/packages/dashcore-utils/dash-qt-hd" \
-        "$HOME/.local/bin/dash-qt-hd"
+        "$HOME/.local/bin/dash-qt-hd" \
+        "dash-qt-hd"
     chmod a+x "$HOME/.local/bin/dash-qt-hd"
 
     webi_download \
         "$WEBI_HOST/packages/dashcore-utils/dash-qt-testnet" \
-        "$HOME/.local/bin/dash-qt-testnet"
+        "$HOME/.local/bin/dash-qt-testnet" \
+        "dash-qt-testnet"
     chmod a+x "$HOME/.local/bin/dash-qt-testnet"
 
     webi_download \
         "$WEBI_HOST/packages/dashcore-utils/dashd-hd" \
-        "$HOME/.local/bin/dashd-hd"
+        "$HOME/.local/bin/dashd-hd" \
+        "dashd-hd"
     chmod a+x "$HOME/.local/bin/dashd-hd"
 
     webi_download \
         "$WEBI_HOST/packages/dashcore-utils/dashd-testnet" \
-        "$HOME/.local/bin/dashd-testnet"
+        "$HOME/.local/bin/dashd-testnet" \
+        "dashd-testnet"
     chmod a+x "$HOME/.local/bin/dashd-testnet"
 
     webi_download \
         "$WEBI_HOST/packages/dashcore-utils/dashd-hd-service-install" \
-        "$HOME/.local/bin/dashd-hd-service-install"
+        "$HOME/.local/bin/dashd-hd-service-install" \
+        "dashd-hd-service-install"
     chmod a+x "$HOME/.local/bin/dashd-hd-service-install"
 
     webi_download \
         "$WEBI_HOST/packages/dashcore-utils/dashd-testnet-service-install" \
-        "$HOME/.local/bin/dashd-testnet-service-install"
+        "$HOME/.local/bin/dashd-testnet-service-install" \
+        "dashd-testnet-service-install"
     chmod a+x "$HOME/.local/bin/dashd-testnet-service-install"
 
     if ! test -e "${HOME}/.dashcore"; then
@@ -44,7 +50,8 @@ __install_dashcore_utils() {
 
     webi_download \
         "$WEBI_HOST/packages/dashcore-utils/dash.example.conf" \
-        "$HOME/.dashcore/dash.example.conf"
+        "$HOME/.dashcore/dash.example.conf" \
+        "dash.example.conf"
 
     if ! grep -q rpcuser ~/.dashcore/dash.conf; then
         cat ~/.dashcore/dash.example.conf >> ~/.dashcore/dash.conf
