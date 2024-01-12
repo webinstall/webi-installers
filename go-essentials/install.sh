@@ -3,7 +3,7 @@ set -e
 set -u
 
 __run_go_essentials() {
-    if ! command -v go 2> /dev/null; then
+    if ! command -v go > /dev/null; then
         "$HOME/.local/bin/webi" "go@${WEBI_TAG}"
     fi
 
