@@ -746,6 +746,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     exts.push('.git');
 
     // Fallbacks
+    // (we include everything to bubble an extract error over not found)
     exts.push('.app.zip');
     exts.push('.dmg');
     exts.push('.pkg');

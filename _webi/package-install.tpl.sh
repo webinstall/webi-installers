@@ -200,7 +200,7 @@ __bootstrap_webi() {
         if [ "tar" = "$WEBI_EXT" ]; then
             echo "    Extracting $(t_path "${my_dl_rel}")"
             tar xf "${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
-        elif [ "zip" = "$WEBI_EXT" ]; then
+        elif [ "zip" = "$WEBI_EXT" ] || [ "app.zip" = "$WEBI_EXT" ]; then
             echo "    Extracting $(t_path "${my_dl_rel}")"
             unzip "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" > __unzip__.log
         elif [ "exe" = "$WEBI_EXT" ]; then
