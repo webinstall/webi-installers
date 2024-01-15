@@ -197,20 +197,32 @@ __bootstrap_webi() {
         my_dl_rel="$(
             fn_sub_home "${WEBI_PKG_PATH}/${WEBI_PKG_FILE}"
         )"
-        if [ "tar" = "$WEBI_EXT" ]; then
+        if test "$WEBI_EXT" = "tar.zst"; then
+            echo "    Extracting $(t_path "${my_dl_rel}")"
+            unzstd -c --keep "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" | tar xf -
+        elif test "$WEBI_EXT" = "tar.xz"; then
+            echo "    Extracting $(t_path "${my_dl_rel}")"
+            unxz -c --keep "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" | tar xf -
+        elif test "$WEBI_EXT" = "tar.gz"; then
+            echo "    Extracting $(t_path "${my_dl_rel}")"
+            tar xzf "${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
+        elif test "$WEBI_EXT" = "tar.bz2"; then
+            echo "    Extracting $(t_path "${my_dl_rel}")"
+            tar xjf "${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
+        elif test "$WEBI_EXT" = "tar"; then
             echo "    Extracting $(t_path "${my_dl_rel}")"
             tar xf "${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
-        elif [ "zip" = "$WEBI_EXT" ] || [ "app.zip" = "$WEBI_EXT" ]; then
+        elif test "$WEBI_EXT" = "zip" || test "$WEBI_EXT" = "app.zip"; then
             echo "    Extracting $(t_path "${my_dl_rel}")"
             unzip "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" > __unzip__.log
-        elif [ "exe" = "$WEBI_EXT" ]; then
+        elif test "$WEBI_EXT" = "exe"; then
             echo "    Moving $(t_path "${my_dl_rel}")"
             echo "      to $(t_path "$(fn_sub_home "$(pwd)")")"
             mv "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" .
-        elif [ "git" = "$WEBI_EXT" ]; then
+        elif test "$WEBI_EXT" = "git"; then
             echo "    Moving $(t_path "${my_dl_rel}")"
             mv "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" .
-        elif [ "xz" = "$WEBI_EXT" ]; then
+        elif test "$WEBI_EXT" = "xz"; then
             echo "    Inflating $(t_path "${my_dl_rel}")"
             unxz -c "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" > "$(basename "$WEBI_PKG_FILE")"
         else

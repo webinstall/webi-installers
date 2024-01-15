@@ -93,7 +93,7 @@ Installers.renderBash = async function (
     ['WEBI_GIT_TAG', rel.git_tag], // TODO replace with branch
     ['WEBI_LTS', rel.lts],
     ['WEBI_CHANNEL', rel.channel],
-    ['WEBI_EXT', rel.ext.replace(/tar.*/, 'tar')],
+    ['WEBI_EXT', rel.ext],
     ['WEBI_FORMATS', formats.join(',')],
     ['WEBI_PKG_URL', rel.download],
     ['WEBI_PKG_PATHNAME', pkgFile],
