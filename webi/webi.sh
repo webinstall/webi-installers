@@ -141,16 +141,30 @@ __webi_main() {
     }
 
     fn_checksum() {
-        cmd_shasum='sha1sum'
-        if command -v shasum > /dev/null; then
-            cmd_shasum='shasum'
+        a_filepath="${1}"
+
+        if command -v sha1sum > /dev/null; then
+            sha1sum "${a_filepath}" | cut -d' ' -f1 | cut -c 1-8
+            return 0
         fi
-        $cmd_shasum "${0}" | cut -d' ' -f1 | cut -c 1-8
+
+        if command -v shasum > /dev/null; then
+            shasum "${a_filepath}" | cut -d' ' -f1 | cut -c 1-8
+            return 0
+        fi
+
+        if command -v sha1 > /dev/null; then
+            sha1 "${a_filepath}" | cut -d'=' -f2 | cut -c 2-9
+            return 0
+        fi
+
+        echo >&2 "    warn: no sha1 sum program"
+        date '+%F %H:%M'
     }
 
     version() {
         my_checksum="$(
-            fn_checksum
+            fn_checksum "${0}"
         )"
         my_version=v1.2.8
         printf "\e[35mwebi\e[32m %s\e[0m Copyright 2020+ AJ ONeal\n" "${my_version} (${my_checksum})"

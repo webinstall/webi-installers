@@ -788,12 +788,23 @@ webi_upgrade() { (
 fn_checksum() {
     a_filepath="${1}"
 
-    cmd_shasum='sha1sum'
-    if command -v shasum > /dev/null; then
-        cmd_shasum='shasum'
+    if command -v sha1sum > /dev/null; then
+        sha1sum "${a_filepath}" | cut -d' ' -f1 | cut -c 1-8
+        return 0
     fi
 
-    $cmd_shasum "${a_filepath}" | cut -d' ' -f1 | cut -c 1-8
+    if command -v shasum > /dev/null; then
+        shasum "${a_filepath}" | cut -d' ' -f1 | cut -c 1-8
+        return 0
+    fi
+
+    if command -v sha1 > /dev/null; then
+        sha1 "${a_filepath}" | cut -d'=' -f2 | cut -c 2-9
+        return 0
+    fi
+
+    echo >&2 "    warn: no sha1 sum program"
+    date '+%F %H:%M'
 }
 
 ##############################################
