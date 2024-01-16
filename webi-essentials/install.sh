@@ -180,7 +180,7 @@ _install_webi_essentials() { (
         fi
     fi
 
-    printf '%s' "    $(t_dim 'Checking for apt/apk ...')"
+    printf '%s' "    $(t_dim 'Checking for apt/apk/pkg_add ...')"
     if command -v apt > /dev/null; then
         echo " $(t_pkg 'apt')"
         _install_webi_essentials_apt "${cmd_sudo}" "${b_pkgs}"
@@ -191,6 +191,13 @@ _install_webi_essentials() { (
     if command -v apk > /dev/null; then
         echo " $(t_pkg 'apk')"
         _install_webi_essentials_apk "${cmd_sudo}" "${b_pkgs}"
+        echo "    $(t_dim 'OK')"
+        return 0
+    fi
+
+    if command -v pkg_add > /dev/null; then
+        echo " $(t_pkg 'pkg_add')"
+        _install_webi_essentials_pkg_add "${cmd_sudo}" "${b_pkgs}"
         echo "    $(t_dim 'OK')"
         return 0
     fi
@@ -228,6 +235,16 @@ _install_webi_essentials_apk() { (
     fn_polite_sudo "${cmd_sudo}" "    $(t_cmd "apk add --no-cache ${b_pkgs}")"
     # shellcheck disable=SC2086
     ${cmd_sudo} apk add --no-cache ${b_pkgs}
+); }
+
+_install_webi_essentials_pkg_add() { (
+    cmd_sudo="${1}"
+    b_pkgs="${2}"
+
+    echo "    $(t_dim 'Running') $(t_cmd "${cmd_sudo}pkg_add")"
+    fn_polite_sudo "${cmd_sudo}" "    $(t_cmd "pkg_add ${b_pkgs}")"
+    # shellcheck disable=SC2086
+    ${cmd_sudo} pkg_add ${b_pkgs}
 ); }
 
 _install_webi_essentials_webi() { (
