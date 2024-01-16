@@ -63,10 +63,11 @@ __webi_main() {
     export WEBI_URL
     set -e
 
+    my_uname_o="$(uname -o 2> /dev/null || echo '')"
     my_libc=''
     if ldd /bin/ls 2> /dev/null | grep -q 'musl' 2> /dev/null; then
         my_libc='musl'
-    elif uname -o | grep -q 'GNU' || uname -s | grep -q 'Linux'; then
+    elif echo "${my_uname_o}" | grep -q 'GNU' || uname -s | grep -q 'Linux'; then
         my_libc='gnu'
     else
         my_libc='libc'
