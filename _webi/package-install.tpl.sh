@@ -202,7 +202,7 @@ __bootstrap_webi() {
             unzstd -c --keep "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" | tar xf -
         elif test "$WEBI_EXT" = "tar.xz"; then
             echo "    Extracting $(t_path "${my_dl_rel}")"
-            unxz -c --keep "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" | tar xf -
+            unxz -c -k "${WEBI_PKG_PATH}/$WEBI_PKG_FILE" | tar xf -
         elif test "$WEBI_EXT" = "tar.gz"; then
             echo "    Extracting $(t_path "${my_dl_rel}")"
             tar xzf "${WEBI_PKG_PATH}/$WEBI_PKG_FILE"
