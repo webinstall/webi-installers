@@ -46,7 +46,7 @@ __init_pwsh() {
 
     pkg_done_message() {
         echo "Installed 'pwsh' at $pkg_dst"
-        pwsh -V
+        "$pkg_dst_cmd" -V
     }
 }
 
