@@ -32,6 +32,10 @@ jobs:
       - run: npm run fmt
       - run: npm ci
       - run: npm run lint
+      - name: "Test in a minimal container"
+        run: |
+          wget -O /tmp/curl https://github.com/moparisthebest/static-curl/releases/download/v8.5.0/curl-amd64
+          podman run --rm -v /tmp/curl:/usr/bin/curl alpine sh -c "curl -sS https://webi.sh/pwsh@7.4.1 | sh"
       - env:
           GITHUB_TOKEN: ${{ github.token }}
         run: npm run test
