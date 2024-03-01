@@ -98,8 +98,8 @@ You just fill in the blanks.
 Just create an empty directory and run the tests until you get a good result.
 
 ```sh
-git clone git@github.com:webinstall/packages.git
-pushd packages
+git clone git@github.com:webinstall/webi-installers.git
+pushd ./webi-installers/
 npm install
 ```
 
