@@ -1,6 +1,6 @@
 ---
 title: vim-devicons
-homepage: https://github.com/ryanoasis/devicons
+homepage: https://github.com/ryanoasis/vim-devicons
 tagline: |
   VimDevIcons: Adds Icons to Your Plugins.
 ---
