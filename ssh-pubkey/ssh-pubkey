@@ -78,14 +78,17 @@ main() {
         ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
     fi
 
-    # TODO use the comment (if any) for the name of the file
+    my_comment="$(tr '[:space:]' '\n' < "$HOME/.ssh/id_${my_keytype}.pub" | grep '\w' | tail -n 1)"
+    if test -z "${my_comment}" || test "${my_comment#}" -gt 100; then
+        my_comment="$(id -u -n)"
+    fi
     echo >&2 ""
     #shellcheck disable=SC2088
-    echo >&2 "~/Downloads/id_${my_keytype}.$(whoami).pub":
+    echo >&2 "~/Downloads/id_${my_keytype}.${my_comment}.pub":
     echo >&2 ""
-    rm -f "$HOME/Downloads/id_${my_keytype}.$(whoami).pub"
-    cp -RPp "$HOME/.ssh/id_${my_keytype}.pub" "$HOME/Downloads/id_${my_keytype}.$(whoami).pub"
-    cat "$HOME/Downloads/id_${my_keytype}.$(whoami).pub"
+    rm -f "$HOME/Downloads/id_${my_keytype}.${my_comment}.pub"
+    cp -RPp "$HOME/.ssh/id_${my_keytype}.pub" "$HOME/Downloads/id_${my_keytype}.${my_comment}.pub"
+    cat "$HOME/Downloads/id_${my_keytype}.${my_comment}.pub"
     echo >&2 ""
 
     if test -f ~/.ssh/id_rsa; then
