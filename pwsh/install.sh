@@ -45,7 +45,9 @@ __init_pwsh() {
     }
 
     pkg_done_message() {
-        echo "Installed 'pwsh' at $pkg_dst"
+        # We print the version here to ensure the install completed without
+        # errors - no missing libraries, not incompatible arch, etc
+        echo ""
         "$pkg_dst_cmd" -V
     }
 }
