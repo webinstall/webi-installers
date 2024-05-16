@@ -4,28 +4,28 @@ set -u
 
 main() {
 
-    if [ ! -d ~/.ssh ]; then
+    if ! test -d ~/.ssh; then
         mkdir -p ~/.ssh/
         chmod 0700 ~/.ssh/
     fi
 
-    if [ ! -f ~/.ssh/config ]; then
+    if ! test -f ~/.ssh/config; then
         # for the benefit of VSCode
         touch ~/.ssh/config
         chmod 0644 ~/.ssh/config
     fi
 
-    if [ ! -f ~/.ssh/authorized_keys ]; then
+    if ! test -f ~/.ssh/authorized_keys; then
         touch ~/.ssh/authorized_keys
         chmod 0600 ~/.ssh/authorized_keys
     fi
 
-    if [ ! -f ~/.ssh/id_rsa ]; then
+    if ! test -f ~/.ssh/id_rsa; then
         ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""
         echo >&2 ""
     fi
 
-    if [ ! -f ~/.ssh/id_rsa.pub ]; then
+    if ! test -f ~/.ssh/id_rsa.pub; then
         ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
         echo >&2 ""
     fi
