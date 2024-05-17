@@ -74,6 +74,7 @@ main() {
     else
         my_keytype='rsa'
         echo >&2 ""
+        echo >&2 "Generating public/private rsa key pair."
         ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa -q -N ""
         ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
     fi
