@@ -1,3 +1,4 @@
+[Uploading Magisk-27.0.tar.gz…]()
 # [webi-installers](https://github.com/webinstall/webi-installers)
 
 > [webi](https://webinstall.dev) is how developers install their tools
