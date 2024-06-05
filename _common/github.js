@@ -9,12 +9,16 @@ require('dotenv').config();
  * @param {String} owner
  * @param {String} repo
  * @param {String} [baseurl]
+ * @param {String} [username]
+ * @param {String} [token]
  */
 async function getAllReleases(
   request,
   owner,
   repo,
   baseurl = 'https://api.github.com',
+  username = process.env.GITHUB_USERNAME || '',
+  token = process.env.GITHUB_TOKEN || '',
 ) {
   if (!owner) {
     throw new Error('missing owner for repo');
@@ -28,11 +32,10 @@ async function getAllReleases(
     json: true,
   };
 
-  // TODO I really don't like global config, find a way to do better
-  if (process.env.GITHUB_USERNAME) {
+  if (username) {
     req.auth = {
-      user: process.env.GITHUB_USERNAME,
-      pass: process.env.GITHUB_TOKEN,
+      user: username,
+      pass: token,
     };
   }
 
