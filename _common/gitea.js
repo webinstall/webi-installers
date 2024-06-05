@@ -1,6 +1,6 @@
 'use strict';
 
-var ghRelease = require('./github.js');
+var GitHubish = require('./githubish.js');
 
 /**
  * Lists Gitea Releases (w/ uploaded assets)
@@ -24,7 +24,14 @@ async function getAllReleases(
     throw new Error('missing baseurl');
   }
   baseurl = `${baseurl}/api/v1`;
-  let all = await ghRelease(request, owner, repo, baseurl, username, token);
+  let all = await GitHubish.getAllReleases(
+    request,
+    owner,
+    repo,
+    baseurl,
+    username,
+    token,
+  );
   return all;
 }
 

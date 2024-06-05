@@ -2,6 +2,8 @@
 
 require('dotenv').config();
 
+let GitHubish = module.exports;
+
 /**
  * Lists GitHub Releases (w/ uploaded assets)
  *
@@ -12,7 +14,7 @@ require('dotenv').config();
  * @param {String} [username]
  * @param {String} [token]
  */
-async function getAllReleases(
+GitHubish.getAllReleases = async function (
   request,
   owner,
   repo,
@@ -92,12 +94,10 @@ async function getAllReleases(
   }
 
   return all;
-}
-
-module.exports = getAllReleases;
+};
 
 if (module === require.main) {
-  getAllReleases(require('@root/request'), 'BurntSushi', 'ripgrep').then(
+  GitHubish.getAllReleases(require('@root/request'), 'BurntSushi', 'ripgrep').then(
     function (all) {
       console.info(JSON.stringify(all, null, 2));
     },
