@@ -40,7 +40,7 @@ GitHubish.getAllReleases = async function ({
     let userpass = `${username}:${token}`;
     let basicAuth = btoa(userpass);
     Object.assign(opts.headers, {
-      Authentication: `Basic ${basicAuth}`,
+      Authorization: `Basic ${basicAuth}`,
     });
   }
 
