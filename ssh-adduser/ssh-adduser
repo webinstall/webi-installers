@@ -10,7 +10,7 @@ main() {
     my_key_url="${2:-}"
     my_keys=""
 
-    if [ "root" != "$(whoami)" ]; then
+    if [ "root" != "$(id -u -n)" ]; then
         echo "webi adduser: running user is already a non-root user"
         exit 0
     fi

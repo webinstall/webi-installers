@@ -82,11 +82,11 @@ main() {
     # TODO use the comment (if any) for the name of the file
     echo >&2 ""
     #shellcheck disable=SC2088
-    echo >&2 "~/Downloads/id_${my_keytype}.$(whoami).pub":
+    echo >&2 "~/Downloads/id_${my_keytype}.$(id -u -n).pub":
     echo >&2 ""
-    rm -f "$HOME/Downloads/id_${my_keytype}.$(whoami).pub"
-    cp -RPp "$HOME/.ssh/id_${my_keytype}.pub" "$HOME/Downloads/id_${my_keytype}.$(whoami).pub"
-    cat "$HOME/Downloads/id_${my_keytype}.$(whoami).pub"
+    rm -f "$HOME/Downloads/id_${my_keytype}.$(id -u -n).pub"
+    cp -RPp "$HOME/.ssh/id_${my_keytype}.pub" "$HOME/Downloads/id_${my_keytype}.$(id -u -n).pub"
+    cat "$HOME/Downloads/id_${my_keytype}.$(id -u -n).pub"
     echo >&2 ""
 
     if test -f ~/.ssh/id_rsa; then

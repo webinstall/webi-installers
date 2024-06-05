@@ -37,7 +37,7 @@ Run as a system service on Linux:
 
 ```sh
 sudo env PATH="$PATH" \
-    serviceman add --system --username "$(whoami)" --name postgres -- \
+    serviceman add --system --username "$(id -u -n)" --name postgres -- \
     postgres -D "$HOME/.local/share/postgres/var" -p 5432
 
 # Restart the logging service
