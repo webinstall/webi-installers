@@ -1,16 +1,14 @@
 'use strict';
 
-require('dotenv').config();
-
 let GitHubish = module.exports;
 
 /**
- * Lists GitHub Releases (w/ uploaded assets)
+ * Lists GitHub-Like Releases (w/ uploaded assets)
  *
  * @param {any} request
  * @param {String} owner
  * @param {String} repo
- * @param {String} [baseurl]
+ * @param {String} baseurl
  * @param {String} [username]
  * @param {String} [token]
  */
@@ -18,15 +16,18 @@ GitHubish.getAllReleases = async function (
   request,
   owner,
   repo,
-  baseurl = 'https://api.github.com',
-  username = process.env.GITHUB_USERNAME || '',
-  token = process.env.GITHUB_TOKEN || '',
+  baseurl,
+  username = '',
+  token = '',
 ) {
   if (!owner) {
     throw new Error('missing owner for repo');
   }
   if (!repo) {
     throw new Error('missing repo name');
+  }
+  if (!baseurl) {
+    throw new Error('missing baseurl');
   }
 
   var req = {
@@ -97,9 +98,12 @@ GitHubish.getAllReleases = async function (
 };
 
 if (module === require.main) {
-  GitHubish.getAllReleases(require('@root/request'), 'BurntSushi', 'ripgrep').then(
-    function (all) {
-      console.info(JSON.stringify(all, null, 2));
-    },
-  );
+  GitHubish.getAllReleases(
+    require('@root/request'),
+    'BurntSushi',
+    'ripgrep',
+    'https://api.github.com',
+  ).then(function (all) {
+    console.info(JSON.stringify(all, null, 2));
+  });
 }
