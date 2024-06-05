@@ -6,7 +6,6 @@ let GitHubish = module.exports;
  * Lists GitHub-Like Releases (w/ uploaded assets)
  *
  * @param {Object} opts
- * @param {any} opts.request
  * @param {String} opts.owner
  * @param {String} opts.repo
  * @param {String} opts.baseurl
@@ -14,7 +13,6 @@ let GitHubish = module.exports;
  * @param {String} [opts.token]
  */
 GitHubish.getAllReleases = async function ({
-  request,
   owner,
   repo,
   baseurl,
@@ -31,26 +29,42 @@ GitHubish.getAllReleases = async function ({
     throw new Error('missing baseurl');
   }
 
-  var req = {
-    url: `${baseurl}/repos/${owner}/${repo}/releases`,
-    json: true,
+  let url = `${baseurl}/repos/${owner}/${repo}/releases`;
+  let opts = {
+    headers: {
+      'Content-Type': 'appplication/json',
+    },
   };
 
-  if (username) {
-    req.auth = {
-      user: username,
-      pass: token,
-    };
+  if (token) {
+    let userpass = `${username}:${token}`;
+    let basicAuth = btoa(userpass);
+    Object.assign(opts.headers, {
+      Authentication: `Basic ${basicAuth}`,
+    });
   }
 
-  let resp = await request(req);
+  let resp = await fetch(url, opts);
   if (!resp.ok) {
-    console.error('Bad Resp Headers:', resp.headers);
-    console.error('Bad Resp Body:', resp.body);
-    throw new Error('the elusive releases BOOGEYMAN strikes again');
+    let headers = Array.from(resp.headers);
+    console.error('Bad Resp Headers:', headers);
+    let text = await resp.text();
+    console.error('Bad Resp Body:', text);
+    let msg = `failed to fetch releases from '${baseurl}' with user '${username}'`;
+    throw new Error(msg);
   }
 
-  let gHubResp = resp.body;
+  let respText = await resp.text();
+  let gHubResp;
+  try {
+    gHubResp = JSON.parse(respText);
+  } catch (e) {
+    console.error('Bad Resp JSON:', respText);
+    console.error(e.message);
+    let msg = `failed to parse releases from '${baseurl}' with user '${username}'`;
+    throw new Error(msg);
+  }
+
   let all = {
     releases: [],
     // todo make this ':baseurl' + ':releasename'
@@ -63,7 +77,8 @@ GitHubish.getAllReleases = async function ({
     console.error(e.message);
     console.error('Error Headers:', resp.headers);
     console.error('Error Body:', resp.body);
-    throw e;
+    let msg = `failed to transform releases from '${baseurl}' with user '${username}'`;
+    throw new Error(msg);
   }
 
   function transformReleases(release) {
@@ -100,7 +115,6 @@ GitHubish.getAllReleases = async function ({
 
 if (module === require.main) {
   GitHubish.getAllReleases({
-    request: require('@root/request'),
     owner: 'BurntSushi',
     repo: 'ripgrep',
     baseurl: 'https://api.github.com',

@@ -5,7 +5,7 @@ var GitHubish = require('./githubish.js');
 /**
  * Lists Gitea Releases (w/ uploaded assets)
  *
- * @param {any} request
+ * @param {any} _request - deprecated
  * @param {String} owner
  * @param {String} repo
  * @param {String} baseurl
@@ -13,7 +13,7 @@ var GitHubish = require('./githubish.js');
  * @param {String} [token]
  */
 async function getAllReleases(
-  request,
+  _request,
   owner,
   repo,
   baseurl,
@@ -22,7 +22,6 @@ async function getAllReleases(
 ) {
   baseurl = `${baseurl}/api/v1`;
   let all = await GitHubish.getAllReleases({
-    request,
     owner,
     repo,
     baseurl,
@@ -36,7 +35,7 @@ module.exports = getAllReleases;
 
 if (module === require.main) {
   getAllReleases(
-    require('@root/request'),
+    null,
     'root',
     'pathman',
     'https://git.rootprojects.org',
