@@ -5,21 +5,22 @@ let GitHubish = module.exports;
 /**
  * Lists GitHub-Like Releases (w/ uploaded assets)
  *
- * @param {any} request
- * @param {String} owner
- * @param {String} repo
- * @param {String} baseurl
- * @param {String} [username]
- * @param {String} [token]
+ * @param {Object} opts
+ * @param {any} opts.request
+ * @param {String} opts.owner
+ * @param {String} opts.repo
+ * @param {String} opts.baseurl
+ * @param {String} [opts.username]
+ * @param {String} [opts.token]
  */
-GitHubish.getAllReleases = async function (
+GitHubish.getAllReleases = async function ({
   request,
   owner,
   repo,
   baseurl,
   username = '',
   token = '',
-) {
+}) {
   if (!owner) {
     throw new Error('missing owner for repo');
   }
@@ -98,12 +99,12 @@ GitHubish.getAllReleases = async function (
 };
 
 if (module === require.main) {
-  GitHubish.getAllReleases(
-    require('@root/request'),
-    'BurntSushi',
-    'ripgrep',
-    'https://api.github.com',
-  ).then(function (all) {
+  GitHubish.getAllReleases({
+    request: require('@root/request'),
+    owner: 'BurntSushi',
+    repo: 'ripgrep',
+    baseurl: 'https://api.github.com',
+  }).then(function (all) {
     console.info(JSON.stringify(all, null, 2));
   });
 }

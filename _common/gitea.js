@@ -21,14 +21,14 @@ async function getAllReleases(
   token = '',
 ) {
   baseurl = `${baseurl}/api/v1`;
-  let all = await GitHubish.getAllReleases(
+  let all = await GitHubish.getAllReleases({
     request,
     owner,
     repo,
     baseurl,
     username,
     token,
-  );
+  });
   return all;
 }
 

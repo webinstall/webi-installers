@@ -22,14 +22,14 @@ async function getAllReleases(
   username = process.env.GITHUB_USERNAME || '',
   token = process.env.GITHUB_TOKEN || '',
 ) {
-  let all = await GitHubish.getAllReleases(
+  let all = await GitHubish.getAllReleases({
     request,
     owner,
     repo,
     baseurl,
     username,
     token,
-  );
+  });
   return all;
 }
 
