@@ -5,10 +5,10 @@ require('dotenv').config();
 /**
  * Lists GitHub Releases (w/ uploaded assets)
  *
- * @param request
- * @param {string} owner
- * @param {string} repo
- * @returns {PromiseLike<any> | Promise<any>}
+ * @param {any} request
+ * @param {String} owner
+ * @param {String} repo
+ * @param {String} [baseurl]
  */
 async function getAllReleases(
   request,

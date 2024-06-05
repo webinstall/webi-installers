@@ -3,23 +3,20 @@
 var ghRelease = require('./github.js');
 
 /**
- * Gets the releases for 'ripgrep'. This function could be trimmed down and made
- * for use with any github release.
+ * Lists Gitea Releases (w/ uploaded assets)
  *
- * @param request
- * @param {string} owner
- * @param {string} repo
- * @returns {PromiseLike<any> | Promise<any>}
+ * @param {any} request
+ * @param {String} owner
+ * @param {String} repo
+ * @param {String} baseurl
  */
-function getAllReleases(request, owner, repo, baseurl) {
+async function getAllReleases(request, owner, repo, baseurl) {
   if (!baseurl) {
-    return Promise.reject('missing baseurl');
+    throw new Error('missing baseurl');
   }
-  return ghRelease(request, owner, repo, baseurl + '/api/v1').then(
-    function (all) {
-      return all;
-    },
-  );
+  baseurl = `${baseurl}/api/v1`;
+  let all = await ghRelease(request, owner, repo, baseurl);
+  return all;
 }
 
 module.exports = getAllReleases;
