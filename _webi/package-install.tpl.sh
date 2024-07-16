@@ -235,8 +235,6 @@ __bootstrap_webi() {
     webi_path_add() {
         my_path="${1}"
 
-        fn_envman_init
-
         # \v was chosen as it is extremely unlikely for a filename
         # \1 could be an even better choice, but needs more testing.
         # (currently tested working on: linux & mac)
@@ -399,7 +397,6 @@ __bootstrap_webi() {
     export _webi_tmp="${_webi_tmp:-"$HOME/.local/opt/webi-tmp.d"}"
 
     mkdir -p "${WEBI_PKG_PATH}"
-    mkdir -p "$HOME/.local/bin"
     mkdir -p "$HOME/.local/opt"
 
     if test -e ~/.local/bin; then
@@ -408,6 +405,7 @@ __bootstrap_webi() {
         echo "    Creating$(t_path ' ~/.local/bin')"
         mkdir -p "$HOME/.local/bin"
     fi
+    fn_envman_init
 
     ##
     ##
