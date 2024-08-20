@@ -592,7 +592,14 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     // {NAME}.windows.x86_64v2.musl.exe
     //     windows-x86_64_v2-musl
     target = { triplet: '' };
-    void Triplet.termsToTarget(target, projInfo, build, terms);
+    try {
+      void Triplet.termsToTarget(target, projInfo, build, terms);
+    } catch (e) {
+      console.error(`PACKAGE FORMAT CHANGE for '${projInfo.name}':`);
+      console.error(e.message);
+      console.error(build);
+      return null;
+    }
 
     target.triplet = `${target.arch}-${target.vendor}-${target.os}-${target.libc}`;
 
