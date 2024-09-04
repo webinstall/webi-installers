@@ -1,6 +1,6 @@
 ---
 title: koji
-homepage: https://github.com/its-danny/koji
+homepage: https://github.com/cococonscious/koji
 tagline: |
   🦊 An interactive CLI for creating conventional commits.
 ---
@@ -13,7 +13,7 @@ To update or switch versions, run `webi koji@stable` (or `@v2`, `@beta`, etc).
 
 > `koji` is an interactive CLI for creating [conventional commits][cc].
 
-![](https://github.com/its-danny/koji/raw/main/meta/demo.gif)
+![](https://github.com/cococonscious/koji/raw/main/meta/demo.gif)
 
 [cc]: https://conventionalcommits.org/en/v1.0.0/
 
@@ -105,4 +105,4 @@ description = "A new feature"
 ```
 
 The default emoji can be seen in
-[koji-default.toml](https://github.com/its-danny/koji/blob/main/meta/config/koji-default.toml).
+[default.toml](https://github.com/cococonscious/koji/blob/main/meta/config/default.toml).

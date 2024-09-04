@@ -1,7 +1,7 @@
 'use strict';
 
 var github = require('../_common/github.js');
-var owner = 'its-danny';
+var owner = 'cococonscious';
 var repo = 'koji';
 
 module.exports = function (request) {
