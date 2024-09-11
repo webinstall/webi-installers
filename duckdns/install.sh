@@ -2,10 +2,16 @@
 set -e
 set -u
 
-echo "'duckdns@${WEBI_TAG:-stable}' is reserved for future use."
-echo
-echo "Did you mean 'duckdns.sh@${WEBI_VERSION-}'?"
 WEBI_HOST=${WEBI_HOST:-"https://webi.sh"}
+
 echo ""
-echo "    curl -fsSL '$WEBI_HOST/duckdns.sh@${WEBI_VERSION-}' | sh"
+echo "ERROR"
+echo "    installer name 'duckdns' is reserved for future use"
+echo ""
+echo "SOLUTION"
+echo "    Did you mean 'duckdns.sh'?"
+echo ""
+echo "    curl -fsSL '$WEBI_HOST/duckdns.sh' | sh"
+echo ""
+
 exit 1
