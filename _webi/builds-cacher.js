@@ -189,9 +189,10 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
   }
 
   let bc = {};
-  bc.usedTerms = {};
-  bc.orphanTerms = Object.assign({}, ALL_TERMS);
+  bc.ALL_TERMS = ALL_TERMS;
+  bc.orphanTerms = Object.assign({}, bc.ALL_TERMS);
   bc.unknownTerms = {};
+  bc.usedTerms = {};
   bc.formats = [];
   bc._triplets = {};
   bc._targetsByBuildIdCache = {};
@@ -381,7 +382,14 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     if (!projInfo) {
       projInfo = await getLatestBuilds(Releases, installersDir, cacheDir, name);
     }
-    transformAndUpdate(name, projInfo, meta, tsDate);
+    let latestProjInfo = await BuildsCacher.transformAndUpdate(
+      name,
+      projInfo,
+      meta,
+      tsDate,
+      bc,
+    );
+    bc._caches[name] = latestProjInfo;
 
     process.nextTick(async function () {
       let now = date.valueOf();
@@ -393,102 +401,18 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
       }
 
       projInfo = await getLatestBuilds(Releases, installersDir, cacheDir, name);
-      transformAndUpdate(name, projInfo, meta, date);
+      let latestProjInfo = BuildsCacher.transformAndUpdate(
+        name,
+        projInfo,
+        meta,
+        date,
+        bc,
+      );
+      bc._caches[name] = latestProjInfo;
     });
 
     return projInfo;
   };
-
-  function transformAndUpdate(name, projInfo, meta, date) {
-    meta.packages = [];
-
-    let updated = date.valueOf();
-
-    Object.assign(projInfo, { name, updated }, meta);
-    for (let build of projInfo.releases) {
-      let buildTarget = bc.classify(projInfo, build);
-      if (!buildTarget) {
-        // ignore known, non-package extensions
-        continue;
-      }
-
-      if (buildTarget.error) {
-        let err = buildTarget.error;
-        let code = err.code || '';
-        console.error(`[ERROR]: ${code} ${projInfo.name}: ${build.name}`);
-        console.error(`>>> ${err.message} <<<`);
-        console.error(projInfo);
-        console.error(build);
-        console.error(`^^^ ${err.message} ^^^`);
-        console.error(err.stack);
-        continue;
-      }
-
-      if (!build.name) {
-        build.name = build.download.replace(/.*\//, '');
-      }
-
-      build.target = buildTarget;
-      meta.packages.push(build);
-    }
-
-    updateReleasesByTriplet(meta);
-    updateAndSortVersions(projInfo, meta);
-
-    Object.assign(projInfo, { name, updated }, meta);
-    bc._caches[name] = projInfo;
-  }
-
-  function updateReleasesByTriplet(meta) {
-    for (let build of meta.packages) {
-      let target = build.target;
-
-      let triplet = `${target.os}-${target.arch}-${target.libc}`;
-      if (!meta.releasesByTriplet[triplet]) {
-        meta.releasesByTriplet[triplet] = {};
-      }
-
-      let buildsByRelease = meta.releasesByTriplet[triplet];
-      if (!buildsByRelease[build.version]) {
-        buildsByRelease[build.version] = [];
-      }
-
-      let packages = buildsByRelease[build.version];
-      packages.push(build);
-    }
-  }
-
-  // TODO
-  //   - tag channels
-  function updateAndSortVersions(projInfo, meta) {
-    for (let build of projInfo.packages) {
-      let hasVersion = meta.versions.includes(build.version);
-      if (!hasVersion) {
-        build.lexver = Lexver.parseVersion(build.version);
-        meta.lexversMap[build.lexver] = build.version;
-      }
-    }
-
-    meta.lexvers = Object.keys(meta.lexversMap);
-    meta.lexvers.sort();
-    meta.lexvers.reverse();
-
-    meta.versions = [];
-    for (let lexver of meta.lexvers) {
-      let version = meta.lexversMap[lexver];
-      meta.versions.push(version);
-    }
-
-    projInfo.packages.sort(function (a, b) {
-      if (a.lexver > b.lexver) {
-        return -1;
-      }
-      if (a.lexver < b.lexver) {
-        return 1;
-      }
-      return 0;
-    });
-  }
 
   // Makes sure that packages are updated once an hour, on average
   bc._staleNames = [];
@@ -523,141 +447,6 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     clearTimeout(bc._freshenTimeout);
     bc._freshenTimeout = setTimeout(bc.freshenRandomPackage, delay);
     bc._freshenTimeout.unref();
-  };
-
-  bc.classify = function (projInfo, build) {
-    /* jshint maxcomplexity: 25 */
-    let maybeInstallable = Triplet.maybeInstallable(projInfo, build);
-    if (!maybeInstallable) {
-      return null;
-    }
-
-    if (LEGACY_OS_MAP[build.os]) {
-      build.os = LEGACY_OS_MAP[build.os];
-    }
-    if (LEGACY_ARCH_MAP[build.arch]) {
-      build.arch = LEGACY_ARCH_MAP[build.arch];
-    }
-
-    // because some packages are shimmed to match a single download against
-    let preTarget = Object.assign({ os: '', arch: '', libc: '' }, build);
-
-    let targetId = `${preTarget.os}:${preTarget.arch}:${preTarget.libc}`;
-    let buildId = `${projInfo.name}:${targetId}@${build.download}`;
-    let target = bc._targetsByBuildIdCache[buildId];
-    if (target) {
-      Object.assign(build, { target: target, triplet: target.triplet });
-      return target;
-    }
-
-    let pattern = Triplet.toPattern(projInfo, build);
-    if (!pattern) {
-      let err = new Error(`no pattern generated for ${projInfo.name}`);
-      err.code = 'E_BUILD_NO_PATTERN';
-      target = { error: err };
-      bc._targetsByBuildIdCache[buildId] = target;
-      return target;
-    }
-
-    let rawTerms = pattern.split(/[_\{\}\/\.\-]+/g);
-    for (let term of rawTerms) {
-      delete bc.orphanTerms[term];
-      bc.usedTerms[term] = true;
-    }
-
-    // {NAME}/{NAME}-{VER}-Windows-x86_64_v2-musl.exe =>
-    //     {NAME}.windows.x86_64v2.musl.exe
-    let terms = Triplet.patternToTerms(pattern);
-    if (!terms.length) {
-      let err = new Error(`'${terms}' was trimmed to ''`);
-      target = { error: err };
-      bc._targetsByBuildIdCache[buildId] = target;
-      return target;
-    }
-
-    for (let term of terms) {
-      if (!term) {
-        continue;
-      }
-
-      if (ALL_TERMS[term]) {
-        delete bc.orphanTerms[term];
-        bc.usedTerms[term] = true;
-        continue;
-      }
-
-      bc.unknownTerms[term] = true;
-    }
-
-    // {NAME}.windows.x86_64v2.musl.exe
-    //     windows-x86_64_v2-musl
-    target = { triplet: '' };
-    try {
-      void Triplet.termsToTarget(target, projInfo, build, terms);
-    } catch (e) {
-      console.error(`PACKAGE FORMAT CHANGE for '${projInfo.name}':`);
-      console.error(e.message);
-      console.error(build);
-      return null;
-    }
-
-    target.triplet = `${target.arch}-${target.vendor}-${target.os}-${target.libc}`;
-
-    {
-      // TODO I don't love this hidden behavior
-      // perhaps classify should just happen when the package is loaded
-      // (and the sanity error should be removed, or thrown after the loop is complete)
-      let hasTriplet = projInfo.triplets.includes(target.triplet);
-      if (!hasTriplet) {
-        projInfo.triplets.push(target.triplet);
-      }
-      let hasOs = projInfo.oses.includes(target.os);
-      if (!hasOs) {
-        projInfo.oses.push(target.os);
-      }
-      let hasArch = projInfo.arches.includes(target.arch);
-      if (!hasArch) {
-        projInfo.arches.push(target.arch);
-      }
-      let hasLibc = projInfo.libcs.includes(target.libc);
-      if (!hasLibc) {
-        projInfo.libcs.push(target.libc);
-      }
-
-      if (!build.ext) {
-        build.ext = Triplet.buildToPackageType(build);
-      }
-      if (build.ext) {
-        if (!build.ext.startsWith('.')) {
-          build.ext = `.${build.ext}`;
-        }
-      }
-      let hasExt = projInfo.formats.includes(build.ext);
-      if (!hasExt) {
-        projInfo.formats.push(build.ext);
-      }
-      let hasGlobalExt = bc.formats.includes(build.ext);
-      if (!hasGlobalExt) {
-        bc.formats.push(build.ext);
-      }
-    }
-
-    bc._triplets[target.triplet] = true;
-    bc._targetsByBuildIdCache[buildId] = target;
-
-    let triple = [target.arch, target.vendor, target.os, target.libc];
-    for (let term of triple) {
-      if (!ALL_TERMS[term]) {
-        throw new Error(
-          `[SANITY FAIL] '${projInfo.name}' '${target.triplet}' generated unknown term '${term}'`,
-        );
-      }
-
-      delete bc.orphanTerms[term];
-      bc.usedTerms[term] = true;
-    }
-
-    return target;
   };
 
   /**
@@ -973,4 +762,234 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
   };
 
   return bc;
+};
+
+BuildsCacher._classify = function (bc, projInfo, build) {
+  /* jshint maxcomplexity: 25 */
+  let maybeInstallable = Triplet.maybeInstallable(projInfo, build);
+  if (!maybeInstallable) {
+    return null;
+  }
+
+  if (LEGACY_OS_MAP[build.os]) {
+    build.os = LEGACY_OS_MAP[build.os];
+  }
+  if (LEGACY_ARCH_MAP[build.arch]) {
+    build.arch = LEGACY_ARCH_MAP[build.arch];
+  }
+
+  // because some packages are shimmed to match a single download against
+  let preTarget = Object.assign({ os: '', arch: '', libc: '' }, build);
+
+  let targetId = `${preTarget.os}:${preTarget.arch}:${preTarget.libc}`;
+  let buildId = `${projInfo.name}:${targetId}@${build.download}`;
+  //console.log(`dbg: buildId`, buildId);
+  let target = bc._targetsByBuildIdCache[buildId];
+  if (target) {
+    Object.assign(build, { target: target, triplet: target.triplet });
+    return target;
+  }
+
+  let pattern = Triplet.toPattern(projInfo, build);
+  //console.log(`dbg: pattern`, pattern);
+  if (!pattern) {
+    let err = new Error(`no pattern generated for ${projInfo.name}`);
+    err.code = 'E_BUILD_NO_PATTERN';
+    target = { error: err };
+    bc._targetsByBuildIdCache[buildId] = target;
+    return target;
+  }
+
+  let rawTerms = pattern.split(/[_\{\}\/\.\-]+/g);
+  //console.log(`dbg: rawTerms`, rawTerms);
+  for (let term of rawTerms) {
+    delete bc.orphanTerms[term];
+    bc.usedTerms[term] = true;
+  }
+
+  // {NAME}/{NAME}-{VER}-Windows-x86_64_v2-musl.exe =>
+  //     {NAME}.windows.x86_64v2.musl.exe
+  let terms = Triplet.patternToTerms(pattern);
+  //console.log(`dbg: terms`, terms);
+  if (!terms.length) {
+    let err = new Error(`'${terms}' was trimmed to ''`);
+    target = { error: err };
+    bc._targetsByBuildIdCache[buildId] = target;
+    return target;
+  }
+
+  for (let term of terms) {
+    if (!term) {
+      continue;
+    }
+
+    if (bc.ALL_TERMS[term]) {
+      delete bc.orphanTerms[term];
+      bc.usedTerms[term] = true;
+      continue;
+    }
+
+    bc.unknownTerms[term] = true;
+  }
+
+  // {NAME}.windows.x86_64v2.musl.exe
+  //     windows-x86_64_v2-musl
+  target = { triplet: '' };
+  try {
+    void Triplet.termsToTarget(target, projInfo, build, terms);
+  } catch (e) {
+    console.error(`PACKAGE FORMAT CHANGE for '${projInfo.name}':`);
+    console.error(e.message);
+    console.error(build);
+    return null;
+  }
+
+  target.triplet = `${target.arch}-${target.vendor}-${target.os}-${target.libc}`;
+
+  {
+    // TODO I don't love this hidden behavior
+    // perhaps classify should just happen when the package is loaded
+    // (and the sanity error should be removed, or thrown after the loop is complete)
+    let hasTriplet = projInfo.triplets.includes(target.triplet);
+    if (!hasTriplet) {
+      projInfo.triplets.push(target.triplet);
+    }
+    let hasOs = projInfo.oses.includes(target.os);
+    if (!hasOs) {
+      projInfo.oses.push(target.os);
+    }
+    let hasArch = projInfo.arches.includes(target.arch);
+    if (!hasArch) {
+      projInfo.arches.push(target.arch);
+    }
+    let hasLibc = projInfo.libcs.includes(target.libc);
+    if (!hasLibc) {
+      projInfo.libcs.push(target.libc);
+    }
+
+    if (!build.ext) {
+      build.ext = Triplet.buildToPackageType(build);
+    }
+    if (build.ext) {
+      if (!build.ext.startsWith('.')) {
+        build.ext = `.${build.ext}`;
+      }
+    }
+    let hasExt = projInfo.formats.includes(build.ext);
+    if (!hasExt) {
+      projInfo.formats.push(build.ext);
+    }
+    let hasGlobalExt = bc.formats.includes(build.ext);
+    if (!hasGlobalExt) {
+      bc.formats.push(build.ext);
+    }
+  }
+
+  bc._triplets[target.triplet] = true;
+  bc._targetsByBuildIdCache[buildId] = target;
+
+  let triple = [target.arch, target.vendor, target.os, target.libc];
+  for (let term of triple) {
+    if (!bc.ALL_TERMS[term]) {
+      throw new Error(
+        `[SANITY FAIL] '${projInfo.name}' '${target.triplet}' generated unknown term '${term}'`,
+      );
+    }
+
+    delete bc.orphanTerms[term];
+    bc.usedTerms[term] = true;
+  }
+
+  return target;
+};
+
+BuildsCacher.transformAndUpdate = function (name, projInfo, meta, date, bc) {
+  meta.packages = [];
+
+  let updated = date.valueOf();
+
+  Object.assign(projInfo, { name, updated }, meta);
+  for (let build of projInfo.releases) {
+    let buildTarget = BuildsCacher._classify(bc, projInfo, build);
+    if (!buildTarget) {
+      // ignore known, non-package extensions
+      continue;
+    }
+
+    if (buildTarget.error) {
+      let err = buildTarget.error;
+      let code = err.code || '';
+      console.error(`[ERROR]: ${code} ${projInfo.name}: ${build.name}`);
+      console.error(`>>> ${err.message} <<<`);
+      console.error(projInfo);
+      console.error(build);
+      console.error(`^^^ ${err.message} ^^^`);
+      console.error(err.stack);
+      continue;
+    }
+
+    if (!build.name) {
+      build.name = build.download.replace(/.*\//, '');
+    }
+
+    build.target = buildTarget;
+    meta.packages.push(build);
+  }
+
+  BuildsCacher.updateReleasesByTriplet(meta);
+  BuildsCacher.updateAndSortVersions(projInfo, meta);
+
+  Object.assign(projInfo, { name, updated }, meta);
+  return projInfo;
+};
+
+// TODO
+//   - tag channels
+BuildsCacher.updateAndSortVersions = function (projInfo, meta) {
+  for (let build of projInfo.packages) {
+    let hasVersion = meta.versions.includes(build.version);
+    if (!hasVersion) {
+      build.lexver = Lexver.parseVersion(build.version);
+      meta.lexversMap[build.lexver] = build.version;
+    }
+  }
+
+  meta.lexvers = Object.keys(meta.lexversMap);
+  meta.lexvers.sort();
+  meta.lexvers.reverse();
+
+  meta.versions = [];
+  for (let lexver of meta.lexvers) {
+    let version = meta.lexversMap[lexver];
+    meta.versions.push(version);
+  }
+
+  projInfo.packages.sort(function (a, b) {
+    if (a.lexver > b.lexver) {
+      return -1;
+    }
+    if (a.lexver < b.lexver) {
+      return 1;
+    }
+    return 0;
+  });
+};
+
+BuildsCacher.updateReleasesByTriplet = function (meta) {
+  for (let build of meta.packages) {
+    let target = build.target;
+
+    let triplet = `${target.os}-${target.arch}-${target.libc}`;
+    if (!meta.releasesByTriplet[triplet]) {
+      meta.releasesByTriplet[triplet] = {};
+    }
+
+    let buildsByRelease = meta.releasesByTriplet[triplet];
+    if (!buildsByRelease[build.version]) {
+      buildsByRelease[build.version] = [];
+    }
+
+    let packages = buildsByRelease[build.version];
+    packages.push(build);
+  }
 };
