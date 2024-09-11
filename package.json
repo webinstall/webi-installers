@@ -4,6 +4,7 @@
   "version": "1.1.1",
   "description": "webinstall script repository",
   "main": "_webi/",
+  "type": "commonjs",
   "scripts": {
     "bump": "npm version -m \"chore(release): bump to v%s\"",
     "fmt": "npm run prettier && npm run shfmt && npm run pwsh-fmt",
