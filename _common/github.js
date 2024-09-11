@@ -7,7 +7,7 @@ let GitHubish = require('./githubish.js');
 /**
  * Lists GitHub Releases (w/ uploaded assets)
  *
- * @param {any} _request - deprecated
+ * @param {null} _request - deprecated
  * @param {String} owner
  * @param {String} repo
  * @param {String} [baseurl]
