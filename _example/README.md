@@ -23,7 +23,7 @@ install:
 ```text
 ~/.config/envman/PATH.env
 ~/.local/bin/foo
-~/.local/opt/foo
+~/.local/opt/foo/
 ```
 
 ## Cheat Sheet
