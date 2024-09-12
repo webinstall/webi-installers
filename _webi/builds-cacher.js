@@ -726,9 +726,9 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     if (hostTarget.os === 'windows') {
       oses = ['ANYOS', 'windows'];
     } else if (hostTarget.os === 'android') {
-      oses = ['ANYOS', 'posix_2017', 'android', 'linux'];
+      oses = ['ANYOS', 'posix_2017', 'posix_2024', 'android', 'linux'];
     } else {
-      oses = ['ANYOS', 'posix_2017', hostTarget.os];
+      oses = ['ANYOS', 'posix_2017', 'posix_2024', hostTarget.os];
     }
 
     let waterfall = HostTargets.WATERFALL[hostTarget.os] || {};

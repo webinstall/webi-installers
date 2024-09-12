@@ -132,10 +132,23 @@ InstallerServer.helper = async function ({
     formats: projInfo.formats,
   };
 
+  // TODO .findMatchingPackages() should probably account for this
   let hasOs = projInfo.oses.includes(hostTarget.os);
+  let maybePosix = !hasOs && hostTarget.os !== 'windows';
+  if (maybePosix) {
+    let posixes = ['posix_2017', 'posix_2024'];
+    for (let posixYear of posixes) {
+      let hasPosix = projInfo.oses.includes(posixYear);
+      if (hasPosix) {
+        hasOs = true;
+        break;
+      }
+    }
+  }
   if (!hasOs) {
     hasOs = projInfo.oses.includes('ANYOS');
   }
+
   if (!hasOs) {
     let pkg1 = Object.assign(buildTargetInfo, errPackage);
     return [pkg1, tmplParams];
