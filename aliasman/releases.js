@@ -1,17 +1,21 @@
 'use strict';
 
-var githubSource = require('../_common/github-source.js');
-var owner = 'BeyondCodeBootcamp';
-var repo = 'aliasman';
+let Releases = module.exports;
 
-module.exports = function (request) {
-  return githubSource(request, owner, repo).then(function (all) {
-    return all;
-  });
+let GitHubSource = require('../_common/github-source.js');
+let owner = 'BeyondCodeBootcamp';
+let repo = 'aliasman';
+
+Releases.latest = async function () {
+  let all = await GitHubSource.getDistributables({ owner, repo });
+  for (let pkg of all.releases) {
+    pkg.os = 'posix_2017';
+  }
+  return all;
 };
 
 if (module === require.main) {
-  module.exports(require('@root/request')).then(function (all) {
+  Releases.latest().then(function (all) {
     all = require('../_webi/normalize.js')(all);
     console.info(JSON.stringify(all, null, 2));
   });

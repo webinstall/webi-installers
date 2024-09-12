@@ -14,7 +14,7 @@ let GitHubish = require('./githubish.js');
  * @param {String} [username]
  * @param {String} [token]
  */
-async function getDistributables(
+module.exports = async function (
   _request,
   owner,
   repo,
@@ -30,12 +30,13 @@ async function getDistributables(
     token,
   });
   return all;
-}
+};
 
-module.exports = getDistributables;
+let GitHub = module.exports;
+GitHub.getDistributables = module.exports;
 
 if (module === require.main) {
-  getDistributables(null, 'BurntSushi', 'ripgrep').then(function (all) {
+  GitHub.getDistributables(null, 'BurntSushi', 'ripgrep').then(function (all) {
     console.info(JSON.stringify(all, null, 2));
   });
 }

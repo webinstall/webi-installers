@@ -1,44 +1,70 @@
 'use strict';
 
-require('dotenv').config();
+let GitHubishSource = module.exports;
 
 /**
- * Gets the releases for 'ripgrep'. This function could be trimmed down and made
- * for use with any github release.
+ * Lists GitHub-Like Releases (source tarball & zip)
  *
- * @param request
- * @param {string} owner
- * @param {string} repo
- * @returns {PromiseLike<any> | Promise<any>}
+ * @param {Object} opts
+ * @param {String} opts.owner
+ * @param {String} opts.repo
+ * @param {String} opts.baseurl
+ * @param {String} [opts.username]
+ * @param {String} [opts.token]
  */
-async function getDistributables(
-  request,
+GitHubishSource.getDistributables = async function ({
   owner,
   repo,
-  baseurl = 'https://api.github.com',
-) {
+  baseurl,
+  username = '',
+  token = '',
+}) {
   if (!owner) {
-    return Promise.reject('missing owner for repo');
+    throw new Error('missing owner for repo');
   }
   if (!repo) {
-    return Promise.reject('missing repo name');
+    throw new Error('missing repo name');
+  }
+  if (!baseurl) {
+    throw new Error('missing baseurl');
   }
 
-  let req = {
-    url: `${baseurl}/repos/${owner}/${repo}/releases`,
-    json: true,
+  let url = `${baseurl}/repos/${owner}/${repo}/releases`;
+  let opts = {
+    headers: {
+      'Content-Type': 'appplication/json',
+    },
   };
 
-  // TODO I really don't like global config, find a way to do better
-  if (process.env.GITHUB_USERNAME) {
-    req.auth = {
-      user: process.env.GITHUB_USERNAME,
-      pass: process.env.GITHUB_TOKEN,
-    };
+  if (token) {
+    let userpass = `${username}:${token}`;
+    let basicAuth = btoa(userpass);
+    Object.assign(opts.headers, {
+      Authorization: `Basic ${basicAuth}`,
+    });
   }
 
-  let resp = await request(req);
-  let gHubResp = resp.body;
+  let resp = await fetch(url, opts);
+  if (!resp.ok) {
+    let headers = Array.from(resp.headers);
+    console.error('Bad Resp Headers:', headers);
+    let text = await resp.text();
+    console.error('Bad Resp Body:', text);
+    let msg = `failed to fetch releases from '${baseurl}' with user '${username}'`;
+    throw new Error(msg);
+  }
+
+  let respText = await resp.text();
+  let gHubResp;
+  try {
+    gHubResp = JSON.parse(respText);
+  } catch (e) {
+    console.error('Bad Resp JSON:', respText);
+    console.error(e.message);
+    let msg = `failed to parse releases from '${baseurl}' with user '${username}'`;
+    throw new Error(msg);
+  }
+
   let all = {
     releases: [],
     // TODO make this ':baseurl' + ':releasename'
@@ -46,60 +72,82 @@ async function getDistributables(
   };
 
   for (let release of gHubResp) {
-    // TODO tags aren't always semver / sensical
-    let tag = release['tag_name'];
-    let lts = /(\b|_)(lts)(\b|_)/.test(release['tag_name']);
-    let channel = 'stable';
-    if (release['prerelease']) {
-      channel = 'beta';
-    }
-    let date = release['published_at'] || '';
-    date = date.replace(/T.*/, '');
-
-    let urls = [release.tarball_url, release.zipball_url];
-    for (let url of urls) {
-      let resp = await request({
-        method: 'HEAD',
-        followRedirect: true,
-        followAllRedirects: true,
-        followOriginalHttpMethod: true,
-        url: url,
-        stream: true,
-      });
-      // Workaround for bug where method changes to GET
-      resp.destroy();
-
-      // content-disposition: attachment; filename=BeyondCodeBootcamp-DuckDNS.sh-v1.0.1-0-ga2f4bde.zip
-      let name = resp.headers['content-disposition'].replace(
-        /.*filename=([^;]+)(;|$)/,
-        '$1',
-      );
-      all.releases.push({
-        name: name,
-        version: tag,
-        lts: lts,
-        channel: channel,
-        date: date,
-        os: '*',
-        arch: '*',
-        libc: '',
-        ext: '',
-        download: resp.request.uri.href,
-      });
+    let dists = GitHubishSource.releaseToDistributables(release);
+    for (let dist of dists) {
+      let updates =
+        await GitHubishSource.followDistributableDownloadAttachment(dist);
+      Object.assign(dist, updates);
+      all.releases.push(dist);
     }
   }
 
   return all;
-}
+};
 
-module.exports = getDistributables;
+GitHubishSource.releaseToDistributables = function (ghRelease) {
+  let ghTag = ghRelease['tag_name']; // TODO tags aren't always semver / sensical
+  let lts = /(\b|_)(lts)(\b|_)/.test(ghRelease['tag_name']);
+  let channel = 'stable';
+  if (ghRelease['prerelease']) {
+    channel = 'beta';
+  }
+  let date = ghRelease['published_at'] || '';
+  date = date.replace(/T.*/, '');
+
+  let urls = [ghRelease.tarball_url, ghRelease.zipball_url];
+  let dists = [];
+  for (let url of urls) {
+    dists.push({
+      name: '',
+      version: ghTag,
+      lts: lts,
+      channel: channel,
+      date: date,
+      os: '*',
+      arch: '*',
+      libc: '',
+      ext: '',
+      download: url,
+    });
+  }
+
+  return dists;
+};
+
+GitHubishSource.followDistributableDownloadAttachment = async function (dist) {
+  let abortCtrl = new AbortController();
+  let resp = await fetch(dist.download, {
+    method: 'HEAD',
+    redirect: 'follow',
+    signal: abortCtrl.signal,
+  });
+  let headers = Object.fromEntries(resp.headers);
+
+  // Workaround for bug where METHOD changes to GET
+  abortCtrl.abort();
+  await resp.text().catch(function (err) {
+    if (err.name !== 'AbortError') {
+      throw err;
+    }
+  });
+
+  // ex: content-disposition: attachment; filename=BeyondCodeBootcamp-DuckDNS.sh-v1.0.1-0-ga2f4bde.zip
+  //  => BeyondCodeBootcamp-DuckDNS.sh-v1.0.1-0-ga2f4bde.zip
+  let name = headers['content-disposition'].replace(
+    /.*filename=([^;]+)(;|$)/,
+    '$1',
+  );
+  let download = resp.url;
+
+  return { name, download };
+};
 
 if (module === require.main) {
-  getDistributables(
-    require('@root/request'),
-    'BeyondCodeBootcamp',
-    'DuckDNS.sh',
-  ).then(function (all) {
+  GitHubishSource.getDistributables({
+    owner: 'BeyondCodeBootcamp',
+    repo: 'DuckDNS.sh',
+    baseurl: 'https://api.github.com',
+  }).then(function (all) {
     console.info(JSON.stringify(all, null, 2));
   });
 }
