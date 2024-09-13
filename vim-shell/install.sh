@@ -13,10 +13,14 @@ __init_vim_shell() {
         touch "$HOME/.vimrc"
     fi
 
-    if ! grep 'shell=' -r ~/.vimrc > /dev/null 2> /dev/null; then
+    if ! grep -q 'shell=' ~/.vimrc 2> /dev/null; then
+        b_shell='bash'
+        if ! command -v bash > /dev/null; then
+            b_shell='sh'
+        fi
         {
             printf '" bash set as default shell (for compatibility) by webinstall.dev/vim-shell\n'
-            printf 'set shell=bash\n'
+            printf 'set shell=%s\n' "${b_shell}"
             printf '\n'
             cat ~/.vimrc
         } >> ~/.vimrc.new.1
