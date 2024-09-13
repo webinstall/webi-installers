@@ -1,6 +1,6 @@
 'use strict';
 
-function getAllReleases(request) {
+function getDistributables(request) {
   return request({
     url: 'https://releases.hashicorp.com/terraform/index.json',
     json: true,
@@ -37,10 +37,10 @@ function getAllReleases(request) {
   });
 }
 
-module.exports = getAllReleases;
+module.exports = getDistributables;
 
 if (module === require.main) {
-  getAllReleases(require('@root/request')).then(function (all) {
+  getDistributables(require('@root/request')).then(function (all) {
     all = require('../_webi/normalize.js')(all);
     console.info(JSON.stringify(all));
   });

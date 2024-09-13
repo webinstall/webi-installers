@@ -18,7 +18,7 @@ function isOdd(filename) {
   }
 }
 
-function getAllReleases(request) {
+function getDistributables(request) {
   /*
   {
     version: 'go1.13.8',
@@ -86,10 +86,10 @@ function getAllReleases(request) {
   });
 }
 
-module.exports = getAllReleases;
+module.exports = getDistributables;
 
 if (module === require.main) {
-  getAllReleases(require('@root/request')).then(function (all) {
+  getDistributables(require('@root/request')).then(function (all) {
     all = require('../_webi/normalize.js')(all);
     all.releases = all.releases.slice(0, 10);
     console.info(JSON.stringify(all, null, 2));

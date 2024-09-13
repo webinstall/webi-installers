@@ -7,7 +7,7 @@
  * @param {string} formula
  * @returns {PromiseLike<any> | Promise<any>}
  */
-function getAllReleases(request, formula) {
+function getDistributables(request, formula) {
   if (!formula) {
     return Promise.reject('missing formula for brew');
   }
@@ -55,10 +55,10 @@ function failOnBadStatus(resp) {
   return resp;
 }
 
-module.exports = getAllReleases;
+module.exports = getDistributables;
 
 if (module === require.main) {
-  getAllReleases(require('@root/request'), 'mariadb').then(function (all) {
+  getDistributables(require('@root/request'), 'mariadb').then(function (all) {
     console.info(JSON.stringify(all, null, 2));
   });
 }

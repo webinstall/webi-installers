@@ -14,7 +14,7 @@ let GitHubish = require('./githubish.js');
  * @param {String} [username]
  * @param {String} [token]
  */
-async function getAllReleases(
+async function getDistributables(
   _request,
   owner,
   repo,
@@ -22,7 +22,7 @@ async function getAllReleases(
   username = process.env.GITHUB_USERNAME || '',
   token = process.env.GITHUB_TOKEN || '',
 ) {
-  let all = await GitHubish.getAllReleases({
+  let all = await GitHubish.getDistributables({
     owner,
     repo,
     baseurl,
@@ -32,10 +32,10 @@ async function getAllReleases(
   return all;
 }
 
-module.exports = getAllReleases;
+module.exports = getDistributables;
 
 if (module === require.main) {
-  getAllReleases(null, 'BurntSushi', 'ripgrep').then(function (all) {
+  getDistributables(null, 'BurntSushi', 'ripgrep').then(function (all) {
     console.info(JSON.stringify(all, null, 2));
   });
 }

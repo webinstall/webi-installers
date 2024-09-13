@@ -115,7 +115,7 @@ Repos.getCommitInfo = async function (repoPath, commitish) {
  * @param {string} gitUrl
  * @returns {PromiseLike<any> | Promise<any>}
  */
-async function getAllReleases(gitUrl) {
+async function getDistributables(gitUrl) {
   let all = {
     releases: [],
     download: '',
@@ -190,7 +190,7 @@ async function getAllReleases(gitUrl) {
   return all;
 }
 
-module.exports = getAllReleases;
+module.exports = getDistributables;
 
 if (module === require.main) {
   (async function main() {
@@ -203,7 +203,7 @@ if (module === require.main) {
       //'https://github.com/dense-analysis/ale.git',
     ];
     for (let url of testRepos) {
-      let all = await getAllReleases(url);
+      let all = await getDistributables(url);
 
       all = require('../_webi/normalize.js')(all);
       console.info(JSON.stringify(all, null, 2));

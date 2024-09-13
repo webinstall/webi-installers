@@ -40,7 +40,7 @@ let pkgMap = {
   musl: ['tar.gz', 'tar.xz'],
 };
 
-async function getAllReleases(request) {
+async function getDistributables(request) {
   let all = {
     releases: [],
     download: '',
@@ -174,10 +174,10 @@ async function getAllReleases(request) {
 
   return all;
 }
-module.exports = getAllReleases;
+module.exports = getDistributables;
 
 if (module === require.main) {
-  getAllReleases(require('@root/request')).then(function (all) {
+  getDistributables(require('@root/request')).then(function (all) {
     all = require('../_webi/normalize.js')(all);
     console.info(JSON.stringify(all));
     //console.info(JSON.stringify(all, null, 2));

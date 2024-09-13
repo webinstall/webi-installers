@@ -12,7 +12,7 @@ let GitHubish = module.exports;
  * @param {String} [opts.username]
  * @param {String} [opts.token]
  */
-GitHubish.getAllReleases = async function ({
+GitHubish.getDistributables = async function ({
   owner,
   repo,
   baseurl,
@@ -114,7 +114,7 @@ GitHubish.getAllReleases = async function ({
 };
 
 if (module === require.main) {
-  GitHubish.getAllReleases({
+  GitHubish.getDistributables({
     owner: 'BurntSushi',
     repo: 'ripgrep',
     baseurl: 'https://api.github.com',

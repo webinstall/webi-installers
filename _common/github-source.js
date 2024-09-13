@@ -11,7 +11,7 @@ require('dotenv').config();
  * @param {string} repo
  * @returns {PromiseLike<any> | Promise<any>}
  */
-async function getAllReleases(
+async function getDistributables(
   request,
   owner,
   repo,
@@ -120,10 +120,10 @@ function combinate(all, oses, arches) {
   return all;
 }
 
-module.exports = getAllReleases;
+module.exports = getDistributables;
 
 if (module === require.main) {
-  getAllReleases(
+  getDistributables(
     require('@root/request'),
     'BeyondCodeBootcamp',
     'DuckDNS.sh',

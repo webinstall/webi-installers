@@ -12,7 +12,7 @@ var GitHubish = require('./githubish.js');
  * @param {String} [username]
  * @param {String} [token]
  */
-async function getAllReleases(
+async function getDistributables(
   _request,
   owner,
   repo,
@@ -21,7 +21,7 @@ async function getAllReleases(
   token = '',
 ) {
   baseurl = `${baseurl}/api/v1`;
-  let all = await GitHubish.getAllReleases({
+  let all = await GitHubish.getDistributables({
     owner,
     repo,
     baseurl,
@@ -31,10 +31,10 @@ async function getAllReleases(
   return all;
 }
 
-module.exports = getAllReleases;
+module.exports = getDistributables;
 
 if (module === require.main) {
-  getAllReleases(
+  getDistributables(
     null,
     'root',
     'pathman',
@@ -42,7 +42,7 @@ if (module === require.main) {
     '',
     '',
   ).then(
-    //getAllReleases(require('@root/request'), 'root', 'serviceman', 'https://git.rootprojects.org').then(
+    //getDistributables(require('@root/request'), 'root', 'serviceman', 'https://git.rootprojects.org').then(
     function (all) {
       console.info(JSON.stringify(all, null, 2));
     },

@@ -76,16 +76,16 @@ function transformReleases(links) {
   };
 }
 
-async function getAllReleases(request) {
+async function getDistributables(request) {
   let releases = await getRawReleases(request);
   let all = transformReleases(releases);
   return all;
 }
 
-module.exports = getAllReleases;
+module.exports = getDistributables;
 
 if (module === require.main) {
-  getAllReleases(require('@root/request')).then(function (all) {
+  getDistributables(require('@root/request')).then(function (all) {
     all = require('../_webi/normalize.js')(all);
     all.releases = all.releases.slice(0, 10000);
     console.info(JSON.stringify(all, null, 2));

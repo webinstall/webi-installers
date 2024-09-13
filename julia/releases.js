@@ -10,7 +10,7 @@ var archMap = {
   powerpc64le: 'ppc64le',
 };
 
-async function getAllReleases() {
+async function getDistributables() {
   let all = {
     releases: [],
     download: '',
@@ -134,10 +134,10 @@ function sortByVersion(a, b) {
   return 0;
 }
 
-module.exports = getAllReleases;
+module.exports = getDistributables;
 
 if (module === require.main) {
-  getAllReleases().then(function (all) {
+  getDistributables().then(function (all) {
     all = require('../_webi/normalize.js')(all);
     all.releases = all.releases.slice(0, 10);
     console.info(JSON.stringify(all, null, 2));
