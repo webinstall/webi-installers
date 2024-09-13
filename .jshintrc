@@ -1,4 +1,7 @@
 {
+  "globals": {
+    "AbortController": false
+  },
   "browser": true,
   "node": true,
   "esversion": 11,
