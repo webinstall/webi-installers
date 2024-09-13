@@ -45,10 +45,6 @@ __run_go_essentials() {
     go "${my_install}" golang.org/x/tools/gopls@latest > /dev/null #2>/dev/null
 
     echo ""
-    echo guru
-    go "${my_install}" golang.org/x/tools/cmd/guru@latest > /dev/null #2>/dev/null
-
-    echo ""
     echo golint
     go "${my_install}" golang.org/x/lint/golint@latest > /dev/null #2>/dev/null
 

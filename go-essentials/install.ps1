@@ -17,10 +17,6 @@ Write-Output gopls
 & go install golang.org/x/tools/gopls@latest
 
 Write-Output ""
-Write-Output guru
-& go install golang.org/x/tools/guru@latest
-
-Write-Output ""
 Write-Output golint
 & go install golang.org/x/lint/golint@latest
 

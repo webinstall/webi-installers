@@ -17,7 +17,6 @@ including:
 
 - [godoc](https://pkg.go.dev/golang.org/x/tools/cmd/godoc)
 - [gopls](https://pkg.go.dev/golang.org/x/tools/gopls)
-- [guru](https://pkg.go.dev/golang.org/x/tools/cmd/guru)
 - [golint](https://pkg.go.dev/golang.org/x/lint/golint)
 - [goimports](https://pkg.go.dev/golang.org/x/tools/cmd/goimports)
 - [gomvpkg](https://pkg.go.dev/golang.org/x/tools/cmd/gomvpkg)
