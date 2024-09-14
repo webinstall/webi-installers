@@ -1,7 +1,14 @@
-.env
-node_modules
+# generated artifacts
 install-*.sh
 install-*.bat
 install-*.ps1
+
+# local config
+.env
+
+# caches
+node_modules/
+
+# temporary & backup files
 .*.sw*
 *.bak
