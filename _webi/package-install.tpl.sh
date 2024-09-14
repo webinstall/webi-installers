@@ -27,6 +27,7 @@ __bootstrap_webi() {
     #PKG_LIBCS=
     #PKG_FORMATS=
     #PKG_LATEST=
+    #PKG_STABLE=
     WEBI_PKG_DOWNLOAD=""
     WEBI_DOWNLOAD_DIR="${HOME}/Downloads"
     if command -v xdg-user-dir > /dev/null; then
