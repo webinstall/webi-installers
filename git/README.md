@@ -21,9 +21,10 @@ is a good place to get started if you're new to git.
 - Files
 - Commit Files
 - Ignore Files
+- Reasonable Defaults
 - Create Branch
-- Rebase by Default
 - Rebase
+- Auth via SSH
 - Auth via Token
 
 ### Files
@@ -66,9 +67,49 @@ This will branch from the branch you're currently on.
 git switch -c my-branch-name
 ```
 
-### How to rebase by default
+### Reasonable Defaults for Git Config
+
+- use SSH instead of HTTPS
+- default to 'main'
+- create on 'push'
+- stash on 'rebase'
+- default to 'rebase' (modern)
 
 ```sh
+#####################
+#    ENFORCE SSH    #
+#####################
+# replace HTTPS urls with SSH urls (to always use keys rather than tokens)
+
+git config --global url."ssh://git@example.com/".insteadOf "https://example.com/"
+git config --global url."ssh://git@github.com/".insteadOf "https://github.com/"
+
+######################
+#   DEFAULT BRANCH   #
+######################
+# Set the default branch for new repos (ex: 'main')
+
+git config --global init.defaultBranch 'main'
+
+######################
+# AUTOMATIC BRANCHES #
+######################
+# make 'git push' create branches if they don't exist on the remote
+
+git config --global push.autoSetupRemote true
+
+######################
+# REBASE AUTO-STASH  #
+######################
+# stash immediately before rebase and unstash immediately after
+
+git config --global rebase.autoStash true
+
+######################
+# REBASE BY DEFAULT  #
+######################
+# use 'rebase' rather than 'merge' or 'ff-only'
+
 git config --global pull.rebase true
 ```
 
@@ -100,6 +141,26 @@ git rebase master
 # fix conflicts if you need to, and then continue
 git add ./my-merged-file
 git rebase --continue
+```
+
+### How to authenticate git with SSH keys by default
+
+```sh
+# Git, Gitea, etc
+git config --global url."ssh://git@git.example.com/".insteadOf "https://git.example.com/"
+git config --global url."ssh://git@git.example.com.com/".insteadOf "git@git.example.com.com:"
+
+# GitHub
+git config --global url."ssh://git@github.com/".insteadOf "https://github.com/"
+git config --global url."ssh://git@github.com/".insteadOf "git@github.com:"
+
+# GitLab
+git config --global url."ssh://git@gitlab.com/".insteadOf "https://gitlab.com/"
+git config --global url."ssh://git@gitlab.com/".insteadOf "git@gitlab.com:"
+
+# BitBucket
+git config --global url."ssh://git@bitbucket.com/".insteadOf "https://bitbucket.com/"
+git config --global url."ssh://git@bitbucket.com/".insteadOf "git@bitbucket.com:"
 ```
 
 ### How to authenticate git with deploy tokens
