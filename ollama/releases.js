@@ -22,6 +22,12 @@ module.exports = async function (request) {
 
       rel.arch = 'aarch64';
     }
+
+    let isROCm = rel.name.includes('-rocm');
+    if (isROCm) {
+      Object.assign(rel, { arch: 'x86_64_rocm' });
+    }
+
     releases.push(rel);
   }
   all.releases = releases;
