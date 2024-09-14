@@ -7,7 +7,7 @@ let owner = 'therootcompany';
 let repo = 'runzip';
 
 Releases.latest = async function () {
-  let all = await GitHub.getAllPackages(null, owner, repo);
+  let all = await GitHub.getDistributables(null, owner, repo);
   return all;
 };
 
