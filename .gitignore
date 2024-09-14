@@ -4,11 +4,16 @@ install-*.bat
 install-*.ps1
 
 # local config
+.env.*
+*.env
 .env
+!example.env
 
 # caches
+_cache/
 node_modules/
 
 # temporary & backup files
 .*.sw*
 *.bak
+*.bak.*
