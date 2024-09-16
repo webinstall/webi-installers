@@ -28,6 +28,21 @@ module.exports = async function (request) {
       Object.assign(rel, { arch: 'x86_64_rocm' });
     }
 
+    let oddballs = {
+      tgz: 'tar.gz',
+      tbz2: 'tar.bz2',
+      txz: 'tar.xz',
+    };
+    let oddExts = Object.keys(oddballs);
+    for (let oddExt of oddExts) {
+      let isOddball = rel.name.endsWith(`.${oddExt}`);
+      if (isOddball) {
+        let ext = oddballs[oddExt];
+        rel.name = rel.name.replace(`.${oddExt}`, `.${ext}`);
+        rel.ext = ext;
+      }
+    }
+
     releases.push(rel);
   }
   all.releases = releases;
