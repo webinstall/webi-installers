@@ -1,7 +1,7 @@
 'use strict';
 
 // See <https://googlechromelabs.github.io/chrome-for-testing/>
-var releaseApiUrl =
+const releaseApiUrl =
   'https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json';
 
 // {
@@ -40,14 +40,19 @@ var releaseApiUrl =
 //   ]
 // }
 
-module.exports = async function (request) {
-  let resp = await request({
-    url: releaseApiUrl,
-    json: true,
-  });
+module.exports = async function () {
+  let resp = await fetch(releaseApiUrl);
+
+  if (!resp.ok) {
+    let text = await resp.text();
+    let msg = `failed to fetch releases from '${releaseApiUrl}': ${resp.status} ${text}`;
+    throw new Error(msg);
+  }
+
+  let body = await resp.json();
 
   let builds = [];
-  for (let release of resp.body.versions) {
+  for (let release of body.versions) {
     if (!release.downloads.chromedriver) {
       continue;
     }
@@ -58,7 +63,7 @@ module.exports = async function (request) {
         version: version,
         download: asset.url,
         // I' not sure that this is actually statically built but it
-        // seems to be and at worst we'll just get bug reports for Apline
+        // seems to be and at worst we'll just get bug reports for Alpine
         libc: 'none',
       };
 
@@ -75,10 +80,15 @@ module.exports = async function (request) {
 };
 
 if (module === require.main) {
-  module.exports(require('@root/request')).then(function (all) {
-    all = require('../_webi/normalize.js')(all);
-    // just select the latest 5 for demonstration
-    all.releases = all.releases.slice(-20);
-    console.info(JSON.stringify(all, null, 2));
-  });
+  module
+    .exports()
+    .then(function (all) {
+      all = require('../_webi/normalize.js')(all);
+      // just select the latest 20 for demonstration
+      all.releases = all.releases.slice(-20);
+      console.info(JSON.stringify(all, null, 2));
+    })
+    .catch(function (err) {
+      console.error('Error:', err);
+    });
 }
