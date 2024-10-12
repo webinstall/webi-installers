@@ -1,5 +1,18 @@
 'use strict';
 
+/**
+ * @typedef DistributableRaw
+ * @prop {String} name
+ * @prop {String} version
+ * @prop {Boolean} lts
+ * @prop {String} [channel]
+ * @prop {String} date
+ * @prop {String} os
+ * @prop {String} arch
+ * @prop {String} ext
+ * @prop {String} download
+ */
+
 let GitHubish = module.exports;
 
 /**
@@ -66,6 +79,7 @@ GitHubish.getDistributables = async function ({
   }
 
   let all = {
+    /** @type {Array<DistributableRaw>} */
     releases: [],
     // todo make this ':baseurl' + ':releasename'
     download: '',
