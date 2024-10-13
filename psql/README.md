@@ -51,6 +51,7 @@ psql "postgres://db-xxxx@pg-1.example.com:5432/db-xxxx?sslmode=require&sslnegoti
 - .pgpass
 - .psqlrc
 - How to Import / Export CSV
+- How to Backup & Restore
 - Session Variables (& Encryption Keys)
 
 ### Where to Find the Postgres Server Cheat Sheet
@@ -217,6 +218,68 @@ FROM "character_descriptions";
 ```sql
 \copy "character_descriptions"("id", "character_name", "description") FROM './character_descriptions.csv' WITH (FORMAT csv, HEADER);
 ```
+
+### How to Backup & Restore
+
+To backup in a way that will be easy to restore:
+
+- save the schema separately from the data
+- don't include database-specific roles or permissions
+- store the password in `~/.pgpass` as described above
+
+You can use a helper script like
+[psql-backup](https://github.com/bnnanet/pg-essentials), or create your own:
+
+Given these credentials:
+
+```sh
+my_user="db_xxxx"
+my_db="db_xxxx"
+my_host="pg-1.example.com"
+my_port="5432"
+```
+
+And these [`pg_dump`](https://www.postgresql.org/docs/current/app-pgdump.html)
+commands:
+
+```sh
+pg_dump --no-privileges --no-owner --schema-only --clean \
+    --username "$my_user" --no-password --host "$my_host" --port "$my_port" \
+    -f ./"$my_db".schema.drop.sql "$my_db" >&2
+
+pg_dump --no-privileges --no-owner --schema-only \
+    --username "$my_user" --no-password --host "$my_host" --port "$my_port" \
+    -f ./"$my_db".schema.sql "$my_db" >&2
+
+pg_dump --no-privileges --no-owner --data-only \
+    --username "$my_user" --no-password --host "$my_host" --port "$my_port" \
+    -f ./"$my_db".data.sql "$my_db"
+```
+
+You'll get your data is this format:
+
+```text
+db_xxxx.schema.drop.sql # will replace (DELETE) all tables with empty tables
+db_xxxx.schema.sql      # will create new empty tables
+db_xxxx.data.sql        # will load data
+```
+
+To restore / copy to another database:
+
+```sh
+new_user="db_yyyy"
+new_db="db_yyyy"
+psql "postgres://$new_user@$my_host:$my_port/$new_db" < ./db_xxxx.schema.sql
+psql "postgres://$new_user@$my_host:$my_port/$new_db" < ./db_xxxx.data.sql
+```
+
+Or use
+[`pg_restore`](https://www.postgresql.org/docs/current/app-pgrestore.html).
+
+See the examples at:
+
+- https://github.com/bnnanet/pg-essentials?tab=readme-ov-file#psql-backup
+- https://github.com/therootcompany/pg-xzbackup.sh
 
 ### How to use Session Variables
 
