@@ -52,6 +52,7 @@ psql "postgres://db-xxxx@pg-1.example.com:5432/db-xxxx?sslmode=require&sslnegoti
 - .psqlrc
 - How to Import / Export CSV
 - How to Backup & Restore
+- How to Create a Table
 - Session Variables (& Encryption Keys)
 
 ### Where to Find the Postgres Server Cheat Sheet
@@ -280,6 +281,100 @@ See the examples at:
 
 - https://github.com/bnnanet/pg-essentials?tab=readme-ov-file#psql-backup
 - https://github.com/therootcompany/pg-xzbackup.sh
+
+### How to Create a Table
+
+```sql
+CREATE TABLE "example_table" (
+    -- Primary Key using gen_random_uuid()
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    -- Numeric types
+    "small_int_column" SMALLINT,
+    "positive_integer_column" INTEGER CHECK ("positive_integer_column" > 0),
+    "big_int_column" BIGINT,
+    "decimal_column" DECIMAL(10, 2),
+    "numeric_column" NUMERIC(15, 3),
+    "real_column" REAL,
+    "double_precision_column" DOUBLE PRECISION,
+    "serial_column" SERIAL NOT NULL UNIQUE,
+    "bigserial_column" BIGSERIAL NOT NULL UNIQUE,
+
+    -- Monetary type
+    "money_column" MONEY,
+
+    -- Character types
+    "char_column" CHAR(10),
+    "varchar_column" VARCHAR(255),
+    "text_column" TEXT,
+
+    -- Binary types
+    "bytea_column" BYTEA,
+
+    -- Date/time types
+    "timestamp_column" TIMESTAMP,
+    "timestamp_tz_column" TIMESTAMP WITH TIME ZONE,
+    "date_column" DATE,
+    "time_column" TIME,
+    "time_tz_column" TIME WITH TIME ZONE,
+    "interval_column" INTERVAL,
+
+    -- Boolean type
+    "boolean_column" BOOLEAN,
+
+    -- UUID type
+    "uuid_column" UUID,
+
+    -- JSON types
+    "json_column" JSON DEFAULT '{}',
+    "jsonb_column" JSONB,
+
+    -- Array types
+    "int_array_column" INTEGER[],
+    "text_array_column" TEXT[],
+
+    -- Geometric types
+    "point_column" POINT,
+    "line_column" LINE,
+    "lseg_column" LSEG,
+    "box_column" BOX,
+    "path_column" PATH,
+    "polygon_column" POLYGON,
+    "circle_column" CIRCLE,
+
+    -- Network address types
+    "cidr_column" CIDR,
+    "inet_column" INET,
+    "macaddr_column" MACADDR,
+    "macaddr8_column" MACADDR8,
+
+    -- Bit string types
+    "bit_column" BIT(8),
+    "varbit_column" BIT VARYING(8),
+
+    -- Text search types
+    "tsvector_column" TSVECTOR,
+    "tsquery_column" TSQUERY,
+
+    -- XML type
+    "xml_column" XML,
+
+    -- Range types
+    "int4range_column" INT4RANGE,
+    "numrange_column" NUMRANGE,
+    "tsrange_column" TSRANGE,
+    "tstzrange_column" TSTZRANGE,
+    "daterange_column" DATERANGE,
+
+    -- Hstore type
+    "hstore_column" HSTORE,
+
+    -- Unique constraint (example)
+    CONSTRAINT "unique_example_table_columns" UNIQUE ("positive_integer_column", "varchar_column")
+);
+
+COMMENT ON COLUMN "example_table"."id" IS 'Unique identifier for the example table';
+```
 
 ### How to use Session Variables
 
