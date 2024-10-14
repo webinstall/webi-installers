@@ -17,3 +17,8 @@ node_modules/
 .*.sw*
 *.bak
 *.bak.*
+
+# other
+.DS_Store
+desktop.ini
+.directory
