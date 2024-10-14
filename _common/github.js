@@ -7,7 +7,7 @@ let GitHubish = require('./githubish.js');
 /**
  * Lists GitHub Releases (w/ uploaded assets)
  *
- * @param {null} _request - deprecated
+ * @param {null} _ - deprecated
  * @param {String} owner
  * @param {String} repo
  * @param {String} [baseurl]
@@ -15,7 +15,7 @@ let GitHubish = require('./githubish.js');
  * @param {String} [token]
  */
 module.exports = async function (
-  _request,
+  _,
   owner,
   repo,
   baseurl = 'https://api.github.com',

@@ -3,14 +3,14 @@
 var git = require('../_common/git-tag.js');
 var gitUrl = 'https://github.com/tpope/vim-commentary.git';
 
-module.exports = async function (request) {
+module.exports = async function () {
   let all = await git(gitUrl);
 
   return all;
 };
 
 if (module === require.main) {
-  module.exports(require('@root/request')).then(function (all) {
+  module.exports().then(function (all) {
     all = require('../_webi/normalize.js')(all);
 
     let samples = JSON.stringify(all, null, 2);

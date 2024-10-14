@@ -3,7 +3,7 @@
 var git = require('../_common/git-tag.js');
 var gitUrl = 'https://github.com/ziglang/zig.vim.git';
 
-module.exports = async function (request) {
+module.exports = async function () {
   let all = await git(gitUrl);
 
   all._names = ['zig.vim', 'vim-zig'];
@@ -11,7 +11,7 @@ module.exports = async function (request) {
 };
 
 if (module === require.main) {
-  module.exports(require('@root/request')).then(function (all) {
+  module.exports().then(function (all) {
     all = require('../_webi/normalize.js')(all);
 
     let samples = JSON.stringify(all, null, 2);

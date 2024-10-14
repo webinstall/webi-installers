@@ -5,7 +5,7 @@ var GitHubish = require('./githubish.js');
 /**
  * Lists Gitea Releases (w/ uploaded assets)
  *
- * @param {any} _request - deprecated
+ * @param {null} _ - deprecated
  * @param {String} owner
  * @param {String} repo
  * @param {String} baseurl
@@ -13,7 +13,7 @@ var GitHubish = require('./githubish.js');
  * @param {String} [token]
  */
 async function getDistributables(
-  _request,
+  _,
   owner,
   repo,
   baseurl,
@@ -42,7 +42,6 @@ if (module === require.main) {
     '',
     '',
   ).then(
-    //getDistributables(require('@root/request'), 'root', 'serviceman', 'https://git.rootprojects.org').then(
     function (all) {
       console.info(JSON.stringify(all, null, 2));
     },

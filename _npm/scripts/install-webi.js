@@ -4,7 +4,6 @@
 
 //var pkg = require('../package.json');
 var os = require('os');
-//var request = require('@root/request');
 //var promisify = require('util').promisify;
 //var exec = promisify(require('child_process').exec);
 var exec = require('child_process').exec;
