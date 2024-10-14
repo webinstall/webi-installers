@@ -4,8 +4,8 @@ var github = require('../_common/github.js');
 var owner = 'cilium';
 var repo = 'cilium-cli';
 
-module.exports = async function (request) {
-  let all = await github(request, owner, repo);
+module.exports = async function () {
+  let all = await github(null, owner, repo);
   return all;
 };
 

@@ -4,8 +4,8 @@ var github = require('../_common/github.js');
 var owner = 'sstadick';
 var repo = 'crabz';
 
-module.exports = async function (request) {
-  let all = await github(request, owner, repo);
+module.exports = async function () {
+  let all = await github(null, owner, repo);
 
   let releases = [];
   for (let rel of all.releases) {
@@ -22,7 +22,7 @@ module.exports = async function (request) {
 };
 
 if (module === require.main) {
-  module.exports(require('@root/request')).then(function (all) {
+  module.exports().then(function (all) {
     all = require('../_webi/normalize.js')(all);
     // just select the first 5 for demonstration
     all.releases = all.releases.slice(0, 5);

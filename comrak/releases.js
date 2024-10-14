@@ -6,8 +6,8 @@ var repo = 'comrak';
 
 var ODDITIES = ['-musleabihf.1-'];
 
-module.exports = function (request) {
-  return github(request, owner, repo).then(function (all) {
+module.exports = function () {
+  return github(null, owner, repo).then(function (all) {
     let builds = [];
 
     loopBuilds: for (let build of all.releases) {
@@ -31,7 +31,7 @@ module.exports = function (request) {
 };
 
 if (module === require.main) {
-  module.exports(require('@root/request')).then(function (all) {
+  module.exports().then(function (all) {
     all = require('../_webi/normalize.js')(all);
     all.releases = all.releases.slice(0, 10);
     //console.info(JSON.stringify(all));

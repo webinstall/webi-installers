@@ -14,8 +14,8 @@ var repo = 'ripgrep';
 
 let Releases = module.exports;
 
-Releases.latest = async function (request) {
-  let all = await github(request, owner, repo);
+Releases.latest = async function () {
+  let all = await github(null, owner, repo);
   return all;
 };
 

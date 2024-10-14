@@ -4,8 +4,8 @@ var github = require('../_common/github.js');
 var owner = 'therootcompany';
 var repo = 'xz-static';
 
-module.exports = function (request) {
-  return github(request, owner, repo).then(function (all) {
+module.exports = function () {
+  return github(null, owner, repo).then(function (all) {
     all.releases.forEach(function (rel) {
       if (/windows/.test(rel.download)) {
         if (!/(86|64)/.test(rel.arch)) {
@@ -18,7 +18,7 @@ module.exports = function (request) {
 };
 
 if (module === require.main) {
-  module.exports(require('@root/request')).then(function (all) {
+  module.exports().then(function (all) {
     all = require('../_webi/normalize.js')(all);
     // just select the first 5 for demonstration
     all.releases = all.releases.slice(0, 5);

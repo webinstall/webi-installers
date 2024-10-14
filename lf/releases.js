@@ -4,8 +4,8 @@ var github = require('../_common/github.js');
 var owner = 'gokcehan';
 var repo = 'lf';
 
-module.exports = function (request) {
-  return github(request, owner, repo).then(function (all) {
+module.exports = function () {
+  return github(null, owner, repo).then(function (all) {
     all.releases = all.releases.map(function (r) {
       // r21 -> 0.21.0
       if (/^r/.test(r.version)) {
@@ -18,7 +18,7 @@ module.exports = function (request) {
 };
 
 if (module === require.main) {
-  module.exports(require('@root/request')).then(function (all) {
+  module.exports().then(function (all) {
     all = require('../_webi/normalize.js')._debug(all);
     console.info(JSON.stringify(all, null, 2));
   });

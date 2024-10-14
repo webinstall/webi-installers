@@ -4,9 +4,9 @@ var github = require('../_common/github.js');
 var owner = 'git-for-windows';
 var repo = 'git';
 
-module.exports = function (request) {
+module.exports = function () {
   // TODO support mac and linux tarballs
-  return github(request, owner, repo).then(function (all) {
+  return github(null, owner, repo).then(function (all) {
     // See https://github.com/git-for-windows/git/wiki/MinGit
     // also consider https://github.com/git-for-windows/git/wiki/Silent-or-Unattended-Installation
     all.releases = all.releases
@@ -26,7 +26,7 @@ module.exports = function (request) {
 };
 
 if (module === require.main) {
-  module.exports(require('@root/request')).then(function (all) {
+  module.exports().then(function (all) {
     all = require('../_webi/normalize.js')(all);
     console.info(JSON.stringify(all, null, 2));
   });

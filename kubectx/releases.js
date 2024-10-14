@@ -4,8 +4,8 @@ var github = require('../_common/github.js');
 var owner = 'ahmetb';
 var repo = 'kubectx';
 
-module.exports = function (request) {
-  return github(request, owner, repo).then(function (all) {
+module.exports = function () {
+  return github(null, owner, repo).then(function (all) {
     let builds = [];
 
     for (let build of all.releases) {
@@ -28,7 +28,7 @@ module.exports = function (request) {
 };
 
 if (module === require.main) {
-  module.exports(require('@root/request')).then(function (all) {
+  module.exports().then(function (all) {
     all = require('../_webi/normalize.js')(all);
     // just select the first 5 for demonstration
     all.releases = all.releases.slice(0, 5);

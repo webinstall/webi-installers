@@ -6,8 +6,8 @@ var github = require('../_common/github.js');
 var owner = 'eugeneware';
 var repo = 'ffmpeg-static';
 
-module.exports = function (request) {
-  return github(request, owner, repo).then(function (all) {
+module.exports = function () {
+  return github(null, owner, repo).then(function (all) {
     all.releases = all.releases
       .filter(function (rel) {
         let isFfmpeg = rel.name.includes('ffmpeg');
@@ -38,7 +38,7 @@ module.exports = function (request) {
 };
 
 if (module === require.main) {
-  module.exports(require('@root/request')).then(function (all) {
+  module.exports().then(function (all) {
     all = require('../_webi/normalize.js')(all);
     console.info(JSON.stringify(all));
   });

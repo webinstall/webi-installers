@@ -32,8 +32,8 @@ let targets = {
   },
 };
 
-module.exports = function (request) {
-  return github(request, owner, repo).then(function (all) {
+module.exports = function () {
+  return github(null, owner, repo).then(function (all) {
     for (let rel of all.releases) {
       let windows32 = rel.name.includes('WindowsX86.');
       if (windows32) {
@@ -71,7 +71,7 @@ module.exports = function (request) {
 };
 
 if (module === require.main) {
-  module.exports(require('@root/request')).then(function (all) {
+  module.exports().then(function (all) {
     all = require('../_webi/normalize.js')(all);
     console.info(JSON.stringify(all));
     //console.info(JSON.stringify(all, null, 2));
