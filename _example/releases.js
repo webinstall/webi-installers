@@ -20,9 +20,8 @@ Releases.latest = async function () {
 };
 
 Releases.sample = async function () {
-  let request = require('@root/request');
   let normalize = require('../_webi/normalize.js');
-  let all = await module.exports(request);
+  let all = await module.exports();
   all = normalize(all);
   // just select the first 5 for demonstration
   all.releases = all.releases.slice(0, 5);
