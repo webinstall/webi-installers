@@ -7,7 +7,7 @@ IF ($my_arch -eq $null -or $my_arch -eq "") {
 IF ($my_arch -eq "AMD64") {
     # Because PowerShell isn't ARM yet.
     # See https://oofhours.com/2020/02/04/powershell-on-windows-10-arm64/
-    $my_os_arch = wmic os get osarchitecture
+    $my_os_arch = (Get-WmiObject -Class Win32_OperatingSystem).OSArchitecture
 
     # Using -clike because of the trailing newline
     IF ($my_os_arch -clike "ARM 64*") {

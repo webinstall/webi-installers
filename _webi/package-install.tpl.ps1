@@ -88,7 +88,7 @@ function Get-UserAgent {
     IF ($my_arch -eq "AMD64") {
         # Because PowerShell is sometimes AMD64 on Windows 10 ARM
         # See https://oofhours.com/2020/02/04/powershell-on-windows-10-arm64/
-        $my_os_arch = wmic os get osarchitecture
+        $my_os_arch = (Get-WmiObject -Class Win32_OperatingSystem).OSArchitecture
 
         # Using -clike because of the trailing newline
         IF ($my_os_arch -clike "ARM 64*") {
