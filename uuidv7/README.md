@@ -53,6 +53,30 @@ uuidv7 ; uuidv7 ; uuidv7
 01928d74-3ffb-7e06-abe9-3fe20e5cb5f2
 ```
 
+### How to Generate UPPER CASE (like `uuidgen`)
+
+```sh
+uuidv7 | tr '[:lower:]' '[:upper:]'
+```
+
+```text
+01928D73-D8ED-7211-A314-7081D763271D
+```
+
+### How to Generate v4 UUIDs?
+
+Use `uuidgen`.
+
+```sh
+uuidgen
+uuidgen | tr '[:upper:]' '[:lower:]'
+```
+
+```text
+84FA79E5-024E-4388-8D10-91618B93BE9D
+84fa79e5-024e-4388-8d10-91618b93be9d
+```
+
 ### How could I roll my own UUID v7 generator?
 
 It's not that hard. There are examples in many languages here:
