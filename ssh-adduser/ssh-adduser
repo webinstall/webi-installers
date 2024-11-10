@@ -3,6 +3,10 @@ set -e
 set -u
 
 main() {
+    cmd_http_get="curl -fsS -#"
+    if ! command -v curl > /dev/null; then
+        cmd_http_get="wget -O -"
+    fi
 
     # Add User 'app'
     # Picking 'app' by common convention (what Docker & Vagrant use).
@@ -17,7 +21,7 @@ main() {
 
     if [ -n "${my_key_url}" ]; then
         my_keys="$(
-            curl -fsS "${my_key_url}"
+            $cmd_http_get "${my_key_url}"
         )"
     elif [ -e ~/.ssh/authorized_keys ] && grep -q -v '#' ~/.ssh/authorized_keys; then
         my_keys="$(
@@ -29,7 +33,7 @@ main() {
         echo "    You must add a key to ~/.ssh/authorized_keys before adding a new ssh user."
         echo ""
         echo "To fix:"
-        echo "    Run 'curl https://webinstall.dev/ssh-pubkey | sh' on your local system, "
+        echo "    Run '$cmd_http_get https://webi.sh/ssh-pubkey | sh' on your local system, "
         echo "    then add that key to ~/.ssh/authorized_keys on this (the remote) system.  "
         echo ""
         exit 1
@@ -58,8 +62,7 @@ main() {
     # sudo -i -u "$my_new_user" sh -c \
     #     "ssh-keygen -b 2048 -t rsa -f '/home/$my_new_user/.ssh/id_rsa' -q -N ''"
     WEBI_HOST=${WEBI_HOST:-"https://webinstall.dev"}
-    sudo -i -u "$my_new_user" sh -c "curl -fsSL '$WEBI_HOST/ssh-pubkey' | sh > /dev/null" ||
-        sudo -i -u "$my_new_user" sh -c "wget -q -O - '$WEBI_HOST/ssh-pubkey' | sh > /dev/null"
+    sudo -i -u "$my_new_user" sh -c "$cmd_http_get '$WEBI_HOST/ssh-pubkey' | sh > /dev/null"
 
     if test -z "${SSH_ADDUSER_AUTO:-}"; then
         echo ""
