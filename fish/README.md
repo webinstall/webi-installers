@@ -43,7 +43,7 @@ the file:
 ```sh
 #!/bin/bash
 
-echo "Who am I? I'm $(whoami)."
+echo "Who am I? I'm $(id -u -n)."
 ```
 
 You can also run bash explicitly:
@@ -99,7 +99,7 @@ You should use `chsh` to change your shell:
 ```sh
 #!/bin/sh
 
-sudo chsh -s "$(command -v fish)" "$(whoami)"
+sudo chsh -s "$(command -v fish)" "$(id -u -n)"
 ```
 
 If vim uses `fish` instead of `bash`, annoying errors will happen.

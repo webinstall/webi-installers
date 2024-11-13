@@ -61,7 +61,7 @@ folder:
 
 ```sh
 rsync -av "$HOME/.ssh/id_rsa.pub" \
-    "$HOME/Downloads/id_rsa.$(whoami).pub"
+    "$HOME/Downloads/id_rsa.$(id -u -n).pub"
 ```
 
 How to print your public key to the Terminal:
