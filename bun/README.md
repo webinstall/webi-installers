@@ -134,7 +134,7 @@ file)
    ```sh
    sudo env PATH="$PATH" \
        serviceman add --path="$PATH" --system \
-           --username "$(whoami)" --name my-project -- \
+           --username "$(id -u -n)" --name my-project -- \
        bun run ./my-project.js
    ```
 4. Restart the logging service
