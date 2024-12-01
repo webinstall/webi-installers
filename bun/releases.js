@@ -18,6 +18,14 @@ module.exports = function () {
           return false;
         }
 
+        let isMusl = r.name.includes('-musl');
+        if (isMusl) {
+          r._musl = true;
+          r.libc = 'musl';
+        } else if (r.os === 'linux') {
+          r.libc = 'gnu';
+        }
+
         return true;
       })
       .map(function (r) {
