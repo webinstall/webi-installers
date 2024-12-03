@@ -3,12 +3,22 @@
 var NON_BUILDS = ['bootstrap', 'src'];
 var ODDITIES = NON_BUILDS.concat(['armv6kz-linux']);
 
-module.exports = function (request) {
-  return request({
-    url: 'https://ziglang.org/download/index.json',
-    json: true,
-  }).then(function (resp) {
-    let versions = resp.body;
+module.exports = async function () {
+  try {
+    // Fetch the Zig language download index JSON
+    const response = await fetch('https://ziglang.org/download/index.json', {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+    });
+
+    // Validate HTTP response
+    if (!response.ok) {
+      throw new Error(`Failed to fetch releases: HTTP ${response.status} - ${response.statusText}`);
+    }
+
+    // Parse the JSON response
+    const versions = await response.json();
+
     let releases = [];
 
     let refs = Object.keys(versions);
@@ -77,8 +87,13 @@ module.exports = function (request) {
     return {
       releases: releases,
     };
-  });
-};
+  }catch (err) {
+    console.error('Error fetching Zig releases:', err.message);
+    return {
+      releases: [],
+    };
+  };
+}
 
 if (module === require.main) {
   module.exports(require('@root/request')).then(function (all) {

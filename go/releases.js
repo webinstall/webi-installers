@@ -18,7 +18,7 @@ function isOdd(filename) {
   }
 }
 
-function getDistributables(request) {
+async function getDistributables() {
   /*
   {
     version: 'go1.13.8',
@@ -37,54 +37,54 @@ function getDistributables(request) {
     ]
   };
   */
-  return request({
-    url: 'https://golang.org/dl/?mode=json&include=all',
-    json: true,
-  }).then((resp) => {
-    var goReleases = resp.body;
-    var all = {
+    const response = await fetch('https://golang.org/dl/?mode=json&include=all', {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch Go releases: ${response.statusText}`);
+    }
+  
+    const goReleases = await response.json();
+    const all = {
       releases: [],
       download: '',
     };
 
     goReleases.forEach((release) => {
-      // strip 'go' prefix, standardize version
-      var parts = release.version.slice(2).split('.');
+      // Strip 'go' prefix and standardize version
+      const parts = release.version.slice(2).split('.');
       while (parts.length < 3) {
         parts.push('0');
       }
-      var version = parts.join('.');
-      // nix 'go' prefix
-      var fileversion = release.version.slice(2);
-
+      const version = parts.join('.');
+      const fileversion = release.version.slice(2);
+  
       release.files.forEach((asset) => {
-        let odd = isOdd(asset.filename);
-        if (odd) {
+        if (isOdd(asset.filename)) {
           return;
         }
-
-        var filename = asset.filename;
-        var os = osMap[asset.os] || asset.os || '-';
-        var arch = archMap[asset.arch] || asset.arch || '-';
+  
+        const filename = asset.filename;
+        const os = osMap[asset.os] || asset.os || '-';
+        const arch = archMap[asset.arch] || asset.arch || '-';
         all.releases.push({
           version: version,
           _version: fileversion,
-          // all go versions >= 1.0.0 are effectively LTS
           lts: (parts[0] > 0 && release.stable) || false,
           channel: (release.stable && 'stable') || 'beta',
-          date: '1970-01-01', // the world may never know
+          date: '1970-01-01', // Placeholder
           os: os,
           arch: arch,
-          ext: '', // let normalize run the split/test/join
-          hash: '-', // not ready to standardize this yet
+          ext: '', // Let normalize run the split/test/join
+          hash: '-', // Placeholder for hash
           download: `https://dl.google.com/go/${filename}`,
         });
       });
     });
-
+  
     return all;
-  });
-}
+  }
 
 module.exports = getDistributables;
 

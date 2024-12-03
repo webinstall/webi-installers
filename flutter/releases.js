@@ -53,7 +53,7 @@ var channelMap = {};
 //   ]
 // }
 
-module.exports = async function (request) {
+module.exports = async function () {
   let all = {
     download: '',
     releases: [],
@@ -61,13 +61,17 @@ module.exports = async function (request) {
   };
 
   for (let osname of FLUTTER_OSES) {
-    let resp = await request({
-      url: `https://storage.googleapis.com/flutter_infra_release/releases/releases_${osname}.json`,
-      json: true,
+    const response = await fetch(`https://storage.googleapis.com/flutter_infra_release/releases/releases_${osname}.json`, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
     });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data for ${osname}: ${response.statusText}`);
+    }
+    const respBody = await response.json();
 
-    let osBaseUrl = resp.body.base_url;
-    let osReleases = resp.body.releases;
+    let osBaseUrl = respBody.base_url;
+    let osReleases = respBody.releases;
 
     for (let asset of osReleases) {
       if (!channelMap[asset.channel]) {
@@ -80,7 +84,6 @@ module.exports = async function (request) {
         lts: false,
         channel: asset.channel,
         date: asset.release_date.replace(/T.*/, ''),
-        //sha256: asset.sha256,
         download: `${osBaseUrl}/${asset.archive}`,
         _filename: asset.archive,
       });

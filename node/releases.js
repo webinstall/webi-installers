@@ -40,7 +40,7 @@ let pkgMap = {
   musl: ['tar.gz', 'tar.xz'],
 };
 
-async function getDistributables(request) {
+async function getDistributables() {
   let all = {
     releases: [],
     download: '',
@@ -64,26 +64,40 @@ async function getDistributables(request) {
   ]
   */
 
-  // Alternate: 'https://nodejs.org/dist/index.json',
-  let baseUrl = `https://nodejs.org/download/release`;
-  let officialP = request({
-    url: `${baseUrl}/index.json`,
-    json: true,
-  }).then(function (resp) {
-    transform(baseUrl, resp.body);
-    return;
+   // Alternate: 'https://nodejs.org/dist/index.json',
+   let baseUrl = `https://nodejs.org/download/release`;
+
+   // Fetch official builds
+   let officialP = fetch(`${baseUrl}/index.json`, {
+     method: 'GET',
+     headers: { Accept: 'application/json' },
+   }).then((response) => {
+    if (!response.ok) {
+      throw new Error(`Failed to fetch official builds: HTTP ${response.status} - ${response.statusText}`);
+    }
+    return response.json();
+  })
+  .then((data) => {
+    transform(baseUrl, data);
   });
 
+
+  // Fetch unofficial builds
   let unofficialBaseUrl = `https://unofficial-builds.nodejs.org/download/release`;
-  let unofficialP = request({
-    url: `${unofficialBaseUrl}/index.json`,
-    json: true,
+  let unofficialP = fetch(`${unofficialBaseUrl}/index.json`, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
   })
-    .then(function (resp) {
-      transform(unofficialBaseUrl, resp.body);
-      return;
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch unofficial builds: HTTP ${response.status} - ${response.statusText}`);
+      }
+      return response.json();
     })
-    .catch(function (err) {
+    .then((data) => {
+      transform(unofficialBaseUrl, data);
+    })
+    .catch((err) => {
       console.error('failed to fetch unofficial-builds');
       console.error(err);
     });
