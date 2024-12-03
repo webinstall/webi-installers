@@ -40,23 +40,41 @@ var headers = {
   'Accept-Language': 'en-US,en;q=0.9,sq;q=0.8',
 };
 
-module.exports = function (request) {
-  var all = {
+async function fetchReleasesForOS(os) {
+  // Fetch the webpage for the given OS
+  const response = await fetch(os.url, {
+    method: 'GET',
+    headers: headers,
+  });
+
+  // Validate HTTP response
+  if (!response.ok) {
+    throw new Error(`Failed to fetch URL: ${os.url}. HTTP ${response.status} - ${response.statusText}`);
+  }
+
+  // Parse the response body
+  const body = await response.text();
+
+  // Extract the download link
+  const match = body.match(/(http[^>]+Install[^>]+\.dmg)/);
+  return match ? match[1] : null;
+}
+
+async function getDistributables() {
+  const all = {
     _names: ['InstallOS'],
     download: '',
     releases: [],
   };
 
-  return Promise.all(
-    oses.map(function (os) {
-      return request({
-        method: 'GET',
-        url: os.url,
-        headers: headers,
-      }).then(function (resp) {
-        var m = resp.body.match(/(http[^>]+Install[^>]+.dmg)/);
-        var download = m && m[1];
-        ['macos', 'linux'].forEach(function (osname) {
+  // Fetch data for each OS and populate the releases array
+  await Promise.all(
+    oses.map(async (os) => {
+      try {
+        const download = await fetchReleasesForOS(os);
+
+        // Add releases for macOS and Linux
+        ['macos', 'linux'].forEach((osname) => {
           all.releases.push({
             version: os.version,
             lts: os.lts || false,
@@ -65,27 +83,28 @@ module.exports = function (request) {
             os: osname,
             arch: 'amd64',
             ext: 'dmg',
-            hash: '-',
+            hash: '-', // Placeholder for hash
             download: download,
           });
         });
-      });
+      } catch (err) {
+        console.error(`Error fetching for ${os.name}: ${err.message}`);
+      }
     }),
-  ).then(function () {
-    all.releases.sort(function (a, b) {
-      if ('10.11.6' === a.version) {
-        return -1;
-      }
-      if (a.date > b.date) {
-        return 1;
-      }
-      if (a.date < b.date) {
-        return -1;
-      }
-    });
-    return all;
+  );
+
+  // Sort releases
+  all.releases.sort((a, b) => {
+    if (a.version === '10.11.6') {
+      return -1;
+    }
+    return a.date > b.date ? 1 : -1;
   });
-};
+
+  return all;
+}
+
+module.exports = getDistributables;
 
 if (module === require.main) {
   module.exports(require('@root/request')).then(function (all) {
