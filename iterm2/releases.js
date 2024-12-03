@@ -1,22 +1,38 @@
 'use strict';
 
-function getRawReleases(request) {
-  return request({ url: 'https://iterm2.com/downloads.html' }).then(
-    function (resp) {
-      var links = resp.body
-        .split(/[<>]+/g)
-        .map(function (str) {
-          var m = str.match(
-            /href="(https:\/\/iterm2\.com\/downloads\/.*\.zip)"/,
-          );
-          if (m && /iTerm2-[34]/.test(m[1])) {
-            return m[1];
-          }
-        })
-        .filter(Boolean);
-      return links;
+async function getRawReleases() {
+  const response = await fetch('https://iterm2.com/downloads.html', {
+    method: 'GET',
+    headers: {
+      'Accept': 'text/html', // Explicitly request HTML content
     },
-  );
+  });
+
+  // Validate HTTP response
+  if (!response.ok) {
+    throw new Error(`Failed to fetch releases: HTTP ${response.status} - ${response.statusText}`);
+  }
+
+  // Validate Content-Type header
+  const contentType = response.headers.get('Content-Type');
+  if (!contentType || !contentType.includes('text/html')) {
+    throw new Error(`Unexpected Content-Type: ${contentType}`);
+  }
+
+  // Parse HTML content
+  const body = await response.text();
+  var links = body
+  .split(/[<>]+/g)
+  .map(function (str) {
+    var m = str.match(
+      /href="(https:\/\/iterm2\.com\/downloads\/.*\.zip)"/,
+    );
+    if (m && /iTerm2-[34]/.test(m[1])) {
+      return m[1];
+    }
+  })
+  .filter(Boolean);
+  return links;
 }
 
 function transformReleases(links) {

@@ -16,15 +16,31 @@ function createUrlMatcher() {
   );
 }
 
-async function getRawReleases(request) {
+async function getRawReleases() {
   let matcher = createRssMatcher();
 
-  let resp = await request({
-    url: 'https://sourceforge.net/projects/gpgosx/rss?path=/',
+  const response = await fetch('https://sourceforge.net/projects/gpgosx/rss?path=/', {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/rss+xml', // Ensure the correct content type is requested
+    },
   });
+
+  // Validate the response status
+  if (!response.ok) {
+    throw new Error(`Failed to fetch RSS feed: HTTP ${response.status} - ${response.statusText}`);
+  }
+
+  const contentType = response.headers.get('Content-Type');
+  if (!contentType || !contentType.includes('xml')) {
+    throw new Error(`Unexpected content type: ${contentType}`);
+  }
+
+  const body = await response.text(); // Fetch RSS feed as plain text
+
   let links = [];
   for (;;) {
-    let m = matcher.exec(resp.body);
+    let m = matcher.exec(body);
     if (!m) {
       break;
     }

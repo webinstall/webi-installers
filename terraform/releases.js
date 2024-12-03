@@ -1,11 +1,21 @@
 'use strict';
 
-function getDistributables(request) {
-  return request({
-    url: 'https://releases.hashicorp.com/terraform/index.json',
-    json: true,
-  }).then(function (resp) {
-    let releases = resp.body;
+async function getDistributables() {
+  try {
+    // Fetch the Terraform releases JSON
+    const response = await fetch('https://releases.hashicorp.com/terraform/index.json', {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+    });
+
+    // Validate the HTTP response
+    if (!response.ok) {
+      throw new Error(`Failed to fetch releases: HTTP ${response.status} - ${response.statusText}`);
+    }
+
+    // Parse the JSON response
+    const releases = await response.json();
+
     let all = {
       releases: [],
       download: '', // Full URI provided in response body
@@ -34,7 +44,10 @@ function getDistributables(request) {
     });
 
     return all;
-  });
+  } catch (err) {
+    console.error('Error fetching Terraform releases:', err.message);
+    return { releases: [], download: '' };
+  }
 }
 
 module.exports = getDistributables;
