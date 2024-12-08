@@ -13,13 +13,14 @@ These are the files / directories that are created and/or modified with this
 install:
 
 ```text
-~/.vim/plugins/viminfo.vim
+~/.local/share/vim/viminfo
+~/.config/vim/plugins/viminfo.vim
 ~/.vimrc
 ```
 
 ## Cheat Sheet
 
-> ~/.viminfo stores cursor position, copy and paste buffers, command history,
+> ~/.local/share/vim/viminfo stores cursor position, copy and paste buffers, command history,
 > and a few other goodies. The defaults aren't always good, and should be
 > tweaked.
 
@@ -32,8 +33,8 @@ This one-line plugin does just that.
 
 ### How to install manually
 
-Create the file `~/.vim/plugins/viminfo.vim`. Add the same contents as
-<https://github.com/webinstall/webi-installers/blob/master/vim-viminfo/viminfo.vim>.
+Create the file `~/.config/vim/plugins/viminfo.vim`. Add the same contents as
+<https://github.com/webinstall/webi-installers/blob/main/vim-viminfo/viminfo.vim>.
 
 That will look something like this:
 
@@ -44,12 +45,16 @@ That will look something like this:
 "  :200  :  up to 200 lines of command-line history will be remembered
 "  %     :  saves and restores the buffer list
 "  n...  :  where to save the viminfo files
-set viminfo='100,\"20000,:200,%,n~/.viminfo
+set viminfo='100,\"20000,:200,%,n~/.local/share/vim/viminfo
 ```
+
+Then create the directory `~/.local/share/vim/` to keep viminfo file.
+
+Optionally, copy or move your existing viminfo file to `~/.local/share/vim/`.
 
 Then `~/.vimrc` should be updated to include it:
 
 ```vim
 " viminfo: reasonable defaults from webinstall.dev/vim-viminfo
-source ~/.vim/plugins/viminfo.vim
+source ~/.config/vim/plugins/viminfo.vim
 ```
