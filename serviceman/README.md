@@ -1,6 +1,6 @@
 ---
 title: Serviceman
-homepage: https://git.rootprojects.org/root/serviceman
+homepage: https://github.com/bnnanet/serviceman
 tagline: |
   Serviceman generates and enables startup files on Linux, Mac, and Windows.
 ---
@@ -71,8 +71,7 @@ changes)
 ### Example: Bash
 
 ```sh
-sudo env PATH="$PATH" \
-    serviceman add --system --path="$PATH" -- \
+serviceman add --name 'backup' -- \
     bash ./backup.sh /mnt/data
 ```
 
@@ -83,9 +82,7 @@ sudo env PATH="$PATH" \
 ```sh
 pushd ./my-node-app/
 
-sudo env PATH="$PATH" \
-    serviceman add --system --path="$PATH" \
-    --cap-net-bind -- \
+serviceman add --name 'my-node-app' -- \
     npx nodemon ./server.js
 ```
 
@@ -94,9 +91,7 @@ sudo env PATH="$PATH" \
 ```sh
 pushd ./my-node-app/
 
-sudo env PATH="$PATH" \
-    serviceman add --system --path="$PATH" \
-    --cap-net-bind -- \
+serviceman add --name 'my-node-app' -- \
     npm start
 ```
 
@@ -105,9 +100,7 @@ sudo env PATH="$PATH" \
 ```sh
 pushd ./my-go-package/
 
-sudo env PATH="$PATH" \
-    serviceman add --system --path="$PATH" \
-    -- \
+serviceman add --name 'my-service' -- \
     go run -mod=vendor cmd/my-service/*.go --port 3000
 ```
 
@@ -115,17 +108,15 @@ sudo env PATH="$PATH" \
 pushd ./my-go-package/
 go build -mod=vendor cmd/my-service
 
-sudo env PATH="$PATH" \
-    serviceman add --system --path="$PATH" \
-    --cap-net-bind -- \
+serviceman add --name 'my-service' -- \
     ./my-service --port 80
 ```
 
 ### How to see all services
 
 ```sh
-serviceman list --system
-serviceman list --user
+serviceman list --system --all
+serviceman list --agent --all
 ```
 
 ```text
@@ -140,8 +131,8 @@ You can either `add` the service again (which will update any changed options),
 or you can `stop` and then `start` any service by its name:
 
 ```sh
-sudo env PATH="$PATH" serviceman stop example-service
-sudo env PATH="$PATH" serviceman start example-service
+serviceman stop 'example-service'
+serviceman start 'example-service'
 ```
 
 ### See the (sub)command help
@@ -161,9 +152,7 @@ serviceman add --help
 ### Use `--dryrun` to see the generated launcher config:
 
 ```sh
-sudo env PATH="$PATH" \
-    serviceman add --system --path="$PATH" \
-    --dryrun -- \
+serviceman add --name 'my-backups' --dryrun -- \
     bash ./backup.sh /mnt/data
 ```
 
@@ -173,26 +162,59 @@ sudo env PATH="$PATH" \
 desktop distros.
 
 ```text
+# Generated for serviceman. Edit as needed. Keep this line for 'serviceman list'.
+# https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html
+
 [Unit]
-Description=example-service
+Description=postgres postgres daemon
+Documentation=(none)
 After=network-online.target
 Wants=network-online.target systemd-networkd-wait-online.service
 
 [Service]
 Restart=always
-StartLimitInterval=10
-StartLimitBurst=3
+RestartSec=3
+RestartSteps=5
+RestartMaxDelaySec=300
 
-User=root
-Group=root
+User=app
+Group=app
 
-WorkingDirectory=/srv/example-service
-ExecStart=/srv/example-service/bin/example-command start
+Environment="PATH=/Users/app/.local/opt/pg-essentials/bin:/home/app/.local/opt/postgres/bin:/usr/bin:/bin"
+WorkingDirectory=/home/app/.local/share/postgres/var
+ExecStart="/home/app/.local/opt/postgres/bin/postgres" "-D" "/home/app/.local/share/postgres/var" "-p" "5432"
 ExecReload=/bin/kill -USR1 $MAINPID
 
-# Allow the program to bind on privileged ports, such as 80 and 443
-CapabilityBoundingSet=CAP_NET_BIND_SERVICE
-AmbientCapabilities=CAP_NET_BIND_SERVICE
+# Limit the number of file descriptors and processes; see `man systemd.exec` for more limit settings.
+# These are reasonable defaults for a production system.
+# Note: systemd "user units" do not support this
+LimitNOFILE=1048576
+LimitNPROC=65536
+
+# Enable if desired for extra file system security
+# (ex: non-containers, multi-user systems)
+#
+# Use private /tmp and /var/tmp, which are discarded after the service stops.
+; PrivateTmp=true
+# Use a minimal /dev
+; PrivateDevices=true
+# Hide /home, /root, and /run/user. Nobody will steal your SSH-keys.
+; ProtectHome=true
+# Make /usr, /boot, /etc and possibly some more folders read-only.
+; ProtectSystem=full
+# ... except /opt/{{ .Name }} because we want a place for the database
+# and /var/log/{{ .Name }} because we want a place where logs can go.
+# This merely retains r/w access rights, it does not add any new.
+# Must still be writable on the host!
+; ReadWriteDirectories=/opt/postgres /var/log/postgres
+
+# Grant restricted, root-like privileges to the service.
+# CAP_NET_BIND_SERVICE allows binding on privileged ports as a non-root user
+# CAP_LEASE allows locking files and is sometimes used for handling file uploads
+# Some services may require additional capabilities:
+# https://man7.org/linux/man-pages/man7/capabilities.7.html
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_LEASE
+AmbientCapabilities=CAP_NET_BIND_SERVICE CAP_LEASE
 NoNewPrivileges=true
 
 [Install]
@@ -208,81 +230,88 @@ _container-friendly_ Linuxes.
 
 ```sh
 #!/sbin/openrc-run
-supervisor=supervise-daemon
 
-name="Example System Daemon"
-description="A Service for Logging 'Hello, World', a lot!"
-description_checkconfig="Check configuration"
-description_reload="Reload configuration without downtime"
+# Generated for serviceman. Edit as needed. Keep this line for 'serviceman list'.
+name="postgres"
+# docs: (none)
+description="postgres daemon"
 
-# example:
-# exampled run --port 1337 --envfile /path/to/env
-# exampled check-config --port 1337 --envfile /path/to/env
-# exampled reload --port 1337 --envfile /path/to/env
-
-# for setting Config
-: ${exampled_opts:="--envfile /root/.config/exampled/env"}
-
-command=/root/bin/exampled
-command_args="run --port 1337 $exampled_opts"
-command_user=root:root
-extra_commands="checkconfig"
-extra_started_commands="reload"
-output_log=/var/log/exampled.log
-error_log=/var/log/exampled.err
+supervisor="supervise-daemon"
+output_log="/var/log/postgres"
+error_log="/var/log/postgres"
 
 depend() {
-    need net localmount
-    after firewall
+    need net
 }
 
-checkconfig() {
-    ebegin "Checking configuration for $name"
-    su ${command_user%:*} -s /bin/sh -c "$command check-config $exampled_opts"
+start_pre() {
+    checkpath --directory --owner root /var/log/
+    checkpath --file --owner 'app:app' ${output_log} ${error_log}
+}
+
+start() {
+    ebegin "Starting ${name}"
+    supervise-daemon ${name} --start \
+        --chdir '/home/app/.local/share/postgres/var' \
+        --env 'PATH=/Users/app/.local/opt/pg-essentials/bin:/home/app/.local/opt/postgres/bin:/usr/bin:/bin' \
+        --user 'app' \
+        --group 'app' \
+        --stdout ${output_log} \
+        --stderr ${error_log} \
+        --pidfile /run/${RC_SVCNAME}.pid \
+        --respawn-delay 5 \
+        --respawn-max 51840 \
+        --capabilities=CAP_NET_BIND_SERVICE \
+        -- \
+        '/home/app/.local/opt/postgres/bin/postgres' '-D' '/home/app/.local/share/postgres/var' '-p' '5432'
     eend $?
 }
 
-reload() {
-    ebegin "Reloading $name"
-    su ${command_user%:*} -s /bin/sh -c "$command reload $exampled_opts"
+stop() {
+    ebegin "Stopping ${name}"
+    supervise-daemon ${name} --stop \
+        --pidfile /run/${RC_SVCNAME}.pid
     eend $?
-}
-
-stop_pre() {
-    if [ "$RC_CMD" = restart ]; then
-        checkconfig || return $?
-    fi
 }
 ```
 
 ### What a typical launchd .plist file looks like
 
-```text
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated for serviceman. Edit as you wish, but leave this line. -->
+<!-- Generated for serviceman. Edit as needed. Keep this line for 'serviceman list'. -->
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>Label</key>
-  <string>example-service</string>
-  <key>ProgramArguments</key>
-  <array>
-    <string>/Users/me/example-service/bin/example-command</string>
-    <string>start</string>
-  </array>
+    <key>Label</key>
+    <string>postgres</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/app/.local/opt/postgres/bin/postgres</string>
+        <string>-D</string>
+        <string>/Users/app/.local/share/postgres/var</string>
+        <string>-p</string>
+        <string>5432</string>
+    </array>
 
-  <key>RunAtLoad</key>
-  <true/>
-  <key>KeepAlive</key>
-  <true/>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/Users/app/.local/opt/pg-essentials/bin:/Users/app/.local/opt/postgres/bin:/usr/bin:/bin</string>
+    </dict>
 
-  <key>WorkingDirectory</key>
-  <string>/Users/me/example-service</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
 
-  <key>StandardErrorPath</key>
-  <string>/Users/me/.local/share/example-service/var/log/example-service.log</string>
-  <key>StandardOutPath</key>
-  <string>/Users/me/.local/share/example-service/var/log/example-service.log</string>
+    <key>WorkingDirectory</key>
+    <string>/Users/app/.local/share/postgres/var</string>
+
+    <key>StandardOutPath</key>
+    <string>/Users/app/.local/share/postgres/var/log/postgres.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/app/.local/share/postgres/var/log/postgres.log</string>
 </dict>
 </plist>
 ```
