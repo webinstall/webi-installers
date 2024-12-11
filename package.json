@@ -40,5 +40,8 @@
   "dependencies": {
     "dotenv": "^16.4.7",
     "marked": "^15.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2"
   }
 }
