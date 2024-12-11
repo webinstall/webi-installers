@@ -10,7 +10,7 @@ let GitHubishSource = require('./githubish-source.js');
  * @param {Object} opts
  * @param {String} opts.owner
  * @param {String} opts.repo
- * @param {String} opts.baseurl
+ * @param {String} [opts.baseurl]
  * @param {String} [opts.username]
  * @param {String} [opts.token]
  */
