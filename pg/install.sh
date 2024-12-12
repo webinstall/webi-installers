@@ -58,16 +58,19 @@ __init_pg() {
     }
 
     pkg_done_message() {
-        # TODO show with serviceman
         echo "    Installed $(t_pkg "$pkg_cmd_name v$WEBI_VERSION") (and $(t_pkg "psql")) to $(t_link "$(fn_sub_home "${pkg_dst_bin}")")"
         echo ""
         echo "IMPORTANT!!!"
         echo ""
-        echo "Database initialized at $POSTGRES_DATA_DIR:"
-        echo "    postgres -D $POSTGRES_DATA_DIR -p 5432"
+        echo "Database initialized at:"
+        echo "    $POSTGRES_DATA_DIR"
         echo ""
         echo "Username and password set to 'postgres':"
         echo "    psql 'postgres://postgres:postgres@localhost:5432/postgres'"
+        echo ""
+        echo "To install as a service:"
+        echo "    serviceman add --name 'postgres' --workdir '$POSTGRES_DATA_DIR' -- \\"
+        echo "        postgres -D '$POSTGRES_DATA_DIR' -p 5432"
         echo ""
     }
 }

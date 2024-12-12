@@ -276,11 +276,8 @@ Node app as a Non-System (Unprivileged) Service on Mac, Windows, and Linux:
 ```sh
 pushd ./my-node-project/
 
-my_username="$(id -u -n)"
-sudo env PATH="$PATH" \
-    serviceman add --system --path "$PATH" --cap-net-bind \
-    --name my-node-project --username "${my_username}" -- \
-        npm run start
+serviceman add --name 'my-node-project' -- \
+    npm run start
 ```
 
 #### ... with auto-reload in Dev
@@ -288,10 +285,8 @@ sudo env PATH="$PATH" \
 ```sh
 pushd ./my-node-project/
 
-sudo env PATH="$PATH" \
-    serviceman add --system --path "$PATH" --cap-net-bind \
-    --name my-node-project --username "$(id -u -n)" -- \
-        npx -p nodemon@3 -- nodemon ./server.js
+serviceman add --name 'my-node-project' -- \
+    npx -p nodemon@3 -- nodemon ./server.js
 ```
 
 #### View Logs & Restart

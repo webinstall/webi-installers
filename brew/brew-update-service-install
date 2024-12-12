@@ -7,11 +7,11 @@ main() { (
     chmod a+x ~/.local/bin/brew-update-hourly
 
     echo "Checking for serviceman..."
+    ~/.local/bin/webi serviceman
     if ! command -v serviceman > /dev/null; then
-        "$HOME/.local/bin/webi" serviceman
         export PATH="$HOME/.local/bin:$PATH"
-        serviceman --version
     fi
+    serviceman --version
 
     env PATH="$PATH" serviceman add --agent \
         --workdir ~/.local/opt/brew/ \

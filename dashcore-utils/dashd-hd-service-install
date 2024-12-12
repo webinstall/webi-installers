@@ -84,20 +84,8 @@ fn_srv_install() { (
         my_name="dashd-${my_netname}"
     fi
 
-    my_system_args=""
-    my_kernel="$(
-        uname -s
-    )"
-    if test "Darwin" != "${my_kernel}"; then
-        my_user="$(
-            id -u -n
-        )"
-        my_system_args="--system --username ${my_user}"
-    fi
-
     # shellcheck disable=SC2016,SC1090
-    echo 'sudo env PATH="$PATH"' \
-        "serviceman add ${my_system_args} --path \"\$PATH\" --name \"${my_name}\" --force --" \
+    echo "serviceman add --name \"${my_name}\" --" \
         "dashd " \
         "${my_net_flag}" \
         -usehd \
@@ -107,16 +95,16 @@ fn_srv_install() { (
         "-datadir=\"${my_datadir}\"" \
         "-blocksdir=\"${my_blocksdir}\""
 
+    echo ""
+    echo "Installing latest 'serviceman'..."
+    echo ""
+    "$HOME/.local/bin/webi" serviceman > /dev/null
     if ! command -v serviceman > /dev/null; then
-        echo ""
-        echo "Installing 'serviceman'..."
-        echo ""
-        {
-            "$HOME/.local/bin/webi" serviceman
-        } > /dev/null
-
-        # shellcheck disable=SC1090
-        . ~/.config/envman/PATH.env || true
+        export PATH="$HOME/.local/bin:$PATH"
+    fi
+    serviceman --version
+    if ! command -v dashd > /dev/null; then
+        export PATH="$HOME/.local/opt/dashcore/bin:$PATH"
     fi
 
     mkdir -p "$HOME/.dashcore/wallets/"
@@ -132,7 +120,7 @@ fn_srv_install() { (
     # leave options unquoted so they're interpreted separately
     # shellcheck disable=SC2086
     sudo env PATH="${PATH}" \
-        serviceman add ${my_system_args} --path "${PATH}" --name "${my_name}" --force -- \
+        serviceman add --name "${my_name}" -- \
         dashd \
         ${my_net_flag} \
         -usehd \

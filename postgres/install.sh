@@ -78,16 +78,19 @@ __init_postgres() {
     }
 
     pkg_done_message() {
-        # TODO show with serviceman
         echo "Installed 'postgres' and 'psql' at $pkg_dst"
         echo ""
         echo "IMPORTANT!!!"
         echo ""
-        echo "Database initialized at $POSTGRES_DATA_DIR:"
-        echo "    postgres -D $POSTGRES_DATA_DIR -p 5432"
+        echo "Database initialized at:"
+        echo "    $POSTGRES_DATA_DIR"
         echo ""
         echo "Username and password set to 'postgres':"
         echo "    psql 'postgres://postgres:postgres@localhost:5432/postgres'"
+        echo ""
+        echo "To install as a service:"
+        echo "    serviceman add --name 'postgres' --workdir '$POSTGRES_DATA_DIR' -- \\"
+        echo "        postgres -D '$POSTGRES_DATA_DIR' -p 5432"
         echo ""
     }
 }

@@ -821,8 +821,8 @@ To avoid the nitty-gritty details of `launchd` plist files, you can use
    ```sh
    my_username="$(id -u -n)"
 
-   serviceman add --agent --name caddy -- \
-       caddy run --config ./Caddyfile --envfile ~/.config/caddy/env
+   serviceman add --agent --name 'caddy' --workdir ./ -- \
+       caddy run --envfile ~/.config/caddy/env --config ./Caddyfile --adapter caddyfile
    ```
 
    (this will create `~/Library/LaunchAgents/caddy.plist`)
@@ -837,8 +837,8 @@ This process creates a _User-Level_ service in `~/Library/LaunchAgents`. To
 create a _System-Level_ service in `/Library/LaunchDaemons/` instead:
 
 ```sh
-sudo serviceman add --system --name caddy -- \
-   caddy run --config ./Caddyfile --envfile ~/.config/caddy/env
+serviceman add --name 'caddy' --workdir ./ --daemon -- \
+   caddy run --envfile ~/.config/caddy/env --config ./Caddyfile --adapter caddyfile
 ```
 
 ### How to run Caddy as a Windows Service
@@ -856,7 +856,7 @@ sudo serviceman add --system --name caddy -- \
 3. Create a **Startup Registry Entry** with Serviceman.
    ```sh
    serviceman.exe add --name caddy -- \
-       caddy run --config ./Caddyfile --envfile ~/.config/caddy/env
+       caddy run --envfile ~/.config/caddy/env --config ./Caddyfile --adapter caddyfile
    ```
 4. You can manage the service directly with Serviceman. For example:
    ```sh
@@ -901,10 +901,8 @@ See the notes below to run as a **User Service** or use the JSON Config.
    ```
 4. Use Serviceman to create a _systemd_ config file.
    ```sh
-   my_username="$(id -u -n)"
-   sudo env PATH="$PATH" \
-       serviceman add --system --username "${my_username}" --name caddy -- \
-           caddy run --config ./Caddyfile --envfile ~/.config/caddy/env
+   serviceman add --name 'caddy' --daemon -- \
+       caddy run --envfile ~/.config/caddy/env --config ./Caddyfile --adapter caddyfile
    ```
    (this will create `/etc/systemd/system/caddy.service`)
 5. Manage the service with `systemctl` and `journalctl`:
@@ -915,10 +913,10 @@ See the notes below to run as a **User Service** or use the JSON Config.
 
 To create a **User Service** instead:
 
-- don't use `sudo`, but do use `--agent` when running `serviceman`:
+- use `--agent` when running `serviceman`:
   ```sh
   serviceman add --agent --name caddy -- \
-     caddy run --config ./Caddyfile --envfile ~/.config/caddy/env
+      caddy run --envfile ~/.config/caddy/env --config ./Caddyfile --adapter caddyfile
   ```
   (this will create `~/.config/systemd/user/`)
 - user the `--user` flag to manage services and logs:
@@ -1183,7 +1181,8 @@ To prevent search engine and browser confusion
 - _DO NOT_ prevent crawling via `robots.txt` \
   (counter-intuitive, but pages _must_ be crawled for links to _NOT_ be indexed)
 - _all_ domains using public TLS certs _will_ be indexed by default \
-  (they are all linked to and crawled from various Certificate Transparency reports)
+  (they are all linked to and crawled from various Certificate Transparency
+  reports)
 - follow these guidelines even if the dev sites use HTTP Basic Auth
 
 ```Caddyfile
@@ -1363,19 +1362,13 @@ See also: <https://caddyserver.com/docs/running>
 2. Generate the `service` file: \
    - JSON Config
      ```sh
-     my_app_user="$(id -u -n)"
-     sudo env PATH="${PATH}" \
-         serviceman add --system --cap-net-bind \
-             --username "${my_app_user}" --name caddy -- \
-             caddy run --resume --envfile ./caddy.env
+     serviceman add --name 'caddy' --daemon -- \
+         caddy run --resume --envfile ./caddy.env
      ```
    - Caddyfile
      ```sh
-     my_app_user="$(id -u -n)"
-     sudo env PATH="${PATH}" \
-         serviceman add --system --cap-net-bind \
-             --username "${my_app_user}" --name caddy -- \
-             caddy run --config ./Caddyfile --envfile ./caddy.env
+     serviceman add --name 'caddy' --daemon -- \
+         caddy run --config ./Caddyfile --envfile ./caddy.env
      ```
 3. Reload `systemd` config files, the logging service (it may not be started on
    a new VPS), and caddy

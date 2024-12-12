@@ -132,9 +132,7 @@ file)
    ```
 3. Add your project to the system launcher, running as the current user
    ```sh
-   sudo env PATH="$PATH" \
-       serviceman add --path="$PATH" --system \
-           --username "$(id -u -n)" --name my-project -- \
+   serviceman add --name 'my-project' --daemon -- \
        bun run ./my-project.js
    ```
 4. Restart the logging service
@@ -155,6 +153,6 @@ For **macOS**:
    ```
 3. Add your project to the system launcher, running as the current user
    ```sh
-   serviceman add --path="$PATH" --agent --name my-project -- \
+   serviceman add --agent --name 'my-project' -- \
        bun run ./my-project.js
    ```
