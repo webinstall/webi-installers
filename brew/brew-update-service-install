@@ -13,7 +13,7 @@ main() { (
         serviceman --version
     fi
 
-    env PATH="$PATH" serviceman add --user \
+    env PATH="$PATH" serviceman add --agent \
         --workdir ~/.local/opt/brew/ \
         --name sh.brew.updater -- \
         ~/.local/bin/brew-update-hourly

@@ -155,6 +155,6 @@ For **macOS**:
    ```
 3. Add your project to the system launcher, running as the current user
    ```sh
-   serviceman add --path="$PATH" --user --name my-project -- \
+   serviceman add --path="$PATH" --agent --name my-project -- \
        bun run ./my-project.js
    ```

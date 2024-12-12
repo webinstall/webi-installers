@@ -821,7 +821,7 @@ To avoid the nitty-gritty details of `launchd` plist files, you can use
    ```sh
    my_username="$(id -u -n)"
 
-   serviceman add --user --name caddy -- \
+   serviceman add --agent --name caddy -- \
        caddy run --config ./Caddyfile --envfile ~/.config/caddy/env
    ```
 
@@ -915,9 +915,9 @@ See the notes below to run as a **User Service** or use the JSON Config.
 
 To create a **User Service** instead:
 
-- don't use `sudo`, but do use `--user` when running `serviceman`:
+- don't use `sudo`, but do use `--agent` when running `serviceman`:
   ```sh
-  serviceman add --user --name caddy -- \
+  serviceman add --agent --name caddy -- \
      caddy run --config ./Caddyfile --envfile ~/.config/caddy/env
   ```
   (this will create `~/.config/systemd/user/`)
