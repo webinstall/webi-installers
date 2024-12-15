@@ -227,7 +227,7 @@ Node app as a Non-System (Unprivileged) Service on Mac, Windows, and Linux:
    or _User Unit_ (Linux):
 
    ```sh
-   my_username="$( id -u -n )"
+   my_username="$(id -u -n)"
 
    serviceman add --user --name my-node-project -- \
        caddy run --config ./Caddyfile --envfile ~/.config/caddy/env
@@ -275,7 +275,7 @@ Node app as a Non-System (Unprivileged) Service on Mac, Windows, and Linux:
 ```sh
 pushd ./my-node-project/
 
-my_username="$( id -u -n )"
+my_username="$(id -u -n)"
 sudo env PATH="$PATH" \
     serviceman add --system --path "$PATH" --cap-net-bind \
     --name my-node-project --username "${my_username}" -- \

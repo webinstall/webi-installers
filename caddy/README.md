@@ -819,7 +819,7 @@ To avoid the nitty-gritty details of `launchd` plist files, you can use
 2. Use Serviceman to create a _launchd_ plist file
 
    ```sh
-   my_username="$( id -u -n )"
+   my_username="$(id -u -n)"
 
    serviceman add --user --name caddy -- \
        caddy run --config ./Caddyfile --envfile ~/.config/caddy/env
@@ -901,7 +901,7 @@ See the notes below to run as a **User Service** or use the JSON Config.
    ```
 4. Use Serviceman to create a _systemd_ config file.
    ```sh
-   my_username="$( id -u -n )"
+   my_username="$(id -u -n)"
    sudo env PATH="$PATH" \
        serviceman add --system --username "${my_username}" --name caddy -- \
            caddy run --config ./Caddyfile --envfile ~/.config/caddy/env
@@ -1363,7 +1363,7 @@ See also: <https://caddyserver.com/docs/running>
 2. Generate the `service` file: \
    - JSON Config
      ```sh
-     my_app_user="$( id -u -n )"
+     my_app_user="$(id -u -n)"
      sudo env PATH="${PATH}" \
          serviceman add --system --cap-net-bind \
              --username "${my_app_user}" --name caddy -- \
@@ -1371,7 +1371,7 @@ See also: <https://caddyserver.com/docs/running>
      ```
    - Caddyfile
      ```sh
-     my_app_user="$( id -u -n )"
+     my_app_user="$(id -u -n)"
      sudo env PATH="${PATH}" \
          serviceman add --system --cap-net-bind \
              --username "${my_app_user}" --name caddy -- \
