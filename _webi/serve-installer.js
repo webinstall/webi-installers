@@ -70,17 +70,19 @@ InstallerServer.helper = async function ({
 
   console.log(`dbg: Get Project Installer Type for '${projectName}':`);
   let proj = await Builds.getProjectType(projectName);
-  console.log(proj);
+  if (proj.type === 'alias') {
+    console.log(`dbg: alias`, proj);
+    projectName = proj.detail;
+    proj = await Builds.getProjectType(projectName); // an alias should never resolve to an alias
+  }
+  console.log(`dbg: proj`, proj);
 
-  let validTypes = ['alias', 'selfhosted', 'valid'];
+  let validTypes = ['selfhosted', 'valid'];
   if (!validTypes.includes(proj.type)) {
     let msg = `'${projectName}' doesn't have an installer: '${proj.type}': '${proj.detail}'`;
     let err = new Error(msg);
     err.code = 'ENOENT';
     throw err;
-  }
-  if (proj.type === 'alias') {
-    projectName = proj.detail;
   }
 
   let tmplParams = {
