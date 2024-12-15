@@ -2,7 +2,10 @@
 
 var FLUTTER_OSES = ['macos', 'linux', 'windows'];
 
-// stable, beta, dev
+/**
+ * stable, beta, dev
+ * @type {Object.<String, Boolean>}
+ */
 var channelMap = {};
 
 // This can be spot-checked against
@@ -53,25 +56,39 @@ var channelMap = {};
 //   ]
 // }
 
+/**
+ * @typedef BuildInfo
+ * @prop {String} version
+ * @prop {String} [_version]
+ * @prop {Boolean} lts
+ * @prop {String} channel
+ * @prop {String} date
+ * @prop {String} download
+ * @prop {String} [_filename]
+ */
+
 module.exports = async function () {
   let all = {
     download: '',
+    /** @type {Array<BuildInfo>} */
     releases: [],
+    /** @type {Array<String>} */
     channels: [],
   };
 
   for (let osname of FLUTTER_OSES) {
-    const response = await fetch(`https://storage.googleapis.com/flutter_infra_release/releases/releases_${osname}.json`, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-    });
+    let response = await fetch(
+      `https://storage.googleapis.com/flutter_infra_release/releases/releases_${osname}.json`,
+      { headers: { Accept: 'application/json' } },
+    );
     if (!response.ok) {
-      throw new Error(`Failed to fetch data for ${osname}: ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch data for ${osname}: ${response.statusText}`,
+      );
     }
-    const respBody = await response.json();
-
-    let osBaseUrl = respBody.base_url;
-    let osReleases = respBody.releases;
+    let data = await response.json();
+    let osBaseUrl = data.base_url;
+    let osReleases = data.releases;
 
     for (let asset of osReleases) {
       if (!channelMap[asset.channel]) {
@@ -100,7 +117,7 @@ module.exports = async function () {
 };
 
 if (module === require.main) {
-  module.exports(require('@root/request')).then(function (all) {
+  module.exports().then(function (all) {
     all.releases = all.releases.slice(25);
     console.info(JSON.stringify(all, null, 2));
   });

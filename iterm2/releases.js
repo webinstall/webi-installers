@@ -1,89 +1,82 @@
 'use strict';
 
 async function getRawReleases() {
-  const response = await fetch('https://iterm2.com/downloads.html', {
-    method: 'GET',
-    headers: {
-      'Accept': 'text/html', // Explicitly request HTML content
-    },
+  let resp = await fetch('https://iterm2.com/downloads.html', {
+    headers: { Accept: 'text/html' },
   });
-
-  // Validate HTTP response
-  if (!response.ok) {
-    throw new Error(`Failed to fetch releases: HTTP ${response.status} - ${response.statusText}`);
+  let text = await resp.text();
+  if (!resp.ok) {
+    throw new Error(`Failed to fetch releases: HTTP ${resp.status}: ${text}`);
   }
 
-  // Validate Content-Type header
-  const contentType = response.headers.get('Content-Type');
+  let contentType = resp.headers.get('Content-Type');
   if (!contentType || !contentType.includes('text/html')) {
     throw new Error(`Unexpected Content-Type: ${contentType}`);
   }
 
-  // Parse HTML content
-  const body = await response.text();
-  var links = body
-  .split(/[<>]+/g)
-  .map(function (str) {
-    var m = str.match(
-      /href="(https:\/\/iterm2\.com\/downloads\/.*\.zip)"/,
-    );
+  let lines = text.split(/[<>]+/g);
+
+  /** @type {Array<String>} */
+  let links = [];
+  for (let str of lines) {
+    var m = str.match(/href="(https:\/\/iterm2\.com\/downloads\/.*\.zip)"/);
     if (m && /iTerm2-[34]/.test(m[1])) {
-      return m[1];
+      if (m[1]) {
+        links.push(m[1]);
+      }
     }
-  })
-  .filter(Boolean);
+  }
+
   return links;
 }
 
+/**
+ * @param {Array<String>} links
+ */
 function transformReleases(links) {
-  //console.log(JSON.stringify(links, null, 2));
-  //console.log(links.length);
+  let builds = [];
+  for (let link of links) {
+    var channel = /\/stable\//.test(link) ? 'stable' : 'beta';
+
+    var parts = link.replace(/.*\/iTerm2[-_]v?(\d_.*)\.zip/, '$1').split('_');
+    var version = parts.join('.').replace(/([_-])?beta/, '-beta');
+
+    // ex: 3.5.0-beta17 => 3_5_0beta17
+    // ex: 3.0.2-preview => 3_0_2-preview
+    let fileversion = version.replace(/\./g, '_');
+    fileversion = fileversion.replace(/-beta/g, 'beta');
+
+    let build = {
+      version: version,
+      _version: fileversion,
+      lts: 'stable' === channel,
+      channel: channel,
+      date: '1970-01-01', // the world may never know
+      os: 'macos',
+      arch: 'amd64',
+      ext: '', // let normalize run the split/test/join
+      download: link,
+    };
+    builds.push(build);
+  }
 
   return {
     _names: ['iTerm2', 'iterm2'],
-    releases: links
-      .map(function (link) {
-        var channel = /\/stable\//.test(link) ? 'stable' : 'beta';
-
-        var parts = link
-          .replace(/.*\/iTerm2[-_]v?(\d_.*)\.zip/, '$1')
-          .split('_');
-        var version = parts.join('.').replace(/([_-])?beta/, '-beta');
-
-        // ex: 3.5.0-beta17 => 3_5_0beta17
-        // ex: 3.0.2-preview => 3_0_2-preview
-        let fileversion = version.replace(/\./g, '_');
-        fileversion = fileversion.replace(/-beta/g, 'beta');
-
-        return {
-          version: version,
-          _version: fileversion,
-          // all go versions >= 1.0.0 are effectively LTS
-          lts: 'stable' === channel,
-          channel: channel,
-          date: '1970-01-01', // the world may never know
-          os: 'macos',
-          arch: 'amd64',
-          ext: '', // let normalize run the split/test/join
-          download: link,
-        };
-      })
-      .filter(Boolean),
+    releases: builds,
   };
 }
 
-function getDistributables(request) {
-  return getRawReleases(request)
-    .then(transformReleases)
-    .then(function (all) {
-      return all;
-    });
+async function getDistributables() {
+  let rawReleases = await getRawReleases();
+  let all = transformReleases(rawReleases);
+
+  return all;
 }
 
 module.exports = getDistributables;
 
 if (module === require.main) {
-  getDistributables(require('@root/request')).then(function (all) {
+  getDistributables().then(function (all) {
     all = require('../_webi/normalize.js')(all);
     all.releases = all.releases.slice(0, 10000);
     console.info(JSON.stringify(all, null, 2));

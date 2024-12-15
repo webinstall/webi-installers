@@ -41,9 +41,7 @@ if (module === require.main) {
     'https://git.rootprojects.org',
     '',
     '',
-  ).then(
-    function (all) {
-      console.info(JSON.stringify(all, null, 2));
-    },
-  );
+  ).then(function (all) {
+    console.info(JSON.stringify(all, null, 2));
+  });
 }

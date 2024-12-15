@@ -40,65 +40,90 @@ var headers = {
   'Accept-Language': 'en-US,en;q=0.9,sq;q=0.8',
 };
 
+/**
+ * @param {typeof oses[0]} os
+ */
 async function fetchReleasesForOS(os) {
-  // Fetch the webpage for the given OS
-  const response = await fetch(os.url, {
-    method: 'GET',
+  let resp = await fetch(os.url, {
     headers: headers,
   });
-
-  // Validate HTTP response
-  if (!response.ok) {
-    throw new Error(`Failed to fetch URL: ${os.url}. HTTP ${response.status} - ${response.statusText}`);
+  let text = await resp.text();
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch URL: ${os.url}. HTTP ${resp.status}: ${text}`,
+    );
   }
 
-  // Parse the response body
-  const body = await response.text();
-
   // Extract the download link
-  const match = body.match(/(http[^>]+Install[^>]+\.dmg)/);
-  return match ? match[1] : null;
+  let match = text.match(/(http[^>]+Install[^>]+\.dmg)/);
+  if (match) {
+    return match[1];
+  }
 }
 
+/**
+ * @typedef BuildInfo
+ * @prop {String} version
+ * @prop {String} [_version]
+ * @prop {String} arch
+ * @prop {String} channel
+ * @prop {String} date
+ * @prop {String} download
+ * @prop {String} ext
+ * @prop {String} [_filename]
+ * @prop {String} hash
+ * @prop {Boolean} lts
+ * @prop {String} os
+ */
+
+let osnames = ['macos', 'linux'];
+
 async function getDistributables() {
-  const all = {
+  let all = {
     _names: ['InstallOS'],
     download: '',
+    /** @type {Array<BuildInfo>} */
     releases: [],
   };
 
   // Fetch data for each OS and populate the releases array
-  await Promise.all(
-    oses.map(async (os) => {
-      try {
-        const download = await fetchReleasesForOS(os);
+  for (let os of oses) {
+    let download = await fetchReleasesForOS(os);
+    if (!download) {
+      continue;
+    }
 
-        // Add releases for macOS and Linux
-        ['macos', 'linux'].forEach((osname) => {
-          all.releases.push({
-            version: os.version,
-            lts: os.lts || false,
-            channel: os.channel || 'beta',
-            date: os.date,
-            os: osname,
-            arch: 'amd64',
-            ext: 'dmg',
-            hash: '-', // Placeholder for hash
-            download: download,
-          });
-        });
-      } catch (err) {
-        console.error(`Error fetching for ${os.name}: ${err.message}`);
-      }
-    }),
-  );
+    // Add releases for macOS and Linux
+    for (let osname of osnames) {
+      let build = {
+        version: os.version,
+        lts: os.lts || false,
+        channel: os.channel || 'beta',
+        date: os.date,
+        os: osname,
+        arch: 'amd64',
+        ext: 'dmg',
+        hash: '-',
+        download: download,
+      };
+
+      all.releases.push(build);
+    }
+  }
 
   // Sort releases
-  all.releases.sort((a, b) => {
+  all.releases.sort(function (a, b) {
     if (a.version === '10.11.6') {
       return -1;
     }
-    return a.date > b.date ? 1 : -1;
+
+    if (a.date > b.date) {
+      return 1;
+    } else if (a.date < b.date) {
+      return -1;
+    }
+
+    return 0;
   });
 
   return all;
@@ -107,7 +132,7 @@ async function getDistributables() {
 module.exports = getDistributables;
 
 if (module === require.main) {
-  module.exports(require('@root/request')).then(function (all) {
+  module.exports().then(function (all) {
     console.info(JSON.stringify(all, null, 2));
   });
 }
