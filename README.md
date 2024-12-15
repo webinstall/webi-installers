@@ -145,8 +145,8 @@ It looks like this:
 `releases.js`:
 
 ```js
-module.exports = function (request) {
-  return github(request, owner, repo).then(function (all) {
+module.exports = function () {
+  return github(null, owner, repo).then(function (all) {
     // if you need to do something special, you can do it here
     // ...
     return all;
