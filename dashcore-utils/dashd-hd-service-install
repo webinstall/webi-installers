@@ -119,8 +119,7 @@ fn_srv_install() { (
     cd "${my_vol}" || return 1
     # leave options unquoted so they're interpreted separately
     # shellcheck disable=SC2086
-    sudo env PATH="${PATH}" \
-        serviceman add --name "${my_name}" -- \
+    serviceman add --name "${my_name}" -- \
         dashd \
         ${my_net_flag} \
         -usehd \
