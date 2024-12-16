@@ -1,6 +1,8 @@
 'use strict';
 
-var oses = [
+let Fetcher = require('../_common/fetcher.js');
+
+let oses = [
   {
     name: 'macOS Sierra',
     version: '10.12.6',
@@ -25,7 +27,7 @@ var oses = [
   },
 ];
 
-var headers = {
+let headers = {
   Connection: 'keep-alive',
   'Cache-Control': 'max-age=0',
   'Upgrade-Insecure-Requests': '1',
@@ -44,18 +46,22 @@ var headers = {
  * @param {typeof oses[0]} os
  */
 async function fetchReleasesForOS(os) {
-  let resp = await fetch(os.url, {
-    headers: headers,
-  });
-  let text = await resp.text();
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch URL: ${os.url}. HTTP ${resp.status}: ${text}`,
-    );
+  let resp;
+  try {
+    resp = await Fetcher.fetch(os.url, {
+      headers: headers,
+    });
+  } catch (e) {
+    /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+    let err = e;
+    if (err.code === 'E_FETCH_RELEASES') {
+      err.message = `failed to fetch 'macos' release data: ${err.response.status} ${err.response.body}`;
+    }
+    throw e;
   }
 
   // Extract the download link
-  let match = text.match(/(http[^>]+Install[^>]+\.dmg)/);
+  let match = resp.body.match(/(http[^>]+Install[^>]+\.dmg)/);
   if (match) {
     return match[1];
   }

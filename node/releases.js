@@ -1,8 +1,10 @@
 'use strict';
 
+let Fetcher = require('../_common/fetcher.js');
+
 // https://blog.risingstack.com/update-nodejs-8-end-of-life-no-support/
 // 6 mos "current" + 18 mos LTS "active" +  12 mos LTS "maintenance"
-//var endOfLife = 3 * 366 * 24 * 60 * 60 * 1000;
+//let endOfLife = 3 * 366 * 24 * 60 * 60 * 1000;
 // If there have been no updates in 12 months, it's almost certainly end-of-life
 const END_OF_LIFE = 366 * 24 * 60 * 60 * 1000;
 
@@ -89,33 +91,43 @@ async function getDistributables() {
     let baseUrl = `https://nodejs.org/download/release`;
 
     // Fetch official builds
-    let resp = await fetch(`${baseUrl}/index.json`, {
-      headers: { Accept: 'application/json' },
-    });
-    let text = await resp.text();
-    if (!resp.ok) {
-      throw new Error(
-        `Failed to fetch official builds: HTTP ${resp.status}: ${text}`,
-      );
+    let resp;
+    try {
+      resp = await Fetcher.fetch(`${baseUrl}/index.json`, {
+        headers: { Accept: 'application/json' },
+      });
+    } catch (e) {
+      /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+      let err = e;
+      if (err.code === 'E_FETCH_RELEASES') {
+        err.message = `failed to fetch 'node' release data: ${err.response.status} ${err.response.body}`;
+      }
+      throw e;
     }
-    let data = JSON.parse(text);
+    let data = JSON.parse(resp.body);
 
     void transform(baseUrl, data);
   }
 
   {
-    // Fetch unofficial builds
     let unofficialBaseUrl = `https://unofficial-builds.nodejs.org/download/release`;
-    let resp = await fetch(`${unofficialBaseUrl}/index.json`, {
-      headers: { Accept: 'application/json' },
-    });
-    let text = await resp.text();
-    if (!resp.ok) {
-      throw new Error(
-        `Failed to fetch official builds: HTTP ${resp.status}: ${text}`,
-      );
+
+    // Fetch unofficial builds
+    let resp;
+    try {
+      resp = await Fetcher.fetch(`${unofficialBaseUrl}/index.json`, {
+        headers: { Accept: 'application/json' },
+      });
+    } catch (e) {
+      /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+      let err = e;
+      if (err.code === 'E_FETCH_RELEASES') {
+        err.message = `failed to fetch 'node' (unofficial) release data: ${err.response.status} ${err.response.body}`;
+      }
+      throw e;
     }
-    let data = JSON.parse(text);
+    let data = JSON.parse(resp.body);
+
     transform(unofficialBaseUrl, data);
   }
 

@@ -1,5 +1,7 @@
 'use strict';
 
+let Fetcher = require('../_common/fetcher.js');
+
 /**
  * @typedef BuildInfo
  * @prop {String} version
@@ -7,16 +9,22 @@
  */
 
 async function getDistributables() {
-  let resp = await fetch(
-    'https://releases.hashicorp.com/terraform/index.json',
-    { headers: { Accept: 'application/json' } },
-  );
-  let text = await resp.text();
-  if (!resp.ok) {
-    throw new Error(`Failed to fetch releases: HTTP ${resp.status}: ${text}`);
+  let resp;
+  try {
+    let url = 'https://releases.hashicorp.com/terraform/index.json';
+    resp = await Fetcher.fetch(url, {
+      headers: { Accept: 'application/json' },
+    });
+  } catch (e) {
+    /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+    let err = e;
+    if (err.code === 'E_FETCH_RELEASES') {
+      err.message = `failed to fetch 'terraform' release data: ${err.response.status} ${err.response.body}`;
+    }
+    throw e;
   }
+  let releases = JSON.parse(resp.body);
 
-  let releases = JSON.parse(text);
   let all = {
     /** @type {Array<BuildInfo>} */
     releases: [],

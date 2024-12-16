@@ -1,12 +1,21 @@
 'use strict';
 
+let Fetcher = require('../_common/fetcher.js');
+
 async function getRawReleases() {
-  let resp = await fetch('https://iterm2.com/downloads.html', {
-    headers: { Accept: 'text/html' },
-  });
-  let text = await resp.text();
-  if (!resp.ok) {
-    throw new Error(`Failed to fetch releases: HTTP ${resp.status}: ${text}`);
+  let resp;
+  try {
+    let url = 'https://iterm2.com/downloads.html';
+    resp = await Fetcher.fetch(url, {
+      headers: { Accept: 'text/html' },
+    });
+  } catch (e) {
+    /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+    let err = e;
+    if (err.code === 'E_FETCH_RELEASES') {
+      err.message = `failed to fetch 'iterm2' release data: ${err.response.status} ${err.response.body}`;
+    }
+    throw e;
   }
 
   let contentType = resp.headers.get('Content-Type');
@@ -14,12 +23,12 @@ async function getRawReleases() {
     throw new Error(`Unexpected Content-Type: ${contentType}`);
   }
 
-  let lines = text.split(/[<>]+/g);
+  let lines = resp.body.split(/[<>]+/g);
 
   /** @type {Array<String>} */
   let links = [];
   for (let str of lines) {
-    var m = str.match(/href="(https:\/\/iterm2\.com\/downloads\/.*\.zip)"/);
+    let m = str.match(/href="(https:\/\/iterm2\.com\/downloads\/.*\.zip)"/);
     if (m && /iTerm2-[34]/.test(m[1])) {
       if (m[1]) {
         links.push(m[1]);
@@ -36,10 +45,10 @@ async function getRawReleases() {
 function transformReleases(links) {
   let builds = [];
   for (let link of links) {
-    var channel = /\/stable\//.test(link) ? 'stable' : 'beta';
+    let channel = /\/stable\//.test(link) ? 'stable' : 'beta';
 
-    var parts = link.replace(/.*\/iTerm2[-_]v?(\d_.*)\.zip/, '$1').split('_');
-    var version = parts.join('.').replace(/([_-])?beta/, '-beta');
+    let parts = link.replace(/.*\/iTerm2[-_]v?(\d_.*)\.zip/, '$1').split('_');
+    let version = parts.join('.').replace(/([_-])?beta/, '-beta');
 
     // ex: 3.5.0-beta17 => 3_5_0beta17
     // ex: 3.0.2-preview => 3_0_2-preview

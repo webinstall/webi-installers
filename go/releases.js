@@ -1,11 +1,13 @@
 'use strict';
 
+let Fetcher = require('../_common/fetcher.js');
+
 /** @type {Object.<String, String>} */
-var osMap = {
+let osMap = {
   darwin: 'macos',
 };
 /** @type {Object.<String, String>} */
-var archMap = {
+let archMap = {
   386: 'x86',
 };
 
@@ -57,15 +59,23 @@ async function getDistributables() {
     ]
   };
   */
-  let response = await fetch('https://golang.org/dl/?mode=json&include=all', {
-    method: 'GET',
-    headers: { Accept: 'application/json' },
-  });
-  if (!response.ok) {
-    throw new Error(`Failed to fetch Go releases: ${response.statusText}`);
-  }
 
-  let goReleases = await response.json();
+  let resp;
+  try {
+    let url = 'https://golang.org/dl/?mode=json&include=all';
+    resp = await Fetcher.fetch(url, {
+      headers: { Accept: 'application/json' },
+    });
+  } catch (e) {
+    /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+    let err = e;
+    if (err.code === 'E_FETCH_RELEASES') {
+      err.message = `failed to fetch 'Go' release data: ${err.response.status} ${err.response.body}`;
+    }
+    throw e;
+  }
+  let goReleases = JSON.parse(resp.body);
+
   let all = {
     /** @type {Array<BuildInfo>} */
     releases: [],

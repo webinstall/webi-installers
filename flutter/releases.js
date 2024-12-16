@@ -1,12 +1,14 @@
 'use strict';
 
-var FLUTTER_OSES = ['macos', 'linux', 'windows'];
+let Fetcher = require('../_common/fetcher.js');
+
+let FLUTTER_OSES = ['macos', 'linux', 'windows'];
 
 /**
  * stable, beta, dev
  * @type {Object.<String, Boolean>}
  */
-var channelMap = {};
+let channelMap = {};
 
 // This can be spot-checked against
 // https://docs.flutter.dev/release/archive?tab=windows
@@ -77,16 +79,22 @@ module.exports = async function () {
   };
 
   for (let osname of FLUTTER_OSES) {
-    let response = await fetch(
-      `https://storage.googleapis.com/flutter_infra_release/releases/releases_${osname}.json`,
-      { headers: { Accept: 'application/json' } },
-    );
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch data for ${osname}: ${response.statusText}`,
-      );
+    let resp;
+    try {
+      let url = `https://storage.googleapis.com/flutter_infra_release/releases/releases_${osname}.json`;
+      resp = await Fetcher.fetch(url, {
+        headers: { Accept: 'application/json' },
+      });
+    } catch (e) {
+      /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+      let err = e;
+      if (err.code === 'E_FETCH_RELEASES') {
+        err.message = `failed to fetch 'flutter' release data for ${osname}: ${err.response.status} ${err.response.body}`;
+      }
+      throw e;
     }
-    let data = await response.json();
+    let data = JSON.parse(resp.body);
+
     let osBaseUrl = data.base_url;
     let osReleases = data.releases;
 

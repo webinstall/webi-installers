@@ -1,7 +1,9 @@
 'use strict';
 
-var NON_BUILDS = ['bootstrap', 'src'];
-var ODDITIES = NON_BUILDS.concat(['armv6kz-linux']);
+let Fetcher = require('../_common/fetcher.js');
+
+let NON_BUILDS = ['bootstrap', 'src'];
+let ODDITIES = NON_BUILDS.concat(['armv6kz-linux']);
 
 /**
  * @typedef BuildInfo
@@ -21,15 +23,21 @@ var ODDITIES = NON_BUILDS.concat(['armv6kz-linux']);
  */
 
 module.exports = async function () {
-  let resp = await fetch('https://ziglang.org/download/index.json', {
-    method: 'GET',
-    headers: { Accept: 'application/json' },
-  });
-  let text = await resp.text();
-  if (!resp.ok) {
-    throw new Error(`Failed to fetch releases: HTTP ${resp.status}: ${text}`);
+  let resp;
+  try {
+    let url = 'https://ziglang.org/download/index.json';
+    resp = await Fetcher.fetch(url, {
+      headers: { Accept: 'application/json' },
+    });
+  } catch (e) {
+    /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+    let err = e;
+    if (err.code === 'E_FETCH_RELEASES') {
+      err.message = `failed to fetch 'zig' release data: ${err.response.status} ${err.response.body}`;
+    }
+    throw e;
   }
-  let versions = JSON.parse(text);
+  let versions = JSON.parse(resp.body);
 
   /** @type {Array<BuildInfo>} */
   let releases = [];

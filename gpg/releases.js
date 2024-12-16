@@ -1,5 +1,7 @@
 'use strict';
 
+let Fetcher = require('../_common/fetcher.js');
+
 let ltsRe = /GnuPG-(2\.2\.[\d\.]+)/;
 
 function createRssMatcher() {
@@ -32,24 +34,29 @@ function createUrlMatcher() {
  */
 
 async function getRawReleases() {
-  let matcher = createRssMatcher();
-
-  let resp = await fetch('https://sourceforge.net/projects/gpgosx/rss?path=/', {
-    headers: { Accept: 'application/rss+xml' },
-  });
-  let text = await resp.text(); // Fetch RSS feed as plain text
-  if (!resp.ok) {
-    throw new Error(`Failed to fetch RSS feed: HTTP ${resp.status}: ${text}`);
+  let resp;
+  try {
+    let url = 'https://sourceforge.net/projects/gpgosx/rss?path=/';
+    resp = await Fetcher.fetch(url, {
+      headers: { Accept: 'application/rss+xml' },
+    });
+  } catch (e) {
+    /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+    let err = e;
+    if (err.code === 'E_FETCH_RELEASES') {
+      err.message = `failed to fetch 'gpg' release data: ${err.response.status} ${err.response.body}`;
+    }
+    throw e;
   }
-
   let contentType = resp.headers.get('Content-Type');
-  if (!contentType || !contentType.includes('xml')) {
+  if (!contentType?.includes('xml')) {
     throw new Error(`Unexpected content type: ${contentType}`);
   }
 
+  let matcher = createRssMatcher();
   let links = [];
   for (;;) {
-    let m = matcher.exec(text);
+    let m = matcher.exec(resp.body);
     if (!m) {
       break;
     }
