@@ -2,6 +2,10 @@
 
 let Fetcher = require('../_common/fetcher.js');
 
+let alphaRe = /\d-alpha\d/;
+let betaRe = /\d-beta\d/;
+let rcRe = /\d-rc\d/;
+
 /**
  * @typedef BuildInfo
  * @prop {String} version
@@ -36,6 +40,18 @@ async function getDistributables() {
 
   for (let version of allVersions) {
     for (let build of releases.versions[version].builds) {
+      let channel = 'stable';
+      let isRc = rcRe.test(version);
+      let isBeta = betaRe.test(version);
+      let isAlpha = alphaRe.test(version);
+      if (isRc) {
+        channel = 'rc';
+      } else if (isBeta) {
+        channel = 'beta';
+      } else if (isAlpha) {
+        channel = 'alpha';
+      }
+
       let r = {
         version: build.version,
         download: build.url,
@@ -43,7 +59,7 @@ async function getDistributables() {
         // and the per-file logic has proven to get outdated sooner
         //os: convert[build.os],
         //arch: convert[build.arch],
-        //channel: 'stable|-rc|-beta|-alpha',
+        channel: channel,
       };
       all.releases.push(r);
     }
