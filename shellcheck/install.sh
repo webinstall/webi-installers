@@ -21,7 +21,13 @@ __init_shellcheck() {
     # pkg_install must be defined by every package
     pkg_install() {
         if ! test -e ~/.shellcheckrc; then
-            touch ~/.shellcheckrc
+            {
+                echo '# ignore: https://www.shellcheck.net/wiki/Ignore'
+                echo '# enable: https://www.shellcheck.net/wiki/optional'
+                echo '#disable=SC1090,SC1091'
+                echo '#enable=add-default-case,check-extra-masked-returns,deprecate-which'
+                echo '#enable=quote-safe-variables,check-set-e-suppressed,require-variable-braces'
+            } > ~/.shellcheckrc
         fi
 
         # ~/.local/opt/shellcheck-v0.99.9/bin
