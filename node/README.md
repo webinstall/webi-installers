@@ -363,3 +363,17 @@ jobs:
       - run: npm run lint
       - run: npm run test
 ```
+
+### How to Install Node's Linux Dependencies
+
+Typically Node just needs `openssl` and `libstdc++`.
+
+```sh
+# Apline
+sudo apk add --no-cache libstdc++ libssl3
+```
+
+```sh
+# Debian / Ubuntu
+sudo apt-get install -y libstdc++6 libssl3
+```
