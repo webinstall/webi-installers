@@ -1181,8 +1181,7 @@ To prevent search engine and browser confusion
 - _DO NOT_ prevent crawling via `robots.txt` \
   (counter-intuitive, but pages _must_ be crawled for links to _NOT_ be indexed)
 - _all_ domains using public TLS certs _will_ be indexed by default \
-  (they are all linked to and crawled from various Certificate Transparency
-  reports)
+  (they are all linked to and crawled from various Certificate Transparency reports)
 - follow these guidelines even if the dev sites use HTTP Basic Auth
 
 ```Caddyfile

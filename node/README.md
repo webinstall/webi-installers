@@ -66,8 +66,7 @@ To run them manually on your code;
   jhint -c ./.jshintrc *.js */*.js
   ```
 - fixjson \
-  (turns JavaScript Objects with comments, trailing commas, etc into actual
-  json)
+  (turns JavaScript Objects with comments, trailing commas, etc into actual json)
   ```sh
   fixjson -i 2 -w ./package.json
   ```
