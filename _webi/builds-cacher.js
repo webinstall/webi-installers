@@ -9,8 +9,6 @@ let HostTargets = require('./build-classifier/host-targets.js');
 let Lexver = require('./build-classifier/lexver.js');
 let Triplet = require('./build-classifier/triplet.js');
 
-let request = require('@root/request');
-
 var ALIAS_RE = /^alias: (\w+)$/m;
 
 var LEGACY_ARCH_MAP = {
@@ -153,7 +151,7 @@ async function getLatestBuilds(Releases, installersDir, cacheDir, name, date) {
 }
 
 async function getLatestBuildsInner(Releases, cacheDir, name, date) {
-  let data = await Releases.latest(request);
+  let data = await Releases.latest();
 
   if (!date) {
     date = new Date();

@@ -6,8 +6,6 @@ let Path = require('node:path');
 let BuildsCacher = require('./builds-cacher.js');
 let Triplet = require('./build-classifier/triplet.js');
 
-let request = require('@root/request');
-
 async function main() {
   let projName = process.argv[2];
   if (!projName) {
@@ -47,7 +45,7 @@ async function main() {
     Releases.latest = Releases;
   }
 
-  let projInfo = await Releases.latest(request);
+  let projInfo = await Releases.latest();
 
   // let packages = await Builds.getPackage({ name: projName });
   // console.log(packages);

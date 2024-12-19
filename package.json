@@ -38,8 +38,10 @@
   },
   "homepage": "https://github.com/webinstall/webi-installers#readme",
   "dependencies": {
-    "@root/request": "^1.9.2",
-    "dotenv": "^8.2.0",
-    "marked": "^4.1.1"
+    "dotenv": "^16.4.7",
+    "marked": "^15.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2"
   }
 }

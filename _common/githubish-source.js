@@ -1,5 +1,7 @@
 'use strict';
 
+let Fetcher = require('../_common/fetcher.js');
+
 let GitHubishSource = module.exports;
 
 /**
@@ -44,30 +46,22 @@ GitHubishSource.getDistributables = async function ({
     });
   }
 
-  let resp = await fetch(url, opts);
-  if (!resp.ok) {
-    let headers = Array.from(resp.headers);
-    console.error('Bad Resp Headers:', headers);
-    let text = await resp.text();
-    console.error('Bad Resp Body:', text);
-    let msg = `failed to fetch releases from '${baseurl}' with user '${username}'`;
-    throw new Error(msg);
-  }
-
-  let respText = await resp.text();
-  let gHubResp;
+  let resp;
   try {
-    gHubResp = JSON.parse(respText);
+    resp = await Fetcher.fetch(url, opts);
   } catch (e) {
-    console.error('Bad Resp JSON:', respText);
-    console.error(e.message);
-    let msg = `failed to parse releases from '${baseurl}' with user '${username}'`;
-    throw new Error(msg);
+    /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+    let err = e;
+    if (err.code === 'E_FETCH_RELEASES') {
+      err.message = `failed to fetch '${baseurl}' (githubish-source, user '${username}) release data: ${err.response.status} ${err.response.body}`;
+    }
+    throw e;
   }
+  let gHubResp = JSON.parse(resp.body);
 
   let all = {
+    /** @type {Array<BuildInfo>} */
     releases: [],
-    // TODO make this ':baseurl' + ':releasename'
     download: '',
   };
 
@@ -84,6 +78,29 @@ GitHubishSource.getDistributables = async function ({
   return all;
 };
 
+/**
+ * @typedef BuildInfo
+ * @prop {String} [name] - name to use instead of filename for hash urls
+ * @prop {String} version
+ * @prop {String} [_version]
+ * @prop {String} [arch]
+ * @prop {String} channel
+ * @prop {String} date
+ * @prop {String} download
+ * @prop {String} [ext]
+ * @prop {String} [_filename]
+ * @prop {String} [hash]
+ * @prop {String} [libc]
+ * @prop {Boolean} [_musl]
+ * @prop {Boolean} [lts]
+ * @prop {String} [size]
+ * @prop {String} os
+ */
+
+/**
+ * @param {any} ghRelease - TODO
+ * @returns {Array<BuildInfo>}
+ */
 GitHubishSource.releaseToDistributables = function (ghRelease) {
   let ghTag = ghRelease['tag_name']; // TODO tags aren't always semver / sensical
   let lts = /(\b|_)(lts)(\b|_)/.test(ghRelease['tag_name']);
@@ -95,6 +112,7 @@ GitHubishSource.releaseToDistributables = function (ghRelease) {
   date = date.replace(/T.*/, '');
 
   let urls = [ghRelease.tarball_url, ghRelease.zipball_url];
+  /** @type {Array<BuildInfo>} */
   let dists = [];
   for (let url of urls) {
     dists.push({
@@ -114,6 +132,9 @@ GitHubishSource.releaseToDistributables = function (ghRelease) {
   return dists;
 };
 
+/**
+ * @param {BuildInfo} dist
+ */
 GitHubishSource.followDistributableDownloadAttachment = async function (dist) {
   let abortCtrl = new AbortController();
   let resp = await fetch(dist.download, {

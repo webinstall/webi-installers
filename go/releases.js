@@ -1,14 +1,21 @@
 'use strict';
 
-var osMap = {
+let Fetcher = require('../_common/fetcher.js');
+
+/** @type {Object.<String, String>} */
+let osMap = {
   darwin: 'macos',
 };
-var archMap = {
+/** @type {Object.<String, String>} */
+let archMap = {
   386: 'x86',
 };
 
 let ODDITIES = ['bootstrap', '-arm6.'];
 
+/**
+ * @param {String} filename
+ */
 function isOdd(filename) {
   for (let oddity of ODDITIES) {
     let isOddity = filename.includes(oddity);
@@ -18,7 +25,22 @@ function isOdd(filename) {
   }
 }
 
-function getDistributables(request) {
+/**
+ * @typedef BuildInfo
+ * @prop {String} version
+ * @prop {String} [_version]
+ * @prop {String} arch
+ * @prop {String} channel
+ * @prop {String} date
+ * @prop {String} download
+ * @prop {String} ext
+ * @prop {String} [_filename]
+ * @prop {String} hash
+ * @prop {Boolean} lts
+ * @prop {String} os
+ */
+
+async function getDistributables() {
   /*
   {
     version: 'go1.13.8',
@@ -37,60 +59,71 @@ function getDistributables(request) {
     ]
   };
   */
-  return request({
-    url: 'https://golang.org/dl/?mode=json&include=all',
-    json: true,
-  }).then((resp) => {
-    var goReleases = resp.body;
-    var all = {
-      releases: [],
-      download: '',
-    };
 
-    goReleases.forEach((release) => {
-      // strip 'go' prefix, standardize version
-      var parts = release.version.slice(2).split('.');
-      while (parts.length < 3) {
-        parts.push('0');
-      }
-      var version = parts.join('.');
-      // nix 'go' prefix
-      var fileversion = release.version.slice(2);
-
-      release.files.forEach((asset) => {
-        let odd = isOdd(asset.filename);
-        if (odd) {
-          return;
-        }
-
-        var filename = asset.filename;
-        var os = osMap[asset.os] || asset.os || '-';
-        var arch = archMap[asset.arch] || asset.arch || '-';
-        all.releases.push({
-          version: version,
-          _version: fileversion,
-          // all go versions >= 1.0.0 are effectively LTS
-          lts: (parts[0] > 0 && release.stable) || false,
-          channel: (release.stable && 'stable') || 'beta',
-          date: '1970-01-01', // the world may never know
-          os: os,
-          arch: arch,
-          ext: '', // let normalize run the split/test/join
-          hash: '-', // not ready to standardize this yet
-          download: `https://dl.google.com/go/${filename}`,
-        });
-      });
+  let resp;
+  try {
+    let url = 'https://golang.org/dl/?mode=json&include=all';
+    resp = await Fetcher.fetch(url, {
+      headers: { Accept: 'application/json' },
     });
+  } catch (e) {
+    /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+    let err = e;
+    if (err.code === 'E_FETCH_RELEASES') {
+      err.message = `failed to fetch 'Go' release data: ${err.response.status} ${err.response.body}`;
+    }
+    throw e;
+  }
+  let goReleases = JSON.parse(resp.body);
 
-    return all;
-  });
+  let all = {
+    /** @type {Array<BuildInfo>} */
+    releases: [],
+    download: '',
+  };
+
+  for (let release of goReleases) {
+    // Strip 'go' prefix, standardize version
+    let parts = release.version.slice(2).split('.');
+    while (parts.length < 3) {
+      parts.push('0');
+    }
+    let version = parts.join('.');
+    let fileversion = release.version.slice(2);
+
+    for (let asset of release.files) {
+      if (isOdd(asset.filename)) {
+        continue;
+      }
+
+      let filename = asset.filename;
+      let os = osMap[asset.os] || asset.os || '-';
+      let arch = archMap[asset.arch] || asset.arch || '-';
+      let build = {
+        version: version,
+        _version: fileversion,
+        lts: (parts[0] > 0 && release.stable) || false,
+        channel: (release.stable && 'stable') || 'beta',
+        date: '1970-01-01', // the world may never know
+        os: os,
+        arch: arch,
+        ext: '', // let normalize run the split/test/join
+        hash: '-', // not ready to standardize this yet
+        download: `https://dl.google.com/go/${filename}`,
+      };
+      all.releases.push(build);
+    }
+  }
+
+  return all;
 }
 
 module.exports = getDistributables;
 
 if (module === require.main) {
-  getDistributables(require('@root/request')).then(function (all) {
+  getDistributables().then(function (all) {
     all = require('../_webi/normalize.js')(all);
+    //@ts-expect-error
     all.releases = all.releases.slice(0, 10);
     console.info(JSON.stringify(all, null, 2));
   });

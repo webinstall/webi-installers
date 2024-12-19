@@ -34,8 +34,7 @@ To enable Postgres as a Linux Service with [serviceman](../serviceman/): \
 (see macOS below)
 
 ```sh
-sudo env PATH="$PATH" \
-    serviceman add --system --username "$(whoami)" --name 'postgres' -- \
+serviceman add --name 'postgres' --workdir ~/.local/share/postgres/var -- \
     postgres -D ~/.local/share/postgres/var -p 5432
 
 sudo systemctl restart systemd-journald
@@ -119,8 +118,7 @@ curl https://webi.sh/serviceman | sh
 ```
 
 ```sh
-sudo env PATH="$PATH" \
-    serviceman add --system --username "$(whoami)" --name 'postgres' -- \
+serviceman add --name 'postgres' --workdir ~/.local/share/postgres/var -- \
     postgres -D ~/.local/share/postgres/var -p 5432
 
 sudo systemctl restart systemd-journald
@@ -185,7 +183,7 @@ sudo tail -f /var/log/postgres
 #### macOS
 
 ```sh
-serviceman add --name 'postgres' -- \
+serviceman add --name 'postgres' --workdir ~/.local/share/postgres/var -- \
     postgres -D ~/.local/share/postgres/var -p 5432
 
 tail -f ~/.local/share/postgres/var/log/postgres.log

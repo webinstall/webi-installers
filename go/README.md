@@ -80,8 +80,7 @@ webi serviceman
 pushd ./hello/
 
 # swap 'hello' and './hello' for the name of your project and binary
-sudo env PATH="$PATH" \
-    serviceman add --system --username "$(whoami)" --name hello -- \
+serviceman add --name 'hello' -- \
     ./hello
 
 # Restart the logging service

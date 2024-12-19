@@ -1,5 +1,7 @@
 'use strict';
 
+let Fetcher = require('../_common/fetcher.js');
+
 // See <https://googlechromelabs.github.io/chrome-for-testing/>
 const releaseApiUrl =
   'https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json';
@@ -41,18 +43,23 @@ const releaseApiUrl =
 // }
 
 module.exports = async function () {
-  let resp = await fetch(releaseApiUrl);
-
-  if (!resp.ok) {
-    let text = await resp.text();
-    let msg = `failed to fetch releases from '${releaseApiUrl}': ${resp.status} ${text}`;
-    throw new Error(msg);
+  let resp;
+  try {
+    resp = await Fetcher.fetch(releaseApiUrl, {
+      headers: { Accept: 'application/json' },
+    });
+  } catch (e) {
+    /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+    let err = e;
+    if (err.code === 'E_FETCH_RELEASES') {
+      err.message = `failed to fetch 'chromedriver' release data: ${err.response.status} ${err.response.body}`;
+    }
+    throw e;
   }
-
-  let body = await resp.json();
+  let data = JSON.parse(resp.body);
 
   let builds = [];
-  for (let release of body.versions) {
+  for (let release of data.versions) {
     if (!release.downloads.chromedriver) {
       continue;
     }

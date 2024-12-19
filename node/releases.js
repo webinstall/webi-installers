@@ -1,12 +1,15 @@
 'use strict';
 
+let Fetcher = require('../_common/fetcher.js');
+
 // https://blog.risingstack.com/update-nodejs-8-end-of-life-no-support/
 // 6 mos "current" + 18 mos LTS "active" +  12 mos LTS "maintenance"
-//var endOfLife = 3 * 366 * 24 * 60 * 60 * 1000;
+//let endOfLife = 3 * 366 * 24 * 60 * 60 * 1000;
 // If there have been no updates in 12 months, it's almost certainly end-of-life
 const END_OF_LIFE = 366 * 24 * 60 * 60 * 1000;
 
 // OSes
+/** @type {Object.<String, String>} */
 let osMap = {
   osx: 'macos', // NOTE: filename is 'darwin'
   linux: 'linux',
@@ -16,6 +19,7 @@ let osMap = {
 };
 
 // CPU architectures
+/** @type {Object.<String, String>} */
 let archMap = {
   x64: 'amd64',
   x86: 'x86',
@@ -28,6 +32,7 @@ let archMap = {
 };
 
 // file extensions
+/** @type {Object.<String, Array<String>>} */
 let pkgMap = {
   pkg: ['pkg'],
   //exe: ['exe'], // disable
@@ -40,8 +45,25 @@ let pkgMap = {
   musl: ['tar.gz', 'tar.xz'],
 };
 
-async function getDistributables(request) {
+/**
+ * @typedef BuildInfo
+ * @prop {String} version
+ * @prop {String} [_version]
+ * @prop {String} arch
+ * @prop {String} channel
+ * @prop {String} date
+ * @prop {String} download
+ * @prop {String} ext
+ * @prop {String} [_filename]
+ * @prop {String} [hash]
+ * @prop {String} libc
+ * @prop {Boolean} lts
+ * @prop {String} os
+ */
+
+async function getDistributables() {
   let all = {
+    /** @type {Array<BuildInfo>} */
     releases: [],
     download: '',
   };
@@ -64,37 +86,62 @@ async function getDistributables(request) {
   ]
   */
 
-  // Alternate: 'https://nodejs.org/dist/index.json',
-  let baseUrl = `https://nodejs.org/download/release`;
-  let officialP = request({
-    url: `${baseUrl}/index.json`,
-    json: true,
-  }).then(function (resp) {
-    transform(baseUrl, resp.body);
-    return;
-  });
+  {
+    // Alternate: 'https://nodejs.org/dist/index.json',
+    let baseUrl = `https://nodejs.org/download/release`;
 
-  let unofficialBaseUrl = `https://unofficial-builds.nodejs.org/download/release`;
-  let unofficialP = request({
-    url: `${unofficialBaseUrl}/index.json`,
-    json: true,
-  })
-    .then(function (resp) {
-      transform(unofficialBaseUrl, resp.body);
-      return;
-    })
-    .catch(function (err) {
-      console.error('failed to fetch unofficial-builds');
-      console.error(err);
-    });
+    // Fetch official builds
+    let resp;
+    try {
+      resp = await Fetcher.fetch(`${baseUrl}/index.json`, {
+        headers: { Accept: 'application/json' },
+      });
+    } catch (e) {
+      /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+      let err = e;
+      if (err.code === 'E_FETCH_RELEASES') {
+        err.message = `failed to fetch 'node' release data: ${err.response.status} ${err.response.body}`;
+      }
+      throw e;
+    }
+    let data = JSON.parse(resp.body);
 
+    void transform(baseUrl, data);
+  }
+
+  {
+    let unofficialBaseUrl = `https://unofficial-builds.nodejs.org/download/release`;
+
+    // Fetch unofficial builds
+    let resp;
+    try {
+      resp = await Fetcher.fetch(`${unofficialBaseUrl}/index.json`, {
+        headers: { Accept: 'application/json' },
+      });
+    } catch (e) {
+      /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+      let err = e;
+      if (err.code === 'E_FETCH_RELEASES') {
+        err.message = `failed to fetch 'node' (unofficial) release data: ${err.response.status} ${err.response.body}`;
+      }
+      throw e;
+    }
+    let data = JSON.parse(resp.body);
+
+    transform(unofficialBaseUrl, data);
+  }
+
+  /**
+   * @param {String} baseUrl
+   * @param {Array<any>} builds
+   */
   function transform(baseUrl, builds) {
-    builds.forEach(function (build) {
+    for (let build of builds) {
       let buildDate = new Date(build.date).valueOf();
       let age = Date.now() - buildDate;
       let maintained = age < END_OF_LIFE;
       if (!maintained) {
-        return;
+        continue;
       }
 
       let lts = false !== build.lts;
@@ -108,9 +155,9 @@ async function getDistributables(request) {
         channel = 'beta';
       }
 
-      build.files.forEach(function (file) {
+      for (let file of build.files) {
         if ('src' === file || 'headers' === file) {
-          return;
+          continue;
         }
 
         let fileParts = file.split('-');
@@ -126,7 +173,7 @@ async function getDistributables(request) {
           pkgs = pkgMap.tar;
         }
         if (!pkgs?.length) {
-          return;
+          continue;
         }
 
         let extra = '';
@@ -143,7 +190,7 @@ async function getDistributables(request) {
           osPart = 'darwin';
         }
 
-        pkgs.forEach(function (pkg) {
+        for (let pkg of pkgs) {
           let filename = `node-${build.version}-${osPart}-${archPart}${extra}.${pkg}`;
           if ('msi' === pkg) {
             filename = `node-${build.version}-${archPart}${extra}.${pkg}`;
@@ -164,20 +211,17 @@ async function getDistributables(request) {
           };
 
           all.releases.push(release);
-        });
-      });
-    });
+        }
+      }
+    }
   }
-
-  await officialP;
-  await unofficialP;
 
   return all;
 }
 module.exports = getDistributables;
 
 if (module === require.main) {
-  getDistributables(require('@root/request')).then(function (all) {
+  getDistributables().then(function (all) {
     all = require('../_webi/normalize.js')(all);
     console.info(JSON.stringify(all));
     //console.info(JSON.stringify(all, null, 2));

@@ -46,7 +46,7 @@ webi serviceman
 
 ```sh
 mkdir -p ~/.config/syncthing/
-env PATH="$PATH" serviceman add --user --name syncthing -- \
+serviceman add --agent --name syncthing -- \
   syncthing --home ~/.config/syncthing/
 ```
 

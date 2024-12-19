@@ -1,5 +1,7 @@
 'use strict';
 
+let Fetcher = require('../_common/fetcher.js');
+
 /**
  * @typedef DistributableRaw
  * @prop {String} name
@@ -57,26 +59,18 @@ GitHubish.getDistributables = async function ({
     });
   }
 
-  let resp = await fetch(url, opts);
-  if (!resp.ok) {
-    let headers = Array.from(resp.headers);
-    console.error('Bad Resp Headers:', headers);
-    let text = await resp.text();
-    console.error('Bad Resp Body:', text);
-    let msg = `failed to fetch releases from '${baseurl}' with user '${username}'`;
-    throw new Error(msg);
-  }
-
-  let respText = await resp.text();
-  let gHubResp;
+  let resp;
   try {
-    gHubResp = JSON.parse(respText);
+    resp = await Fetcher.fetch(url, opts);
   } catch (e) {
-    console.error('Bad Resp JSON:', respText);
-    console.error(e.message);
-    let msg = `failed to parse releases from '${baseurl}' with user '${username}'`;
-    throw new Error(msg);
+    /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+    let err = e;
+    if (err.code === 'E_FETCH_RELEASES') {
+      err.message = `failed to fetch '${baseurl}' (githubish, user '${username}) release data: ${err.response.status} ${err.response.body}`;
+    }
+    throw e;
   }
+  let gHubResp = JSON.parse(resp.body);
 
   let all = {
     /** @type {Array<DistributableRaw>} */
@@ -88,13 +82,18 @@ GitHubish.getDistributables = async function ({
   try {
     gHubResp.forEach(transformReleases);
   } catch (e) {
-    console.error(e.message);
+    /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+    let err = e;
+    console.error(err.message);
     console.error('Error Headers:', resp.headers);
     console.error('Error Body:', resp.body);
     let msg = `failed to transform releases from '${baseurl}' with user '${username}'`;
     throw new Error(msg);
   }
 
+  /**
+   * @param {any} release - TODO
+   */
   function transformReleases(release) {
     for (let asset of release['assets']) {
       let name = asset['name'];

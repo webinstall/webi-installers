@@ -1,31 +1,61 @@
 'use strict';
 
-var osMap = {
+let Fetcher = require('../_common/fetcher.js');
+
+/** @type {Object.<String, String>} */
+let osMap = {
   winnt: 'windows',
   mac: 'darwin',
 };
-var archMap = {
+
+/** @type {Object.<String, String>} */
+let archMap = {
   armv7l: 'armv7',
   i686: 'x86',
   powerpc64le: 'ppc64le',
 };
 
+/**
+ * @typedef BuildInfo
+ * @prop {String} version
+ * @prop {String} [_version]
+ * @prop {String} [arch]
+ * @prop {String} channel
+ * @prop {String} date
+ * @prop {String} download
+ * @prop {String} [ext]
+ * @prop {String} [_filename]
+ * @prop {String} [hash]
+ * @prop {String} [libc]
+ * @prop {Boolean} [_musl]
+ * @prop {Boolean} [lts]
+ * @prop {String} [size]
+ * @prop {String} os
+ */
+
 async function getDistributables() {
   let all = {
+    /** @type {Array<BuildInfo>} */
     releases: [],
     download: '',
     _names: ['julia', 'macaarch64'],
   };
 
-  let resp = await fetch(
-    'https://julialang-s3.julialang.org/bin/versions.json',
-    {
-      headers: {
-        Accept: 'application/json',
-      },
-    },
-  );
-  let buildsByVersion = await resp.json();
+  let resp;
+  try {
+    let url = 'https://julialang-s3.julialang.org/bin/versions.json';
+    resp = await Fetcher.fetch(url, {
+      headers: { Accept: 'application/json' },
+    });
+  } catch (e) {
+    /** @type {Error & { code: string, response: { status: number, body: string } }} */ //@ts-expect-error
+    let err = e;
+    if (err.code === 'E_FETCH_RELEASES') {
+      err.message = `failed to fetch 'julia' release data: ${err.response.status} ${err.response.body}`;
+    }
+    throw e;
+  }
+  let buildsByVersion = JSON.parse(resp.body);
 
   /*
       {
@@ -105,6 +135,12 @@ async function getDistributables() {
   return all;
 }
 
+/**
+ * @param {Object} a
+ * @param {String} a.version
+ * @param {Object} b
+ * @param {String} b.version
+ */
 function sortByVersion(a, b) {
   let [aVer, aPre] = a.version.split('-');
   let [bVer, bPre] = b.version.split('-');

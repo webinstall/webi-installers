@@ -100,8 +100,7 @@ mkdir -p ~/.dashcore/wallets/
 mkdir -p /mnt/slc1_vol_100g/dashcore/_data
 mkdir -p /mnt/slc1_vol_100g/dashcore/_caches
 
-sudo env PATH="$PATH" serviceman add \
-        --system --user "$my_user" --path "$PATH" --name dashd --force -- \
+serviceman add --name 'dashd' --daemon -- \
     dashd \
         -usehd \
         -conf="$HOME/.dashcore/dash.conf" \

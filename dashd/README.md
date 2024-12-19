@@ -219,14 +219,7 @@ You can use [`serviceman`](../serviceman/):
 **Linux**
 
 ```sh
-sudo env PATH="$PATH" \
-    serviceman add \
-        --system \
-        --username "$(id -n -u)" \
-        --path "$PATH" \
-        --name dashd \
-        --force \
-        -- \
+serviceman add --name 'dashd' -- \
     dashd \
         -usehd \
         -conf="$HOME/.dashcore/dash.conf" \
@@ -239,11 +232,7 @@ sudo env PATH="$PATH" \
 **Mac**
 
 ```sh
-serviceman add \
-    --path "$PATH" \
-    --name dashd \
-    --force \
-    -- \
+serviceman add --name 'dashd' -- \
     dashd \
         -usehd \
         -conf="$HOME/.dashcore/dash.conf" \

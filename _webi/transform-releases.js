@@ -3,7 +3,6 @@
 var Releases = module.exports;
 
 var path = require('path');
-var request = require('@root/request');
 var _normalize = require('./normalize.js');
 
 var cache = {};
@@ -28,7 +27,7 @@ Releases.get = async function (pkgdir) {
     throw err;
   }
 
-  let all = await get.latest(request);
+  let all = await get.latest();
 
   return _normalize(all);
 };
