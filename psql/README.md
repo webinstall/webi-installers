@@ -38,7 +38,7 @@ psql "postgres://db-xxxx:secret123@pg-1.example.com:5432/db-xxxx"
 ```
 
 For remote / public networks: \
-(with `sslmode` & `sslnegotiation`)
+(with `sslmode` & `sslnegotiation` for standard TLS and SNI, with ALPN set to 'postgresql')
 
 ```sh
 psql "postgres://db-xxxx@pg-1.example.com:5432/db-xxxx?sslmode=require&sslnegotiation=direct"
