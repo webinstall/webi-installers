@@ -27,7 +27,6 @@ __init_serviceman() {
             # mv ./bnnanet-serviceman-* "$HOME/.local/opt/serviceman-v0.9.1"
             mv ./*"$pkg_cmd_name"*/ "${pkg_src_dir}"
         else
-            echo "NO share"
             # $HOME/.local/opt/serviceman-v0.8.0/bin
             mkdir -p "$pkg_src_bin"
 
