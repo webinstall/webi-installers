@@ -3,8 +3,8 @@
 let Releases = module.exports;
 
 let GitHubSource = require('../_common/github-source.js');
-let owner = 'BeyondCodeBootcamp';
-let repo = 'aliasman';
+let owner = 'bnnanet';
+let repo = 'pg-essentials';
 
 Releases.latest = async function () {
   let all = await GitHubSource.getDistributables({ owner, repo });
