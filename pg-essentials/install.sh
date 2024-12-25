@@ -14,8 +14,8 @@ __init_pg_essentials() {
     pkg_dst_cmd="$HOME/.local/bin/psql-backup"
     pkg_dst="$pkg_dst_cmd"
 
-    pkg_src_cmd="$HOME/.local/opt/pg-essentials-v$WEBI_VERSION/bin/psql-backup"
-    pkg_src_bin="$HOME/.local/opt/pg-essentials-v$WEBI_VERSION/bin"
+    pkg_src_cmd="$HOME/.local/opt/pg-essentials-v$WEBI_VERSION/psql-backup"
+    pkg_src_bin="$HOME/.local/opt/pg-essentials-v$WEBI_VERSION"
     pkg_src_dir="$HOME/.local/opt/pg-essentials-v$WEBI_VERSION"
     pkg_src="$pkg_src_cmd"
 
@@ -37,11 +37,11 @@ __init_pg_essentials() {
             cd ~/.local/opt/pg-essentials/ || return 1
             for b_file in pg-*; do
                 rm -rf ../../bin/"${b_file}"
-                ln -s "../opt/pg-essentials-v$WEBI_VERSION/bin/${b_file}" .
+                ln -s "../opt/pg-essentials-v$WEBI_VERSION/${b_file}" ../../bin/
             done
             for b_file in psql-*; do
                 rm -rf ../../bin/"${b_file}"
-                ln -s "../opt/pg-essentials-v$WEBI_VERSION/bin/${b_file}" .
+                ln -s "../opt/pg-essentials-v$WEBI_VERSION/${b_file}" ../../bin/
             done
         )
     }
