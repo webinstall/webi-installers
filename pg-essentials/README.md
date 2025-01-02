@@ -144,7 +144,7 @@ pg-addgroup 'hostssl' 'remote_users' 5432
 ```
 
 This is the same as adding a remote users role and editing
-`~/.local/share/postgres/var/hba.conf`
+`~/.local/share/postgres/var/pg_hba.conf`
 
 ```sql
 CREATE ROLE "remote_users" NOLOGIN;
