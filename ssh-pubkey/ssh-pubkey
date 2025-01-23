@@ -2,40 +2,27 @@
 set -e
 set -u
 
-fn_warn_rsa() { (
+fn_fix_rsa() { (
     echo 'WARNING'
     echo '    ~/.ssh/id_rsa is less than the required 3072 bits'
     echo '    (some modern services will reject your key)'
-
     echo ''
-    echo 'SOLUTION'
-    echo '    Generate a new key, and update accordingly'
-
-    my_ts="$(date -u "+%F_%H.%M.%S")"
-
-    echo ''
-    echo '    # OPTION 1: Generate a more efficient, ED25519 256-bit key'
-    echo '    #           and update your ~/.ssh/config accordingly'
-    echo "    mv ~/.ssh/id_rsa ~/.ssh/id_rsa.${my_ts}.bak"
-    # shellcheck disable=SC2016
+    echo 'AUTOMATIC FIX'
+    echo '    Generating an efficient, modern ed25519 key'
     echo '    ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -q -N ""'
+    echo ''
+    my_ts="$(date -u "+%F_%H.%M.%S")"
+    echo 'MANUAL FIX (optional)'
+    echo "    mv ~/.ssh/id_rsa ~/.ssh/id_rsa.${my_ts}.bak"
+    echo '    ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -q -N ""'
+    # shellcheck disable=SC2016
     echo "    echo 'Host *
         IdentityFile ~/.ssh/id_ed25519
-        IdentityFile ~/.ssh/id_rsa.${my_ts}.bak' >> ~/.ssh/config"
-
-    echo ''
-    echo '    # OPTION 2: Generate a larger, 4096-bit RSA key"'
-    echo '    #           and update your ~/.ssh/config accordingly'
-    echo "    mv ~/.ssh/id_rsa ~/.ssh/id_rsa.${my_ts}.bak"
-    # shellcheck disable=SC2016
-    echo '    ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -q -N ""'
-    echo "    echo 'Host *
         IdentityFile ~/.ssh/id_rsa
         IdentityFile ~/.ssh/id_rsa.${my_ts}.bak' >> ~/.ssh/config"
 ); }
 
 main() {
-
     if ! test -d ~/.ssh; then
         mkdir -p ~/.ssh/
         chmod 0700 ~/.ssh/
@@ -59,43 +46,52 @@ main() {
             echo >&2 ""
             ssh-keygen -y -f ~/.ssh/id_ed25519 > ~/.ssh/id_ed25519.pub
         fi
-    elif test -f ~/.ssh/id_rsa; then
-        my_keytype='rsa'
-        if ! test -f ~/.ssh/id_rsa.pub; then
-            echo >&2 ""
-            ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
-        fi
     elif test -f ~/.ssh/id_ecda; then
         my_keytype='ecdsa'
         if ! test -f ~/.ssh/id_ecdsa.pub; then
             echo >&2 ""
             ssh-keygen -y -f ~/.ssh/id_ecda > ~/.ssh/id_ecda.pub
         fi
-    else
-        my_keytype='rsa'
-        echo >&2 ""
-        echo >&2 "Generating public/private rsa key pair."
-        ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa -q -N ""
-        ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
     fi
 
-    # TODO use the comment (if any) for the name of the file
-    echo >&2 ""
-    #shellcheck disable=SC2088
-    echo >&2 "~/Downloads/id_${my_keytype}.$(id -u -n).pub":
-    echo >&2 ""
-    rm -f "$HOME/Downloads/id_${my_keytype}.$(id -u -n).pub"
-    cp -RPp "$HOME/.ssh/id_${my_keytype}.pub" "$HOME/Downloads/id_${my_keytype}.$(id -u -n).pub"
-    cat "$HOME/Downloads/id_${my_keytype}.$(id -u -n).pub"
-    echo >&2 ""
-
-    if test -f ~/.ssh/id_rsa; then
-        my_rsa_chars="$(cat ~/.ssh/id_rsa)"
-        if test "${#my_rsa_chars}" -lt 2500; then
-            fn_warn_rsa >&2
-            echo >&2 ""
+    if test -z "${my_keytype}"; then
+        if test -f ~/.ssh/id_rsa; then
+            my_rsa_chars="$(cat ~/.ssh/id_rsa)"
+            if test "${#my_rsa_chars}" -lt 2500; then
+                fn_fix_rsa >&2
+                echo >&2 ""
+            else
+                my_keytype='rsa'
+            fi
         fi
     fi
+
+    if test -z "${my_keytype}"; then
+        echo >&2 ""
+
+        my_keytype='ed25519'
+        ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -q -N ""
+        ssh-keygen -y -f ~/.ssh/id_ed25519 > ~/.ssh/id_ed25519.pub
+
+        # my_keytype='rsa'
+        # echo >&2 "Generating public/private rsa key pair."
+        # ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa -q -N ""
+        # ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
+    fi
+
+    my_comment="$(cut -d' ' -f3 < ~/.ssh/"id_${my_keytype}.pub")"
+    if test -z "${my_comment}"; then
+        my_comment="$(id -u -n)"
+    fi
+
+    echo >&2 ""
+    #shellcheck disable=SC2088
+    echo >&2 "~/Downloads/id_${my_keytype}.${my_comment}.pub":
+    echo >&2 ""
+    rm -f "$HOME/Downloads/id_${my_keytype}.${my_comment}.pub"
+    cp -RPp "$HOME/.ssh/id_${my_keytype}.pub" "$HOME/Downloads/id_${my_keytype}.${my_comment}.pub"
+    cat "$HOME/Downloads/id_${my_keytype}.${my_comment}.pub"
+    echo >&2 ""
 }
 
 main
