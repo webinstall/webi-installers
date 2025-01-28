@@ -10,7 +10,7 @@ async function getDistributables() {
   let all = await github(null, owner, repo);
   let releases = [];
   for (let release of all.releases) {
-    let isJunk = !junkFiles.includes(release.name);
+    let isJunk = junkFiles.includes(release.name);
     if (isJunk) {
       continue;
     }
