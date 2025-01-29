@@ -22,21 +22,21 @@ if (!(Test-Path -Path "$Env:USERPROFILE/.ssh/config")) {
 #    #& icacls "$Env:USERPROFILE/.ssh/authorized_keys" /grant:r "$Env:USERNAME":"(F)"
 #}
 
-if (!(Test-Path -Path "$Env:USERPROFILE/.ssh/id_rsa")) {
-    & ssh-keygen -b 2048 -t rsa -f "$Env:USERPROFILE/.ssh/id_rsa" -q -N """"
+if (!(Test-Path -Path "$Env:USERPROFILE/.ssh/id_ed25519")) {
+    & ssh-keygen -t ed25519 -f "$Env:USERPROFILE/.ssh/id_ed25519" -q -N """"
     Write-Output ""
 }
 
-if (!(Test-Path -Path "$Env:USERPROFILE/.ssh/id_rsa.pub")) {
-    & ssh-keygen -y -f "$Env:USERPROFILE/.ssh/id_rsa" > "$Env:USERPROFILE/.ssh/id_rsa.pub"
+if (!(Test-Path -Path "$Env:USERPROFILE/.ssh/id_ed25519.pub")) {
+    & ssh-keygen -y -f "$Env:USERPROFILE/.ssh/id_ed25519" > "$Env:USERPROFILE/.ssh/id_ed25519.pub"
     Write-Output ""
 }
 
 # TODO use the comment (if any) for the name of the file
 Write-Output ""
-Write-Output "~/Downloads/id_rsa.$Env:USERNAME.pub":
+Write-Output "~/Downloads/id_ed25519.$Env:USERNAME.pub":
 Write-Output ""
-#rm -f "$Env:USERPROFILE/Downloads/id_rsa.$Env:USERNAME.pub":
-Copy-Item -Path "$Env:USERPROFILE/.ssh/id_rsa.pub" -Destination "$Env:USERPROFILE/Downloads/id_rsa.$Env:USERNAME.pub"
-& Get-Content "$Env:USERPROFILE/Downloads/id_rsa.$Env:USERNAME.pub"
+#rm -f "$Env:USERPROFILE/Downloads/id_ed25519.$Env:USERNAME.pub":
+Copy-Item -Path "$Env:USERPROFILE/.ssh/id_ed25519.pub" -Destination "$Env:USERPROFILE/Downloads/id_ed25519.$Env:USERNAME.pub"
+& Get-Content "$Env:USERPROFILE/Downloads/id_ed25519.$Env:USERNAME.pub"
 Write-Output ""
