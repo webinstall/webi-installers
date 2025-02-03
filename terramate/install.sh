@@ -15,16 +15,24 @@ __init_terramate() {
     pkg_dst="$pkg_dst_cmd"
 
     pkg_src_cmd="$HOME/.local/opt/terramate-v$WEBI_VERSION/bin/terramate"
+    pkg_src_bin="$HOME/.local/opt/terramate-v$WEBI_VERSION/bin"
     pkg_src_dir="$HOME/.local/opt/terramate-v$WEBI_VERSION"
     pkg_src="$pkg_src_cmd"
 
     # pkg_install must be defined by every package
     pkg_install() {
         # ~/.local/opt/terramate-v0.11.4/bin
-        mkdir -p "$(dirname "$pkg_src_cmd")"
+        mkdir -p "$pkg_src_bin"
 
         # mv ./terramate* ~/.local/opt/terramate-v0.11.4/bin/terramate
-        mv terramate* "$pkg_src_cmd"
+        mv ./terramate "$pkg_src_bin"
+        mv ./terramate-ls "$pkg_src_bin"
+    }
+
+    # this is an override since we have two binaries to link
+    pkg_link() {
+        ln -sf "../opt/terramate-v$WEBI_VERSION/bin/terramate" ~/.local/bin/
+        ln -sf "../opt/terramate-v$WEBI_VERSION/bin/terramate-ls" ~/.local/bin/
     }
 
     # pkg_get_current_version is recommended, but (soon) not required
