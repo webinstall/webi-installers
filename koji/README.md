@@ -26,7 +26,7 @@ You can use koji in one of two ways:
 Here's the shortlist of options we've found most useful:
 
 ```text
--e, --emoji - use emoji for commit type (ex: `✨ feat:`)
+-e, --emoji - use emoji for commit summary (ex: `feat: ✨ ...`)
 -a, --autocomplete - guess 'scope' based on commit history (slow on large projects)
 --hook - expect to be run from 'git commit', rather than wrap it
 ```
@@ -72,8 +72,8 @@ git commit
 
 ### How to use Emoji
 
-You can use `-e` (or `--emoji`) to prepend your commit message with the relevant
-emoji for the commit type:
+You can use `-e` (or `--emoji`) to prepend your commit message summary with the
+relevant emoji for the commit type:
 
 ```sh
 koji -e
@@ -91,18 +91,20 @@ koji --emoji --hook
 You can also use _shortcodes_ (`:pinched_fingers:`) in the scope, summary, or
 body.
 
-### How to configure Koji (custom emoji)
+### How to configure koji
 
-You can add custom commit types via a `koji.toml` in the project directory.
+You can configure koji via a custom config passed with `--config`, a
+`.koji.toml` file in the project root, or a user config at
+`~/.config/koji/config.toml`.
 
-For example:
+Here's an example of a custom commit type:
 
 ```toml
 [[commit_types]]
-name = "feat"
+name = "cust"
 emoji = "✨"
-description = "A new feature"
+description = "A custom commit type"
 ```
 
-The default emoji can be seen in
+The default configuration can be seen in
 [default.toml](https://github.com/cococonscious/koji/blob/main/meta/config/default.toml).
