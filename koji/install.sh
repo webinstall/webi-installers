@@ -19,13 +19,13 @@ __init_koji() {
         # ~/.local/opt/koji-v1.5.0/bin
         mkdir -p "$(dirname "$pkg_src_cmd")"
 
-        # mv ./koji-*/koji ~/.local/opt/koji-v1.5.0/bin/koji
-        mv ./koji-*/koji "$pkg_src_cmd"
+        # mv koji ~/.local/opt/koji-v1.5.0/bin/koji
+        mv koji "$pkg_src_cmd"
     }
 
     # pkg_get_current_version is recommended, but (soon) not required
     pkg_get_current_version() {
-        # 'koji version' has output in this format:
+        # 'koji --version' has output in this format:
         #       koji 1.5.0
         # This trims it down to just the version number:
         #       1.5.0
