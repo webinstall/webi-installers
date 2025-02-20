@@ -19,8 +19,19 @@ __init_koji() {
         # ~/.local/opt/koji-v1.5.0/bin
         mkdir -p "$(dirname "$pkg_src_cmd")"
 
-        # mv koji ~/.local/opt/koji-v1.5.0/bin/koji
-        mv koji "$pkg_src_cmd"
+        if test -f ./koji; then
+            # mv koji ~/.local/opt/koji-v1.5.0/bin/koji
+            mv ./koji "$pkg_src_cmd"
+        elif test -e ./koji-*/koji; then
+            # mv koji-1.4.0/koji ~/.local/opt/koji-v1.4.0/bin/koji
+            mv ./koji-*/koji "$pkg_src_cmd"
+        elif test -e ./koji-*; then
+            # mv koji-linux-amd64 ~/.local/opt/koji-v1.2.0/bin/koji
+            mv ./koji-* "$pkg_src_cmd"
+        else
+            echo >&2 "failed to find 'koji' exectutable"
+            return 1
+        fi
     }
 
     # pkg_get_current_version is recommended, but (soon) not required
@@ -29,7 +40,7 @@ __init_koji() {
         #       koji 1.5.0
         # This trims it down to just the version number:
         #       1.5.0
-        koji --version 2> /dev/null | cut -c6-
+        koji --version 2> /dev/null | head -n 1 | cut -d' ' -f2
     }
 }
 
