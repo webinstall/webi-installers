@@ -398,15 +398,21 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
         return;
       }
 
-      projInfo = await getLatestBuilds(Releases, installersDir, cacheDir, name);
-      let latestProjInfo = BuildsCacher.transformAndUpdate(
-        name,
-        projInfo,
-        meta,
-        date,
-        bc,
-      );
-      bc._caches[name] = latestProjInfo;
+      projInfo = await getLatestBuilds(Releases, installersDir, cacheDir, name)
+        .then(function () {
+          let latestProjInfo = BuildsCacher.transformAndUpdate(
+            name,
+            projInfo,
+            meta,
+            date,
+            bc,
+          );
+          bc._caches[name] = latestProjInfo;
+        })
+        .catch(function (err) {
+          console.error(`Fail when fetching latest builds for '${name}'`);
+          console.error(err);
+        });
     });
 
     return projInfo;
