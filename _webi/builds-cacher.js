@@ -56,20 +56,25 @@ var TERMS_META = [
 /** @typedef {String} VersionString */
 /** @typedef {Object.<VersionString, Array<BuildAsset>>} PackagesByRelease */
 
+/** @typedef {ProjectMeta & ProjectInfoPartial} ProjectInfo */
 /**
- * @typedef ProjectInfo
- * @prop {Array<BuildAsset>} releases
+ * @typedef ProjectMeta
  * @prop {Array<BuildAsset>} packages
  * @prop {Object.<TripletString, PackagesByRelease>} releasesByTriplet
  * @prop {Array<import('./build-classifier/types.js').ArchString>} arches
  * @prop {Array<import('./build-classifier/types.js').OsString>} oses
  * @prop {Array<import('./build-classifier/types.js').LibcString>} libcs
- * @prop {Array<String>} channels
  * @prop {Array<String>} formats
  * @prop {Array<String>} triplets
  * @prop {Array<String>} versions
  * @prop {Array<String>} lexvers
  * @prop {Object.<String, String>} lexversMap
+ */
+
+/**
+ * @typedef ProjectInfoPartial
+ * @prop {Array<BuildAsset>} releases
+ * @prop {Array<String>} channels
  */
 
 /**
@@ -83,6 +88,8 @@ var TERMS_META = [
  * @prop {String} libc
  * @prop {String} ext
  * @prop {String} download
+ * @prop {import('./build-classifier/types.js').TargetTriplet} [target]
+ * @prop {String} [lexver]
  */
 
 /**
@@ -100,6 +107,18 @@ var TERMS_META = [
  * @prop {Error} target.error
  */
 
+/**
+ * @typedef {Error & WebiErrorPartial} WebiError
+ * @typedef WebiErrorPartial
+ * @prop {String} code
+ * @prop {Number} status
+ */
+
+/** @typedef {String} PathString */
+
+/**
+ * @param {PathString} path
+ */
 async function getPartialHeader(path) {
   let readme = `${path}/README.md`;
   let head = await readFirstBytes(readme).catch(function (err) {
@@ -112,8 +131,9 @@ async function getPartialHeader(path) {
   return head;
 }
 
-// let fsOpen = util.promisify(Fs.open);
-// let fsRead = util.promisify(Fs.read);
+/**
+ * @param {PathString} path
+ */
 async function readFirstBytes(path) {
   let start = 0;
   let n = 1024;
@@ -126,15 +146,29 @@ async function readFirstBytes(path) {
   return str;
 }
 
+/** @type {Object.<String, Promise<void>>} */
 let promises = {};
+
+/**
+ * @param {import('../_example/releases.js')?} Releases
+ * @param {PathString} installersDir
+ * @param {PathString} cacheDir
+ * @param {PathString} name
+ * @param {Date?} [date]
+ */
 async function getLatestBuilds(Releases, installersDir, cacheDir, name, date) {
   console.info(`[INFO] getLatestBuilds: ${name}`);
 
   if (!Releases) {
     Releases = require(`${installersDir}/${name}/releases.js`);
   }
+  if (!Releases) {
+    throw new Error('unreachable: narrowing for type checker');
+  }
+
   // TODO update all releases files with module.exports.xxxx = 'foo';
   if (!Releases.latest) {
+    //@ts-expect-error
     Releases.latest = Releases;
   }
 
@@ -150,6 +184,12 @@ async function getLatestBuilds(Releases, installersDir, cacheDir, name, date) {
   return await promises[id];
 }
 
+/**
+ * @param {import('../_example/releases.js')} Releases
+ * @param {PathString} cacheDir
+ * @param {PathString} name
+ * @param {Date?} [date]
+ */
 async function getLatestBuildsInner(Releases, cacheDir, name, date) {
   let data = await Releases.latest();
 
@@ -191,11 +231,14 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
   bc.orphanTerms = Object.assign({}, bc.ALL_TERMS);
   bc.unknownTerms = {};
   bc.usedTerms = {};
+  /** @type {Array<String>} */
   bc.formats = [];
   bc._triplets = {};
   bc._targetsByBuildIdCache = {};
+  /** @type {Object.<String, ProjectInfo>} */
   bc._caches = {};
   bc._staleAge = 15 * 60 * 1000;
+  /** @type {Object.<String, Array<String>>} */
   bc._allFormats = {};
   bc._allTriplets = {};
 
@@ -243,8 +286,8 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     let filepath = Path.join(installersDir, name);
     let entry;
     try {
-      entry = await Fs.lstat(filepath);
-      Object.assign(entry, { name: name });
+      let stat = await Fs.lstat(filepath);
+      entry = Object.assign(stat, { name: name });
     } catch (e) {
       return { type: 'errors', detail: 'not found' };
     }
@@ -255,7 +298,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
 
   /**
    * Get project type and detail - alias, selfhosted, valid (and the invalids)
-   * @param {fs.Stats|fs.Dirent} entry
+   * @param {Omit<import('fs').Dirent, "path"|"parentPath">} entry
    */
   bc.getProjectTypeByEntry = async function (entry) {
     let path = Path.join(installersDir, entry.name);
@@ -300,7 +343,9 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     let releasesPath = Path.join(path, 'releases.js');
     try {
       void require(releasesPath);
-    } catch (err) {
+    } catch (_err) {
+      /** @type {WebiError} */ // @ts-expect-error
+      let err = _err;
       if (err.code !== 'MODULE_NOT_FOUND') {
         return { type: 'errors', detail: err };
       }
@@ -315,9 +360,16 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     return { type: 'valid', detail: true };
   };
 
-  // Typically a package is organized by release (ex: go has 1.20, 1.21, etc),
-  // but we will organize by the build (ex: go1.20-darwin-arm64.tar.gz, etc).
-  bc.getPackages = async function ({ Releases, name, date }) {
+  /**
+   * Typically a package is organized by release (ex: go has 1.20, 1.21, etc),
+   * but we will organize by the build (ex: go1.20-darwin-arm64.tar.gz, etc).
+   *
+   * @param {Object} opts
+   * @param {import('../_example/releases.js')?} [opts.Releases]
+   * @param {PathString} opts.name
+   * @param {Date} opts.date
+   */
+  bc.getPackages = async function ({ Releases = null, name, date }) {
     if (!date) {
       date = new Date();
     }
@@ -342,6 +394,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
 
     let projInfo = bc._caches[name];
 
+    /** @type {ProjectMeta} */
     let meta = {
       // version info
       versions: projInfo?.versions || [],
@@ -360,20 +413,23 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     };
 
     if (!projInfo) {
+      let NULLSTRING = 'null';
       let json = await Fs.readFile(dataFile, 'ascii').catch(
         async function (err) {
           if (err.code !== 'ENOENT') {
             throw err;
           }
 
-          return null;
+          return NULLSTRING;
         },
       );
 
       try {
         projInfo = JSON.parse(json);
-      } catch (e) {
-        console.error(`error: ${dataFile}:\n\t${e.message}`);
+      } catch (_err) {
+        /** @type {WebiError} */ // @ts-expect-error
+        let err = _err;
+        console.error(`error: ${dataFile}:\n\t${err.message}`);
         projInfo = null;
       }
     }
@@ -398,23 +454,34 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
         return;
       }
 
-      projInfo = await getLatestBuilds(Releases, installersDir, cacheDir, name);
-      let latestProjInfo = BuildsCacher.transformAndUpdate(
-        name,
-        projInfo,
-        meta,
-        date,
-        bc,
-      );
-      bc._caches[name] = latestProjInfo;
+      projInfo = await getLatestBuilds(Releases, installersDir, cacheDir, name)
+        .then(function () {
+          let latestProjInfo = BuildsCacher.transformAndUpdate(
+            name,
+            projInfo,
+            meta,
+            date,
+            bc,
+          );
+          bc._caches[name] = latestProjInfo;
+        })
+        .catch(function (err) {
+          console.error(`Fail when fetching latest builds for '${name}'`);
+          console.error(err);
+        });
     });
 
     return projInfo;
   };
 
   // Makes sure that packages are updated once an hour, on average
+  /** @type {Array<String>} */
   bc._staleNames = [];
+  /** @type {ReturnType<typeof setTimeout>?} */
   bc._freshenTimeout = null;
+  /**
+   * @param {Number?} [minDelay]
+   */
   bc.freshenRandomPackage = async function (minDelay) {
     if (!minDelay) {
       minDelay = 15 * 1000;
@@ -431,7 +498,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     let name = bc._staleNames.pop();
     void (await bc.getPackages({
       //Releases: Releases,
-      name: name,
+      name: name || '',
       date: new Date(),
     }));
     console.info(`[INFO] freshenRandomPackage: ${name}`);
@@ -442,7 +509,9 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     let seed = Math.random();
     delay += seed * spread;
 
-    clearTimeout(bc._freshenTimeout);
+    if (bc._freshenTimeout) {
+      clearTimeout(bc._freshenTimeout);
+    }
     bc._freshenTimeout = setTimeout(bc.freshenRandomPackage, delay);
     bc._freshenTimeout.unref();
   };
@@ -465,6 +534,8 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
    *     .tar.xz
    *     .xz
    *     .zip
+   *
+   * @param {Array<String>} formats
    */
   bc.getSortedFormats = function (formats) {
     /* jshint maxcomplexity: 25 */
@@ -573,6 +644,10 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     return exts;
   };
 
+  /**
+   * @param {Array<BuildAsset>} packages
+   * @param {Array<String>} formats
+   */
   bc.selectPackage = function (packages, formats) {
     if (packages.length === 1) {
       return packages[0];
@@ -761,6 +836,11 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
   return bc;
 };
 
+/**
+ * @param {ReturnType<typeof BuildsCacher.create>} bc
+ * @param {ProjectInfo} projInfo
+ * @param {BuildAsset} build
+ */
 BuildsCacher._classify = function (bc, projInfo, build) {
   /* jshint maxcomplexity: 25 */
   let maybeInstallable = Triplet.maybeInstallable(projInfo, build);
@@ -941,7 +1021,11 @@ BuildsCacher.transformAndUpdate = function (name, projInfo, meta, date, bc) {
 };
 
 // TODO
-//   - tag channels
+//  - tag channels
+/**
+ * @param {ProjectInfo} projInfo
+ * @param {ProjectMeta} meta
+ */
 BuildsCacher.updateAndSortVersions = function (projInfo, meta) {
   for (let build of projInfo.packages) {
     let hasVersion = meta.versions.includes(build.version);
@@ -961,17 +1045,31 @@ BuildsCacher.updateAndSortVersions = function (projInfo, meta) {
     meta.versions.push(version);
   }
 
-  projInfo.packages.sort(function (a, b) {
-    if (a.lexver > b.lexver) {
-      return -1;
-    }
-    if (a.lexver < b.lexver) {
-      return 1;
-    }
-    return 0;
-  });
+  projInfo.packages.sort(BuildsCacher.sortByLexver);
 };
 
+/**
+ * @typedef HasLexver
+ * @prop {String} lexver
+ */
+
+/**
+ * @param {HasLexver} a
+ * @param {HasLexver} b
+ */
+BuildsCacher.sortByLexver = function (a, b) {
+  if (a.lexver > b.lexver) {
+    return -1;
+  }
+  if (a.lexver < b.lexver) {
+    return 1;
+  }
+  return 0;
+};
+
+/**
+ * @param {ProjectMeta} meta
+ */
 BuildsCacher.updateReleasesByTriplet = function (meta) {
   for (let build of meta.packages) {
     let target = build.target;
