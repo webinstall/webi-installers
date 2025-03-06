@@ -18,7 +18,7 @@ etc).
 The obligatory Hello World
 
 ```sh
-deno run https://deno.land/std/examples/welcome.ts
+deno run https://docs.deno.com/examples/scripts/hello_world.ts
 ```
 
 Run a local file
