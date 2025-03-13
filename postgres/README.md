@@ -47,7 +47,7 @@ To login: \
 # as Postgres admin
 psql "postgres://postgres:postgres@localhost:5432/postgres"
 
-# as remote user
+# as remote user (over standard TLS and SNI, with ALPN set to 'postgresql')
 psql "postgres://db-xxxx@pg-1.example.com:5432/db-xxxx?sslmode=require&sslnegotiation=direct"
 ```
 
