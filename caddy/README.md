@@ -33,6 +33,8 @@ We've split what we find most useful into two categories:
 
 - **Caddy for Developers** (Caddyfile)
   - Serve Static Files & Directories
+  - React's Client-Side Routing
+  - Hosting a Single File
   - Warning-free HTTPS on localhost
   - Redirect (ex: www, https)
   - Logging
@@ -146,6 +148,83 @@ See also:
 - [`root`][root]: <https://caddyserver.com/docs/caddyfile/directives/root>
 - [`file_server`][file_server]:
   <https://caddyserver.com/docs/caddyfile/directives/file_server>
+
+### How to handle React's Client-Side Routing
+
+React utilizez client-side routing, which requires Caddy to use certain server configurations.
+This is a result of React not following HTTP and HTML standards when handling URLs, as it needs
+to serve index.html.
+
+The following configuration will follow a waterfall system to ensure that all special routes
+are handled correctly:
+
+```Caddyfile
+localhost {
+    # ...
+    # Proxies API requests
+    handle /api/* {
+        reverse_proxy localhost:3000
+    }
+
+    # Serves static assets
+    handle_path /assets/* {
+        root * ./build/
+        file_server
+    }
+
+    # Handles dynamic routing
+    handle /* {
+        root * ./public/
+        file_server {
+            browse
+        }
+    }
+}
+```
+
+Steps taken:
+1. Proxies the API requests to the backend server, or fails with 404 error.
+2. Serves the static assets from the ./build/assets/ directory, or fails with 404 error.
+3. Handles other types of requests by attempting to serve the file directly, and falls back to
+   index.html for client-side routing (never fails with 404 error).
+
+### Hosting a Single File
+
+Caddy can be used to host a single file. This can be done by serving a specific route
+for the file, or by using a generic handler with a rewrite rule that points to an HTML
+file. 
+
+1. Specific Route with Single File:
+
+This approach is helpful when there is a specific endpoint (in this case /thing) and a
+single file (thing.txt).
+  
+  ```Caddyfile
+  localhost {
+      # ...
+      handle /thing {
+          rewrite * ./thing.txt
+          root * ./build/
+          file_server
+      }
+  }
+  ```
+
+2. Generic Routing with Rewriting:
+
+This approach uses a rewrite rule for /thing to point directly an HTML file in the directory. 
+This is more flexible if multiple files and routes are going to be implemented later.
+  
+  ```Caddyfile
+  localhost {
+      # ...
+      handle /* {
+        rewrite /thing ./things/thing-1.html
+        root * ./build/
+        file_server
+      }
+  }
+  ```
 
 ### How to serve HTTPS on localhost
 
