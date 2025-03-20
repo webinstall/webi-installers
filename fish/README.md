@@ -27,12 +27,7 @@ This also covers how to
 - Run bash scripts with bash
 - Set vim to keep using bash
 - Set fish as the default shell in **Linux**
-- Set fish as the default shell in various Terminals
-  - Terminal.app
-  - iTerm2
-  - Hyper
-  - Alacritty
-- Find fish's config files
+- Set abbreviations for commands
 - Set the default shell back to `bash`
 
 ### How to run bash scripts from fish
@@ -52,14 +47,15 @@ You can also run bash explicitly:
 bash ./some-script.sh
 ```
 
-### How to set the fish Color Scheme
+### How to set preferences
 
-You may like to have your `fish` theme match your Terminal or iTerm2 theme (such
-as _Solarized_, _Dracula_, or _Tomorrow Night_).
+To tweak with preferences:
 
 ```sh
-fish_config colors
+fish_config
 ```
+
+This will open up a html page to tweak fish to your liking!
 
 ### How to set vim to keep using bash
 
@@ -111,116 +107,14 @@ shell.
 
 You can also set is as the default for a particular Terminal, or for your user.
 
-### How to set fish as the Terminal.app shell
+### How to set abbreviations
 
-Find out where `fish` is:
-
-```sh
-command -v fish
-```
-
-Then update the Terminal preferences:
-
-```text
-Terminal > Preferences > General > Shells open with:
-/Users/YOUR_USER/.local/bin/fish
-```
-
-![Terminal.app preferences](https://i.imgur.com/bulS4Vv.png)
-
-Or, you can quit Terminal and change the preferences from the command line:
+You can set cool abbreviations to your favorite commands in fish!
 
 ```sh
-#!/bin/sh
+abbr -a <abbr-name> '<command-name>'
 
-defaults write com.apple.Terminal "Shell" -string "$HOME/.local/bin/fish"
-```
-
-### How to set fish as the iTerm2 shell
-
-Find out where `fish` is:
-
-```sh
-command -v fish
-```
-
-Then update iTerm2 preferences:
-
-```
-iTerm2 > Preferences > Profiles > General > Command >
-Custom Shell: /Users/YOUR_USER/.local/bin/fish
-```
-
-![iTerm2 Preferences](https://i.imgur.com/VtBUzVH.png)
-
-Or, you can quit iTerm2 and change the preferences from the command line:
-
-```sh
-#!/bin/sh
-
-/usr/libexec/PlistBuddy -c "SET ':New Bookmarks:0:Custom Command' 'Custom Shell'" \
-    ~/Library/Preferences/com.googlecode.iterm2.plist
-
-/usr/libexec/PlistBuddy -c "SET ':New Bookmarks:0:Command' 'Custom Shell' '$HOME/.local/bin/fish'" \
-    ~/Library/Preferences/com.googlecode.iterm2.plist
-```
-
-### How to set fish as the Hyper shell
-
-Hyper is configured with JavaScript.
-
-`~/.hyper.js`:
-
-```js
-module.exports = {
-  config: {
-    // ...
-    shell: process.env.HOME + '/.local/bin/fish',
-  },
-};
-```
-
-### How to set fish as the Alacritty shell
-
-`~/.config/alacritty/alacritty.yml` should contain the shell config:
-
-```yml
-shell:
-  program: /Users/YOUR_USER/.local/bin/fish
-  args:
-    - --login
-```
-
-If you don't yet have an alacritty config, this will do:
-
-```sh
-#!/bin/sh
-
-mkdir -p ~/.config/alacritty
-
-cat << EOF >> ~/.config/alacritty/alacritty.yml:
-shell:
-  program: $HOME/.local/bin/fish
-  args:
-    - --login
-EOF
-```
-
-The default `alacritty.yml` is included as an _asset_ with each
-[Github release](https://github.com/alacritty/alacritty/releases).
-
-### Where is the fish config?
-
-Fish will be installed to the standard user location:
-
-```sh
-~/.local/opt/fish/
-```
-
-It's config will also go in the standard user location:
-
-```sh
-~/.config/fish/config.fish
+#abbr -a gs 'git status'
 ```
 
 ### How to set the default shell back to bash

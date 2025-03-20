@@ -80,6 +80,9 @@ Builds.getPackage({ name: projName }).then(async function (/*projInfo*/) {
       nodeLibc = 'musl';
     }
   }
+  if (nodeArch == 'x64') {
+    nodeArch = 'amd64';
+  }
   var formats = ['exe', 'xz', 'tar', 'zip', 'git'];
 
   let [rel, opts] = await ServeInstaller.helper({
