@@ -38,7 +38,7 @@ Make sure that you already have the necessary build tools installed:
 ```sh
 # required
 sudo apt update
-sudo apt install -y build-essential zlib1g-dev libssl-dev
+sudo apt install -y build-essential zlib1g-dev libssl-dev tk-dev
 
 # recommended
 sudo apt install -y libreadline-dev libsqlite3-dev \
