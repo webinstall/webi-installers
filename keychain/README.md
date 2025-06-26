@@ -16,7 +16,7 @@ install:
 ```text
 ~/.config/envman/PATH.env
 ~/.local/bin/keychain
-~/.local/opt/keychain/
+~/.local/opt/keychain-v*.*.*/
 ```
 
 ## Cheat Sheet

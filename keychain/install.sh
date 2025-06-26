@@ -7,9 +7,9 @@ __init_keychain() {
     set -e
     set -u
 
-    ##################
+    ####################
     # Install keychain #
-    ##################
+    ####################
 
     # Every package should define these 6 variables
     pkg_cmd_name="keychain"
@@ -26,7 +26,7 @@ __init_keychain() {
         # ~/.local/opt/keychain-v0.99.9/bin
         mkdir -p "$(dirname "${pkg_src_cmd}")"
 
-        # mv ./keychain-*/keychain ~/.local/opt/keychain-v0.99.9/bin/keychain
+        # mv ./keychain ~/.local/opt/keychain-v0.99.9/bin/keychain
         mv ./keychain "${pkg_src_cmd}"
     }
 
