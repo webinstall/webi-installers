@@ -35,3 +35,7 @@ jobs:
       - env:
           GITHUB_TOKEN: ${{ github.token }}
         run: npm run test
+        jobs:
+  my_job:
+    name: deploy to staging
+    runs-on: ubuntu-22.04
