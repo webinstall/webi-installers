@@ -5,7 +5,8 @@ tagline: |
   tlrc: A fast tldr client written in Rust.
 ---
 
-To update or switch versions, run `webi tlrc@stable` (or `@v1.11`, `@beta`, etc).
+To update or switch versions, run `webi tlrc@stable` (or `@v1.11`, `@beta`,
+etc).
 
 ### Files
 
