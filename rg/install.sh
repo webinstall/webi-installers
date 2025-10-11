@@ -33,6 +33,10 @@ __init_rg() {
 
     # pkg_get_current_version is recommended, but (soon) not required
     pkg_get_current_version() {
+        if ! command -v rg >/dev/null 2>&1; then
+            echo ""
+            return
+        fi
         # 'rg --version' has output in this format:
         #       ripgrep 12.1.1 (rev 7cb211378a)
         #       -SIMD -AVX (compiled)
