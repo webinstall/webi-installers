@@ -24,7 +24,7 @@ main() {
     my_bin="$(readlink -f "${my_bin}")"
 
     # ex: sudo setcap 'cap_net_bind_service=+ep' ~/.local/opt/node-v16.13.0/bin/node"
-    "${my_sudo}" setcap 'cap_net_bind_service=+ep' "${my_bin}"
+    ${my_sudo} setcap 'cap_net_bind_service=+ep' "${my_bin}"
 }
 
 main "${1-}"
