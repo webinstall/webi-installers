@@ -3,28 +3,28 @@ set -e
 set -u
 
 main() {
-    my_bin="${1}"
+    a_exename="${1}"
     # ex: node
-    if ! command -v "${my_bin}" > /dev/null; then
-        echo "setcap-netbind: '${my_bin}' not found"
+    if ! command -v "${a_exename}" > /dev/null; then
+        echo "setcap-netbind: '${a_exename}' not found"
         exit 1
     fi
 
-    my_sudo=""
+    cmd_sudo=""
     if command -v sudo > /dev/null; then
-        my_sudo=sudo
+        cmd_sudo=sudo
     fi
 
     # get full path
     # ex: ~/.local/opt/node/bin/node
-    my_bin="$(command -v "${my_bin}")"
+    a_exename="$(command -v "${a_exename}")"
 
     # get canonical full path
     # ex: ~/.local/opt/node-v16.13.0/bin/node
-    my_bin="$(readlink -f "${my_bin}")"
+    a_exename="$(readlink -f "${a_exename}")"
 
     # ex: sudo setcap 'cap_net_bind_service=+ep' ~/.local/opt/node-v16.13.0/bin/node"
-    ${my_sudo} setcap 'cap_net_bind_service=+ep' "${my_bin}"
+    $cmd_sudo setcap 'cap_net_bind_service=+ep' "${a_exename}"
 }
 
 main "${1-}"
