@@ -71,6 +71,14 @@ Builds.getPackage({ name: projName }).then(async function (/*projInfo*/) {
   var nodeOs = os.platform();
   var nodeOsRelease = os.release();
   var nodeArch = os.arch();
+  
+   // To make arch names compatible across all helpers
+  if (nodeArch === 'x64') {
+    nodeArch = 'amd64';
+  } else if (nodeArch === 'arm64') {
+    nodeArch = 'arm64';
+  }
+
   var nodeLibc = 'libc';
   if (process.platform === 'linux') {
     nodeLibc = 'gnu';

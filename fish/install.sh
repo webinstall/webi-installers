@@ -35,8 +35,38 @@ pkg_src_dir="$HOME/.local/opt/fish-v$WEBI_VERSION"
 pkg_src="$pkg_src_cmd"
 
 # pkg_install must be defined by every package
+_linux_post_install() {
+    if [ "Linux" != "$(uname -s)" ]; then #terminate if MacOS
+        return 0
+    fi
+
+    if ! [ -e "$HOME/.local/bin/fish" ]; then
+        return 0
+    fi
+
+    echo ""
+    echo "To set fish as your default shell, run:"
+    echo ""
+
+    # Check if fish is in /etc/shells
+    if grep -q "$HOME/.local/bin/fish" /etc/shells 2> /dev/null; then
+        echo "    chsh -s $HOME/.local/bin/fish"
+    else
+        echo "    # First, add fish to allowed shells"
+        echo "    echo '$HOME/.local/bin/fish' | sudo tee -a /etc/shells"
+        echo ""
+        echo "    # Then change your default shell:"
+        echo "    chsh -s $HOME/.local/bin/fish"
+    fi
+    echo ""
+}
 
 _macos_post_install() {
+
+    if [ "Darwin" != "$(uname -s)" ]; then #terminate if linux machine
+        return 0
+    fi
+
     if ! [ -e "$HOME/.local/bin/fish" ]; then
         return 0
     fi
@@ -85,7 +115,7 @@ pkg_post_install() {
 
     # try again to update default shells, now that all files should exist
     _macos_post_install
-
+    _linux_post_install
     if [ ! -e ~/.config/fish/config.fish ]; then
         mkdir -p ~/.config/fish
         touch ~/.config/fish/config.fish

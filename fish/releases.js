@@ -23,6 +23,23 @@ module.exports = function () {
           rel.arch = 'amd64';
           return rel;
         }
+        
+        // Linux x86_64 binary
+        // e.g. fish-4.3.2-linux-x86_64.tar.xz
+        if (/-linux-x86_64\.tar\.xz$/.test(rel.name)) {
+          rel.os = 'linux';
+          rel.arch = 'amd64';
+          return rel;
+        }
+
+        // Linux aarch64 binary
+        // e.g. fish-4.3.2-linux-aarch64.tar.xz
+        if (/-linux-aarch64\.tar\.xz$/.test(rel.name)) {
+          rel.os = 'linux';
+          rel.arch = 'arm64';
+          return rel;
+        }
+
       })
       .filter(Boolean);
     return all;
