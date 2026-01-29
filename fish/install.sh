@@ -10,11 +10,6 @@ if command -v fish > /dev/null; then
     fi
 fi
 
-if [ "Darwin" != "$(uname -s)" ]; then
-    echo "No fish installer for Linux yet. Try this instead:"
-    echo "    sudo apt install -y fish"
-    exit 1
-fi
 
 ################
 # Install fish #
@@ -105,8 +100,12 @@ _macos_post_install() {
 _macos_post_install
 
 pkg_install() {
-    mv fish.app/Contents/Resources/base/usr/local "$HOME/.local/opt/fish-v${WEBI_VERSION}"
-
+    if [ "Darwin" = "$(uname -s)" ]; then
+        mv fish.app/Contents/Resources/base/usr/local "$pkg_src_dir"
+    else
+        mkdir -p "$pkg_src_dir/bin"
+        mv fish "$pkg_src_dir/bin/"
+    fi
 }
 
 pkg_post_install() {
@@ -126,8 +125,8 @@ pkg_post_install() {
 # pkg_get_current_version is recommended, but (soon) not required
 pkg_get_current_version() {
     # 'fish --version' has output in this format:
-    #       fish, version 3.1.2
+    #       fish, version 4.3.3
     # This trims it down to just the version number:
-    #       3.1.2
+    #       4.3.3
     fish --version 2> /dev/null | head -n 1 | cut -d ' ' -f 3
 }
