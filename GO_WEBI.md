@@ -109,11 +109,25 @@ download \t name \t comment`
 
 - **`webid`** — the HTTP API server. Reads from storage, renders templates,
   serves responses. Stateless (apart from in-memory caches of template files).
-- **`webicached`** — the cache daemon. Periodically fetches releases from
-  upstream sources (GitHub API, Gitea, etc.), classifies builds, writes to
-  storage. Runs independently.
+  Discovers available packages from storage — no restart needed when packages
+  are added or updated.
+- **`webicached`** — the cache daemon. Watches for new packages on the
+  filesystem (new directories with `releases.js` or a future Go-native config),
+  periodically fetches releases from upstream sources, classifies builds, and
+  writes to storage. Runs independently.
 
-This separation means `webid` never blocks on upstream API calls. It serves from
+A key design constraint: **adding a new installer must not require restarting
+either server.** This was one of the original reasons for choosing Node.js — you
+could drop a `releases.js` in a folder and it was live. The Go architecture
+preserves this:
+
+1. `webicached` watches the installers directory for new/changed packages
+   (fsnotify or periodic scan).
+2. When it finds a new package, it fetches releases and writes them to storage.
+3. `webid` discovers the package on the next read from storage — no restart,
+   no config reload, no deployment.
+
+This also means `webid` never blocks on upstream API calls. It serves from
 whatever is in storage — always fast, always available.
 
 ### Double-Buffer Storage
@@ -300,15 +314,17 @@ behavior must be preserved for backward compatibility.
 
 ## Open Questions
 
-- [ ] How should the Go server discover which packages exist? Currently the
-  Node.js server scans the filesystem for directories with `releases.js`. The Go
-  cache daemon needs a similar discovery mechanism — or a static manifest.
 - [ ] Should `webicached` shell out to `node releases.js` during migration, or
-  do we rewrite every releases.js as Go config/code from the start?
+  do we rewrite every releases.js as Go config/code from the start? (Shelling
+  out preserves hot-add compatibility during the transition — a new `releases.js`
+  just works without any Go changes.)
 - [ ] What's the deployment topology? Single binary serving both roles? Separate
   processes? Kubernetes pods?
 - [ ] Rate limiting for GitHub API calls in `webicached` — how to coordinate
   across multiple instances?
+- [ ] Package discovery: filesystem watch (fsnotify) vs periodic directory scan?
+  fsnotify is more responsive but adds a dependency; periodic scan is simpler and
+  good enough if the interval is short (e.g. 30s).
 
 ## Current Node.js Architecture (Reference)
 
