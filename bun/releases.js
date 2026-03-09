@@ -21,6 +21,10 @@ module.exports = function () {
           return false;
         }
 
+        if (r.name.endsWith('.txt') || r.name.endsWith('.asc')) {
+          return false;
+        }
+
         // drop the non-baseline asset when a baseline twin exists
         if (!r.name.includes('-baseline') && baselineNames.has(r.name)) {
           return false;
@@ -37,8 +41,8 @@ module.exports = function () {
         return true;
       })
       .map(function (r) {
-        // bun-linux-x64-baseline.zip => bun-linux-x64.zip
-        r.name = r.name.replace('-baseline', '');
+        // bun-linux-x64-baseline.zip => bun-linux-x64
+        r.name = r.name.replace('-baseline', '').replace(/\.zip$/, '');
         // bun-v0.5.1 => v0.5.1
         r.version = r.version.replace(/bun-/g, '');
         return r;
