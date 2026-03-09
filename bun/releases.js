@@ -4,88 +4,48 @@ var github = require('../_common/github.js');
 var owner = 'oven-sh';
 var repo = 'bun';
 
-function isDebugRelease(release) {
-  return release.name.includes('-profile');
-}
-
-function isBaselineRelease(release) {
-  return release.name.includes('-baseline');
-}
-
-function getLinuxAmd64Target(name) {
-  let match = name.match(/bun-(linux-x64(?:-musl)?)(?:-baseline)?[.]/);
-  if (!match) {
-    return '';
-  }
-
-  return match[1];
-}
-
-function prepareRelease(release) {
-  if (isDebugRelease(release)) {
-    return null;
-  }
-
-  let rel = Object.assign({}, release);
-  if (isBaselineRelease(rel)) {
-    rel._baseline = true;
-  }
-
-  let isMusl = rel.name.includes('-musl');
-  if (isMusl) {
-    rel._musl = true;
-    rel.libc = 'musl';
-  } else if (rel.name.includes('-linux-')) {
-    rel.libc = 'gnu';
-  }
-
-  // bun's baseline Linux x64 builds avoid SIGILL on older/container CPUs.
-  rel._target = getLinuxAmd64Target(rel.name);
-  rel.version = rel.version.replace(/bun-/g, '');
-
-  return rel;
-}
-
-function compareReleasePriority(a, b) {
-  if (a.version !== b.version) {
-    return 0;
-  }
-
-  if (!a._target || a._target !== b._target) {
-    return 0;
-  }
-
-  if (a._baseline && !b._baseline) {
-    return -1;
-  }
-  if (!a._baseline && b._baseline) {
-    return 1;
-  }
-
-  return 0;
-}
-
-function normalizeReleases(releases) {
-  return releases
-    .map(prepareRelease)
-    .filter(Boolean)
-    .sort(compareReleasePriority)
-    .map(function (release) {
-      delete release._target;
-      return release;
-    });
-}
-
 module.exports = function () {
   return github(null, owner, repo).then(function (all) {
-    all.releases = normalizeReleases(all.releases);
+    // collect baseline asset names so we can prefer them over non-baseline
+    // (baseline builds avoid SIGILL on older/container CPUs)
+    let baselineNames = new Set();
+    all.releases.forEach(function (r) {
+      if (r.name.includes('-baseline')) {
+        baselineNames.add(r.name.replace('-baseline', ''));
+      }
+    });
+
+    all.releases = all.releases
+      .filter(function (r) {
+        if (r.name.includes('-profile')) {
+          return false;
+        }
+
+        // drop the non-baseline asset when a baseline twin exists
+        if (!r.name.includes('-baseline') && baselineNames.has(r.name)) {
+          return false;
+        }
+
+        let isMusl = r.name.includes('-musl');
+        if (isMusl) {
+          r._musl = true;
+          r.libc = 'musl';
+        } else if (r.name.includes('-linux-')) {
+          r.libc = 'gnu';
+        }
+
+        return true;
+      })
+      .map(function (r) {
+        // bun-linux-x64-baseline.zip => bun-linux-x64.zip
+        r.name = r.name.replace('-baseline', '');
+        // bun-v0.5.1 => v0.5.1
+        r.version = r.version.replace(/bun-/g, '');
+        return r;
+      });
     return all;
   });
 };
-
-module.exports._normalizeReleases = normalizeReleases;
-module.exports._prepareRelease = prepareRelease;
-module.exports._compareReleasePriority = compareReleasePriority;
 
 if (module === require.main) {
   module.exports().then(function (all) {
