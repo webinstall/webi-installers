@@ -45,15 +45,15 @@ $TDim = "${Esc}[2m"
 $TReset = "${Esc}[0m"
 
 function Invoke-DownloadUrl {
-    Param (
+    param (
         [string]$URL,
         [string]$Params,
         [string]$Path,
         [switch]$Force
     )
 
-    IF (Test-Path -Path "$Path") {
-        IF (-Not $Force.IsPresent) {
+    if (Test-Path -Path "$Path") {
+        if (-not $Force.IsPresent) {
             Write-Host "    ${TDim}Found${TReset} $Path"
             return
         }
@@ -65,7 +65,7 @@ function Invoke-DownloadUrl {
 
     Write-Host "    Downloading ${TDim}from${TReset}"
     Write-Host "      ${TDim}${URL}${TReset}"
-    IF ($Params.Length -ne 0) {
+    if ($Params.Length -ne 0) {
         Write-Host "        ?$Params"
         $URL = "${URL}?${Params}"
     }
@@ -80,18 +80,18 @@ function Get-UserAgent {
     # This is the canonical CPU arch when the process is emulated
     $my_arch = "$Env:PROCESSOR_ARCHITEW6432"
 
-    IF ($my_arch -eq $null -or $my_arch -eq "") {
+    if ($my_arch -eq $null -or $my_arch -eq "") {
         # This is the canonical CPU arch when the process is native
         $my_arch = "$Env:PROCESSOR_ARCHITECTURE"
     }
 
-    IF ($my_arch -eq "AMD64") {
+    if ($my_arch -eq "AMD64") {
         # Because PowerShell is sometimes AMD64 on Windows 10 ARM
         # See https://oofhours.com/2020/02/04/powershell-on-windows-10-arm64/
         $my_os_arch = (Get-CimInstance -ClassName Win32_OperatingSystem).OSArchitecture
 
         # Using -clike because of the trailing newline
-        IF ($my_os_arch -clike "ARM 64*") {
+        if ($my_os_arch -clike "ARM 64*") {
             $my_arch = "ARM64"
         }
     }
@@ -124,7 +124,7 @@ function webi_path_add($pathname) {
             $exists_in_path = $true
         }
     }
-    if (-Not $exists_in_path) {
+    if (-not $exists_in_path) {
         $all_user_paths = "${pathname};${all_user_paths}".Trim(';')
         [Environment]::SetEnvironmentVariable("Path", $all_user_paths, "User")
         $null = Sync-EnvPath

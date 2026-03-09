@@ -24,7 +24,7 @@ function Repair-AdminAuthorizedKeyPermission {
         /t /grant "${Env:UserName}:(F)"
 
     # Create whitelist for 'sudoer' authorized keys
-    IF (-Not (Test-Path -Path $AdminAuthorizedKeys)) {
+    if (-not (Test-Path -Path $AdminAuthorizedKeys)) {
         $null = New-Item -Path $AdminAuthorizedKeys -Type 'File'
     }
 
@@ -70,7 +70,7 @@ function Repair-UserAuthorizedKeyPermission {
     $null = New-Item -Type Directory -Force -Path "$HOME\.ssh\"
 
     # touch ~/.ssh/authorized_keys
-    IF (-Not (Test-Path -Path "$HOME\.ssh\authorized_keys")) {
+    if (-not (Test-Path -Path "$HOME\.ssh\authorized_keys")) {
         $null = New-Item -Type 'File' -Path "$HOME\.ssh\authorized_keys"
     }
 
@@ -96,34 +96,34 @@ function Repair-AuthorizedKeyFile($Path) {
     $null = New-Item -Type 'File' -Force -Path $FixedPath
     foreach ($Line in [System.IO.File]::ReadLines($Path)) {
         $Line = $Line.Trim()
-        IF ($Line.Length -eq 0) {
+        if ($Line.Length -eq 0) {
             $null = Add-Content -Path $FixedPath -Value $Line
             continue
         }
-        IF ($Line.StartsWith('#')) {
+        if ($Line.StartsWith('#')) {
             $null = Add-Content -Path $FixedPath -Value $Line
             continue
         }
-        IF ($Line.StartsWith('ssh-')) {
+        if ($Line.StartsWith('ssh-')) {
             $null = Add-Content -Path $FixedPath -Value $Line
             continue
         }
-        IF ($Line.StartsWith('ecdsa-')) {
+        if ($Line.StartsWith('ecdsa-')) {
             $null = Add-Content -Path $FixedPath -Value $Line
             continue
         }
-        if (-Not $HasBadLine) {
+        if (-not $HasBadLine) {
             $HasBadLine = $true
             Write-Host "Skipping lines that do not begin with ssh-, ecdsa- or #:" -ForegroundColor Red -BackgroundColor Black
         }
         Write-Host "    $Line" -ForegroundColor Yellow -BackgroundColor Black
     }
 
-    IF ($HasBadLine) {
+    if ($HasBadLine) {
         Write-Host "Unrecognized line formats were filtered out."
 
         $FixedPath
-        Return
+        return
     }
 
     Write-Verbose "No invalid keys were filtered out."
@@ -150,17 +150,17 @@ function Add-AuthorizedKey($UrlOrPath) {
     $IsHttp = $UrlOrPath.StartsWith("HTTP://", 'CurrentCultureIgnoreCase')
     $IsHttps = $UrlOrPath.StartsWith("HTTPS://", 'CurrentCultureIgnoreCase')
 
-    IF (Test-Path -Path $UrlOrPath -Type 'Leaf') {
+    if (Test-Path -Path $UrlOrPath -Type 'Leaf') {
         $FixedPath = Repair-AuthorizedKeyFile $UrlOrPath
         $null = Add-AuthorizedKeyFile $FixedPath
 
         $IsTmp = $UrlOrPath.EndsWith(".TMP.TXT", 'CurrentCultureIgnoreCase')
-        IF ($IsTmp) {
+        if ($IsTmp) {
             $null = Remove-Item -Path "${TmpKeys}.tmp.txt" -Force -ErrorAction Ignore
         }
-        Return
+        return
     }
-    IF (-Not ($IsHttps -Or $IsHttp)) {
+    if (-not ($IsHttps -or $IsHttp)) {
         throw "'$UrlOrPath' does not exist as a file and doesn't look like a URL (no https://)"
     }
 
@@ -169,7 +169,7 @@ function Add-AuthorizedKey($UrlOrPath) {
     curl.exe -f -sS $UrlOrPath | Out-File -Force "${TmpKeys}.partial"
     $null = Move-Item -Force "${TmpKeys}.partial" $TmpKeys
 
-    IF ($IsHttp) {
+    if ($IsHttp) {
         Write-Host ""
         Write-Host "Error: Cowardly refusing to add file downloaded over plain http" -ForegroundColor Yellow -BackgroundColor black
         Write-Host ""
@@ -177,7 +177,7 @@ function Add-AuthorizedKey($UrlOrPath) {
         Write-Host "    ssh-authorize ${TmpKeys}" -ForegroundColor Yellow -BackgroundColor black
         Write-Host ""
         1
-        Return
+        return
     }
 
     $FixedPath = Repair-AuthorizedKeyFile $TmpKeys
@@ -214,7 +214,7 @@ function Show-Help() {
     Write-Host ""
     Write-Host "LOCAL IDENTIFY FILES"
     $Pubs = Get-ChildItem -Path "$HOME\.ssh\" -Filter '*.pub'
-    IF ($Pubs.Length -eq 0) {
+    if ($Pubs.Length -eq 0) {
         Write-Host "    (no files match ~/.ssh/*.pub)"
     }
     foreach ($Pub in $Pubs) {
@@ -227,17 +227,17 @@ function Main($Paths) {
     $null = Repair-AuthorizedKeyPermission
     #Debug-AuthorizedKeyPermission | Write-Host
 
-    if ($Paths.Length -eq 0 -Or $Paths[0] -eq "help" -Or $Paths[0] -eq "--help") {
+    if ($Paths.Length -eq 0 -or $Paths[0] -eq "help" -or $Paths[0] -eq "--help") {
         Show-Help | Write-Host
 
         Write-Host ""
-        IF ($Paths.Length -eq 0) {
+        if ($Paths.Length -eq 0) {
             1
-            Return
+            return
         }
 
         0
-        Return
+        return
     }
     $Uri = $Paths[0]
 
@@ -253,8 +253,8 @@ function Main($Paths) {
     Write-Host ""
 
     0
-    Return
+    return
 }
 
 $Status = Main $Args
-Exit $Status
+exit $Status

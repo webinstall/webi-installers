@@ -20,14 +20,14 @@ $pkg_download_dir = "$Env:USERPROFILE\Downloads\webi\$pkg_cmd_name\$Env:WEBI_VER
 $pkg_download_file = "$pkg_download_dir\$Env:WEBI_PKG_FILE"
 
 # Fetch archive
-IF (!(Test-Path -Path "$pkg_download_file")) {
+if (!(Test-Path -Path "$pkg_download_file")) {
     New-Item "$pkg_download_dir" -ItemType Directory -Force | Out-Null
     Write-Output "    Downloading $pkg_cmd_name v$Env:WEBI_VERSION from $Env:WEBI_PKG_URL to $pkg_download_file"
     & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download_file.part"
     & Move-Item "$pkg_download_file.part" "$pkg_download_file"
 }
 
-IF (!(Test-Path -Path "$pkg_src_cmd")) {
+if (!(Test-Path -Path "$pkg_src_cmd")) {
     Write-Output "    Installing sqlc v$Env:WEBI_VERSION"
 
     # Remove any leftover tmp cruft and recreate the unpack

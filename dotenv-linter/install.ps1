@@ -20,18 +20,18 @@ $pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 
 # Fetch MSVC Runtime
 Write-Output "Checking for MSVC Runtime..."
-IF (-not (Test-Path "\Windows\System32\vcruntime140.dll")) {
+if (-not (Test-Path "\Windows\System32\vcruntime140.dll")) {
     & "$Env:USERPROFILE\.local\bin\webi-pwsh.ps1" vcruntime
 }
 
 # Fetch archive
-IF (!(Test-Path -Path "$pkg_download")) {
+if (!(Test-Path -Path "$pkg_download")) {
     Write-Output "Downloading dotenv-linter from $Env:WEBI_PKG_URL to $pkg_download"
     & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
     & Move-Item "$pkg_download.part" "$pkg_download"
 }
 
-IF (!(Test-Path -Path "$pkg_src_cmd")) {
+if (!(Test-Path -Path "$pkg_src_cmd")) {
     Write-Output "Installing dotenv-linter"
 
     # TODO: create package-specific temp directory

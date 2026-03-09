@@ -4,7 +4,7 @@ $my_nerdfont_otf = "Droid Sans Mono for Powerline Nerd Font Complete Windows Com
 $my_fontdir = "$Env:UserProfile\AppData\Local\Microsoft\Windows\Fonts"
 
 New-Item -Path "$my_fontdir" -ItemType Directory -Force | Out-Null
-IF (!(Test-Path -Path "$my_fontdir\$my_nerdfont_otf")) {
+if (!(Test-Path -Path "$my_fontdir\$my_nerdfont_otf")) {
     & curl.exe -fsSLo "$my_nerdfont_otf" 'https://github.com/ryanoasis/nerd-fonts/raw/v2.3.3/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete%20Windows%20Compatible.otf'
     & Move-Item "$my_nerdfont_otf" "$my_fontdir"
 }

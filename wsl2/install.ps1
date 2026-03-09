@@ -4,23 +4,23 @@ Write-Output "Installing WSL 2 (Windows Subsystem for Linux with Hyper-V) ..."
 Write-Output ""
 Write-Output "Security: requires administrator approval to install"
 
-IF ($null -eq $Env:WEBI_HOST -or $Env:WEBI_HOST -eq "") { $Env:WEBI_HOST = "https://webinstall.dev" }
+if ($null -eq $Env:WEBI_HOST -or $Env:WEBI_HOST -eq "") { $Env:WEBI_HOST = "https://webinstall.dev" }
 
 $MYPWD = (Get-Item .).FullName
 & curl.exe -fA "MS" -o "$Env:TEMP\install-wsl2.ps1" "$Env:WEBI_HOST/packages/wsl2/install-wsl2.ps1"
 powershell -Command "Start-Process cmd -Wait -Verb RunAs -ArgumentList '/c cd /d %CD% && powershell -ExecutionPolicy Bypass $Env:TEMP\install-wsl2.ps1'"
 
 # From https://devblogs.microsoft.com/scripting/use-a-powershell-function-to-see-if-a-command-exists/
-Function Test-CommandExist {
-    Param ($command)
+function Test-CommandExist {
+    param ($command)
     $oldPreference = $ErrorActionPreference
     $ErrorActionPreference = 'stop'
-    try { if (Get-Command $command) { RETURN $true } }
-    Catch { RETURN $false }
-    Finally { $ErrorActionPreference = $oldPreference }
+    try { if (Get-Command $command) { return $true } }
+    catch { return $false }
+    finally { $ErrorActionPreference = $oldPreference }
 }
 
-IF (!(Test-CommandExists wsl)) {
+if (!(Test-CommandExists wsl)) {
     Write-Output ""
     Write-Output ""
     Write-Output ""
@@ -42,7 +42,7 @@ IF (!(Test-CommandExists wsl)) {
     Write-Output "       (see https://webinstall.dev/wsl2)"
     Write-Output ""
 
-    Exit
+    exit
 }
 
 Write-Output ""

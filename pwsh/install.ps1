@@ -22,7 +22,7 @@ $pkg_download = "$HOME\Downloads\webi\$Env:WEBI_PKG_FILE"
 # Fetch archive
 Invoke-DownloadURL -URL $Env:WEBI_PKG_URL -Path $pkg_download
 
-IF (!(Test-Path -Path "$pkg_src_cmd")) {
+if (!(Test-Path -Path "$pkg_src_cmd")) {
     Push-Location "$HOME\.local\tmp"
 
     # Remove any leftover tmp cruft

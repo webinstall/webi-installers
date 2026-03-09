@@ -35,15 +35,18 @@ info, and doing a find and replace on a few file system path names.
    ```
 2. Copy the example template and update with info from Official Releases:
    <https://github.com/___CHANGE/ME___/releases>
+
    ```bash
    rsync -av _example/ CHANGE-ME/
    ```
+
    - [ ] update `CHANGE-ME/release.js` to use the official repo
    - [ ] Learn how `CHANGE-ME` unpacks (i.e. as a single file? as a .tar.gz? as
          a .tar.gz with a folder named CHANGE-ME?)
    - [ ] find and replace to change the name
      - [ ] update `CHANGE-ME/install.sh` (see `bat` and `jq` as examples)
      - [ ] update `CHANGE-ME/install.ps1` (see `bat` and `jq` as examples)
+
 3. Needs an updated tagline and cheat sheet
    - [ ] update `CHANGE-ME/README.md`
      - [ ] official URL

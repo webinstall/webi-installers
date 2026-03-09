@@ -6,28 +6,28 @@ function Install-WebiEssential() {
 
     # Fetch curl
     Write-Output "    Checking for Windows 10+ Built-in curl.exe ..."
-    IF (-Not (Get-Command -Name "curl.exe" -ErrorAction Silent)) {
+    if (-not (Get-Command -Name "curl.exe" -ErrorAction Silent)) {
         Write-Error"error: curl.exe not found: something is very wrong"
-        Exit 1
+        exit 1
     }
 
     # Fetch git
     Write-Output "    Checking for git ..."
-    IF (-Not (Get-Command -Name "git" -ErrorAction Silent)) {
+    if (-not (Get-Command -Name "git" -ErrorAction Silent)) {
         & "$Env:USERPROFILE\.local\bin\webi-pwsh.ps1" git
         $null = Sync-EnvPath
     }
 
     # Fetch tar
     Write-Output "    Checking for Windows 10+ Built-in BSD tar ..."
-    IF (-Not (Get-Command -Name "tar.exe" -ErrorAction Silent)) {
+    if (-not (Get-Command -Name "tar.exe" -ErrorAction Silent)) {
         Write-Error"error: tar.exe not found: something is very wrong"
-        Exit 1
+        exit 1
     }
 
     # Fetch xz
     Write-Output "    Checking for xz ..."
-    IF (-Not (Get-Command -Name "xz" -ErrorAction Silent)) {
+    if (-not (Get-Command -Name "xz" -ErrorAction Silent)) {
         & "$Env:USERPROFILE\.local\bin\webi-pwsh.ps1" xz
         $null = Sync-EnvPath
     }

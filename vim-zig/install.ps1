@@ -1,6 +1,6 @@
 #!/usr/bin/env pwsh
 
-IF ($null -eq $Env:WEBI_HOST -or "" -eq $Env:WEBI_HOST) {
+if ($null -eq $Env:WEBI_HOST -or "" -eq $Env:WEBI_HOST) {
     $Env:WEBI_HOST = "https://webinstall.dev"
 }
 
@@ -21,7 +21,7 @@ $pkg_src = "$HOME\Downloads\webi\$Env:WEBI_PKG_PATHNAME"
 $pkg_dst = "$HOME\.vim\pack\plugins\start\$my_vim_plugin"
 
 function fn_vim_init {
-    if (-Not (Test-Path "$HOME\.vimrc")) {
+    if (-not (Test-Path "$HOME\.vimrc")) {
         New-Item -ItemType File -Path "$HOME\.vimrc"
     }
     New-Item -ItemType Directory -Force `
@@ -31,13 +31,13 @@ function fn_vim_init {
 }
 
 function fn_git_shallow_clone {
-    IF (Test-Path -Path "$pkg_src") {
+    if (Test-Path -Path "$pkg_src") {
         Write-Host "Found $pkg_src"
-        Return
+        return
     }
 
     Write-Output "Checking for Git..."
-    IF (-Not (Get-Command -Name "git" -ErrorAction Silent)) {
+    if (-not (Get-Command -Name "git" -ErrorAction Silent)) {
         & "$HOME\.local\bin\webi-pwsh.ps1" git
         $null = Sync-EnvPath
     }
@@ -64,9 +64,9 @@ function fn_install {
 
 function fn_vim_config_download {
     $my_vim_confpath = "$HOME\.vim\plugins\$my_vim_confname"
-    IF (Test-Path -Path "$my_vim_confpath") {
+    if (Test-Path -Path "$my_vim_confpath") {
         Write-Host "Found $my_vim_confpath"
-        Return
+        return
     }
 
     & curl.exe -sS -o "$my_vim_confpath" `

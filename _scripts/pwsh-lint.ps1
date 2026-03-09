@@ -15,8 +15,8 @@ foreach ($my_dir in $my_dirs) {
         $my_ps1 = [System.IO.Path]::GetRelativePath($my_cwd, $my_file.FullName)
         $my_dir = [System.IO.Path]::GetDirectoryName($my_file.FullName)
 
-        if (-Not (Test-Path -PathType Leaf -Path $my_ps1) -or
-            -Not (Test-Path -PathType Container -Path $my_dir)) {
+        if (-not (Test-Path -PathType Leaf -Path $my_ps1) -or
+            -not (Test-Path -PathType Container -Path $my_dir)) {
             Write-Host ("    SKIP {0} (non-regular file or parent directory)" -f $my_ps1)
             continue
         }
@@ -39,7 +39,7 @@ foreach ($my_dir in $my_dirs) {
         $my_new_file | Set-Content -Path $my_ps1
 
         $my_new_file = $my_new_file + "`n"
-        IF ($my_old_file -ne $my_new_file) {
+        if ($my_old_file -ne $my_new_file) {
             $my_status = 1
         }
     }

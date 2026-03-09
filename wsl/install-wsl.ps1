@@ -7,25 +7,25 @@ Write-Output ""
 Write-Output "Installing 2 of 5 VirtualMachinePlatform (for WSL 2 Hyper-V) ..."
 & dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 
-Function Test-CommandExist {
-    Param ($command)
+function Test-CommandExist {
+    param ($command)
     $oldPreference = $ErrorActionPreference
     $ErrorActionPreference = 'stop'
-    try { if (Get-Command $command) { RETURN $true } }
-    Catch { RETURN $false }
-    Finally { $ErrorActionPreference = $oldPreference }
+    try { if (Get-Command $command) { return $true } }
+    catch { return $false }
+    finally { $ErrorActionPreference = $oldPreference }
 }
 
 Write-Output ""
-IF (!(Test-CommandExists wsl)) {
+if (!(Test-CommandExists wsl)) {
     Write-Output "Skipping 3 of 5: Microsoft Linux Kernel requires WSL 1 to be installed first ..."
 }
-ELSE {
+else {
     Write-Output "Installing 3 of 5 Microsoft Linux Kernel (wsl_update_x64.msi for WSL 2) ..."
-    IF (!(Test-Path -Path "$Env:TEMP\wsl_update_x64.msi")) {
+    if (!(Test-Path -Path "$Env:TEMP\wsl_update_x64.msi")) {
         & curl.exe -f -o "$Env:TEMP\wsl_update_x64.msi" "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
     }
-    IF (!(Test-Path -Path "C:\Temp\System32\lxss\tools\kernel")) {
+    if (!(Test-Path -Path "C:\Temp\System32\lxss\tools\kernel")) {
         # NOTE: This WILL NOT work with TARGETDIR=$Env:TEMP!!
         Write-Output "Start-Process msiexec -Wait -ArgumentList '/a ""$Env:TEMP\wsl_update_x64.msi"" /quiet /qn TARGETDIR=""C:\Temp""'"
         powershell -Command "Start-Process msiexec -Wait -ArgumentList '/a ""$Env:TEMP\wsl_update_x64.msi"" /quiet /qn TARGETDIR=""C:\Temp""'"

@@ -3,7 +3,7 @@
 $PkgName = "pwsh-essentials"
 
 function Repair-MissingCommand {
-    Param(
+    param(
         [string]$Name,
         [string]$Package,
         [string]$Command
@@ -11,8 +11,8 @@ function Repair-MissingCommand {
 
     Write-Host "    Checking for $Name ..."
     $HasCommand = Get-Command -Name $Command -ErrorAction Silent
-    IF ($HasCommand) {
-        Return
+    if ($HasCommand) {
+        return
     }
 
     & "$HOME\.local\bin\webi-pwsh.ps1" $Package
@@ -20,7 +20,7 @@ function Repair-MissingCommand {
 }
 
 function Install-WebiHostedPSCoreScript () {
-    Param(
+    param(
         [string]$Package,
         [string]$ScriptName
     )
