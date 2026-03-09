@@ -61,4 +61,4 @@ The Standard Edition is written and compiled with Go, which means it's binaries:
 
 ### [Hugo](../hugo/) Quick Start & Tips
 
-See the [Hugo Cheat Sheet](../hugo/). See the [Hugo Cheat Sheet](../hugo/).
+See the [Hugo Cheat Sheet](../hugo/).
