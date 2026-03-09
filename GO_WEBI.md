@@ -111,13 +111,13 @@ download \t name \t comment`
   serves responses. Stateless (apart from in-memory caches of template files).
   Discovers available packages from storage — no restart needed when packages
   are added or updated.
-- **`webicached`** — the cache daemon. Knows its set of packages at startup,
-  periodically fetches releases from upstream sources, classifies builds, and
-  writes to both Postgres and the filesystem. Must be restarted to pick up new
-  packages.
+- **`webicached`** — the cache daemon. Built with its package set compiled in.
+  Periodically fetches releases from upstream sources, classifies builds, and
+  writes to both Postgres and the filesystem. Adding a new package means
+  rebuilding and redeploying `webicached`.
 
-**Adding a new installer requires restarting `webicached`, but not `webid`.** The
-API server discovers packages from storage — when `webicached` writes a new
+**Adding a new installer requires rebuilding `webicached`, but not `webid`.** The
+API server discovers packages from storage — when the new `webicached` writes a
 package's releases to Postgres or the filesystem, `webid` sees it on the next
 read. No restart, no config reload.
 
