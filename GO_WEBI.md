@@ -111,24 +111,18 @@ download \t name \t comment`
   serves responses. Stateless (apart from in-memory caches of template files).
   Discovers available packages from storage — no restart needed when packages
   are added or updated.
-- **`webicached`** — the cache daemon. Watches for new packages on the
-  filesystem (new directories with `releases.js` or a future Go-native config),
+- **`webicached`** — the cache daemon. Knows its set of packages at startup,
   periodically fetches releases from upstream sources, classifies builds, and
-  writes to storage. Runs independently.
+  writes to both Postgres and the filesystem. Must be restarted to pick up new
+  packages.
 
-A key design constraint: **adding a new installer must not require restarting
-either server.** This was one of the original reasons for choosing Node.js — you
-could drop a `releases.js` in a folder and it was live. The Go architecture
-preserves this:
+**Adding a new installer requires restarting `webicached`, but not `webid`.** The
+API server discovers packages from storage — when `webicached` writes a new
+package's releases to Postgres or the filesystem, `webid` sees it on the next
+read. No restart, no config reload.
 
-1. `webicached` watches the installers directory for new/changed packages
-   (fsnotify or periodic scan).
-2. When it finds a new package, it fetches releases and writes them to storage.
-3. `webid` discovers the package on the next read from storage — no restart,
-   no config reload, no deployment.
-
-This also means `webid` never blocks on upstream API calls. It serves from
-whatever is in storage — always fast, always available.
+This means `webid` never blocks on upstream API calls. It serves from whatever is
+in storage — always fast, always available.
 
 ### Double-Buffer Storage
 
@@ -322,9 +316,6 @@ behavior must be preserved for backward compatibility.
   processes? Kubernetes pods?
 - [ ] Rate limiting for GitHub API calls in `webicached` — how to coordinate
   across multiple instances?
-- [ ] Package discovery: filesystem watch (fsnotify) vs periodic directory scan?
-  fsnotify is more responsive but adds a dependency; periodic scan is simpler and
-  good enough if the interval is short (e.g. 30s).
 
 ## Current Node.js Architecture (Reference)
 
