@@ -107,10 +107,11 @@ download \t name \t comment`
 
 ### Two Servers
 
-- **`webid`** — the HTTP API server. Reads from storage, renders templates,
-  serves responses. Stateless (apart from in-memory caches of template files).
-  Discovers available packages from storage — no restart needed when packages
-  are added or updated.
+- **`webid`** — the HTTP API server. Renders templates and serves responses.
+  On each request, looks up releases by package name in storage (filesystem
+  and/or Postgres, configurable). No package registry — if releases exist in
+  storage for that name, it's a valid package. No restart needed when packages
+  are added.
 - **`webicached`** — the cache daemon. Built with its package set compiled in.
   Periodically fetches releases from upstream sources, classifies builds, and
   writes to both Postgres and the filesystem. Adding a new package means
