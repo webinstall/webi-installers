@@ -63,7 +63,7 @@ To run them manually on your code;
 - jshintrc (lint)
   ```sh
   touch .jshintrc .jshintignore
-  jhint -c ./.jshintrc *.js */*.js
+  jshint -c ./.jshintrc *.js */*.js
   ```
 - fixjson \
   (turns JavaScript Objects with comments, trailing commas, etc into actual
