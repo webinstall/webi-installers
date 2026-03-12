@@ -41,19 +41,19 @@ pkg_link() {
     # all Go versions, so ~/go is kept stable rather than being swapped to a
     # versioned directory on each upgrade.
     b_gobin_stable="${HOME}/.local/opt/go-bin"
-    if [ ! -e "$GOBIN" ] && [ ! -L "$GOBIN" ]; then
+    if ! test -e "$GOBIN" && ! test -L "$GOBIN"; then
         # New install: create ~/go as a real directory (not a symlink)
         mkdir -p "$GOBIN/bin"
-    elif [ -L "$GOBIN" ]; then
+    elif test -L "$GOBIN"; then
         b_old_target="$(readlink "$GOBIN")"
-        if [ "$b_old_target" != "$b_gobin_stable" ] && [ -d "$b_old_target" ]; then
+        if test "$b_old_target" != "$b_gobin_stable" && test -d "$b_old_target"; then
             # Migrate from old versioned-symlink (e.g. go-bin-v1.14.2):
             # rename the versioned directory to the stable unversioned path
             # so that all installed tools are preserved on upgrade.
             mv "$b_old_target" "$b_gobin_stable"
             rm -f "$GOBIN"
             ln -s "$b_gobin_stable" "$GOBIN"
-        elif [ ! -d "$b_old_target" ]; then
+        elif ! test -d "$b_old_target"; then
             # Symlink target is gone; recreate ~/go as a real directory
             rm -f "$GOBIN"
             mkdir -p "$GOBIN/bin"
