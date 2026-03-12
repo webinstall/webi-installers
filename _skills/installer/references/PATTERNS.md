@@ -141,9 +141,9 @@ pkg_install() {
             "$pkg_src_dir/share/fish/vendor_completions.d/rg.fish"
     fi
     # zsh completion
-    if test -e './ripgrep-*/complete/_rg'; then
+    if test -e ./ripgrep-*/complete/_rg; then
         mkdir -p "$pkg_src_dir/share/zsh/site-functions"
-        mv './ripgrep-*/complete/_rg' \
+        mv ./ripgrep-*/complete/_rg \
             "$pkg_src_dir/share/zsh/site-functions/_rg"
     fi
     # man page
