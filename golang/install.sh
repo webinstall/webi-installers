@@ -41,26 +41,38 @@ pkg_link() {
     # all Go versions, so ~/go is kept stable rather than being swapped to a
     # versioned directory on each upgrade.
     b_gobin_stable="${HOME}/.local/opt/go-bin"
+
+    # New install: create ~/go as a real directory (not a symlink)
     if ! test -e "$GOBIN" && ! test -L "$GOBIN"; then
-        # New install: create ~/go as a real directory (not a symlink)
         mkdir -p "$GOBIN/bin"
-    elif test -L "$GOBIN"; then
-        b_old_target="$(readlink "$GOBIN")"
-        if test "$b_old_target" != "$b_gobin_stable" && test -d "$b_old_target"; then
-            # Migrate from old versioned-symlink (e.g. go-bin-v1.14.2):
-            # rename the versioned directory to the stable unversioned path
-            # so that all installed tools are preserved on upgrade.
-            mv "$b_old_target" "$b_gobin_stable"
-            rm -f "$GOBIN"
-            ln -s "$b_gobin_stable" "$GOBIN"
-        elif ! test -d "$b_old_target"; then
-            # Symlink target is gone; recreate ~/go as a real directory
-            rm -f "$GOBIN"
-            mkdir -p "$GOBIN/bin"
-        fi
-        # If already pointing to the stable unversioned dir, do nothing
+        return
     fi
-    # If $GOBIN is already a real directory, leave it alone
+
+    # Real directory: leave it alone
+    if ! test -L "$GOBIN"; then
+        return
+    fi
+
+    b_old_target="$(readlink "$GOBIN")"
+
+    # Already pointing to the stable unversioned dir: nothing to do
+    if test "$b_old_target" = "$b_gobin_stable"; then
+        return
+    fi
+
+    # Migrate from old versioned-symlink (e.g. go-bin-v1.14.2):
+    # rename the versioned directory to the stable unversioned path
+    # so that all installed tools are preserved on upgrade.
+    if test -d "$b_old_target"; then
+        mv "$b_old_target" "$b_gobin_stable"
+        rm -f "$GOBIN"
+        ln -s "$b_gobin_stable" "$GOBIN"
+        return
+    fi
+
+    # Symlink target is gone; recreate ~/go as a real directory
+    rm -f "$GOBIN"
+    mkdir -p "$GOBIN/bin"
 }
 
 pkg_post_install() {
