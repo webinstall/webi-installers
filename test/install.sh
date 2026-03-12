@@ -43,6 +43,7 @@ __rmrf_local() {
                 iterm2-utils \
                 jq \
                 k9s \
+                keychain \
                 keypairs \
                 kind \
                 koji \
@@ -139,6 +140,7 @@ __rmrf_local() {
                 iterm2-utils \
                 jq \
                 k9s \
+                keychain \
                 keypairs \
                 kind \
                 koji \
@@ -238,6 +240,7 @@ __test() {
         iterm2-utils \
         jq \
         k9s \
+        keychain \
         keypairs \
         kind \
         koji \
