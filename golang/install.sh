@@ -3,7 +3,6 @@ set -e
 set -u
 
 GOBIN="${HOME}/go"
-GOBIN_REAL="${HOME}/.local/opt/go-bin-v${WEBI_VERSION}"
 
 pkg_cmd_name="go"
 
@@ -37,13 +36,31 @@ pkg_link() {
     rm -rf "$pkg_dst"
     ln -s "$pkg_src" "$pkg_dst"
 
-    # Go has a special $GOBIN
-
-    # 'GOBIN' is set above to "${HOME}/go"
-    # 'GOBIN_REAL' will be "${HOME}/.local/opt/go-bin-v${WEBI_VERSION}"
-    rm -rf "$GOBIN"
-    mkdir -p "$GOBIN_REAL/bin"
-    ln -s "$GOBIN_REAL" "$GOBIN"
+    # Go's package directory (GOPATH) at ~/go must persist across version
+    # upgrades. Unlike other tools, go-installed binaries are shared across
+    # all Go versions, so ~/go is kept stable rather than being swapped to a
+    # versioned directory on each upgrade.
+    b_gobin_stable="${HOME}/.local/opt/go-bin"
+    if [ ! -e "$GOBIN" ] && [ ! -L "$GOBIN" ]; then
+        # New install: create ~/go as a real directory (not a symlink)
+        mkdir -p "$GOBIN/bin"
+    elif [ -L "$GOBIN" ]; then
+        b_old_target="$(readlink "$GOBIN")"
+        if [ "$b_old_target" != "$b_gobin_stable" ] && [ -d "$b_old_target" ]; then
+            # Migrate from old versioned-symlink (e.g. go-bin-v1.14.2):
+            # rename the versioned directory to the stable unversioned path
+            # so that all installed tools are preserved on upgrade.
+            mv "$b_old_target" "$b_gobin_stable"
+            rm -f "$GOBIN"
+            ln -s "$b_gobin_stable" "$GOBIN"
+        elif [ ! -d "$b_old_target" ]; then
+            # Symlink target is gone; recreate ~/go as a real directory
+            rm -f "$GOBIN"
+            mkdir -p "$GOBIN/bin"
+        fi
+        # If already pointing to the stable unversioned dir, do nothing
+    fi
+    # If $GOBIN is already a real directory, leave it alone
 }
 
 pkg_post_install() {
