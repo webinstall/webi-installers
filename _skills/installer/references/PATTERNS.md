@@ -129,25 +129,25 @@ pkg_install() {
     chmod a+x "$pkg_src_cmd"
 
     # bash completion
-    if [ -e ./ripgrep-*/complete/rg.bash ]; then
+    if test -e ./ripgrep-*/complete/rg.bash; then
         mkdir -p "$pkg_src_dir/share/bash-completion/completions"
         mv ./ripgrep-*/complete/rg.bash \
             "$pkg_src_dir/share/bash-completion/completions/rg"
     fi
     # fish completion
-    if [ -e ./ripgrep-*/complete/rg.fish ]; then
+    if test -e ./ripgrep-*/complete/rg.fish; then
         mkdir -p "$pkg_src_dir/share/fish/vendor_completions.d"
         mv ./ripgrep-*/complete/rg.fish \
             "$pkg_src_dir/share/fish/vendor_completions.d/rg.fish"
     fi
     # zsh completion
-    if [ -e './ripgrep-*/complete/_rg' ]; then
+    if test -e './ripgrep-*/complete/_rg'; then
         mkdir -p "$pkg_src_dir/share/zsh/site-functions"
         mv './ripgrep-*/complete/_rg' \
             "$pkg_src_dir/share/zsh/site-functions/_rg"
     fi
     # man page
-    if [ -e ./ripgrep-*/doc/rg.1 ]; then
+    if test -e ./ripgrep-*/doc/rg.1; then
         mkdir -p "$pkg_src_dir/share/man/man1"
         mv ./ripgrep-*/doc/rg.1 "$pkg_src_dir/share/man/man1/rg.1"
     fi
@@ -159,7 +159,7 @@ pkg_get_current_version() {
 ```
 
 **Note**: Completion paths in completions/man install are best-effort
-— use `if [ -e ... ]` guards so the script still works on older releases
+— use `if test -e ...` guards so the script still works on older releases
 that didn't include them.
 
 ---

@@ -182,24 +182,24 @@ pkg_install() {
     chmod a+x "$pkg_src_cmd"
 
     # completions (install what exists — not all builds include them)
-    if [ -e ./tool-*/completions/tool.bash ]; then
+    if test -e ./tool-*/completions/tool.bash; then
         mkdir -p "$pkg_src_dir/share/bash-completion/completions"
         mv ./tool-*/completions/tool.bash \
             "$pkg_src_dir/share/bash-completion/completions/tool"
     fi
-    if [ -e ./tool-*/completions/tool.fish ]; then
+    if test -e ./tool-*/completions/tool.fish; then
         mkdir -p "$pkg_src_dir/share/fish/vendor_completions.d"
         mv ./tool-*/completions/tool.fish \
             "$pkg_src_dir/share/fish/vendor_completions.d/tool.fish"
     fi
-    if [ -e ./tool-*'/completions/_tool' ]; then
+    if test -e './tool-*/completions/_tool'; then
         mkdir -p "$pkg_src_dir/share/zsh/site-functions"
         mv './tool-*/completions/_tool' \
             "$pkg_src_dir/share/zsh/site-functions/_tool"
     fi
 
     # man page
-    if [ -e ./tool-*/tool.1 ]; then
+    if test -e ./tool-*/tool.1; then
         mkdir -p "$pkg_src_dir/share/man/man1"
         mv ./tool-*/tool.1 "$pkg_src_dir/share/man/man1/tool.1"
     fi
