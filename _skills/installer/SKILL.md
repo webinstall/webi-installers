@@ -130,10 +130,10 @@ sourced by the framework:
 
 ```sh
 #!/bin/sh
-set -e
-set -u
 
 __init_toolname() {
+    set -e
+    set -u
 
     ####################
     # Install toolname #
@@ -173,22 +173,28 @@ __init_toolname
 | `pkg_src_dir` | Versioned install dir: `~/.local/opt/<pkg>-v<ver>` |
 | `pkg_src` | Same as `pkg_src_cmd` for single-binary packages; same as `pkg_src_dir` for SDKs |
 
-**Framework-derived (do not set these yourself):**
+**Framework-derived (set by the framework before calling `pkg_install` — do not set manually):**
 - `pkg_src_bin` — `$(dirname "$pkg_src_cmd")` — the versioned `bin/` dir
 - `pkg_dst_bin` — `$(dirname "$pkg_dst_cmd")` — `~/.local/bin`
 
 ### `WEBI_SINGLE`
 
-`WEBI_SINGLE=true` tells the framework to link the binary directly:
-`~/.local/bin/cmd → ~/.local/opt/cmd-vX.Y.Z/bin/cmd`
+`WEBI_SINGLE=true` affects the default values the framework uses for
+`pkg_src` and `pkg_dst`, and how `webi_link()` creates the symlink:
 
-Without it (the default), the framework links the whole directory:
-`~/.local/opt/cmd → ~/.local/opt/cmd-vX.Y.Z`
+- **With `WEBI_SINGLE=true`**: links the binary file directly:
+  `~/.local/bin/cmd → ~/.local/opt/cmd-vX.Y.Z/bin/cmd`
+- **Without it (default)**: links the directory:
+  `~/.local/opt/cmd → ~/.local/opt/cmd-vX.Y.Z`
 
-**Set `WEBI_SINGLE=true` for any package that installs a single binary**
-— regardless of whether the archive has a subdirectory. Pattern G (SDKs)
-is the main case where you do NOT set it, because the whole directory tree
-needs to be accessible (e.g. `node/lib/`, `go/src/`).
+Set `WEBI_SINGLE=true` when using the conventional Pattern A skeleton
+(where `pkg_src` and `pkg_dst` are not set to custom values). When you
+explicitly assign all six variables yourself (as in Patterns B–F),
+`WEBI_SINGLE` is not strictly required but can still be set for clarity.
+
+Pattern G (SDKs) and Pattern H (.NET bundles) do NOT use `WEBI_SINGLE` —
+they define `pkg_link()` manually because the whole directory tree must
+be linked, not just a single binary.
 
 ### Required function: `pkg_install`
 
@@ -313,7 +319,7 @@ pkg_install() {
 
 pkg_link() {
     rm -f "$pkg_dst"
-    ln -s "$pkg_src_dir" "$pkg_dst"
+    ln -s "$pkg_src" "$pkg_dst"
 }
 ```
 
@@ -321,10 +327,14 @@ pkg_link() {
 
 ## 4. Write `install.ps1`
 
-Unlike the shell side, there is no PowerShell framework template — each
-`install.ps1` is a self-contained script that handles download, extraction,
-and placement itself. The same path conventions apply (opt/bin layout), but
-Windows uses `Copy-Item` instead of symlinks for the final `bin/` step.
+A PowerShell framework template exists (`_webi/package-install.tpl.ps1`)
+and injects the `install.ps1` script at the `# {{ installer }}` placeholder.
+The template provides: error handling, directory setup, `Invoke-DownloadUrl`
+helper, and PATH management via `webi_path_add`. However, unlike the shell
+side, the PS1 framework does **not** download or extract the archive — the
+package script must handle that itself. The same path conventions apply
+(opt/bin layout), but Windows uses `Copy-Item` instead of symlinks for
+the final `bin/` step.
 
 ### Variable block (always at top)
 

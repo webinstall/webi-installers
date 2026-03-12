@@ -10,7 +10,9 @@ the most common. Check `tar -tz $ARCHIVE` before writing any code.
 The archive extracts directly to the current directory with no wrapper
 subdirectory. Binary (and optional LICENSE/README) is at the top level.
 
-**Set `WEBI_SINGLE=true`** — tells the framework the archive is flat.
+**Set `WEBI_SINGLE=true`** — tells the framework to link the binary file
+directly (`~/.local/bin/cmd → ~/.local/opt/cmd-vX/bin/cmd`) rather than
+linking the versioned directory.
 
 Representative packages: caddy, fzf, k9s, terraform, sttr, lf, monorel,
 awless, bun, cilium, curlie, dashmsg, dotenv, dotenv-linter, ffuf,
@@ -93,11 +95,13 @@ Move-Item -Path ".\delta-*\delta.exe" -Destination "$pkg_src_bin"
 Same as B but the archive also contains shell completions and/or man pages
 worth installing.
 
-Representative packages: bat, fd, goreleaser, lsd, rg/ripgrep, sd,
-watchexec, zoxide
+Representative packages: bat, fd, lsd, rg/ripgrep, sd, watchexec, zoxide
+
+Note: goreleaser has a flat archive (Pattern A layout) but with completions at
+the archive root. See the goreleaser entry in ARCHIVE-LAYOUTS.md.
 
 **Completion directory name varies by package**:
-- `completions/` — sd, goreleaser, watchexec, zoxide
+- `completions/` — sd, watchexec, zoxide
 - `autocomplete/` — bat, fd, lsd
 - `complete/` — rg/ripgrep
 
@@ -110,7 +114,6 @@ watchexec, zoxide
 **Man page location varies**:
 - `tool.1` at subdirectory root — sd, bat, fd, lsd
 - `doc/tool.1` — rg/ripgrep
-- `manpages/tool.1.gz` — goreleaser
 - `man/man1/tool.1` — zoxide (deepest path)
 
 **install.sh** (rg as example):
@@ -298,7 +301,9 @@ pkg_get_current_version() {
 ## Pattern H — .NET runtime bundle
 
 Flat directory with one binary and hundreds of `.dll` files. The entire
-directory must be preserved intact.
+directory must be preserved. Like Pattern G (SDK) in structure — the
+versioned directory is the package root, with the binary directly inside
+(no `bin/` subdirectory). A `pkg_link()` creates the unversioned symlink.
 
 Representative packages: pwsh (PowerShell Core)
 
@@ -306,18 +311,24 @@ Representative packages: pwsh (PowerShell Core)
 ```sh
 pkg_cmd_name="pwsh"
 
-pkg_dst_cmd="$HOME/.local/bin/pwsh"
-pkg_dst="$pkg_dst_cmd"
-pkg_src_cmd="$HOME/.local/opt/pwsh-v$WEBI_VERSION/bin/pwsh"
+# note: binary is at pkg_src_dir root, no bin/ subdirectory
+pkg_src_cmd="$HOME/.local/opt/pwsh-v$WEBI_VERSION/pwsh"
 pkg_src_dir="$HOME/.local/opt/pwsh-v$WEBI_VERSION"
-pkg_src="$pkg_src_cmd"
+pkg_src="$pkg_src_dir"
+
+pkg_dst_cmd="$HOME/.local/opt/pwsh/pwsh"
+pkg_dst="$HOME/.local/opt/pwsh"
 
 pkg_install() {
+    # Archive extracts flat — move all contents into the versioned dir
     mkdir -p "$pkg_src_dir"
-    # Archive extracts flat — move all contents into bin/
-    mkdir -p "$pkg_src_bin"
-    mv ./* "$pkg_src_bin/" 2>/dev/null || true
+    mv ./* "$pkg_src_dir"
     chmod a+x "$pkg_src_cmd"
+}
+
+pkg_link() {
+    rm -rf "$pkg_dst"
+    ln -s "$pkg_src" "$pkg_dst"
 }
 ```
 

@@ -276,11 +276,8 @@ curl -fsSL "$URL" | tar -tz | head -20
 curl -fsSL "$URL" -o /tmp/pkg.zip
 unzip -l /tmp/pkg.zip | head -20
 
-# For a .zst file you don't have zstd for:
-curl -fsSL "$URL" | python3 -c "
-import sys, subprocess
-subprocess.run(['tar', '--zstd', '-tz'], stdin=sys.stdin)
-" | head -20
+# For a .zst file when tar doesn't support zstd natively:
+curl -fsSL "$URL" -o /tmp/pkg.tar.zst && zstd -dc /tmp/pkg.tar.zst | tar -tz | head -20
 ```
 
 **What to look for**:
