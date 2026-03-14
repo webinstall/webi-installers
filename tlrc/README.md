@@ -15,8 +15,8 @@ install:
 
 ```text
 ~/.config/envman/PATH.env
-~/.local/bin/tlrc
-~/.local/opt/tlrc/
+~/.local/bin/tldr
+~/.local/opt/tldr/
 ```
 
 ## Cheat Sheet
@@ -28,7 +28,7 @@ install:
 To get help for a command:
 
 ```sh
-tlrc tar
+tldr tar
 ```
 
 ### List all available pages
@@ -36,7 +36,7 @@ tlrc tar
 To see all available commands:
 
 ```sh
-tlrc --list
+tldr --list
 ```
 
 ### Update the cache
@@ -44,7 +44,7 @@ tlrc --list
 To update the local cache of tldr pages:
 
 ```sh
-tlrc --update
+tldr --update
 ```
 
 ### Search for commands
@@ -52,7 +52,7 @@ tlrc --update
 To search for commands containing a keyword:
 
 ```sh
-tlrc --search "compress"
+tldr --search "compress"
 ```
 
 ### Show examples for specific platform
@@ -60,7 +60,7 @@ tlrc --search "compress"
 To show examples for a specific platform:
 
 ```sh
-tlrc --platform linux tar
+tldr --platform linux tar
 ```
 
 ### Random page
@@ -68,5 +68,5 @@ tlrc --platform linux tar
 To display a random page:
 
 ```sh
-tlrc --random
+tldr --random
 ```
