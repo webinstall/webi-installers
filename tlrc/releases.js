@@ -6,7 +6,15 @@ var repo = 'tlrc';
 
 module.exports = function () {
   return github(null, owner, repo).then(function (all) {
-    // tlrc has a clean release structure, no filtering needed
+    all.releases = all.releases.map(function (rel) {
+      if (/-gnu/.test(rel.name)) {
+        rel.libc = 'gnu';
+      }
+      if (/-musl/.test(rel.name)) {
+        rel.libc = 'musl';
+      }
+      return rel;
+    });
     return all;
   });
 };

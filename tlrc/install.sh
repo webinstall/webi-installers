@@ -9,12 +9,12 @@ __init_tlrc() {
     ###############
 
     # Every package should define these 6 variables
-    pkg_cmd_name="tlrc"
+    pkg_cmd_name="tldr"
 
     pkg_dst_cmd="$HOME/.local/bin/tlrc"
     pkg_dst="$pkg_dst_cmd"
 
-    pkg_src_cmd="$HOME/.local/opt/tlrc-v$WEBI_VERSION/tlrc"
+    pkg_src_cmd="$HOME/.local/opt/tlrc-v$WEBI_VERSION/tldr"
     pkg_src_dir="$HOME/.local/opt/tlrc-v$WEBI_VERSION"
     pkg_src="$pkg_src_cmd"
 
@@ -29,11 +29,11 @@ __init_tlrc() {
 
     # pkg_get_current_version is recommended, but not required
     pkg_get_current_version() {
-        # 'tlrc --version' has output in this format:
+        # 'tldr --version' has output in this format:
         #       tlrc 1.11.1
         # This trims it down to just the version number:
         #       1.11.1
-        tlrc --version 2> /dev/null |
+        tldr --version 2> /dev/null |
             head -n 1 |
             cut -d ' ' -f 2
     }
