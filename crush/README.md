@@ -5,7 +5,8 @@ tagline: |
   crush: Your new coding bestie, now available in your favourite terminal.
 ---
 
-To update or switch versions, run `webi crush@stable` (or `@v0.50`, `@beta`, etc).
+To update or switch versions, run `webi crush@stable` (or `@v0.50`, `@beta`,
+etc).
 
 ### Files
 
@@ -91,8 +92,8 @@ TypeScript, Python, Rust, and more).
 
 ### How to Use with Local Models (Optional)
 
-For fully local AI coding with no API calls, use
-[ollama](../ollama/) (also available via webi):
+For fully local AI coding with no API calls, use [ollama](../ollama/) (also
+available via webi):
 
 ```sh
 # Install ollama separately (optional)
@@ -164,17 +165,17 @@ crush supports Model Context Protocol (MCP) extensions for additional tools:
 
 ### Useful Key Bindings
 
-| Key           | Action                           |
-| ------------- | -------------------------------- |
-| `Enter`       | Send message                     |
-| `Ctrl+M`      | Switch model/provider            |
-| `Ctrl+S`      | Save session                     |
-| `Ctrl+L`      | Clear screen                     |
-| `Ctrl+C`      | Cancel current operation         |
-| `Ctrl+D`      | Exit crush                       |
-| `Ctrl+E`      | Open editor for multi-line input |
-| `Ctrl+R`      | Search message history           |
-| `Ctrl+T`      | Toggle LSP diagnostics           |
+| Key      | Action                           |
+| -------- | -------------------------------- |
+| `Enter`  | Send message                     |
+| `Ctrl+M` | Switch model/provider            |
+| `Ctrl+S` | Save session                     |
+| `Ctrl+L` | Clear screen                     |
+| `Ctrl+C` | Cancel current operation         |
+| `Ctrl+D` | Exit crush                       |
+| `Ctrl+E` | Open editor for multi-line input |
+| `Ctrl+R` | Search message history           |
+| `Ctrl+T` | Toggle LSP diagnostics           |
 
 ### How to Configure Advanced Features
 
