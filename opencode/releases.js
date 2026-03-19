@@ -19,13 +19,15 @@ Releases.latest = async function () {
     rel.assets = (rel.assets || []).filter(function (asset) {
       let name = asset.name;
       // Keep only CLI binaries: opencode-{os}-{arch}.{tar.gz|zip}
-      // Exclude: desktop, electron, baseline, musl, auto-update manifests, packages
+      // Exclude: desktop, electron, baseline, .yml manifests, auto-update files, packages
+      // Include: musl builds (webi handles both gnu and musl)
       return (
         name.match(/^opencode-(darwin|linux|windows)-/) &&
         !name.includes('desktop') &&
         !name.includes('electron') &&
         !name.includes('baseline') &&
-        !name.includes('musl') &&
+        !name.endsWith('.yml') &&
+        !name.endsWith('.yaml') &&
         (name.endsWith('.tar.gz') || name.endsWith('.zip'))
       );
     });
