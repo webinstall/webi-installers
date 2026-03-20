@@ -15,10 +15,40 @@ $pkg_src_bin = "$Env:USERPROFILE\.local\opt\crush-v$Env:WEBI_VERSION\bin"
 $pkg_src_dir = "$Env:USERPROFILE\.local\opt\crush-v$Env:WEBI_VERSION"
 $pkg_src = "$pkg_src_cmd"
 
-New-Item "$pkg_src_bin" -ItemType Directory -Force | Out-Null
+New-Item "$Env:USERPROFILE\Downloads\webi" -ItemType Directory -Force | Out-Null
+$pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 
-# Rename from 'crush.exe' to 'crush.exe' (goreleaser pattern)
-# (The extracted archive contains crush_VERSION_Windows_arch/crush.exe)
-Get-ChildItem -Path "." -Filter "crush-*" -Directory | ForEach-Object {
-    Move-Item -Path "$_\crush.exe" -Destination "$pkg_src_cmd" -Force
+# Fetch archive
+if (!(Test-Path -Path "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE")) {
+    Write-Output "Downloading crush from $Env:WEBI_PKG_URL to $pkg_download"
+    & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
+    & Move-Item "$pkg_download.part" "$pkg_download"
 }
+
+if (!(Test-Path -Path "$pkg_src_cmd")) {
+    Write-Output "Installing crush"
+
+    # Enter tmp
+    Push-Location .local\tmp
+
+    # Remove any leftover tmp cruft
+    Remove-Item -Path ".\crush_*" -Recurse -ErrorAction Ignore
+    Remove-Item -Path ".\crush.exe" -Recurse -ErrorAction Ignore
+
+    # Unpack archive
+    Write-Output "Unpacking $pkg_download"
+    & tar xf "$pkg_download"
+
+    # Move binary into place
+    # (goreleaser archive contains crush_VERSION_Windows_arch/crush.exe)
+    Write-Output "Install Location: $pkg_src_cmd"
+    New-Item "$pkg_src_bin" -ItemType Directory -Force | Out-Null
+    Move-Item -Path ".\crush_*\crush.exe" -Destination "$pkg_src_bin"
+
+    # Exit tmp
+    Pop-Location
+}
+
+Write-Output "Copying into '$pkg_dst_cmd' from '$pkg_src_cmd'"
+Remove-Item -Path "$pkg_dst_cmd" -Recurse -ErrorAction Ignore | Out-Null
+Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse

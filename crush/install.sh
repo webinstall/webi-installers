@@ -1,42 +1,76 @@
 #!/bin/sh
 
 __init_crush() {
-	set -e
-	set -u
+    set -e
+    set -u
 
-	##################
-	# Install crush #
-	##################
+    ##################
+    # Install crush #
+    ##################
 
-	# Every package should define these 6 variables
-	pkg_cmd_name="crush"
+    # Every package should define these 6 variables
+    pkg_cmd_name="crush"
 
-	pkg_dst_cmd="$HOME/.local/bin/crush"
-	pkg_dst="$pkg_dst_cmd"
+    pkg_dst_cmd="$HOME/.local/bin/crush"
+    pkg_dst="$pkg_dst_cmd"
 
-	pkg_src_cmd="$HOME/.local/opt/crush-v$WEBI_VERSION/bin/crush"
-	pkg_src_dir="$HOME/.local/opt/crush-v$WEBI_VERSION"
-	pkg_src="$pkg_src_cmd"
+    pkg_src_cmd="$HOME/.local/opt/crush-v$WEBI_VERSION/bin/crush"
+    pkg_src_dir="$HOME/.local/opt/crush-v$WEBI_VERSION"
+    pkg_src="$pkg_src_cmd"
 
-	pkg_install() {
-		# $HOME/.local/opt/crush-v0.50.1/bin
-		mkdir -p "$(dirname "$pkg_src_cmd")"
+    pkg_install() {
+        # $HOME/.local/opt/crush-v0.50.1/bin
+        mkdir -p "$(dirname "$pkg_src_cmd")"
 
-		# mv ./crush_*/* "$HOME/.local/opt/crush-v0.50.1/bin/"
-		# (goreleaser puts binaries in a subdirectory with underscores: crush_VERSION_OS_arch/)
-		mv ./crush_*/"$pkg_cmd_name" "$pkg_src_cmd"
+        # (goreleaser archive: crush_VERSION_OS_arch/crush)
+        mv ./crush_*/"$pkg_cmd_name" "$pkg_src_cmd"
+        chmod a+x "$pkg_src_cmd"
 
-		# chmod a+x "$HOME/.local/opt/crush-v0.50.1/bin/crush"
-		chmod a+x "$pkg_src_cmd"
-	}
+        # Install manpage if present
+        # (archive contains crush_VERSION_OS_arch/manpages/crush.1.gz)
+        if test -f ./crush_*/manpages/crush.1.gz; then
+            mkdir -p "$HOME/.local/share/man/man1"
+            mv ./crush_*/manpages/crush.1.gz "$HOME/.local/share/man/man1/"
+        fi
 
-	pkg_get_current_version() {
-		# 'crush --version' has output in this format:
-		#       0.50.1
-		# This trims it down to just the version number:
-		#       0.50.1
-		crush --version 2>/dev/null | head -n 1 | sed 's:^v::'
-	}
+        # Install shell completions if present
+        # (archive contains crush_VERSION_OS_arch/completions/{crush.bash,crush.fish,crush.zsh})
+        if test -f ./crush_*/completions/crush.bash; then
+            mkdir -p "$HOME/.local/share/bash-completion/completions"
+            mv ./crush_*/completions/crush.bash "$HOME/.local/share/bash-completion/completions/crush"
+        fi
+
+        if test -f ./crush_*/completions/crush.zsh; then
+            mkdir -p "$HOME/.local/share/zsh/site-functions"
+            mv ./crush_*/completions/crush.zsh "$HOME/.local/share/zsh/site-functions/_crush"
+        fi
+
+        if test -f ./crush_*/completions/crush.fish; then
+            mkdir -p "$HOME/.config/fish/completions"
+            mv ./crush_*/completions/crush.fish "$HOME/.config/fish/completions/crush.fish"
+        fi
+    }
+
+    pkg_get_current_version() {
+        # 'crush --version' outputs just the version number:
+        #       0.50.1
+        crush --version 2> /dev/null | head -n 1 | sed 's:^v::'
+    }
+
+    pkg_done_message() {
+        echo "Installed 'crush' v${WEBI_VERSION}"
+        echo ""
+        echo "  crush --help"
+        echo ""
+        echo "Shell completions were installed to standard locations."
+        echo "Bash and fish completions should work automatically."
+        echo ""
+        echo "For zsh, you may need to add this to your ~/.zshrc:"
+        echo '  fpath=(~/.local/share/zsh/site-functions $fpath)'
+        echo ""
+        echo "A manpage was also installed. Try:"
+        echo "  man crush"
+    }
 
 }
 
