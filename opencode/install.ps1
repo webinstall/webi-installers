@@ -1,8 +1,8 @@
 #!/usr/bin/env pwsh
 
-##################
+####################
 # Install opencode #
-##################
+####################
 
 # Every package should define these variables
 $pkg_cmd_name = "opencode"
@@ -19,31 +19,30 @@ New-Item "$Env:USERPROFILE\Downloads\webi" -ItemType Directory -Force | Out-Null
 $pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 
 # Fetch archive
-IF (!(Test-Path -Path "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE")) {
+if (!(Test-Path -Path "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE")) {
     Write-Output "Downloading opencode from $Env:WEBI_PKG_URL to $pkg_download"
     & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
     & Move-Item "$pkg_download.part" "$pkg_download"
 }
 
-IF (!(Test-Path -Path "$pkg_src_cmd")) {
+if (!(Test-Path -Path "$pkg_src_cmd")) {
     Write-Output "Installing opencode"
 
-    # TODO: create package-specific temp directory
     # Enter tmp
     Push-Location .local\tmp
 
-        # Remove any leftover tmp cruft
-        Remove-Item -Path ".\opencode-v*" -Recurse -ErrorAction Ignore
-        Remove-Item -Path ".\opencode.exe" -Recurse -ErrorAction Ignore
+    # Remove any leftover tmp cruft
+    Remove-Item -Path ".\opencode-v*" -Recurse -ErrorAction Ignore
+    Remove-Item -Path ".\opencode.exe" -Recurse -ErrorAction Ignore
 
-        # Extract to opencode-v$Env:WEBI_VERSION
-        Write-Output "Unpacking $pkg_download"
-        & tar xf "$pkg_download"
+    # Unpack archive
+    Write-Output "Unpacking $pkg_download"
+    & tar xf "$pkg_download"
 
-        # Move into place
-        Write-Output "Install Location: $pkg_src_cmd"
-        New-Item "$pkg_src_bin" -ItemType Directory -Force | Out-Null
-        Move-Item -Path ".\opencode.exe" -Destination "$pkg_src_bin"
+    # Move single binary into place
+    Write-Output "Install Location: $pkg_src_cmd"
+    New-Item "$pkg_src_bin" -ItemType Directory -Force | Out-Null
+    Move-Item -Path ".\opencode.exe" -Destination "$pkg_src_bin"
 
     # Exit tmp
     Pop-Location

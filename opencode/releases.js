@@ -9,28 +9,18 @@ let Releases = module.exports;
 Releases.latest = async function () {
   let all = await github(null, owner, repo);
 
-  // Filter to CLI-only releases (exclude desktop, electron, baseline, musl variants)
+  // Keep only CLI binaries: opencode-{os}-{arch}.{tar.gz|zip}
+  // Exclude: desktop/electron apps, baseline builds, .yml/.yaml manifests,
+  //          .json metadata, .dmg/.deb/.rpm packages, .sig signatures
+  // Include: musl builds (webi handles both gnu and musl)
   all.releases = all.releases.filter(function (rel) {
-    return rel.version && !rel.version.includes('nightly');
-  });
-
-  all.releases.forEach(function (rel) {
-    // Filter assets to CLI binaries only
-    rel.assets = (rel.assets || []).filter(function (asset) {
-      let name = asset.name;
-      // Keep only CLI binaries: opencode-{os}-{arch}.{tar.gz|zip}
-      // Exclude: desktop, electron, baseline, .yml manifests, auto-update files, packages
-      // Include: musl builds (webi handles both gnu and musl)
-      return (
-        name.match(/^opencode-(darwin|linux|windows)-/) &&
-        !name.includes('desktop') &&
-        !name.includes('electron') &&
-        !name.includes('baseline') &&
-        !name.endsWith('.yml') &&
-        !name.endsWith('.yaml') &&
-        (name.endsWith('.tar.gz') || name.endsWith('.zip'))
-      );
-    });
+    let name = rel.name;
+    return (
+      name.match(/^opencode-(darwin|linux|windows)-/) &&
+      !name.includes('desktop') &&
+      !name.includes('baseline') &&
+      (name.endsWith('.tar.gz') || name.endsWith('.zip'))
+    );
   });
 
   return all;

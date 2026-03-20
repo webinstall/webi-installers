@@ -2,10 +2,11 @@
 title: opencode
 homepage: https://github.com/anomalyco/opencode
 tagline: |
-  opencode: The open source coding agent.
+  opencode: A terminal-based AI coding agent with multi-provider LLM support.
 ---
 
-To update or switch versions, run `webi opencode@stable` (or `@v1.2`, `@beta`, etc).
+To update or switch versions, run `webi opencode@stable` (or `@v1.2`, `@beta`,
+etc).
 
 ### Files
 
@@ -21,43 +22,34 @@ install:
 
 ## Cheat Sheet
 
-> `opencode` is a terminal-based AI coding assistant. It connects to LLM
-> providers (Anthropic, OpenAI, Google, local models via Ollama) and gives you
-> an interactive TUI for writing, reviewing, and refactoring code — with full
-> tool use, file editing, and shell access.
+> `opencode` is an AI coding agent that runs in the terminal. It connects to LLM
+> providers (Anthropic, OpenAI, Google, or local models via Ollama) and gives
+> you an interactive TUI with full tool use — file editing, shell commands, and
+> codebase navigation.
 
 ### How to Get Started
 
-1. Set an API key for your preferred provider:
+Set an API key and launch in your project directory:
 
-   ```sh
-   export ANTHROPIC_API_KEY="sk-ant-..."
-   # or
-   export OPENAI_API_KEY="sk-..."
-   ```
+```sh
+export ANTHROPIC_API_KEY="sk-ant-..."
+cd ~/your-project
+opencode
+```
 
-2. Launch opencode in your project directory:
-
-   ```sh
-   cd ~/your-project
-   opencode
-   ```
-
-   opencode starts a TUI where you can chat, edit files, run commands, and
-   navigate your codebase — all from the terminal.
+opencode starts a TUI where you can chat, edit files, run commands, and navigate
+your codebase.
 
 ### How to Configure Providers
 
-opencode supports multiple LLM providers simultaneously. Add them to
-`~/.config/opencode/opencode.json`:
+Add providers to `~/.config/opencode/opencode.json`:
 
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
   "provider": {
     "anthropic": {},
-    "openai": {},
-    "google": {}
+    "openai": {}
   },
   "model": {
     "big": "anthropic/claude-sonnet-4-5-20250514",
@@ -66,91 +58,56 @@ opencode supports multiple LLM providers simultaneously. Add them to
 }
 ```
 
-Anthropic and OpenAI providers read from `ANTHROPIC_API_KEY` and
-`OPENAI_API_KEY` environment variables respectively.
+Anthropic reads `ANTHROPIC_API_KEY`, OpenAI reads `OPENAI_API_KEY`.
 
-### How to Use with Local Models (Optional)
+### How to Use Plugins
 
-If you prefer fully local AI coding with no API calls, you can use
-[ollama](../ollama/) (also available via webi):
+opencode supports plugins for extended workflows.
+[oh-my-opencode](https://github.com/code-yeongyu/oh-my-opencode) adds
+multi-agent orchestration, model routing, and specialized skills — the entire
+plugin system fits in a single config line:
 
-```sh
-# Install ollama separately (optional)
-curl https://webi.sh/ollama | sh
-source ~/.config/envman/PATH.env
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["oh-my-opencode@latest"],
+  "provider": {
+    "anthropic": {}
+  }
+}
 ```
 
-1. Start the `ollama` server and pull a model:
+That's it. One plugin, your providers, done. The plugin handles agent
+definitions, skill loading, and model routing automatically.
 
-   ```sh
-   ollama serve &
-   ollama pull qwen2.5-coder:14b
-   ```
+### How to Use with Local Models
 
-2. Configure opencode to use the local model:
+Install [ollama](../ollama/) (also available via webi), then configure opencode:
 
-   ```json
-   {
-     "$schema": "https://opencode.ai/config.json",
-     "provider": {
-       "ollama": {
-         "models": {
-           "qwen-coder": {
-             "id": "qwen2.5-coder:14b",
-             "name": "Qwen 2.5 Coder 14B"
-           }
-         }
-       }
-     },
-     "model": {
-       "big": "ollama/qwen-coder",
-       "small": "ollama/qwen-coder"
-     }
-   }
-   ```
+```sh
+webi ollama
+ollama serve &
+ollama pull qwen2.5-coder:14b
+```
 
-3. Launch opencode — it will connect to your local Ollama instance:
-
-   ```sh
-   opencode
-   ```
-
-### How to Use Plugins (oh-my-opencode)
-
-opencode supports plugins for multi-agent orchestration, custom tools, and
-extended workflows.
-[oh-my-opencode](https://github.com/code-yeongyu/oh-my-opencode) is a plugin
-that adds specialized agents, model routing, and skill-based delegation:
-
-1. Install the plugin:
-
-   ```sh
-   cd ~/.config/opencode
-   npm install oh-my-opencode
-   ```
-
-2. Add it to your config:
-
-   ```json
-   {
-     "$schema": "https://opencode.ai/config.json",
-     "plugin": ["oh-my-opencode"]
-   }
-   ```
-
-3. Configure agents in `~/.config/opencode/oh-my-opencode.json`:
-
-   ```json
-   {
-     "agents": {
-       "oracle": {
-         "description": "Read-only high-IQ consultant for architecture",
-         "model": "anthropic/claude-sonnet-4-5-20250514",
-         "tools": ["Read", "Grep", "Glob", "WebFetch"]
-       }
-     }
-   }
-   ```
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "http://127.0.0.1:11434/v1"
+      },
+      "models": {
+        "qwen2.5-coder:14b": {
+          "name": "Qwen 2.5 Coder 14B (local)"
+        }
+      }
+    }
+  }
+}
+```
 
 ### Useful Key Bindings
 
