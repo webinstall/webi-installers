@@ -1,22 +1,30 @@
 ---
 name: crush
-description: Glamorous terminal-based AI coding assistant from Charm with LSP integration, MCP extensions, session management, and beautiful TUI. Use when the user wants a polished terminal AI coding experience.
+description:
+  Glamorous terminal-based AI coding assistant from Charm with LSP integration,
+  MCP extensions, session management, and beautiful TUI. Use when the user wants
+  a polished terminal AI coding experience.
 homepage: https://github.com/charmbracelet/crush
 ---
 
 # Crush
 
-Your new coding bestie in the terminal — built on the Charm ecosystem, powering 25k+ applications. Beautiful TUI with LSP integration, MCP extensions, and multi-model LLM support.
+Your new coding bestie in the terminal — built on the Charm ecosystem, powering
+25k+ applications. Beautiful TUI with LSP integration, MCP extensions, and
+multi-model LLM support.
 
 ## When to Use
 
 - User wants a polished, beautiful terminal AI coding experience
-- User needs LSP-enhanced code intelligence (go-to-definition, references, diagnostics)
-- User wants session-based workflow with context preservation across multiple work sessions
+- User needs LSP-enhanced code intelligence (go-to-definition, references,
+  diagnostics)
+- User wants session-based workflow with context preservation across multiple
+  work sessions
 - User needs MCP (Model Context Protocol) extensions for custom tools
 - User wants to switch LLM providers mid-conversation while preserving context
 - User values aesthetic terminal UIs (Charm ecosystem: Bubble Tea, Lip Gloss)
-- User wants first-class support across all platforms (macOS, Linux, Windows, BSD, Android)
+- User wants first-class support across all platforms (macOS, Linux, Windows,
+  BSD, Android)
 
 ## Installation
 
@@ -28,6 +36,7 @@ source ~/.config/envman/PATH.env
 ## Quick Start
 
 1. **Launch in project directory**:
+
    ```sh
    cd ~/your-project
    crush
@@ -100,7 +109,8 @@ default_model: qwen2.5-coder:32b
 
 ### LSP Configuration
 
-Crush automatically detects and uses LSP servers when available. Install language servers for enhanced intelligence:
+Crush automatically detects and uses LSP servers when available. Install
+language servers for enhanced intelligence:
 
 ```sh
 # TypeScript/JavaScript
@@ -163,6 +173,7 @@ crush sessions delete feature-auth
 ```
 
 Sessions preserve:
+
 - Conversation history
 - File context
 - Model selection
@@ -170,19 +181,20 @@ Sessions preserve:
 
 ## Key Features
 
-| Feature | Description |
-|---------|-------------|
-| **Multi-Model** | OpenAI, Anthropic, Google, Groq, Ollama — switch mid-session |
-| **Session-Based** | Multiple named sessions per project with context preservation |
-| **LSP-Enhanced** | Go-to-definition, find-references, diagnostics, code actions |
-| **MCP Extensions** | Add custom tools via Model Context Protocol |
-| **Git-Aware** | Automatically includes git context in conversations |
-| **Beautiful TUI** | Built on Charm's Bubble Tea framework |
-| **Cross-Platform** | First-class support on macOS, Linux, Windows, BSD, Android |
+| Feature            | Description                                                   |
+| ------------------ | ------------------------------------------------------------- |
+| **Multi-Model**    | OpenAI, Anthropic, Google, Groq, Ollama — switch mid-session  |
+| **Session-Based**  | Multiple named sessions per project with context preservation |
+| **LSP-Enhanced**   | Go-to-definition, find-references, diagnostics, code actions  |
+| **MCP Extensions** | Add custom tools via Model Context Protocol                   |
+| **Git-Aware**      | Automatically includes git context in conversations           |
+| **Beautiful TUI**  | Built on Charm's Bubble Tea framework                         |
+| **Cross-Platform** | First-class support on macOS, Linux, Windows, BSD, Android    |
 
 ## Common Workflows
 
 ### Feature Implementation with LSP
+
 ```sh
 crush --session feature-payments
 # Crush uses LSP to:
@@ -193,6 +205,7 @@ crush --session feature-payments
 ```
 
 ### Switch Models Mid-Session
+
 ```sh
 crush
 # In TUI: Press Ctrl+M to open model selector
@@ -201,6 +214,7 @@ crush
 ```
 
 ### Debug with LSP Diagnostics
+
 ```sh
 crush
 # In TUI: Press Ctrl+T to toggle LSP diagnostics
@@ -209,6 +223,7 @@ crush
 ```
 
 ### Multi-Session Workflow
+
 ```sh
 # Terminal 1: Work on authentication
 crush --session auth
@@ -223,21 +238,27 @@ crush --session bugfix-123
 ## Integration with Other Tools
 
 ### With Ollama (Local Models)
+
 Requires `ollama` to be running:
+
 ```sh
 ollama serve &  # Keep running in background
 crush           # Will connect to local Ollama
 ```
 
 ### With Git
+
 Crush automatically includes:
+
 - Current branch
 - Uncommitted changes
 - Recent commits
 - Diff context
 
 ### With LSP Servers
+
 Crush integrates with any LSP-compliant language server:
+
 - **Go**: gopls
 - **TypeScript**: typescript-language-server
 - **Python**: python-lsp-server, pyright
@@ -246,7 +267,9 @@ Crush integrates with any LSP-compliant language server:
 - **Java**: jdtls
 
 ### With MCP Servers
+
 Extend crush with Model Context Protocol servers:
+
 - Filesystem access
 - HTTP client
 - Database queries
@@ -255,17 +278,17 @@ Extend crush with Model Context Protocol servers:
 
 ## Key Bindings
 
-| Key | Action |
-|-----|--------|
-| `Enter` | Send message |
-| `Ctrl+M` | Switch model/provider |
-| `Ctrl+S` | Save session |
-| `Ctrl+L` | Clear screen |
-| `Ctrl+C` | Cancel current operation |
-| `Ctrl+D` | Exit crush |
+| Key      | Action                           |
+| -------- | -------------------------------- |
+| `Enter`  | Send message                     |
+| `Ctrl+M` | Switch model/provider            |
+| `Ctrl+S` | Save session                     |
+| `Ctrl+L` | Clear screen                     |
+| `Ctrl+C` | Cancel current operation         |
+| `Ctrl+D` | Exit crush                       |
 | `Ctrl+E` | Open editor for multi-line input |
-| `Ctrl+R` | Search message history |
-| `Ctrl+T` | Toggle LSP diagnostics |
+| `Ctrl+R` | Search message history           |
+| `Ctrl+T` | Toggle LSP diagnostics           |
 
 ## Files Created
 
@@ -312,29 +335,33 @@ performance:
 
 ## Comparison with Alternatives
 
-| Tool | Crush | OpenCode | Cursor |
-|------|-------|----------|--------|
-| **Interface** | Beautiful Charm TUI | Terminal TUI | VS Code fork |
-| **LSP Integration** | ✅ Full | ❌ | ✅ |
-| **MCP Extensions** | ✅ Native | ❌ | ❌ |
-| **Session Management** | ✅ Multi-session | Single session | Workspace-based |
-| **Local Models** | ✅ Via Ollama | ✅ Via Ollama | ❌ |
-| **Mid-Session Model Switch** | ✅ With context | ❌ | ❌ |
-| **Platform Support** | macOS, Linux, Windows, BSD, Android | macOS, Linux | macOS, Linux, Windows |
-| **UI Polish** | ⭐⭐⭐⭐⭐ Charm ecosystem | ⭐⭐⭐ | ⭐⭐⭐⭐ |
+| Tool                         | Crush                               | OpenCode       | Cursor                |
+| ---------------------------- | ----------------------------------- | -------------- | --------------------- |
+| **Interface**                | Beautiful Charm TUI                 | Terminal TUI   | VS Code fork          |
+| **LSP Integration**          | ✅ Full                             | ❌             | ✅                    |
+| **MCP Extensions**           | ✅ Native                           | ❌             | ❌                    |
+| **Session Management**       | ✅ Multi-session                    | Single session | Workspace-based       |
+| **Local Models**             | ✅ Via Ollama                       | ✅ Via Ollama  | ❌                    |
+| **Mid-Session Model Switch** | ✅ With context                     | ❌             | ❌                    |
+| **Platform Support**         | macOS, Linux, Windows, BSD, Android | macOS, Linux   | macOS, Linux, Windows |
+| **UI Polish**                | ⭐⭐⭐⭐⭐ Charm ecosystem          | ⭐⭐⭐         | ⭐⭐⭐⭐              |
 
 ## Best Practices
 
-1. **Use sessions for parallel work** — Separate sessions for features, bugs, experiments
+1. **Use sessions for parallel work** — Separate sessions for features, bugs,
+   experiments
 2. **Install LSP servers** — Maximize code intelligence with language servers
-3. **Configure MCP early** — Add filesystem and HTTP MCP servers for full capabilities
+3. **Configure MCP early** — Add filesystem and HTTP MCP servers for full
+   capabilities
 4. **Use Ctrl+M liberally** — Switch models based on task complexity
-5. **Enable git integration** — Let crush see your commit history for better context
+5. **Enable git integration** — Let crush see your commit history for better
+   context
 6. **Save sessions regularly** — Use Ctrl+S to preserve important conversations
 
 ## Troubleshooting
 
 **Crush won't start:**
+
 ```sh
 # Check if binary is in PATH
 which crush
@@ -348,6 +375,7 @@ crush
 ```
 
 **LSP features not working:**
+
 ```sh
 # Check LSP status
 crush --lsp-status
@@ -360,6 +388,7 @@ grep lsp ~/.config/crush/config.yaml
 ```
 
 **MCP servers not loading:**
+
 ```sh
 # Check MCP configuration
 cat ~/.config/crush/mcp.yaml
@@ -372,6 +401,7 @@ echo "debug: true" >> ~/.config/crush/config.yaml
 ```
 
 **Ollama connection failed:**
+
 ```sh
 # Check if Ollama is running
 curl http://localhost:11434/api/version
@@ -385,12 +415,12 @@ grep ollama ~/.config/crush/config.yaml
 
 ## System Requirements
 
-| Requirement | Minimum | Recommended |
-|-------------|---------|-------------|
-| **RAM** | 4GB | 8GB+ |
-| **Storage** | 100MB | 500MB+ (with sessions) |
-| **Network** | Optional (with Ollama) | Required (cloud LLMs) |
-| **Terminal** | UTF-8, 256-color | True color |
+| Requirement  | Minimum                | Recommended            |
+| ------------ | ---------------------- | ---------------------- |
+| **RAM**      | 4GB                    | 8GB+                   |
+| **Storage**  | 100MB                  | 500MB+ (with sessions) |
+| **Network**  | Optional (with Ollama) | Required (cloud LLMs)  |
+| **Terminal** | UTF-8, 256-color       | True color             |
 
 ## Resources
 

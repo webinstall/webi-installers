@@ -9,26 +9,16 @@ let Releases = module.exports;
 Releases.latest = async function () {
   let all = await github(null, owner, repo);
 
-  // Filter to archives only (tar.gz and zip)
-  // Exclude: packages (.deb, .rpm, .apk, .pkg.tar.zst), checksums, sbom, source tarball
+  // Keep only binary archives (goreleaser tar.gz/zip with underscore naming)
+  // Excludes: .deb, .rpm, .apk, .pkg.tar.zst, checksums, .sbom.json,
+  //           source tarballs (crush-VERSION.tar.gz), nightly builds
   all.releases = all.releases.filter(function (rel) {
     let name = rel.name;
-    // Exclude source tarball (crush-VERSION.tar.gz without OS/arch)
-    // Source tarball has exact pattern: repo-version.tar.gz
-    // Binary tarballs have pattern: repo_VERSION_OS_arch.tar.gz
-    let isSourceTarball = name === repo + '-' + rel.version + '.tar.gz';
-
     return (
       (name.endsWith('.tar.gz') || name.endsWith('.zip')) &&
-      !name.includes('.sbom.') &&
-      !name.includes('.sig') &&
-      name !== 'checksums.txt' &&
-      !isSourceTarball &&
-      name.includes('_') && // goreleaser archives always have underscores
-      !name.endsWith('.deb') &&
-      !name.endsWith('.rpm') &&
-      !name.endsWith('.apk') &&
-      !name.endsWith('.pkg.tar.zst')
+      name.includes('_') &&
+      !name.includes('-nightly') &&
+      !name.includes('.sbom.')
     );
   });
 

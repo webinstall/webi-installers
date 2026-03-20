@@ -1,8 +1,10 @@
 #!/bin/sh
+# shellcheck disable=SC2034
+
+set -e
+set -u
 
 __init_crush() {
-    set -e
-    set -u
 
     ##################
     # Install crush #
@@ -58,18 +60,7 @@ __init_crush() {
     }
 
     pkg_done_message() {
-        echo "Installed 'crush' v${WEBI_VERSION}"
-        echo ""
-        echo "  crush --help"
-        echo ""
-        echo "Shell completions were installed to standard locations."
-        echo "Bash and fish completions should work automatically."
-        echo ""
-        echo "For zsh, you may need to add this to your ~/.zshrc:"
-        echo '  fpath=(~/.local/share/zsh/site-functions $fpath)'
-        echo ""
-        echo "A manpage was also installed. Try:"
-        echo "  man crush"
+        echo "Installed 'crush' v${WEBI_VERSION} with shell completions and manpage"
     }
 
 }
