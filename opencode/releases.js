@@ -12,13 +12,15 @@ Releases.latest = async function () {
   // Keep only CLI binaries: opencode-{os}-{arch}.{tar.gz|zip}
   // Exclude: desktop/electron apps, baseline builds, .yml/.yaml manifests,
   //          .json metadata, .dmg/.deb/.rpm packages, .sig signatures
-  // Include: musl builds (webi handles both gnu and musl)
+  // Exclude musl builds: the normalizer maps both musl and gnu to the same
+  // os/arch key, causing duplicates. Prefer gnu (glibc) as the default.
   all.releases = all.releases.filter(function (rel) {
     let name = rel.name;
     return (
       name.match(/^opencode-(darwin|linux|windows)-/) &&
       !name.includes('desktop') &&
       !name.includes('baseline') &&
+      !name.includes('-musl') &&
       (name.endsWith('.tar.gz') || name.endsWith('.zip'))
     );
   });

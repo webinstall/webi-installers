@@ -25,6 +25,7 @@ __init_opencode() {
 
         # mv ./opencode ~/.local/opt/opencode-v1.2.27/bin/opencode
         mv ./opencode "$pkg_src_cmd"
+        chmod a+x "$pkg_src_cmd"
     }
 
     pkg_get_current_version() {
