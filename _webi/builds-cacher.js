@@ -198,6 +198,9 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
   bc._staleAge = 15 * 60 * 1000;
   bc._allFormats = {};
   bc._allTriplets = {};
+  // Per-name lock: serializes cold-cache getPackages so concurrent
+  // callers can't corrupt bc._caches[name] via a transformAndUpdate race.
+  bc._inflight = {};
 
   for (let term of TERMS_META) {
     delete bc.orphanTerms[term];
@@ -317,7 +320,24 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
 
   // Typically a package is organized by release (ex: go has 1.20, 1.21, etc),
   // but we will organize by the build (ex: go1.20-darwin-arm64.tar.gz, etc).
-  bc.getPackages = async function ({ Releases, name, date }) {
+  bc.getPackages = async function (args) {
+    let name = args.name;
+    let warm = bc._caches[name];
+    if (warm) {
+      return _doGetPackages(args);
+    }
+    let inflight = bc._inflight[name];
+    if (inflight) {
+      return inflight;
+    }
+    let p = _doGetPackages(args).finally(function () {
+      delete bc._inflight[name];
+    });
+    bc._inflight[name] = p;
+    return p;
+  };
+
+  async function _doGetPackages({ Releases, name, date }) {
     if (!date) {
       date = new Date();
     }
@@ -410,7 +430,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     });
 
     return projInfo;
-  };
+  }
 
   // Makes sure that packages are updated once an hour, on average
   bc._staleNames = [];
