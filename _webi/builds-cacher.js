@@ -557,7 +557,10 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
       exts.push('.gz');
       exts.push('.sh');
     }
-    exts.push('.git');
+    let hasGit = formats.includes('git') || formats.includes('.git');
+    if (hasGit) {
+      exts.push('.git');
+    }
 
     // Fallbacks
     // (we include everything to bubble an extract error over not found)
