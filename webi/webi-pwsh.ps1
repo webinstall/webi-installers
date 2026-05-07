@@ -194,8 +194,11 @@ Write-Host "${TTask}Installing${TReset} ${TName}${exename}${TReset}"
 Write-Host "    ${TDim}Fetching install script ...${TReset}"
 
 $PKG_URL = "$Env:WEBI_HOST/api/installers/$exename.ps1"
-# TODO detect formats
-$UrlParams = "formats=zip,exe,tar,git&libc=msvc"
+$DetectedFormats = @("zip", "exe", "tar")
+if (Get-Command git -ErrorAction SilentlyContinue) { $DetectedFormats += "git" }
+if (Get-Command zstd -ErrorAction SilentlyContinue) { $DetectedFormats += "zst" }
+if (Get-Command 7z -ErrorAction SilentlyContinue) { $DetectedFormats += "7z" }
+$UrlParams = "formats=$($DetectedFormats -join ',')&libc=msvc"
 $PkgInstallPwsh = "$HOME\.local\tmp\$exename.install.ps1"
 Invoke-DownloadUrl -Force -URL $PKG_URL -Params $UrlParams -Path $PkgInstallPwsh
 

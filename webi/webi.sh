@@ -40,6 +40,9 @@ __webi_main() {
     if [ -n "$(command -v git)" ]; then
         my_ext="git,$my_ext"
     fi
+    if [ -n "$(command -v unzstd)" ] || [ -n "$(command -v zstd)" ]; then
+        my_ext="zst,$my_ext"
+    fi
     if [ -n "$(command -v unxz)" ]; then
         my_ext="xz,$my_ext"
     fi
