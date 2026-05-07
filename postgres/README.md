@@ -5,6 +5,8 @@ tagline: |
   PostgreSQL: The World's Most Advanced Open Source Relational Database.
 ---
 
+TODO
+
 To update or switch versions, run `webi postgres@stable` (or `@v10`, `@beta`,
 etc).
 
@@ -47,7 +49,7 @@ To login: \
 # as Postgres admin
 psql "postgres://postgres:postgres@localhost:5432/postgres"
 
-# as remote user
+# as remote user (over standard TLS and SNI, with ALPN set to 'postgresql')
 psql "postgres://db-xxxx@pg-1.example.com:5432/db-xxxx?sslmode=require&sslnegotiation=direct"
 ```
 
