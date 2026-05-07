@@ -3,13 +3,16 @@
 var BuildsCacher = module.exports;
 
 let Fs = require('node:fs/promises');
+let Os = require('node:os');
 let Path = require('node:path');
+
+let LEGACY_CACHE_DIR = Path.join(Os.homedir(), '.cache/webi/legacy');
 
 let HostTargets = require('./build-classifier/host-targets.js');
 let Lexver = require('./build-classifier/lexver.js');
 let Triplet = require('./build-classifier/triplet.js');
 
-var ALIAS_RE = /^alias: (\w+)$/m;
+var ALIAS_RE = /^alias: ([\w.-]+)$/m;
 
 var LEGACY_ARCH_MAP = {
   '*': 'ANYARCH',
@@ -126,61 +129,8 @@ async function readFirstBytes(path) {
   return str;
 }
 
-let promises = {};
-async function getLatestBuilds(Releases, installersDir, cacheDir, name, date) {
-  console.info(`[INFO] getLatestBuilds: ${name}`);
-
-  if (!Releases) {
-    Releases = require(`${installersDir}/${name}/releases.js`);
-  }
-  // TODO update all releases files with module.exports.xxxx = 'foo';
-  if (!Releases.latest) {
-    Releases.latest = Releases;
-  }
-
-  let id = `${cacheDir}/${name}`;
-  if (!promises[id]) {
-    promises[id] = Promise.resolve();
-  }
-
-  promises[id] = promises[id].then(async function () {
-    return await getLatestBuildsInner(Releases, cacheDir, name, date);
-  });
-
-  return await promises[id];
-}
-
-async function getLatestBuildsInner(Releases, cacheDir, name, date) {
-  let data = await Releases.latest();
-
-  if (!date) {
-    date = new Date();
-  }
-  let isoDate = date.toISOString();
-  let yearMonth = isoDate.slice(0, 7);
-
-  // TODO hash file
-  let dataFile = `${cacheDir}/${yearMonth}/${name}.json`;
-  // TODO fsstat releases.js vs require-ing time as well
-  let tsFile = `${cacheDir}/${yearMonth}/${name}.updated.txt`;
-
-  let dirPath = Path.dirname(dataFile);
-  await Fs.mkdir(dirPath, { recursive: true });
-
-  let json = JSON.stringify(data, null, 2);
-  await Fs.writeFile(dataFile, json, 'utf8');
-
-  let seconds = date.valueOf();
-  let ms = seconds / 1000;
-  let msStr = ms.toFixed(3);
-  await Fs.writeFile(tsFile, msStr, 'utf8');
-
-  return data;
-}
-
-BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
+BuildsCacher.create = function ({ ALL_TERMS, installers }) {
   let installersDir = installers;
-  let cacheDir = caches;
 
   if (!ALL_TERMS) {
     ALL_TERMS = Triplet.TERMS_PRIMARY_MAP;
@@ -195,7 +145,6 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
   bc._triplets = {};
   bc._targetsByBuildIdCache = {};
   bc._caches = {};
-  bc._staleAge = 15 * 60 * 1000;
   bc._allFormats = {};
   bc._allTriplets = {};
   // Per-name lock: serializes cold-cache getPackages so concurrent
@@ -219,19 +168,6 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     let entries = await Fs.readdir(installersDir, { withFileTypes: true });
     for (let entry of entries) {
       let meta = await bc.getProjectTypeByEntry(entry);
-      if (meta.type === 'not_found') {
-        let err = meta.detail;
-        console.error('');
-        console.error('PROBLEM');
-        console.error(`    ${err.message}`);
-        console.error('');
-        console.error('SOLUTION');
-        console.error('    npm clean-install');
-        console.error('');
-        throw new Error(
-          '[SANITY FAIL] should never have missing modules in prod',
-        );
-      }
       dirs[meta.type][entry.name] = meta.detail;
     }
 
@@ -300,19 +236,16 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
       return { type: 'alias', detail: link };
     }
 
-    let releasesPath = Path.join(path, 'releases.js');
-    try {
-      void require(releasesPath);
-    } catch (err) {
-      if (err.code !== 'MODULE_NOT_FOUND') {
-        return { type: 'errors', detail: err };
-      }
-
-      if (err.message.includes(`Cannot find module '${releasesPath}'`)) {
-        return { type: 'selfhosted', detail: true };
-      }
-
-      return { type: 'not_found', detail: err };
+    let cacheFile = `${LEGACY_CACHE_DIR}/${entry.name}.json`;
+    let hasCacheFile = await Fs.access(cacheFile)
+      .then(function () {
+        return true;
+      })
+      .catch(function () {
+        return false;
+      });
+    if (!hasCacheFile) {
+      return { type: 'selfhosted', detail: true };
     }
 
     return { type: 'valid', detail: true };
@@ -337,14 +270,9 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     return p;
   };
 
-  async function _doGetPackages({ Releases, name, date }) {
-    if (!date) {
-      date = new Date();
-    }
-    let isoDate = date.toISOString();
-    let yearMonth = isoDate.slice(0, 7);
-    let dataFile = `${cacheDir}/${yearMonth}/${name}.json`;
-    let tsFile = `${cacheDir}/${yearMonth}/${name}.updated.txt`;
+  async function _doGetPackages({ name }) {
+    let dataFile = `${LEGACY_CACHE_DIR}/${name}.json`;
+    let tsFile = `${LEGACY_CACHE_DIR}/${name}.updated.txt`;
 
     let tsDate;
     {
@@ -398,7 +326,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
       }
     }
     if (!projInfo) {
-      projInfo = await getLatestBuilds(Releases, installersDir, cacheDir, name);
+      return meta;
     }
     let latestProjInfo = await BuildsCacher.transformAndUpdate(
       name,
@@ -409,63 +337,8 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     );
     bc._caches[name] = latestProjInfo;
 
-    process.nextTick(async function () {
-      let now = date.valueOf();
-      let age = now - projInfo.updated;
-
-      let fresh = age < bc._staleAge;
-      if (fresh) {
-        return;
-      }
-
-      projInfo = await getLatestBuilds(Releases, installersDir, cacheDir, name);
-      let latestProjInfo = BuildsCacher.transformAndUpdate(
-        name,
-        projInfo,
-        meta,
-        date,
-        bc,
-      );
-      bc._caches[name] = latestProjInfo;
-    });
-
-    return projInfo;
+    return latestProjInfo;
   }
-
-  // Makes sure that packages are updated once an hour, on average
-  bc._staleNames = [];
-  bc._freshenTimeout = null;
-  bc.freshenRandomPackage = async function (minDelay) {
-    if (!minDelay) {
-      minDelay = 15 * 1000;
-    }
-
-    if (bc._staleNames.length === 0) {
-      let dirs = await bc.getProjectsByType();
-      bc._staleNames = Object.keys(dirs.valid);
-      bc._staleNames.sort(function () {
-        return 0.5 - Math.random();
-      });
-    }
-
-    let name = bc._staleNames.pop();
-    void (await bc.getPackages({
-      //Releases: Releases,
-      name: name,
-      date: new Date(),
-    }));
-    console.info(`[INFO] freshenRandomPackage: ${name}`);
-
-    let hour = 60 * 60 * 1000;
-    let delay = minDelay;
-    let spread = hour / bc._staleNames.length;
-    let seed = Math.random();
-    delay += seed * spread;
-
-    clearTimeout(bc._freshenTimeout);
-    bc._freshenTimeout = setTimeout(bc.freshenRandomPackage, delay);
-    bc._freshenTimeout.unref();
-  };
 
   /**
    * Given a list of acceptable formats, get the sorted list of of formats.
@@ -669,29 +542,19 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
       return null;
     }
 
-    for (let _triplet of triplets) {
-      let targetReleases = projInfo.releasesByTriplet[_triplet];
-      if (!targetReleases) {
-        continue;
-      }
+    // Version-first iteration, not triplet-first: take the newest
+    // version even when its only build lives in a fallback triplet
+    // (e.g. serviceman v1.0.1 only exists at posix_2017-ANYARCH-none).
+    for (let lexver of projInfo.lexvers) {
+      let ver = projInfo.lexversMap[lexver] || lexver;
 
-      let versions = Object.keys(targetReleases);
-      //console.log('dbg: targetRelease versions', versions);
-      let lexvers = [];
-      for (let version of versions) {
-        let lexPrefix = Lexver.parseVersion(version);
-        lexvers.push(lexPrefix);
-      }
-      lexvers.sort();
-      lexvers.reverse();
-      // TODO get the other matchInfo props
+      for (let _triplet of triplets) {
+        let targetReleases = projInfo.releasesByTriplet[_triplet];
+        if (!targetReleases) {
+          continue;
+        }
 
-      // Make sure that these releases are the expected version
-      // (ex: jq1.7 => darwin-arm64-libc, jq1.6 => darwin-x86_64-libc)
-      for (let matchver of lexvers) {
-        let ver = projInfo.lexversMap[matchver] || matchver;
         let packages = targetReleases[ver];
-        //console.log('dbg: packages', packages);
         if (!packages) {
           continue;
         }
@@ -761,6 +624,13 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
     let libcs = waterfall[hostTarget.libc] ||
       HostTargets.WATERFALL.ANYOS[hostTarget.libc] || [hostTarget.libc];
 
+    // Extend the glibc-host waterfall: the table only lists [none, libc]
+    // but Rust projects (bat, rg) and node ship libc='gnu' builds, and
+    // static musl builds also run on glibc hosts.
+    if (hostTarget.libc === 'libc' && !libcs.includes('gnu')) {
+      libcs = ['none', 'gnu', 'musl', 'libc'];
+    }
+
     for (let os of oses) {
       for (let arch of arches) {
         for (let libc of libcs) {
@@ -788,10 +658,17 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
 };
 
 BuildsCacher._classify = function (bc, projInfo, build) {
-  /* jshint maxcomplexity: 25 */
-  let maybeInstallable = Triplet.maybeInstallable(projInfo, build);
-  if (!maybeInstallable) {
-    return null;
+  /* jshint maxcomplexity: 30 */
+  // Cache entries arrive pre-classified (os/arch/libc/ext set). Skip
+  // maybeInstallable for those — it false-rejects names ending in a
+  // version tag (`serviceman-v1.0.1`, `v1.0.1.zip`).
+  let cacheClassified =
+    build.os && build.arch && build.libc && build.ext;
+  if (!cacheClassified) {
+    let maybeInstallable = Triplet.maybeInstallable(projInfo, build);
+    if (!maybeInstallable) {
+      return null;
+    }
   }
 
   if (LEGACY_OS_MAP[build.os]) {
@@ -855,16 +732,26 @@ BuildsCacher._classify = function (bc, projInfo, build) {
     bc.unknownTerms[term] = true;
   }
 
-  // {NAME}.windows.x86_64v2.musl.exe
-  //     windows-x86_64_v2-musl
+  // Skip termsToTarget for cache-classified entries: it false-flags
+  // e.g. .git URLs as os=ANYOS while the cache says os=posix_2017,
+  // and the mismatch check throws.
   target = { triplet: '' };
-  try {
-    void Triplet.termsToTarget(target, projInfo, build, terms);
-  } catch (e) {
-    console.error(`PACKAGE FORMAT CHANGE for '${projInfo.name}':`);
-    console.error(e.message);
-    console.error(build);
-    return null;
+  if (cacheClassified) {
+    target.os = build.os;
+    target.arch = build.arch;
+    target.libc = build.libc;
+    target.vendor = build.vendor || 'unknown';
+    target.android = false;
+    target.unknownTerms = [];
+  } else {
+    try {
+      void Triplet.termsToTarget(target, projInfo, build, terms);
+    } catch (e) {
+      console.error(`PACKAGE FORMAT CHANGE for '${projInfo.name}':`);
+      console.error(e.message);
+      console.error(build);
+      return null;
+    }
   }
 
   target.triplet = `${target.arch}-${target.vendor}-${target.os}-${target.libc}`;

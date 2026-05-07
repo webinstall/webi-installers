@@ -15,11 +15,8 @@ let bc = BuildsCacher.create({
   caches: CACHE_DIR,
   installers: INSTALLERS_DIR,
 });
-bc.freshenRandomPackage(600 * 1000);
 
 Builds.init = async function () {
-  bc.freshenRandomPackage(600 * 1000);
-
   let dirs = await bc.getProjectsByType();
   let projNames = Object.keys(dirs.valid);
 
