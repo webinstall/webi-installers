@@ -3,6 +3,16 @@ install-*.sh
 install-*.bat
 install-*.ps1
 
+# Go build outputs (from go run/build in repo root)
+/classify
+/e2etest
+/fetchraw
+/inspect
+/uaparse
+/webicached
+/zigtest
+/distributables.csv
+
 # local config
 .env.*
 *.env
@@ -18,7 +28,13 @@ node_modules/
 *.bak
 *.bak.*
 
+# agent session files
+agents/
+
 # other
 .DS_Store
 desktop.ini
 .directory
+LIVE_cache
+/webid
+bin/
