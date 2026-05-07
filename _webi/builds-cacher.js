@@ -742,19 +742,22 @@ BuildsCacher.create = function ({ ALL_TERMS, installers, caches }) {
       return triplets;
     }
 
+    // Prefer platform-specific matches over ANYOS/ANYARCH fallbacks.
+    // This ensures e.g. darwin-aarch64-none matches before
+    // ANYOS-ANYARCH-none (.git source URLs from old releases).
     let oses = [];
     if (hostTarget.os === 'windows') {
-      oses = ['ANYOS', 'windows'];
+      oses = ['windows', 'ANYOS'];
     } else if (hostTarget.os === 'android') {
-      oses = ['ANYOS', 'posix_2017', 'posix_2024', 'android', 'linux'];
+      oses = ['android', 'linux', 'posix_2017', 'posix_2024', 'ANYOS'];
     } else {
-      oses = ['ANYOS', 'posix_2017', 'posix_2024', hostTarget.os];
+      oses = [hostTarget.os, 'posix_2017', 'posix_2024', 'ANYOS'];
     }
 
     let waterfall = HostTargets.WATERFALL[hostTarget.os] || {};
     let arches = waterfall[hostTarget.arch] ||
       HostTargets.WATERFALL.ANYOS[hostTarget.arch] || [hostTarget.arch];
-    arches = ['ANYARCH'].concat(arches);
+    arches = arches.concat(['ANYARCH']);
     let libcs = waterfall[hostTarget.libc] ||
       HostTargets.WATERFALL.ANYOS[hostTarget.libc] || [hostTarget.libc];
 
