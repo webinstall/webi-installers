@@ -24,7 +24,6 @@ Builds.init = async function () {
   await Parallel.run(parallel, projNames, getAll);
   async function getAll(name) {
     void (await bc.getPackages({
-      //Releases: Releases,
       name: name,
       date: new Date(),
     }));

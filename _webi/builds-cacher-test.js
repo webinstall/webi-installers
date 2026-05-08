@@ -13,7 +13,6 @@ async function main() {
     caches: CACHE_DIR,
     installers: INSTALLERS_DIR,
   });
-  bc.freshenRandomPackage(600 * 1000);
 
   // let dirs = await bc.getProjectsByType();
   // let projNames = Object.keys(dirs.valid);

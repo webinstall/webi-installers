@@ -1,10 +1,13 @@
 'use strict';
 
+let Fs = require('node:fs/promises');
+let Os = require('node:os');
 let Path = require('node:path');
 
-// let Builds = require('./builds.js');
 let BuildsCacher = require('./builds-cacher.js');
 let Triplet = require('./build-classifier/triplet.js');
+
+let LEGACY_CACHE_DIR = Path.join(Os.homedir(), '.cache/webi/legacy');
 
 async function main() {
   let projName = process.argv[2];
@@ -36,16 +39,11 @@ async function main() {
     arches: [],
     libcs: [],
     formats: [],
-    // TODO channels: [],
   };
 
-  let installersDir = Path.join(__dirname, '..');
-  let Releases = require(`${installersDir}/${projName}/releases.js`);
-  if (!Releases.latest) {
-    Releases.latest = Releases;
-  }
-
-  let projInfo = await Releases.latest();
+  let dataFile = Path.join(LEGACY_CACHE_DIR, `${projName}.json`);
+  let json = await Fs.readFile(dataFile, 'utf8');
+  let projInfo = JSON.parse(json);
 
   // let packages = await Builds.getPackage({ name: projName });
   // console.log(packages);
@@ -70,9 +68,11 @@ async function main() {
   console.log(`[DEBUG] transformed`);
   let sample = transformed.packages.slice(0, 20);
   console.log('packages:', sample, ':packages');
+  let firstTriplet = Object.keys(transformed.releasesByTriplet)[0];
+  let firstVersion = transformed.versions[0];
   console.log(
-    'releasesByTriplet:',
-    transformed.releasesByTriplet['linux-x86_64-none'][transformed.versions[0]],
+    `releasesByTriplet[${firstTriplet}][${firstVersion}]:`,
+    transformed.releasesByTriplet[firstTriplet]?.[firstVersion],
     ':releasesByTriplet',
   );
   console.log('versions:', transformed.versions, ':versions');

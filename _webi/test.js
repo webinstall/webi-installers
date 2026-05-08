@@ -49,7 +49,7 @@ var baseurl = 'https://webinstall.dev';
 var maxLen = 0;
 console.info('');
 console.info('Has the necessary files?');
-['README.md', 'releases.js', 'install.sh', 'install.ps1']
+['README.md', 'install.sh', 'install.ps1']
   .map(function (node) {
     maxLen = Math.max(maxLen, node.length);
     return node;

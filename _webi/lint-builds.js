@@ -139,8 +139,6 @@ async function main() {
     console.info('');
   }
 
-  bc.freshenRandomPackage(600 * 1000);
-
   let rows = [];
   let triples = [];
   let valids = Object.keys(dirs.valid);
