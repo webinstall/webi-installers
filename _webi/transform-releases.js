@@ -112,7 +112,10 @@ async function filterReleases(
       }
     }
 
-    if (rel.libc !== 'none') {
+    // libc='libc' is serve-releases.js's default when the caller
+    // didn't pin one — treat it as 'no preference', not a filter.
+    let isMeaningfulLibc = libc && libc !== 'libc' && rel.libc !== 'none';
+    if (isMeaningfulLibc) {
       let releaseRequiresMusl = rel.libc === 'musl';
       // goal: handle non-glibc (Alpine / Docker / musl)
       let osHasMusl = libc === 'musl';
