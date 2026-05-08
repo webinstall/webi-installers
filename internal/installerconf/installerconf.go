@@ -162,6 +162,8 @@ func Read(path string) (*Conf, error) {
 	c := &Conf{}
 
 	// Infer source from primary key, falling back to explicit "source".
+	// When both github_releases and source are set, parse the repo ref
+	// from github_releases but use the explicit source for classification.
 	switch {
 	// GitHub binary releases.
 	case raw["github_releases"] != "":
@@ -211,6 +213,13 @@ func Read(path string) (*Conf, error) {
 		c.Repo = raw["hashicorp_product"]
 
 	default:
+	}
+
+	// Explicit "source" overrides the inferred source when both are present.
+	// This lets packages like ffmpeg use github_releases for fetching but
+	// a custom classifier for classification.
+	if raw["source"] != "" && c.Source != "" {
+		c.Source = raw["source"]
 	}
 
 	// git_url can appear alongside any source type (e.g. github_sources)
