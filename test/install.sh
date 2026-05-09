@@ -10,6 +10,7 @@ __rmrf_local() {
                 arc \
                 archiver \
                 awless \
+                basecamp-cli \
                 bat \
                 btop \
                 caddy \
@@ -107,6 +108,7 @@ __rmrf_local() {
                 arc \
                 archiver \
                 awless \
+                basecamp \
                 bat \
                 caddy \
                 chromedriver \
@@ -206,6 +208,7 @@ __test() {
         arc \
         archiver \
         awless \
+        basecamp-cli \
         bat \
         caddy \
         chromedriver \
