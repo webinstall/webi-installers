@@ -15,6 +15,7 @@ __bootstrap_webi() {
     # TODO not sure if BUILD is the best name for this
     #WEBI_BUILD=
     #WEBI_GIT_TAG=
+    #WEBI_GIT_COMMIT_HASH=
     #WEBI_LTS=
     #WEBI_CHANNEL=
     #WEBI_EXT=
