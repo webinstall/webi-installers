@@ -25,6 +25,23 @@ __init_goreleaser() {
 
         # mv ./goreleaser-*/goreleaser ~/.local/opt/goreleaser-v1.21.2/bin/goreleaser
         mv ./goreleaser "$pkg_src_cmd"
+
+        # install completions if present (completions/{goreleaser.bash,.fish,.zsh})
+        if test -d ./completions; then
+            mkdir -p "$pkg_src_dir/share/bash-completion/completions"
+            mkdir -p "$pkg_src_dir/share/fish/vendor_completions.d"
+            mkdir -p "$pkg_src_dir/share/zsh/site-functions"
+            mv ./completions/goreleaser.bash "$pkg_src_dir/share/bash-completion/completions/goreleaser" 2>/dev/null || true
+            mv ./completions/goreleaser.fish "$pkg_src_dir/share/fish/vendor_completions.d/goreleaser.fish" 2>/dev/null || true
+            mv ./completions/goreleaser.zsh "$pkg_src_dir/share/zsh/site-functions/_goreleaser" 2>/dev/null || true
+        fi
+
+        # install man page if present (manpages/goreleaser.1.gz)
+        if test -d ./manpages; then
+            mkdir -p "$pkg_src_dir/share/man/man1"
+            mv ./manpages/*.1.gz "$pkg_src_dir/share/man/man1/" 2>/dev/null || true
+            mv ./manpages/*.1 "$pkg_src_dir/share/man/man1/" 2>/dev/null || true
+        fi
     }
 
     # pkg_get_current_version is recommended, but (soon) not required

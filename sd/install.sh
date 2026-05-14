@@ -29,9 +29,21 @@ __init_sd() {
             # ~/.local/opt/sd-v0.99.9/bin
             mkdir -p "$(dirname "$pkg_src_cmd")"
             mv sd-*/sd "$pkg_src_cmd"
+
+            # install completions if present (completions/{sd.bash,sd.fish,_sd})
+            if test -d sd-*/completions; then
+                mkdir -p "$pkg_src_dir/share/bash-completion/completions"
+                mkdir -p "$pkg_src_dir/share/fish/vendor_completions.d"
+                mkdir -p "$pkg_src_dir/share/zsh/site-functions"
+                mv sd-*/completions/sd.bash "$pkg_src_dir/share/bash-completion/completions/sd" 2>/dev/null || true
+                mv sd-*/completions/sd.fish "$pkg_src_dir/share/fish/vendor_completions.d/sd.fish" 2>/dev/null || true
+                mv sd-*/completions/_sd "$pkg_src_dir/share/zsh/site-functions/_sd" 2>/dev/null || true
+            fi
+
+            # install man page if present
             if test -f sd-*/sd.1; then
                 mkdir -p "$pkg_src_dir/share/man/man1"
-                mv sd-*/sd.1 "$pkg_src_dir/share/man/man1"
+                mv sd-*/sd.1 "$pkg_src_dir/share/man/man1/sd.1"
             fi
         elif test -d sd-*/bin; then
             mv sd-* "$pkg_src_dir"

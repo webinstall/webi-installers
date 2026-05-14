@@ -26,6 +26,22 @@ __init_rg() {
         # mv ./ripgrep-*/rg ~/.local/opt/rg-v12.1.1/bin/rg
         mv ./ripgrep-*/rg "$pkg_src_cmd"
 
+        # install completions if present (complete/_rg, complete/rg.bash, complete/rg.fish)
+        if test -d ./ripgrep-*/complete; then
+            mkdir -p "$pkg_src_dir/share/bash-completion/completions"
+            mkdir -p "$pkg_src_dir/share/fish/vendor_completions.d"
+            mkdir -p "$pkg_src_dir/share/zsh/site-functions"
+            mv ./ripgrep-*/complete/rg.bash "$pkg_src_dir/share/bash-completion/completions/rg" 2>/dev/null || true
+            mv ./ripgrep-*/complete/rg.fish "$pkg_src_dir/share/fish/vendor_completions.d/rg.fish" 2>/dev/null || true
+            mv ./ripgrep-*/complete/_rg "$pkg_src_dir/share/zsh/site-functions/_rg" 2>/dev/null || true
+        fi
+
+        # install man page if present
+        if test -f ./ripgrep-*/doc/rg.1; then
+            mkdir -p "$pkg_src_dir/share/man/man1"
+            mv ./ripgrep-*/doc/rg.1 "$pkg_src_dir/share/man/man1/rg.1"
+        fi
+
         if ! [ -e ~/.ripgreprc ]; then
             touch ~/.ripgreprc
         fi

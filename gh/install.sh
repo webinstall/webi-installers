@@ -25,6 +25,12 @@ __init_gh() {
 
         # mv ./gh-*/gh ~/.local/opt/gh-v0.99.9/bin/gh
         mv ./"$pkg_cmd_name"*/bin/gh "$pkg_src_cmd"
+
+        # install man pages if present
+        if test -d ./"$pkg_cmd_name"*/share/man; then
+            mkdir -p "$pkg_src_dir/share"
+            mv ./"$pkg_cmd_name"*/share/man "$pkg_src_dir/share/man"
+        fi
     }
 
     # pkg_get_current_version is recommended, but (soon) not required
