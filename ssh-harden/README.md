@@ -1,6 +1,6 @@
 ---
 title: SSH Prohibit Password
-homepage: https://webinstall.dev/ssh-prohibit-password
+homepage: https://webinstall.dev/sshd-prohibit-password
 tagline: |
   SSH Prohibit Password: Because friends don't let friends ssh with passwords
 linux: true
@@ -8,9 +8,8 @@ linux: true
 
 ## Cheat Sheet
 
-> Will check if your system This will check if your Modern SSH deployments are
-> key-only and don't allow root login. However, there's a lot of legacy systems
-> out there.
+> Modern SSH deployments are key-only and don't allow root login. However,
+> there's a lot of legacy systems out there.
 
 `ssh-harden` will
 

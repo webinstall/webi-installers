@@ -70,7 +70,7 @@ main() {
         echo ""
         echo "    'ssh-adduser' no longer checks or hardens /etc/ssh/sshd_config"
         echo ""
-        echo "    Run 'sshd-probihit-password' to secure /etc/ssh/sshd_config"
+        echo "    Run 'sshd-prohibit-password' to secure /etc/ssh/sshd_config"
         echo ""
     fi
 

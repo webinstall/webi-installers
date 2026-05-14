@@ -19,9 +19,8 @@ install:
 
 ## Cheat Sheet
 
-> Will check if your system This will check if your Modern SSH deployments are
-> key-only and don't allow root login. However, there's a lot of legacy systems
-> out there.
+> Modern SSH deployments are key-only and don't allow root login. However,
+> there's a lot of legacy systems out there.
 
 `sshd-prohibit-password` will inspect `/etc/ssh/sshd_config` and
 
