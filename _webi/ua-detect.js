@@ -38,10 +38,10 @@ function getOs(ua) {
     // It's the year of the Linux Desktop!
     // See also http://www.mslinux.org/
     // 'linux' must be tested before 'Microsoft' because WSL
-    // (TODO: does this affect cygwin / msysgit?)
     return 'linux';
-  } else if (/^ms$|Microsoft|Windows|win32|win|PowerShell/i.test(ua)) {
+  } else if (/^ms$|Microsoft|Windows|win32|win|PowerShell|CYGWIN|MINGW/i.test(ua)) {
     // 'win' must be tested after 'darwin'
+    // CYGWIN_NT-* and MINGW64_NT-* are Windows hosts running Cygwin/Git Bash
     return 'windows';
   } else if (/Linux|curl|wget/i.test(ua)) {
     // test 'linux' again, after 'win'
