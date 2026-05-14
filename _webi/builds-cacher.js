@@ -621,13 +621,15 @@ BuildsCacher.create = function ({ ALL_TERMS, installers }) {
     let arches = waterfall[hostTarget.arch] ||
       HostTargets.WATERFALL.ANYOS[hostTarget.arch] || [hostTarget.arch];
     arches = arches.concat(['ANYARCH']);
-    let libcs = waterfall[hostTarget.libc] ||
-      HostTargets.WATERFALL.ANYOS[hostTarget.libc] || [hostTarget.libc];
+    // termsToTarget omits libc for plain UAs; 'libc' → waterfall ['none','libc',...]
+    let libc = hostTarget.libc || 'libc';
+    let libcs = waterfall[libc] ||
+      HostTargets.WATERFALL.ANYOS[libc] || [libc];
 
     // Extend the glibc-host waterfall: the table only lists [none, libc]
     // but Rust projects (bat, rg) and node ship libc='gnu' builds, and
     // static musl builds also run on glibc hosts.
-    if (hostTarget.libc === 'libc' && !libcs.includes('gnu')) {
+    if (libc === 'libc' && !libcs.includes('gnu')) {
       libcs = ['none', 'gnu', 'musl', 'libc'];
     }
 
