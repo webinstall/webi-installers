@@ -42,8 +42,9 @@ type Params struct {
 	Minor     string
 	Patch     string
 	Build     string
-	GitTag    string
-	GitBranch string
+	GitTag        string
+	GitBranch     string
+	GitCommitHash string
 	LTS       string // "true" or "false"
 	Channel   string
 	Ext       string // archive extension (e.g. "tar.gz", "zip")
@@ -106,6 +107,7 @@ func Bash(tplPath, installersDir, pkgName string, p Params) (string, error) {
 		{"WEBI_BUILD", p.Build},
 		{"WEBI_GIT_BRANCH", p.GitBranch},
 		{"WEBI_GIT_TAG", p.GitTag},
+		{"WEBI_GIT_COMMIT_HASH", p.GitCommitHash},
 		{"WEBI_LTS", p.LTS},
 		{"WEBI_CHANNEL", p.Channel},
 		{"WEBI_EXT", p.Ext},
@@ -160,6 +162,7 @@ func PowerShell(tplPath, installersDir, pkgName string, p Params) (string, error
 		{"WEBI_HOST", p.Host},
 		{"WEBI_VERSION", p.Version},
 		{"WEBI_GIT_TAG", p.GitTag},
+		{"WEBI_GIT_COMMIT_HASH", p.GitCommitHash},
 		{"WEBI_PKG_URL", p.PkgURL},
 		{"WEBI_PKG_FILE", p.PkgFile},
 		{"WEBI_PKG_PATHNAME", p.PkgFile},
