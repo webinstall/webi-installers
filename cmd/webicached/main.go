@@ -217,11 +217,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("discover: %v", err)
 	}
+	nameSet := make(map[string]bool, len(filterPkgs))
+	for _, a := range filterPkgs {
+		nameSet[a] = true
+	}
 	if len(filterPkgs) > 0 {
-		nameSet := make(map[string]bool, len(filterPkgs))
-		for _, a := range filterPkgs {
-			nameSet[a] = true
-		}
 		var filtered []pkgConf
 		for _, p := range packages {
 			if nameSet[p.name] {
@@ -240,6 +240,28 @@ func main() {
 
 	log.Printf("refreshing %d packages, interval %s, batch size 20 (ctrl-c to stop)", len(real), cfg.interval)
 	for {
+		// Rescan the conf dir so newly added releases.conf files are picked up
+		// without a restart. Unknown source types are logged and skipped by
+		// fetchRaw/classifySource, so this is safe for partially-supported confs.
+		if discovered, err := discover(wc.ConfDir); err != nil {
+			log.Printf("rescan: %v", err)
+		} else {
+			known := make(map[string]bool, len(real))
+			for _, p := range real {
+				known[p.name] = true
+			}
+			for _, p := range discovered {
+				if p.conf.AliasOf != "" || known[p.name] {
+					continue
+				}
+				if len(filterPkgs) > 0 && !nameSet[p.name] {
+					continue
+				}
+				log.Printf("discovered new package: %s (source=%s)", p.name, p.conf.Source)
+				real = append(real, p)
+			}
+		}
+
 		stale := wc.stalest(real)
 		if len(stale) == 0 {
 			log.Printf("all packages fresh, sleeping %s", cfg.interval)
