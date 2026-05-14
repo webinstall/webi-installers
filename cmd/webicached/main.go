@@ -238,29 +238,40 @@ func main() {
 		}
 	}
 
+	// rescanNew appends any conf files added since the last scan.
+	// Returns true when at least one new package was added so the caller
+	// can restart the batch loop and process new packages immediately.
+	rescanNew := func() bool {
+		discovered, err := discover(wc.ConfDir)
+		if err != nil {
+			log.Printf("rescan: %v", err)
+			return false
+		}
+		known := make(map[string]bool, len(real))
+		for _, p := range real {
+			known[p.name] = true
+		}
+		added := false
+		for _, p := range discovered {
+			if p.conf.AliasOf != "" || known[p.name] {
+				continue
+			}
+			if len(filterPkgs) > 0 && !nameSet[p.name] {
+				continue
+			}
+			log.Printf("discovered new package: %s (source=%s)", p.name, p.conf.Source)
+			real = append(real, p)
+			added = true
+		}
+		return added
+	}
+
 	log.Printf("refreshing %d packages, interval %s, batch size 20 (ctrl-c to stop)", len(real), cfg.interval)
 	for {
-		// Rescan the conf dir so newly added releases.conf files are picked up
-		// without a restart. Unknown source types are logged and skipped by
-		// fetchRaw/classifySource, so this is safe for partially-supported confs.
-		if discovered, err := discover(wc.ConfDir); err != nil {
-			log.Printf("rescan: %v", err)
-		} else {
-			known := make(map[string]bool, len(real))
-			for _, p := range real {
-				known[p.name] = true
-			}
-			for _, p := range discovered {
-				if p.conf.AliasOf != "" || known[p.name] {
-					continue
-				}
-				if len(filterPkgs) > 0 && !nameSet[p.name] {
-					continue
-				}
-				log.Printf("discovered new package: %s (source=%s)", p.name, p.conf.Source)
-				real = append(real, p)
-			}
-		}
+		// Rescan before computing staleness so newly added conf files are
+		// included immediately. New packages have a zero timestamp and sort
+		// to the front of the stale list, so they are processed next.
+		rescanNew()
 
 		stale := wc.stalest(real)
 		if len(stale) == 0 {
@@ -285,6 +296,10 @@ func main() {
 			}
 			cancel()
 			time.Sleep(cfg.interval)
+			// Rescan mid-batch so new packages preempt remaining batch items.
+			if rescanNew() {
+				break
+			}
 		}
 	}
 }
