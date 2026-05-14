@@ -25,22 +25,30 @@ __init_ollama() {
         # ~/.local/opt/
         mkdir -p "$(dirname "${pkg_src_dir}")"
 
-        if test -d ./ollama-*/; then
-            # the de facto way (in case it's supported in the future)
-            # mv ./ollama-*/ ~/.local/opt/ollama-v3.27.0/
-            mv ./ollama-*/ "${pkg_src}"
-        elif test -d ./bin; then
-            # how linux is presently done
+        if test -d ./bin; then
+            # linux tar.zst layout: bin/ollama + lib/ollama/
             mkdir -p "${pkg_src_dir}"
-            mv ./bin "${pkg_src_dir}"
-            if test -f ./lib; then
-                mv ./lib "${pkg_src_dir}"
+            mv ./bin "${pkg_src_dir}/bin"
+            if test -d ./lib; then
+                mv ./lib "${pkg_src_dir}/lib"
             fi
-        else
-            # how macOS is presently done
+        elif test -d ./Ollama.app; then
+            # macOS zip layout: extract CLI from Ollama.app bundle
+            mkdir -p "${pkg_src_dir}/bin"
+            mv ./Ollama.app/Contents/Resources/ollama "${pkg_src_cmd}"
+            # install shared libs for GPU acceleration
+            mkdir -p "${pkg_src_dir}/lib/ollama"
+            mv ./Ollama.app/Contents/Resources/libggml-*.so "${pkg_src_dir}/lib/ollama/" 2>/dev/null || true
+            mv ./Ollama.app/Contents/Resources/libggml-*.dylib "${pkg_src_dir}/lib/ollama/" 2>/dev/null || true
+            mv ./Ollama.app/Contents/Resources/libmlx*.dylib "${pkg_src_dir}/lib/ollama/" 2>/dev/null || true
+            mv ./Ollama.app/Contents/Resources/mlx.metallib "${pkg_src_dir}/lib/ollama/" 2>/dev/null || true
+        elif test -f ./ollama-*; then
+            # older macOS/linux bare binary format
             mkdir -p "$(dirname "${pkg_src_cmd}")"
             mv ./ollama-* "${pkg_src_cmd}"
         fi
+
+        chmod a+x "${pkg_src_cmd}"
 
         # remove previous location
         if test -f ~/.local/bin/ollama; then

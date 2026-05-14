@@ -22,11 +22,11 @@ __init_sd() {
     pkg_install() {
         # mv ./sd-*/sd "$pkg_src_cmd"
         if test -f sd-*; then
-            # ~/.local/opt/sd-v0.99.9/bin
+            # old format: bare binary named sd-{triplet}
             mkdir -p "$(dirname "$pkg_src_cmd")"
             mv sd-* "$pkg_src_cmd"
         elif test -f sd-*/sd; then
-            # ~/.local/opt/sd-v0.99.9/bin
+            # current format: sd-v{ver}-{triplet}/ directory
             mkdir -p "$(dirname "$pkg_src_cmd")"
             mv sd-*/sd "$pkg_src_cmd"
             if test -f sd-*/sd.1; then
