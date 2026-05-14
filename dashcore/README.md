@@ -147,8 +147,8 @@ dash-qt \
 CoinJoin aids in preventing some bad actors and malicious observers being able
 to easily reconstruct details about your transactions from the publicly
 available data by creating many excess transactions. \
-(be aware, however, that dedicated bad actors can use sophisticated software that
-will reveal much of the same information over time)
+(be aware, however, that dedicated bad actors can use sophisticated software
+that will reveal much of the same information over time)
 
 `dash-qt` does not enable CoinJoin mixing by default.
 

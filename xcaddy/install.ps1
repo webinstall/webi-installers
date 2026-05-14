@@ -21,19 +21,19 @@ $pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 
 # Fetch Go compiler
 Write-Output "Checking for Go compiler..."
-IF (-Not (Get-Command -Name "go" -ErrorAction Silent)) {
+if (-not (Get-Command -Name "go" -ErrorAction Silent)) {
     & "$Env:USERPROFILE\.local\bin\webi-pwsh.ps1" go
     $null = Sync-EnvPath
 }
 
 # Fetch archive
-IF (!(Test-Path -Path "$pkg_download")) {
+if (!(Test-Path -Path "$pkg_download")) {
     Write-Output "Downloading xcaddy from $Env:WEBI_PKG_URL to $pkg_download"
     & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
     & Move-Item "$pkg_download.part" "$pkg_download"
 }
 
-IF (!(Test-Path -Path "$pkg_src_cmd")) {
+if (!(Test-Path -Path "$pkg_src_cmd")) {
     Write-Output "Installing xcaddy"
 
     # TODO: create package-specific temp directory

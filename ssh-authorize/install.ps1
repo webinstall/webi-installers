@@ -3,7 +3,7 @@
 $ErrorActionPreference = 'stop'
 
 function Install-WebiHostedScript () {
-    Param(
+    param(
         [string]$Package,
         [string]$ScriptName
     )

@@ -11,13 +11,13 @@ $pkg_dst_cmd = "$pkg_dst\cmd\$pkg_cmd_name"
 $pkg_dst_bin = "$pkg_dst\cmd"
 
 # Fetch archive
-IF (!(Test-Path -Path "$pkg_download")) {
+if (!(Test-Path -Path "$pkg_download")) {
     Write-Output "Downloading $Env:PKG_NAME from $Env:WEBI_PKG_URL to $pkg_download"
     & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
     & Move-Item "$pkg_download.part" "$pkg_download"
 }
 
-IF (!(Test-Path -Path "$pkg_src")) {
+if (!(Test-Path -Path "$pkg_src")) {
     Write-Output "Installing $pkg_cmd_name"
     # TODO: temp directory
 
@@ -30,12 +30,12 @@ IF (!(Test-Path -Path "$pkg_src")) {
     # Unpack archive
     # Windows BSD-tar handles zip. Imagine that.
     Write-Output "Unpacking $pkg_download"
-    IF (!(Test-Path -Path "$pkg_cmd_name-v$Env:WEBI_VERSION")) {
+    if (!(Test-Path -Path "$pkg_cmd_name-v$Env:WEBI_VERSION")) {
         New-Item -Path "$pkg_cmd_name-v$Env:WEBI_VERSION" -ItemType Directory -Force | Out-Null
     }
-        ($none = Push-Location "$pkg_cmd_name-v$Env:WEBI_VERSION")  | Out-Null
+    ($none = Push-Location "$pkg_cmd_name-v$Env:WEBI_VERSION")  | Out-Null
     & tar xf "$pkg_download"
-        ($none = Pop-Location)  | Out-Null
+    ($none = Pop-Location)  | Out-Null
 
     # Settle unpacked archive into place
     Write-Output "New Name: $pkg_cmd_name-v$Env:WEBI_VERSION"

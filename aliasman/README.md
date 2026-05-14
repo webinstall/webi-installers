@@ -72,8 +72,8 @@ gc "feat: new feature"
 
 ### Common aliases
 
-Use *alias*es to make other tools you find around webi even _more_ convenient
-⚡️ (and powerful 💪).
+Use *alias*es to make other tools you find around webi even _more_ convenient ⚡️
+(and powerful 💪).
 
 ```sh
 aliasman curl 'curlie'

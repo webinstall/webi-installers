@@ -23,16 +23,16 @@ function Debug-All($Root) {
 
 
         $Diags = Invoke-ScriptAnalyzer -Fix -Path $Child -ExcludeRule PSAvoidUsingWriteHost
-        IF ($Diags.Length -gt 0) {
+        if ($Diags.Length -gt 0) {
             $AreDirty = $true
             $Style = $Bold
         }
         $RelPath = [System.IO.Path]::GetRelativePath($Root, $Child)
-        IF (Test-Path -PathType Leaf -Path $Root) {
+        if (Test-Path -PathType Leaf -Path $Root) {
             $RelPath = $Root
         }
         Write-Host "    ${Style}${RelPath}${ResetWeight}"
-        IF ($Diags.Length -gt 0) {
+        if ($Diags.Length -gt 0) {
             Write-Host ($Diags | Format-List | Out-String)
         }
     }
@@ -42,7 +42,7 @@ function Debug-All($Root) {
 
 function Debug-Recursively($Paths) {
     $Dirty = $false
-    IF ($Paths.Length -lt 1) {
+    if ($Paths.Length -lt 1) {
         $Paths = , (Get-Location)
     }
 
@@ -50,14 +50,14 @@ function Debug-Recursively($Paths) {
         Write-Host "Linting ${Root}"
         $Entry = Get-Item $Root
 
-        IF (-Not ((Test-Path -PathType Container -Path $Entry) -Or (Test-Path -PathType Leaf -Path $Entry))) {
+        if (-not ((Test-Path -PathType Container -Path $Entry) -or (Test-Path -PathType Leaf -Path $Entry))) {
             $RelPath = [System.IO.Path]::GetRelativePath($Root, $Entry.FullName)
             Write-Host "    ${Warn}SKIP${ResetColor} ${RelPath} (${Warn}not a regular file or directory${ResetColor})"
             exit 1
         }
 
         $AreDirty = Debug-All $Root $Entry
-        IF ($AreDirty) {
+        if ($AreDirty) {
             $Dirty = $true
         }
     }

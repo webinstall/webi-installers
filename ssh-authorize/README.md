@@ -81,6 +81,7 @@ This just adds a layer of convenience, and a few benefits:
 
 - handles arbitrary files and URLs, failing bad key lines
 - sets permissions correctly, even if they were incorrect \
-  (which almost no one will to do successfully by hand on Windows on the first try)
+  (which almost no one will be able to do successfully by hand on Windows on the first
+  try)
 - works `curl` (macOS, Ubuntu) or `wget` (Docker, Alpine)
 - enforces `https`

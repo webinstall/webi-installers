@@ -3,7 +3,7 @@
 $ErrorActionPreference = 'stop'
 
 function Install-WebiHostedScript () {
-    Param(
+    param(
         [string]$Package,
         [string]$ScriptName
     )
@@ -31,15 +31,15 @@ Install-WebiHostedScript -Package "gpg-pubkey" -ScriptName "gpg-pubkey"
 #
 # Check the gpg exists
 #
-IF (-Not (Get-Command -Name "gpg" -ErrorAction SilentlyContinue)) {
+if (-not (Get-Command -Name "gpg" -ErrorAction SilentlyContinue)) {
     & "${Env:USERPROFILE}\.local\bin\webi-pwsh.ps1" gpg
     $Env:Path = [Environment]::GetEnvironmentVariable("Path", "User")
 
-    IF (-Not (Get-Command -Name "gpg" -ErrorAction SilentlyContinue)) {
+    if (-not (Get-Command -Name "gpg" -ErrorAction SilentlyContinue)) {
         Write-Output ""
         Write-Output "(exited because gpg is not installed)"
         Write-Output ""
-        Exit 1
+        exit 1
     }
 }
 

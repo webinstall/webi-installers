@@ -6,7 +6,7 @@ $ProgressPreference = 'SilentlyContinue'
 
 $my_version = 'v1.1.16'
 
-IF ($null -eq $Env:WEBI_HOST -or $Env:WEBI_HOST -eq "") {
+if ($null -eq $Env:WEBI_HOST -or $Env:WEBI_HOST -eq "") {
     $Env:WEBI_HOST = "https://webinstall.dev"
 }
 
@@ -25,7 +25,7 @@ $TDim = "${Esc}[2m"
 $TReset = "${Esc}[0m"
 
 $OriginalPath = $Env:Path
-$IsWebiParent = -Not (Test-Path Env:IsWebiChild)
+$IsWebiParent = -not (Test-Path Env:IsWebiChild)
 $Env:IsWebiChild = $true
 
 function Confirm-IsElevated {
@@ -37,8 +37,8 @@ function Confirm-IsElevated {
     { Write-Output $false }
 }
 
-IF (Confirm-IsElevated) {
-    IF ($IsWebiParent) {
+if (Confirm-IsElevated) {
+    if ($IsWebiParent) {
         Write-Host ""
         Write-Host "Running Webi with elevated privileges is unsupported." -ForegroundColor Magenta -BackgroundColor black
         Write-Host "Please run Webi as a normal user, NOT as administrator." -ForegroundColor Magenta -BackgroundColor black
@@ -47,15 +47,15 @@ IF (Confirm-IsElevated) {
 }
 
 function Invoke-DownloadUrl {
-    Param (
+    param (
         [string]$URL,
         [string]$Params,
         [string]$Path,
         [switch]$Force
     )
 
-    IF (Test-Path -Path "$Path") {
-        IF (-Not $Force.IsPresent) {
+    if (Test-Path -Path "$Path") {
+        if (-not $Force.IsPresent) {
             Write-Host "    ${TDim}Found${TReset} $Path"
             return
         }
@@ -67,7 +67,7 @@ function Invoke-DownloadUrl {
 
     Write-Host "    Downloading ${TDim}from${TReset}"
     Write-Host "      ${TDim}${URL}${TReset}"
-    IF ($Params.Length -ne 0) {
+    if ($Params.Length -ne 0) {
         Write-Host "        ?$Params"
         $URL = "${URL}?${Params}"
     }
@@ -82,18 +82,18 @@ function Get-UserAgent {
     # This is the canonical CPU arch when the process is emulated
     $my_arch = "$Env:PROCESSOR_ARCHITEW6432"
 
-    IF ($my_arch -eq $null -or $my_arch -eq "") {
+    if ($my_arch -eq $null -or $my_arch -eq "") {
         # This is the canonical CPU arch when the process is native
         $my_arch = "$Env:PROCESSOR_ARCHITECTURE"
     }
 
-    IF ($my_arch -eq "AMD64") {
+    if ($my_arch -eq "AMD64") {
         # Because PowerShell is sometimes AMD64 on Windows 10 ARM
         # See https://oofhours.com/2020/02/04/powershell-on-windows-10-arm64/
         $my_os_arch = (Get-CimInstance -ClassName Win32_OperatingSystem).OSArchitecture
 
         # Using -clike because of the trailing newline
-        IF ($my_os_arch -clike "ARM 64*") {
+        if ($my_os_arch -clike "ARM 64*") {
             $my_arch = "ARM64"
         }
     }
@@ -182,7 +182,7 @@ if ($exename -eq "-V" -or $exename -eq "--version" -or $exename -eq "version" -o
 
 $Env:WEBI_UA = Get-UserAgent
 
-IF ($IsWebiParent) {
+if ($IsWebiParent) {
     Write-Host ""
     Write-Host "${TName}Welcome to${TReset} ${TTask}Webi${TReset}${TName}!${TReset} - Instant Installs, Easy to Remember URLs"
     Write-Host "${TDim}($Env:WEBI_UA)${TReset}"
@@ -194,14 +194,17 @@ Write-Host "${TTask}Installing${TReset} ${TName}${exename}${TReset}"
 Write-Host "    ${TDim}Fetching install script ...${TReset}"
 
 $PKG_URL = "$Env:WEBI_HOST/api/installers/$exename.ps1"
-# TODO detect formats
-$UrlParams = "formats=zip,exe,tar,git&libc=msvc"
+$DetectedFormats = @("zip", "exe", "tar")
+if (Get-Command git -ErrorAction SilentlyContinue) { $DetectedFormats += "git" }
+if (Get-Command zstd -ErrorAction SilentlyContinue) { $DetectedFormats += "zst" }
+if (Get-Command 7z -ErrorAction SilentlyContinue) { $DetectedFormats += "7z" }
+$UrlParams = "formats=$($DetectedFormats -join ',')&libc=msvc"
 $PkgInstallPwsh = "$HOME\.local\tmp\$exename.install.ps1"
 Invoke-DownloadUrl -Force -URL $PKG_URL -Params $UrlParams -Path $PkgInstallPwsh
 
 powershell -File "$HOME\.local\tmp\${exename}.install.ps1"
 
-IF ($IsWebiParent) {
+if ($IsWebiParent) {
     Write-Host ""
     Write-Host "Checking for updates to Webi ..."
     $WebiUrl = "${Env:WEBI_HOST}/packages/webi/webi-pwsh.ps1"
@@ -211,7 +214,7 @@ IF ($IsWebiParent) {
     $UserPath = [Environment]::GetEnvironmentVariable("Path", "User").Trim(';')
     $MachinePath = [Environment]::GetEnvironmentVariable("Path", "Machine").Trim(';')
     $Env:Path = "${UserPath};${MachinePath}"
-    IF ($OriginalPath -ne $Env:Path) {
+    if ($OriginalPath -ne $Env:Path) {
         Show-HowToUpdateEnv
     }
 }

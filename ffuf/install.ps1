@@ -20,13 +20,13 @@ New-Item "$Env:USERPROFILE\Downloads\webi" -ItemType Directory -Force | Out-Null
 $pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 
 # Fetch archive
-IF (-Not (Test-Path -Path "$pkg_download")) {
+if (-not (Test-Path -Path "$pkg_download")) {
     Write-Output "Downloading ffuf from $Env:WEBI_PKG_URL to $pkg_download"
     & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
     & Move-Item "$pkg_download.part" "$pkg_download"
 }
 
-IF (-Not (Test-Path -Path "$pkg_src_cmd")) {
+if (-not (Test-Path -Path "$pkg_src_cmd")) {
     Write-Output "Installing ffuf"
 
     # TODO: create package-specific temp directory

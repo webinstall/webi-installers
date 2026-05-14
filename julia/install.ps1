@@ -20,13 +20,13 @@ New-Item "$Env:USERPROFILE\Downloads\webi" -ItemType Directory -Force | Out-Null
 $pkg_download = "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
 
 # Fetch archive
-IF (!(Test-Path -Path "$pkg_download")) {
+if (!(Test-Path -Path "$pkg_download")) {
     Write-Output "Downloading julia from $Env:WEBI_PKG_URL to $pkg_download"
     & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
     & Move-Item "$pkg_download.part" "$pkg_download"
 }
 
-IF (!(Test-Path -Path "$pkg_src_dir")) {
+if (!(Test-Path -Path "$pkg_src_dir")) {
     Write-Output "Installing julia"
 
     # TODO: create package-specific temp directory

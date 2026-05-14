@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 
 function Repair-MissingCommand {
-    Param(
+    param(
         [string]$Name,
         [string]$Package,
         [string]$Command
@@ -9,15 +9,15 @@ function Repair-MissingCommand {
 
     Write-Host "    Checking for $Name ..."
     $HasCommand = Get-Command -Name $Command -ErrorAction Silent
-    IF ($HasCommand) {
-        Return
+    if ($HasCommand) {
+        return
     }
 
     & "$HOME\.local\bin\webi-pwsh.ps1" $Package
     $null = Sync-EnvPath
 }
 
-IF ($null -eq $Env:WEBI_HOST -or "" -eq $Env:WEBI_HOST) {
+if ($null -eq $Env:WEBI_HOST -or "" -eq $Env:WEBI_HOST) {
     $Env:WEBI_HOST = "https://webinstall.dev"
 }
 
@@ -26,7 +26,7 @@ function Install-PSScriptAnalyzer {
     Repair-MissingCommand -Name "PowerShell Core" -Package "pwsh" -Command "pwsh"
 
     $NeedsTrust = pwsh -Command "Get-PSRepository -Name 'PSGallery' | Where-Object -Property InstallationPolicy -eq 'Untrusted'"
-    IF ($NeedsTrust) {
+    if ($NeedsTrust) {
         Write-Host "    Trusting PSRepository 'PSGallery' ..."
         pwsh -Command "Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted"
     }

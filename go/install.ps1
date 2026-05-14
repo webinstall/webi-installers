@@ -16,13 +16,13 @@ if (!(Get-Command "git.exe" -ErrorAction SilentlyContinue)) {
 }
 
 # Fetch archive
-IF (!(Test-Path -Path "$pkg_download")) {
+if (!(Test-Path -Path "$pkg_download")) {
     Write-Output "Downloading $Env:PKG_NAME from $Env:WEBI_PKG_URL to $pkg_download"
     & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
     & Move-Item "$pkg_download.part" "$pkg_download"
 }
 
-IF (!(Test-Path -Path "$pkg_src")) {
+if (!(Test-Path -Path "$pkg_src")) {
     Write-Output "Installing $pkg_cmd_name"
     # TODO: temp directory
 
@@ -50,7 +50,7 @@ IF (!(Test-Path -Path "$pkg_src")) {
 Write-Output "Copying into '$pkg_dst' from '$pkg_src'"
 Remove-Item -Path "$pkg_dst" -Recurse -ErrorAction Ignore
 Copy-Item -Path "$pkg_src" -Destination "$pkg_dst" -Recurse
-IF (!(Test-Path -Path go\bin)) { New-Item -Path go\bin -ItemType Directory -Force | Out-Null }
+if (!(Test-Path -Path go\bin)) { New-Item -Path go\bin -ItemType Directory -Force | Out-Null }
 
 # Add to path
 webi_path_add ~/.local/opt/go/bin

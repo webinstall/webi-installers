@@ -10,7 +10,6 @@
 
 - You'll be asked to make changes if you don't run the code formatters and
   linters:
-
   - Node / JavaScript:
     - [prettier](https://webinstall.dev/prettier)
       ```sh
@@ -21,7 +20,6 @@
       npm run lint
       ```
   - Bash
-
     - [shfmt](https://webinstall.dev/shfmt)
       ```sh
       npm run shfmt

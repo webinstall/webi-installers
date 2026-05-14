@@ -20,7 +20,7 @@ New-Item "$HOME\Downloads\webi" -ItemType Directory -Force | Out-Null
 $pkg_download = "$HOME\Downloads\webi\$Env:WEBI_PKG_PATHNAME"
 
 # Fetch archive
-IF (!(Test-Path -Path "$pkg_download")) {
+if (!(Test-Path -Path "$pkg_download")) {
     Write-Output "Downloading tinygo from $Env:WEBI_PKG_URL to $pkg_download"
     & curl.exe -A "$Env:WEBI_UA" -fsSL "$Env:WEBI_PKG_URL" -o "$pkg_download.part"
     & Move-Item "$pkg_download.part" "$pkg_download"
@@ -28,12 +28,12 @@ IF (!(Test-Path -Path "$pkg_download")) {
 
 # Fetch Go compiler
 Write-Output "Checking for Go compiler..."
-IF (-Not (Get-Command -Name "go" -ErrorAction Silent)) {
+if (-not (Get-Command -Name "go" -ErrorAction Silent)) {
     & "$Env:USERPROFILE\.local\bin\webi-pwsh.ps1" go
     $null = Sync-EnvPath
 }
 
-IF (!(Test-Path -Path "$pkg_src")) {
+if (!(Test-Path -Path "$pkg_src")) {
     Write-Output "Installing tinygo"
 
     # TODO: create package-specific temp directory

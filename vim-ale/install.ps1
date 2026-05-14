@@ -1,6 +1,6 @@
 #!/usr/bin/env pwsh
 
-IF (!(Test-Path -Path "$Env:USERPROFILE\.vim\pack\plugins\start")) {
+if (!(Test-Path -Path "$Env:USERPROFILE\.vim\pack\plugins\start")) {
     New-Item -Path "$Env:USERPROFILE\.vim\pack\plugins\start" -ItemType Directory -Force | Out-Null
 }
 Remove-Item -Path "$Env:USERPROFILE\.vim\pack\plugins\start\ale" -Recurse -ErrorAction Ignore

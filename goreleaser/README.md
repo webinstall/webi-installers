@@ -122,8 +122,8 @@ goreleaser --clean
 
 Check the console output to make sure that there are no messages about a failed
 publish. \
-If all is well you should the git tag on the releases page updated with a ChangeLog
-and the published binaries.
+If all is well you should see the git tag on the releases page updated with a
+ChangeLog and the published binaries.
 
 ### How to Publish to Gitea and others
 

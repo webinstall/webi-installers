@@ -33,7 +33,7 @@ function mktemp-d-t() {
 function npm-install-global($pkgname) {
     # Fetch npm package manager
     Write-Output "Checking for npm..."
-    if (-Not (command-v-silent("npm"))) {
+    if (-not (command-v-silent("npm"))) {
         & "$Env:USERPROFILE\.local\bin\webi-pwsh.ps1" node
     }
 
