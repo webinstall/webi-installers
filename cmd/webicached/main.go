@@ -54,7 +54,6 @@ import (
 	"github.com/webinstall/webi-installers/internal/releases/zigdist"
 	"github.com/webinstall/webi-installers/internal/storage"
 	"github.com/webinstall/webi-installers/internal/storage/fsstore"
-	"github.com/webinstall/webi-installers/internal/storage/pgstore"
 )
 
 var (
@@ -78,7 +77,7 @@ type MainConfig struct {
 	envFile   string
 	confDir   string
 	cacheDir  string
-	pgDSN     string
+
 	rawDir    string
 	token     string
 	once      bool
@@ -92,7 +91,7 @@ type MainConfig struct {
 // WebiCache holds the configuration for the cache daemon.
 type WebiCache struct {
 	ConfDir   string          // root directory with {pkg}/releases.conf files
-	Store     storage.Store   // classified asset storage (fsstore or pgstore)
+	Store     storage.Store   // classified asset storage (fsstore)
 	RawDir    string          // raw upstream response cache
 	Client    *http.Client    // HTTP client for upstream calls
 	Auth      *githubish.Auth // GitHub API auth (optional)
@@ -157,20 +156,11 @@ func main() {
 		cfg.token = os.Getenv("GITHUB_TOKEN")
 	}
 
-	var store storage.Store
-	if cfg.pgDSN != "" {
-		pg, err := pgstore.New(context.Background(), cfg.pgDSN)
-		if err != nil {
-			log.Fatalf("pgstore: %v", err)
-		}
-		store = pg
-	} else {
-		fs, err := fsstore.New(cfg.cacheDir)
-		if err != nil {
-			log.Fatalf("fsstore: %v", err)
-		}
-		store = fs
+	fss, err := fsstore.New(cfg.cacheDir)
+	if err != nil {
+		log.Fatalf("fsstore: %v", err)
 	}
+	var store storage.Store = fss
 
 	var auth *githubish.Auth
 	if cfg.token != "" {
@@ -217,11 +207,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("discover: %v", err)
 	}
+	nameSet := make(map[string]bool, len(filterPkgs))
+	for _, a := range filterPkgs {
+		nameSet[a] = true
+	}
 	if len(filterPkgs) > 0 {
-		nameSet := make(map[string]bool, len(filterPkgs))
-		for _, a := range filterPkgs {
-			nameSet[a] = true
-		}
 		var filtered []pkgConf
 		for _, p := range packages {
 			if nameSet[p.name] {
@@ -238,8 +228,41 @@ func main() {
 		}
 	}
 
+	// rescanNew appends any conf files added since the last scan.
+	// Returns true when at least one new package was added so the caller
+	// can restart the batch loop and process new packages immediately.
+	rescanNew := func() bool {
+		discovered, err := discover(wc.ConfDir)
+		if err != nil {
+			log.Printf("rescan: %v", err)
+			return false
+		}
+		known := make(map[string]bool, len(real))
+		for _, p := range real {
+			known[p.name] = true
+		}
+		added := false
+		for _, p := range discovered {
+			if p.conf.AliasOf != "" || known[p.name] {
+				continue
+			}
+			if len(filterPkgs) > 0 && !nameSet[p.name] {
+				continue
+			}
+			log.Printf("discovered new package: %s (source=%s)", p.name, p.conf.Source)
+			real = append(real, p)
+			added = true
+		}
+		return added
+	}
+
 	log.Printf("refreshing %d packages, interval %s, batch size 20 (ctrl-c to stop)", len(real), cfg.interval)
 	for {
+		// Rescan before computing staleness so newly added conf files are
+		// included immediately. New packages have a zero timestamp and sort
+		// to the front of the stale list, so they are processed next.
+		rescanNew()
+
 		stale := wc.stalest(real)
 		if len(stale) == 0 {
 			log.Printf("all packages fresh, sleeping %s", cfg.interval)
@@ -263,6 +286,10 @@ func main() {
 			}
 			cancel()
 			time.Sleep(cfg.interval)
+			// Rescan mid-batch so new packages preempt remaining batch items.
+			if rescanNew() {
+				break
+			}
 		}
 	}
 }
@@ -271,7 +298,7 @@ func registerFlags(fs *flag.FlagSet, cfg *MainConfig) {
 	fs.StringVar(&cfg.envFile, "envfile", "", "path to .env file to load before running")
 	fs.StringVar(&cfg.confDir, "conf", ".", "root directory containing {pkg}/releases.conf files")
 	fs.StringVar(&cfg.cacheDir, "legacy", "~/.cache/webi/legacy", "legacy cache directory (fsstore root)")
-	fs.StringVar(&cfg.pgDSN, "pg", "", "PostgreSQL DSN (enables pgstore; mutually exclusive with -legacy)")
+
 	fs.StringVar(&cfg.rawDir, "raw", "~/.cache/webi/raw", "raw cache directory for upstream responses")
 	fs.StringVar(&cfg.token, "token", "", "GitHub API token (or set $GITHUB_TOKEN)")
 	fs.BoolVar(&cfg.once, "once", false, "run once then exit (no periodic refresh)")
@@ -543,7 +570,14 @@ func (wc *WebiCache) fetchRaw(ctx context.Context, pkg pkgConf, shallow bool) er
 	// commit hashes. Git entries are classified from this data in
 	// refreshPackage, not from the main raw cache.
 	if pkg.conf.GitURL != "" && pkg.conf.Source != "gittag" {
-		if err := wc.fetchGitTagSupplementary(ctx, pkg.name, pkg.conf.GitURL, shallow); err != nil {
+		gitShallow := shallow
+		if !wc.Shallow {
+			gd, gdErr := rawcache.Open(filepath.Join(wc.RawDir, "_gittag", pkg.name))
+			if gdErr == nil && !gd.Populated() {
+				gitShallow = false
+			}
+		}
+		if err := wc.fetchGitTagSupplementary(ctx, pkg.name, pkg.conf.GitURL, gitShallow); err != nil {
 			log.Printf("  %s: supplementary gittag fetch: %v", pkg.name, err)
 		}
 	}
