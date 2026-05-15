@@ -7,16 +7,18 @@ set -u
 g_host="${1:-beta.webi.sh}"
 g_bin="webicached"
 g_out="agents/tmp/${g_bin}"
+# shellcheck disable=SC2088
 g_remote_bin="~/bin/${g_bin}"
 
+# shellcheck disable=SC2088
 case "${g_host}" in
-	beta.webi.sh) g_remote_conf="~/srv/beta.webinstall.dev/installers/" ;;
-	next.webi.sh) g_remote_conf="~/srv/next.webinstall.dev/installers/" ;;
-	*) g_remote_conf="~/srv/webid/installers/" ;;
+beta.webi.sh) g_remote_conf="~/srv/beta.webinstall.dev/installers/" ;;
+next.webi.sh) g_remote_conf="~/srv/next.webinstall.dev/installers/" ;;
+*) g_remote_conf="~/srv/webid/installers/" ;;
 esac
 
 fn_build() {
-	b_version="$(git describe --tags --always 2> /dev/null || echo '0.0.0-dev')"
+	b_version="$(git describe --tags --always 2>/dev/null || echo '0.0.0-dev')"
 	b_commit="$(git rev-parse --short HEAD)"
 	b_date="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 	b_ldflags="-X main.version=${b_version} -X main.commit=${b_commit} -X main.date=${b_date}"
@@ -28,7 +30,8 @@ fn_build() {
 
 fn_deploy() {
 	printf 'Stopping %s on %s...\n' "${g_bin}" "${g_host}"
-	ssh "${g_host}" "~/.local/bin/serviceman stop ${g_bin}" 2> /dev/null || true
+	# shellcheck disable=SC2029,SC2088
+	ssh "${g_host}" "~/.local/bin/serviceman stop ${g_bin}" 2>/dev/null || true
 
 	printf 'Uploading binary...\n'
 	scp "${g_out}" "${g_host}:${g_remote_bin}"
@@ -42,6 +45,7 @@ fn_deploy() {
 		./ "${g_host}:${g_remote_conf}"
 
 	printf 'Starting %s...\n' "${g_bin}"
+	# shellcheck disable=SC2029,SC2088
 	ssh "${g_host}" "~/.local/bin/serviceman start ${g_bin}"
 }
 
@@ -50,9 +54,11 @@ fn_verify() {
 	sleep 5
 
 	printf 'Checking version...\n'
+	# shellcheck disable=SC2029
 	ssh "${g_host}" "${g_remote_bin} -V"
 
 	printf 'Checking logs...\n'
+	# shellcheck disable=SC2029
 	ssh "${g_host}" "sudo journalctl -u ${g_bin} --no-pager -n 5"
 }
 
