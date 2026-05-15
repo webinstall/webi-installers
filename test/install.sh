@@ -11,6 +11,7 @@ __rmrf_local() {
                 archiver \
                 awless \
                 bat \
+                btop \
                 caddy \
                 chromedriver \
                 cmake \
