@@ -54,6 +54,7 @@ import (
 	"github.com/webinstall/webi-installers/internal/releases/zigdist"
 	"github.com/webinstall/webi-installers/internal/storage"
 	"github.com/webinstall/webi-installers/internal/storage/fsstore"
+	"github.com/webinstall/webi-installers/internal/storage/pgstore"
 )
 
 var (
@@ -77,7 +78,7 @@ type MainConfig struct {
 	envFile   string
 	confDir   string
 	cacheDir  string
-
+	pgDSN     string
 	rawDir    string
 	token     string
 	once      bool
@@ -156,11 +157,20 @@ func main() {
 		cfg.token = os.Getenv("GITHUB_TOKEN")
 	}
 
-	fss, err := fsstore.New(cfg.cacheDir)
-	if err != nil {
-		log.Fatalf("fsstore: %v", err)
+	var store storage.Store
+	if cfg.pgDSN != "" {
+		pg, err := pgstore.New(context.Background(), cfg.pgDSN)
+		if err != nil {
+			log.Fatalf("pgstore: %v", err)
+		}
+		store = pg
+	} else {
+		fss, err := fsstore.New(cfg.cacheDir)
+		if err != nil {
+			log.Fatalf("fsstore: %v", err)
+		}
+		store = fss
 	}
-	var store storage.Store = fss
 
 	var auth *githubish.Auth
 	if cfg.token != "" {
@@ -298,6 +308,7 @@ func registerFlags(fs *flag.FlagSet, cfg *MainConfig) {
 	fs.StringVar(&cfg.envFile, "envfile", "", "path to .env file to load before running")
 	fs.StringVar(&cfg.confDir, "conf", ".", "root directory containing {pkg}/releases.conf files")
 	fs.StringVar(&cfg.cacheDir, "legacy", "~/.cache/webi/legacy", "legacy cache directory (fsstore root)")
+	fs.StringVar(&cfg.pgDSN, "pg", "", "PostgreSQL DSN (enables pgstore; mutually exclusive with -legacy)")
 
 	fs.StringVar(&cfg.rawDir, "raw", "~/.cache/webi/raw", "raw cache directory for upstream responses")
 	fs.StringVar(&cfg.token, "token", "", "GitHub API token (or set $GITHUB_TOKEN)")
