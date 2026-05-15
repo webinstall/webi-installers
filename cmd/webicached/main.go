@@ -580,7 +580,14 @@ func (wc *WebiCache) fetchRaw(ctx context.Context, pkg pkgConf, shallow bool) er
 	// commit hashes. Git entries are classified from this data in
 	// refreshPackage, not from the main raw cache.
 	if pkg.conf.GitURL != "" && pkg.conf.Source != "gittag" {
-		if err := wc.fetchGitTagSupplementary(ctx, pkg.name, pkg.conf.GitURL, shallow); err != nil {
+		gitShallow := shallow
+		if !wc.Shallow {
+			gd, gdErr := rawcache.Open(filepath.Join(wc.RawDir, "_gittag", pkg.name))
+			if gdErr == nil && !gd.Populated() {
+				gitShallow = false
+			}
+		}
+		if err := wc.fetchGitTagSupplementary(ctx, pkg.name, pkg.conf.GitURL, gitShallow); err != nil {
 			log.Printf("  %s: supplementary gittag fetch: %v", pkg.name, err)
 		}
 	}
