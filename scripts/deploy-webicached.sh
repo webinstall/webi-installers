@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2029,SC2088
 set -e
 set -u
 
@@ -7,10 +8,8 @@ set -u
 g_host="${1:-beta.webi.sh}"
 g_bin="webicached"
 g_out="agents/tmp/${g_bin}"
-# shellcheck disable=SC2088
 g_remote_bin="~/bin/${g_bin}"
 
-# shellcheck disable=SC2088
 case "${g_host}" in
 beta.webi.sh) g_remote_conf="~/srv/beta.webinstall.dev/installers/" ;;
 next.webi.sh) g_remote_conf="~/srv/next.webinstall.dev/installers/" ;;
@@ -30,7 +29,6 @@ fn_build() {
 
 fn_deploy() {
 	printf 'Stopping %s on %s...\n' "${g_bin}" "${g_host}"
-	# shellcheck disable=SC2029,SC2088
 	ssh "${g_host}" "~/.local/bin/serviceman stop ${g_bin}" 2>/dev/null || true
 
 	printf 'Uploading binary...\n'
@@ -45,7 +43,6 @@ fn_deploy() {
 		./ "${g_host}:${g_remote_conf}"
 
 	printf 'Starting %s...\n' "${g_bin}"
-	# shellcheck disable=SC2029,SC2088
 	ssh "${g_host}" "~/.local/bin/serviceman start ${g_bin}"
 }
 
@@ -54,11 +51,9 @@ fn_verify() {
 	sleep 5
 
 	printf 'Checking version...\n'
-	# shellcheck disable=SC2029
 	ssh "${g_host}" "${g_remote_bin} -V"
 
 	printf 'Checking logs...\n'
-	# shellcheck disable=SC2029
 	ssh "${g_host}" "sudo journalctl -u ${g_bin} --no-pager -n 5"
 }
 
