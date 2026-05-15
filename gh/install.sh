@@ -23,7 +23,7 @@ __init_gh() {
         # ~/.local/opt/gh-v0.99.9/bin
         mkdir -p "$(dirname "$pkg_src_cmd")"
 
-        # mv ./gh-*/gh ~/.local/opt/gh-v0.99.9/bin/gh
+        # mv ./gh_*/bin/gh ~/.local/opt/gh-v0.99.9/bin/gh
         mv ./"$pkg_cmd_name"*/bin/gh "$pkg_src_cmd"
     }
 

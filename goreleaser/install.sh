@@ -23,7 +23,7 @@ __init_goreleaser() {
         # ~/.local/opt/goreleaser-v1.21.2/bin
         mkdir -p "$(dirname "$pkg_src_cmd")"
 
-        # mv ./goreleaser-*/goreleaser ~/.local/opt/goreleaser-v1.21.2/bin/goreleaser
+        # mv ./goreleaser ~/.local/opt/goreleaser-v1.21.2/bin/goreleaser
         mv ./goreleaser "$pkg_src_cmd"
     }
 
