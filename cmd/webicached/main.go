@@ -332,14 +332,13 @@ func (wc *WebiCache) stalest(packages []pkgConf) []pkgConf {
 	for _, pkg := range packages {
 		data, err := wc.Store.Load(ctx, pkg.name)
 		var t time.Time
-		hasAssets := false
 		if err == nil && data != nil {
 			t = data.UpdatedAt
-			hasAssets = len(data.Assets) > 0
 		}
-		// Never fetched, or has no assets despite having a timestamp
-		// (e.g. classified from empty rawcache), or older than 10 minutes.
-		if t.IsZero() || !hasAssets || time.Since(t) > 10*time.Minute {
+		// Never fetched, or older than 10 minutes.
+		// 0-asset results are not treated as perpetually stale — packages that
+		// produce no classifiable assets (e.g. galera) respect the timestamp.
+		if t.IsZero() || time.Since(t) > 10*time.Minute {
 			stale = append(stale, stamped{pkg: pkg, updatedAt: t})
 		}
 	}
