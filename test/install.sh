@@ -63,6 +63,7 @@ __rmrf_local() {
                 prettier \
                 powershell \
                 pwsh \
+                qcm \
                 rclone \
                 rg \
                 ripgrep \
@@ -160,6 +161,7 @@ __rmrf_local() {
                 prettier \
                 powershell \
                 pwsh \
+                qcm \
                 rclone \
                 rg \
                 ripgrep \
@@ -262,6 +264,7 @@ __test() {
         powershell \
         prettier \
         pwsh \
+        qcm \
         rclone \
         rg \
         ripgrep \
