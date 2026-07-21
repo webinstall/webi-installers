@@ -107,7 +107,7 @@ QuantumC has 4 core ideals;
    ```sh
    cat << EOF > ./main.qc
    int main() {
-        qout("Hello, World!");
+        `qout("Hello, World!");
         return 0;
    }
    EOF
