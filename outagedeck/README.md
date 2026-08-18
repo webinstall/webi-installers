@@ -2,7 +2,7 @@
 title: OutageDeck
 homepage: https://outagedeck.com/developers/cli
 tagline: |
-  OutageDeck checks live cloud and SaaS provider status from the terminal.
+  OutageDeck checks cloud and SaaS provider status published through official vendor feeds from the terminal.
 ---
 
 To update or switch versions, run `webi outagedeck@stable` (or `@0.1.3`).
