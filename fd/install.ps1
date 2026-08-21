@@ -24,7 +24,12 @@ if (!(Test-Path -Path "$Env:USERPROFILE\.local\bin\$VERNAME")) {
     Write-Output "Unpacking $Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
     & tar xf "$Env:USERPROFILE\Downloads\webi\$Env:WEBI_PKG_FILE"
     # Move single binary into root of temporary folder
-    & Move-Item "$Env:WEBI_PKG_FILE\$EXENAME" "$VERNAME"
+    # Handle both old layout (bare fd.exe) and new layout (fd-v*\fd.exe)
+    if (Test-Path -Path ".\$EXENAME") {
+        & Move-Item "$EXENAME" "$VERNAME"
+    } elseif (Test-Path -Path ".\$Env:PKG_NAME-*\$EXENAME") {
+        & Move-Item ".\$Env:PKG_NAME-*\$EXENAME" "$VERNAME"
+    }
 
 
     # Settle unpacked archive into place
