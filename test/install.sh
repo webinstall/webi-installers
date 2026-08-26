@@ -17,6 +17,7 @@ __rmrf_local() {
                 chromedriver \
                 cmake \
                 comrak \
+                crush \
                 curlie \
                 delta \
                 deno \
@@ -114,6 +115,7 @@ __rmrf_local() {
                 chromedriver \
                 cmake \
                 comrak \
+                crush \
                 curlie \
                 delta \
                 deno \
