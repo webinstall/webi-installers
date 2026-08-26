@@ -74,6 +74,7 @@ __rmrf_local() {
                 setcap-netbind \
                 shellcheck \
                 shfmt \
+                sing-box \
                 sqlpkg \
                 ssh-pubkey \
                 ssh-utils \
@@ -171,6 +172,7 @@ __rmrf_local() {
                 setcap-netbind \
                 shellcheck \
                 shfmt \
+                sing-box \
                 sqlpkg \
                 ssh-pubkey \
                 ssh-utils \
@@ -273,6 +275,7 @@ __test() {
         setcap-netbind \
         shellcheck \
         shfmt \
+        sing-box \
         sqlpkg \
         ssh-pubkey \
         ssh-utils \
