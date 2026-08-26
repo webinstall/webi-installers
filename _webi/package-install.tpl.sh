@@ -777,6 +777,11 @@ webi_upgrade() { (
         echo "$(t_task 'Updating') $(t_pkg 'Webi')"
     fi
 
+    b_download_dir="$(dirname "${a_path}")"
+    if ! test -w "${b_download_dir}"; then
+        echo "    Creating $(t_path "${b_download_dir}/")"
+        mkdir -p "${b_download_dir}"
+    fi
     echo "    Downloading $(t_url "${b_webi_file_url}")"
     echo "        to $(t_path "${b_path_rel}")"
     fn_download_to_path "${b_webi_file_url}" "${a_path}"
