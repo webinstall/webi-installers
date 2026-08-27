@@ -183,9 +183,17 @@ __bootstrap_webi() {
         fi
 
         echo "    Cloning $(t_url "${my_url}")"
-        cmd_git="git clone --config advice.detachedHead=false --quiet --depth=1 --single-branch"
+        # using fetch to handle signed tags, tags, and branches alike,
+        # without the shallow clone "not a commit!" warning
         rm -rf "${my_dl}.part"
-        if ! $cmd_git "${my_url}" --branch "${WEBI_GIT_TAG}" "${my_dl}.part"; then
+        mkdir -p "${my_dl}.part"
+        if ! (
+            cd "${my_dl}.part" &&
+                git -c init.defaultBranch=main init --quiet &&
+                git remote add origin "${my_url}" &&
+                git fetch --quiet --depth=1 origin "${WEBI_GIT_TAG}" &&
+                git -c advice.detachedHead=false checkout --quiet FETCH_HEAD
+        ); then
             echo >&2 "    $(t_err "failed to git clone ${WEBI_PKG_URL}")"
             exit 1
         fi
