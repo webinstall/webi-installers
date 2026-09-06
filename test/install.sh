@@ -64,6 +64,7 @@ __rmrf_local() {
                 powershell \
                 pwsh \
                 rclone \
+                reactorcide \
                 rg \
                 ripgrep \
                 rust.vim \
@@ -162,6 +163,7 @@ __rmrf_local() {
                 powershell \
                 pwsh \
                 rclone \
+                reactorcide \
                 rg \
                 ripgrep \
                 rust.vim \
@@ -265,6 +267,7 @@ __test() {
         prettier \
         pwsh \
         rclone \
+        reactorcide \
         rg \
         ripgrep \
         rust.vim \
