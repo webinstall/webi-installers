@@ -18,6 +18,7 @@ __rmrf_local() {
                 cmake \
                 comrak \
                 csilctl \
+                csilgen \
                 curlie \
                 delta \
                 deno \
@@ -118,6 +119,7 @@ __rmrf_local() {
                 cmake \
                 comrak \
                 csilctl \
+                csilgen \
                 curlie \
                 delta \
                 deno \
@@ -221,6 +223,7 @@ __test() {
         cmake \
         comrak \
         csilctl \
+        csilgen \
         curlie \
         delta \
         deno \
