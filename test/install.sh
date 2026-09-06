@@ -70,6 +70,7 @@ __rmrf_local() {
                 sass \
                 sclient \
                 sd \
+                semver-tags \
                 serviceman \
                 setcap-netbind \
                 shellcheck \
@@ -167,6 +168,7 @@ __rmrf_local() {
                 sass \
                 sclient \
                 sd \
+                semver-tags \
                 serviceman \
                 setcap-netbind \
                 shellcheck \
@@ -269,6 +271,7 @@ __test() {
         sass \
         sclient \
         sd \
+        semver-tags \
         serviceman \
         setcap-netbind \
         shellcheck \
