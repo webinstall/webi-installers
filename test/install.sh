@@ -26,6 +26,7 @@ __rmrf_local() {
                 dotenv-linter \
                 fd \
                 ffmpeg \
+                foundry \
                 fzf \
                 gh \
                 git-config-gpg \
@@ -127,6 +128,7 @@ __rmrf_local() {
                 dotenv-linter \
                 fd \
                 ffmpeg \
+                foundry \
                 fzf \
                 gh \
                 git-config-gpg \
@@ -231,6 +233,7 @@ __test() {
         dotenv-linter \
         fd \
         ffmpeg \
+        foundry \
         fzf \
         gh \
         git-config-gpg \
