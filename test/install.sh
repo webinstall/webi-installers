@@ -26,6 +26,7 @@ __rmrf_local() {
                 ffmpeg \
                 fzf \
                 gh \
+                gha-doctor \
                 git-config-gpg \
                 git-gpg-init \
                 gitdeploy \
@@ -123,6 +124,7 @@ __rmrf_local() {
                 ffmpeg \
                 fzf \
                 gh \
+                gha-doctor \
                 git-config-gpg \
                 git-gpg-init \
                 gitdeploy \
@@ -223,6 +225,7 @@ __test() {
         ffmpeg \
         fzf \
         gh \
+        gha-doctor \
         git-config-gpg \
         git-gpg-init \
         gitdeploy \
