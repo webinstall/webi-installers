@@ -483,10 +483,16 @@ MUST: New general classifier patterns must apply to 2-3+ packages.
 First-time setup on a new host uses `serviceman`:
 
 ```sh
-serviceman add --name webicached \
-  --workdir ~/srv/webid/installers/ -- \
-  ~/bin/webicached \
-    --envfile ~/srv/webid/.env.secret \
-    --conf ~/srv/webid/installers/ \
-    --raw ~/.cache/webi/raw
+PATH="$HOME/bin:$HOME/.local/bin:$PATH" serviceman add --name webicached \
+  --workdir "$HOME/srv/webid/installers/" -- \
+  webicached \
+    --env-file "$HOME/srv/webid/.env.secret" \
+    --conf "$HOME/srv/webid/installers/" \
+    --raw "$HOME/.cache/webi/raw"
 ```
+
+`webicached` accepts both `--env-file` (preferred) and the legacy
+`--envfile` spelling. Add the directory containing the deployed binary to
+`PATH` before registering the service; `serviceman` resolves the command and
+writes the resolved path into the service definition.
+

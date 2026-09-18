@@ -314,7 +314,9 @@ func main() {
 }
 
 func registerFlags(fs *flag.FlagSet, cfg *MainConfig) {
-	_ = fs.String("env-file", "", "path to .env file to load before running")
+	envFileUsage := "path to .env file to load before running"
+	_ = fs.String("env-file", "", envFileUsage)
+	_ = fs.String("envfile", "", "alias for --env-file")
 	fs.StringVar(&cfg.confDir, "conf", ".", "root directory containing {pkg}/releases.conf files")
 	fs.StringVar(&cfg.cacheDir, "legacy", "~/.cache/webi/legacy", "legacy cache directory (fsstore root)")
 	fs.StringVar(&cfg.rawDir, "raw", "~/.cache/webi/raw", "raw cache directory for upstream responses")
