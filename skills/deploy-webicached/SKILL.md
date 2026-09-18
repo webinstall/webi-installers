@@ -23,17 +23,17 @@ commit:
 ./scripts/deploy-webicached.sh webi.sh
 ```
 
-The deploy script syncs `releases.conf` files. Package pages also need the
-package directory (`README.md`, `install.sh`, and `install.ps1`) present in the
-production checkout; `git pull` supplies those tracked files. Afterward, refresh
-a package's release cache explicitly:
+The deploy script syncs `releases.conf` files only. Package installer changes
+use `./scripts/deploy-installers.sh HOST PACKAGE`; do not add package-file sync
+to the webicached deploy.
+
+Afterward, refresh a package's release cache explicitly:
 
 ```sh
 ssh webi.sh <<'SSH_EOF'
 set -Cue
-. ~/.config/envman/PATH.sh
+. ~/.config/envman/PATH.env
 webicached \
-  --envfile ~/srv/webinstall.dev/.env.secret \
   --conf ~/srv/webinstall.dev/installers/ \
   --raw ~/.cache/webi/raw \
   --once '<pkgname>'
@@ -151,7 +151,7 @@ serviceman logs webicached
 ## One-shot refresh (specific packages)
 
 ```sh
-ssh beta.webi.sh ". ~/srv/beta.webinstall.dev/.env.secret && ~/bin/webicached \
+ssh beta.webi.sh ". ~/.config/envman/PATH.env && webicached \
   --conf ~/srv/beta.webinstall.dev/installers/ \
   --raw ~/.cache/webi/raw \
   --once '<pkgname>'"

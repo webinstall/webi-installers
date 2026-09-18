@@ -10,29 +10,17 @@ Keep the primary worktree and unrelated changes untouched.
 
 ## One package
 
-Use this for changes limited to one package's installer or `releases.conf`:
+Use this for changes limited to one package's installer or `releases.conf`.
+The script takes a host followed by one or more package names.
 
 ```sh
-g_pkg=timeout
-g_host=beta.webi.sh
-g_remote_conf='~/srv/beta.webinstall.dev/installers'
-
-rsync -av "${g_pkg}/" \
-  "${g_host}:${g_remote_conf}/${g_pkg}/"
-
-ssh "${g_host}" <<SSH_EOF
-set -Cue
-. ~/.config/envman/PATH.env
-webicached \
-  --envfile ~/srv/beta.webinstall.dev/.env.secret \
-  --conf ~/srv/beta.webinstall.dev/installers/ \
-  --raw ~/.cache/webi/raw \
-  --once "${g_pkg}"
-SSH_EOF
+./scripts/deploy-installers.sh beta.webi.sh timeout xz
 ```
 
-The package argument on `--once` matters. Without it, `webicached` refreshes the
-whole catalog and spends the GitHub API budget.
+It syncs each package's installer files, refreshes only that package's release
+cache, and checks the public installer endpoint. Package arguments matter:
+without them, `webicached` refreshes the whole catalog and spends the GitHub API
+budget.
 
 Test the result:
 
