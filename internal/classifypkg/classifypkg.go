@@ -24,6 +24,8 @@ import (
 	"github.com/webinstall/webi-installers/internal/releases/bundist"
 	"github.com/webinstall/webi-installers/internal/releases/chromedist"
 	"github.com/webinstall/webi-installers/internal/releases/cmakedist"
+	"github.com/webinstall/webi-installers/internal/releases/csilctldist"
+	"github.com/webinstall/webi-installers/internal/releases/csilgendist"
 	"github.com/webinstall/webi-installers/internal/releases/fishdist"
 	"github.com/webinstall/webi-installers/internal/releases/flutterdist"
 	"github.com/webinstall/webi-installers/internal/releases/gitdist"
@@ -211,6 +213,10 @@ func TagVariants(pkg string, confVariants []string, assets []storage.Asset) {
 		atomicparsleydist.TagVariants(assets)
 	case "cmake":
 		cmakedist.TagVariants(assets)
+	case "csilctl":
+		csilctldist.TagVariants(assets)
+	case "csilgen":
+		csilgendist.TagVariants(assets)
 	case "bun":
 		bundist.TagVariants(assets)
 	case "fish":
