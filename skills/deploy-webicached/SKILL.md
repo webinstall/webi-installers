@@ -1,13 +1,46 @@
 ---
 name: deploy-webicached
-description: Deploy webicached binary to beta.webi.sh. Use when building, uploading, or restarting the cache daemon. Covers cross-compile, conf sync, service management.
+description: Deploy webicached binary to beta.webi.sh or webi.sh. Use when building, uploading, or restarting the cache daemon. Covers cross-compile, conf sync, service management.
 ---
 
 ## One-step deploy
 
+For production, update the server checkout first. Leave it on its current
+`main` or `hotfix` branch and rebase it on `origin/main`:
+
 ```sh
-./scripts/deploy-webicached.sh beta.webi.sh
+ssh webi.sh <<'SSH_EOF'
+set -Cue
+cd ~/srv/webinstall.dev/installers
+git pull --rebase origin main
+SSH_EOF
 ```
+
+Then run the deploy from a clean local worktree at the same `origin/main`
+commit:
+
+```sh
+./scripts/deploy-webicached.sh webi.sh
+```
+
+The deploy script syncs `releases.conf` files. Package pages also need the
+package directory (`README.md`, `install.sh`, and `install.ps1`) present in the
+production checkout; `git pull` supplies those tracked files. Afterward, refresh
+a package's release cache explicitly:
+
+```sh
+ssh webi.sh <<'SSH_EOF'
+set -Cue
+. ~/.config/envman/PATH.sh
+webicached \
+  --envfile ~/srv/webinstall.dev/.env.secret \
+  --conf ~/srv/webinstall.dev/installers/ \
+  --raw ~/.cache/webi/raw \
+  --once '<pkgname>'
+SSH_EOF
+```
+
+For beta, use `./scripts/deploy-webicached.sh beta.webi.sh`.
 
 Builds with version ldflags, stops service, uploads, syncs conf, starts, verifies.
 
@@ -121,5 +154,5 @@ serviceman logs webicached
 ssh beta.webi.sh ". ~/srv/beta.webinstall.dev/.env.secret && ~/bin/webicached \
   --conf ~/srv/beta.webinstall.dev/installers/ \
   --raw ~/.cache/webi/raw \
-  --once bat goreleaser"
+  --once '<pkgname>'"
 ```
