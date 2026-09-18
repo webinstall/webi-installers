@@ -13,7 +13,14 @@ __init_python() {
     #eval "$(pyenv init -)"
     #eval "$(pyenv virtualenv-init -)"
 
-    pyenv update
+    if ! pyenv update; then
+        b_merge_ff=$(git config --global --get merge.ff 2> /dev/null || true)
+        if test "${b_merge_ff}" = 'only'; then
+            echo 'WARN: pyenv update failed because Git has global merge.ff=only; continuing with existing definitions.' >&2
+        else
+            echo 'WARN: pyenv update failed; continuing with existing definitions.' >&2
+        fi
+    fi
 
     my_latest_python3="$(
         pyenv install --list |
