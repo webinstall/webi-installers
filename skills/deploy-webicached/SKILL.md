@@ -69,21 +69,19 @@ Expected: JSON array with release objects; shell script with `PKG_NAME='bat'`.
 
 ## Service management
 
-Register the service with the deployed binary on `PATH` so `serviceman` writes
-its resolved path into the service definition:
+Load the webi-managed `PATH` before registering the service so `serviceman`
+writes its resolved path into the service definition:
 
 ```sh
-PATH="$HOME/bin:$HOME/.local/bin:$PATH" serviceman add --name webicached \
-  --workdir "$HOME/srv/beta.webinstall.dev/installers/" -- \
+. ~/.config/envman/PATH.env
+serviceman add --name webicached \
+  --workdir ~/srv/beta.webinstall.dev/installers/ -- \
   webicached \
-    --env-file "$HOME/srv/beta.webinstall.dev/.env.secret" \
-    --conf "$HOME/srv/beta.webinstall.dev/installers/" \
-    --raw "$HOME/.cache/webi/raw" \
+    --env-file ~/srv/beta.webinstall.dev/.env.secret \
+    --conf ~/srv/beta.webinstall.dev/installers/ \
+    --raw ~/.cache/webi/raw \
     --interval 30s
 ```
-
-`--env-file` is preferred. `webicached` also accepts the legacy `--envfile`
-spelling for existing service definitions.
 
 ```sh
 serviceman status webicached
