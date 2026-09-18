@@ -15,6 +15,13 @@ Install Xcode tools first:
 xcode-select --install
 ```
 
+```sh
+# Use to fix ModuleNotFoundError: No module named '_lzma'
+export CPPFLAGS="-I$HOME/.local/opt/xz/include ${CPPFLAGS:-}"
+export LDFLAGS="-L$HOME/.local/opt/xz/lib ${LDFLAGS:-}"
+export PKG_CONFIG_PATH="$HOME/.local/opt/xz/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
+```
+
 ### How to Install pyenv on Linux
 
 Make sure that you already have the necessary build tools installed:
@@ -95,6 +102,7 @@ install:
 
 ```sh
 ~/.config/envman/PATH.env
+~/.local/opt/xz/
 ~/.pyenv/bin/
 ~/.pyenv/shims/
 
