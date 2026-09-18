@@ -191,7 +191,7 @@ __bootstrap_webi() {
             cd "${my_dl}.part" &&
                 git -c init.defaultBranch=main init --quiet &&
                 git remote add origin "${my_url}" &&
-                git fetch --quiet --depth=1 origin "${WEBI_GIT_TAG}" &&
+                git fetch --quiet --depth=2 origin "${WEBI_GIT_TAG}" &&
                 git -c advice.detachedHead=false checkout --quiet FETCH_HEAD
         ); then
             echo >&2 "    $(t_err "failed to git clone ${WEBI_PKG_URL}")"
