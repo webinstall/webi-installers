@@ -25,6 +25,13 @@ func TestFilename(t *testing.T) {
 			format: buildmeta.FormatTarGz,
 		},
 		{
+			name:   "android linux-named amd64 zip",
+			input:  "bun-linux-x64-android-baseline.zip",
+			wantOS: buildmeta.OSAndroid,
+			arch:   buildmeta.ArchAMD64,
+			format: buildmeta.FormatZip,
+		},
+		{
 			name:   "goreleaser darwin arm64 tar.gz",
 			input:  "hugo_0.145.0_darwin-arm64.tar.gz",
 			wantOS: buildmeta.OSDarwin,
