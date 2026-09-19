@@ -260,6 +260,7 @@ __test() {
         koji \
         kubectx \
         kubens \
+        lazygit \
         lf \
         lsd \
         mutagen \
