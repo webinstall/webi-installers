@@ -13,8 +13,8 @@ the most common. Check `tar -tz $ARCHIVE` before writing any code.
 | caravan | Binary with shared libraries |
 | completionist | FHS layout with files in place |
 | heretic | Gang's all there, but in a bespoke, convention-defying layout |
-| pantheon | Multi-binary distribution |
 | legion | Full SDK or monolith |
+| pantheon | Multi-binary distribution |
 
 ## waif — Single binary, optionally compressed
 

@@ -154,8 +154,8 @@ one binary, so there may be no archive listing to inspect.
 | **caravan** | Binary + shared libraries (bundled) | ollama (Linux), psql, sass, syncthing |
 | **completionist** | FHS-like layout (`bin/`, `share/man/`) | gh, pandoc |
 | **heretic** | Gang's all there, but in a bespoke, convention-defying layout | bat, fd, rg, sd, watchexec, zoxide |
-| **pantheon** | Multi-binary distribution | dashcore, mutagen |
 | **legion** | Full SDK/toolchain (many files) | go, node, zig, flutter, julia |
+| **pantheon** | Multi-binary distribution | dashcore, mutagen |
 
 ### Classification quick reference
 
