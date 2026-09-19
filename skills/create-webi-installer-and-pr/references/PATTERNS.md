@@ -11,7 +11,7 @@ the most common. Check `tar -tz $ARCHIVE` before writing any code.
 | heretic | Gang's all there, but in a bespoke, convention-defying layout |
 | caravan | Binary with shared libraries |
 | completionist | FHS layout with files in place |
-| chameleon | Binary needs renaming |
+| pseudos | Binary needs renaming |
 | legion | Full SDK or monolith |
 | el mono | Flat .NET DLL bundle |
 | pantheon | Multi-binary distribution |
@@ -264,7 +264,7 @@ pkg_get_current_version() {
 No `chmod` needed — binary is already executable inside the archive.
 
 
-## chameleon — Binary needs rename
+## pseudos — Binary needs rename
 
 Binary in the archive doesn't match the expected command name.
 
@@ -404,7 +404,7 @@ Archive already has bin/ and share/ layout?
   → completionist
 
 Binary name doesn't match the command name?
-  → chameleon  (rename during install)
+  → pseudos  (rename during install)
 
 Archive is a full SDK (compiler, runtime, stdlib)?
   → legion  (pkg_src = pkg_src_dir)
@@ -631,7 +631,7 @@ Move the entire `psql-{ver}-{triplet}/` directory: `mv ./psql-*/ "$pkg_src_dir"`
 Move the entire `gh_*/` directory: `mv ./gh_*/ "$pkg_src_dir"`
 
 
-## chameleon examples
+## pseudos examples
 
 ### yq — linux/amd64 tar.gz (WEBI_SINGLE=true)
 ```
@@ -716,9 +716,9 @@ curl -fsSL "$URL" -o /tmp/pkg.tar.zst && zstd -dc /tmp/pkg.tar.zst | tar -tz | h
 
 **What to look for**:
 1. Is this one bare or compressed binary with no archive of files? (waif)
-2. Is there a top-level directory? (prestige/heretic/caravan/completionist/legion) or no directory? (idealist/chameleon/el mono)
+2. Is there a top-level directory? (prestige/heretic/caravan/completionist/legion) or no directory? (idealist/pseudos/el mono)
 3. What is the directory named? Does it contain version? triplet?
 4. Are there `completions/`, `autocomplete/`, `complete/` subdirs? (heretic)
 5. Are there `.so`/`.dylib`/`.dll` files? (caravan or el mono)
-6. Does the binary name match the command you want on PATH? (chameleon if not)
+6. Does the binary name match the command you want on PATH? (pseudos if not)
 7. Is there a `bin/` directory at the top level? (completionist or legion)

@@ -152,7 +152,7 @@ one binary, so there may be no archive listing to inspect.
 | **heretic** | Gang's all there, but in a bespoke, convention-defying layout | bat, fd, rg, sd, watchexec, zoxide |
 | **caravan** | Binary + shared libraries (bundled) | ollama (Linux), psql, sass, syncthing |
 | **completionist** | FHS-like layout (`bin/`, `share/man/`) | gh, pandoc |
-| **chameleon** | Renamed binary needing install-time rename | pathman, yq |
+| **pseudos** | Renamed binary needing install-time rename | pathman, yq |
 | **legion** | Full SDK/toolchain (many files) | go, node, zig, flutter, julia |
 | **el mono** | .NET runtime bundle | pwsh |
 | **pantheon** | Multi-binary distribution | dashcore, mutagen |
@@ -251,7 +251,7 @@ __init_toolname
 
 Set `WEBI_SINGLE=true` when using the conventional **idealist** skeleton
 (where `pkg_src` and `pkg_dst` are not set to custom values). When you
-explicitly assign all six variables yourself (as in **prestige** through **chameleon**),
+explicitly assign all six variables yourself (as in **prestige** through **pseudos**),
 `WEBI_SINGLE` is not strictly required but can still be set for clarity.
 
 **legion** (SDKs) and **el mono** (.NET bundles) do NOT use `WEBI_SINGLE` —
@@ -371,7 +371,7 @@ pkg_install() {
 }
 ```
 
-**chameleon** — binary needs rename (archive name ≠ command name).
+**pseudos** — binary needs rename (archive name ≠ command name).
 Use when the binary in the archive cannot be matched by `$pkg_cmd_name*`
 — e.g., `yq_linux_amd64` for a command named `yq`:
 ```sh
