@@ -8,7 +8,7 @@ the most common. Check `tar -tz $ARCHIVE` before writing any code.
 | waif | Single bare or compressed binary |
 | idealist | Single binary at archive root |
 | prestige | One wrapper directory, one binary |
-| hydra | Wrapper directory, binary, completions, and man pages |
+| heretic | Binary plus extra assets in a bespoke layout |
 | caravan | Binary with shared libraries |
 | completionist | FHS layout with files in place |
 | chameleon | Binary needs renaming |
@@ -120,7 +120,7 @@ Move-Item -Path ".\delta-*\delta.exe" -Destination "$pkg_src_bin"
 ```
 
 
-## hydra — Subdirectory with binary + completions and/or man pages
+## heretic — Binary plus extra assets in a bespoke layout
 
 Same as prestige but the archive also contains shell completions and/or man pages
 worth installing. A new installer should preserve these extra files when they
@@ -397,7 +397,7 @@ Archive root contains a single binary (or binary + docs)?
 
 Archive has a named subdirectory wrapping the binary?
   ├─ Binary only inside subdir?         → prestige
-  ├─ Binary + completions/man pages?    → hydra
+  ├─ Binary + completions/man pages?    → heretic
   └─ Binary + shared libraries (.so)?  → caravan
 
 Archive already has bin/ and share/ layout?
@@ -494,7 +494,7 @@ Glob to move: `./shellcheck-*/shellcheck`
 ```
 
 
-## hydra examples
+## heretic examples
 
 ### rg/ripgrep 14.1.1 — linux/amd64 tar.gz
 ```
@@ -716,9 +716,9 @@ curl -fsSL "$URL" -o /tmp/pkg.tar.zst && zstd -dc /tmp/pkg.tar.zst | tar -tz | h
 
 **What to look for**:
 1. Is this one bare or compressed binary with no archive of files? (waif)
-2. Is there a top-level directory? (prestige/hydra/caravan/completionist/leviathan) or no directory? (idealist/chameleon/el mono)
+2. Is there a top-level directory? (prestige/heretic/caravan/completionist/leviathan) or no directory? (idealist/chameleon/el mono)
 3. What is the directory named? Does it contain version? triplet?
-4. Are there `completions/`, `autocomplete/`, `complete/` subdirs? (hydra)
+4. Are there `completions/`, `autocomplete/`, `complete/` subdirs? (heretic)
 5. Are there `.so`/`.dylib`/`.dll` files? (caravan or el mono)
 6. Does the binary name match the command you want on PATH? (chameleon if not)
 7. Is there a `bin/` directory at the top level? (completionist or leviathan)

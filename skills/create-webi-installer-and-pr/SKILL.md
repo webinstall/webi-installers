@@ -149,7 +149,7 @@ one binary, so there may be no archive listing to inspect.
 | **waif** | Single bare or compressed binary — no archive of files | jq, shfmt |
 | **idealist** | Single binary (or binary+docs) at archive root | caddy, fzf, k9s, terraform |
 | **prestige** | Binary inside a version/triplet-named subdirectory | bun, delta, shellcheck, trip, xsv |
-| **hydra** | Like prestige, plus shell completions and/or man pages | bat, fd, rg, sd, watchexec, zoxide |
+| **heretic** | Binary plus extra assets in a bespoke layout | bat, fd, rg, sd, watchexec, zoxide |
 | **caravan** | Binary + shared libraries (bundled) | ollama (Linux), psql, sass, syncthing |
 | **completionist** | FHS-like layout (`bin/`, `share/man/`) | gh, pandoc |
 | **chameleon** | Renamed binary needing install-time rename | pathman, yq |
@@ -323,7 +323,7 @@ pkg_install() {
 }
 ```
 
-**hydra** — like prestige, plus completions and man pages.
+**heretic** — binary plus extra assets in a bespoke layout.
 The completion directory and filename vary per package — always check
 `tar -tz` output first. Common variants: `completions/`, `autocomplete/`,
 `complete/`. See [`references/PATTERNS.md`](references/PATTERNS.md) for
