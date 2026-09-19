@@ -9,7 +9,6 @@ the most common. Check `tar -tz $ARCHIVE` before writing any code.
 | idealist | Single binary at archive root |
 | prestige | One wrapper directory, one binary |
 | pseudos | Binary needs renaming |
-| el mono | Flat .NET DLL bundle |
 | caravan | Binary with shared libraries |
 | completionist | FHS layout with files in place |
 | heretic | Gang's all there, but in a bespoke, convention-defying layout |
@@ -326,7 +325,7 @@ pkg_get_current_version() {
 ```
 
 
-## el mono — .NET runtime bundle
+## pwsh — .NET runtime bundle (heretic)
 
 Flat directory with one binary and hundreds of `.dll` files. The entire
 directory must be preserved. Like legion (SDK) in structure — the
@@ -410,7 +409,7 @@ Archive is a full SDK (compiler, runtime, stdlib)?
   → legion  (pkg_src = pkg_src_dir)
 
 Flat directory with many DLLs (.NET)?
-  → el mono
+  → heretic
 
 Multiple binaries for a single distributed system?
   → pantheon
@@ -681,7 +680,7 @@ Move entire directory: `mv ./node-*/ "$pkg_src_dir"`
 Note: go's archive root directory is literally `go/` with no version in the name.
 
 
-## el mono examples
+## pwsh example (heretic)
 
 ### pwsh 7.4.6 — linux/amd64 tar.gz
 ```
@@ -716,9 +715,9 @@ curl -fsSL "$URL" -o /tmp/pkg.tar.zst && zstd -dc /tmp/pkg.tar.zst | tar -tz | h
 
 **What to look for**:
 1. Is this one bare or compressed binary with no archive of files? (waif)
-2. Is there a top-level directory? (prestige/heretic/caravan/completionist/legion) or no directory? (idealist/pseudos/el mono)
+2. Is there a top-level directory? (prestige/heretic/caravan/completionist/legion) or no directory? (idealist/pseudos)
 3. What is the directory named? Does it contain version? triplet?
 4. Are there `completions/`, `autocomplete/`, `complete/` subdirs? (heretic)
-5. Are there `.so`/`.dylib`/`.dll` files? (caravan or el mono)
+5. Are there `.so`/`.dylib`/`.dll` files? (caravan or heretic)
 6. Does the binary name match the command you want on PATH? (pseudos if not)
 7. Is there a `bin/` directory at the top level? (completionist or legion)

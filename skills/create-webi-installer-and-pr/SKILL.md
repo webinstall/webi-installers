@@ -150,10 +150,9 @@ one binary, so there may be no archive listing to inspect.
 | **idealist** | Single binary (or binary+docs) at archive root | caddy, fzf, k9s, terraform |
 | **prestige** | Binary inside a version/triplet-named subdirectory | bun, delta, shellcheck, trip, xsv |
 | **pseudos** | Renamed binary needing install-time rename | pathman, yq |
-| **el mono** | .NET runtime bundle | pwsh |
 | **caravan** | Binary + shared libraries (bundled) | ollama (Linux), psql, sass, syncthing |
 | **completionist** | FHS-like layout (`bin/`, `share/man/`) | gh, pandoc |
-| **heretic** | Gang's all there, but in a bespoke, convention-defying layout | bat, fd, rg, sd, watchexec, zoxide |
+| **heretic** | Gang's all there, but in a bespoke, convention-defying layout | bat, fd, pwsh, rg, sd, watchexec, zoxide |
 | **legion** | Full SDK/toolchain (many files) | go, node, zig, flutter, julia |
 | **pantheon** | Multi-binary distribution | dashcore, mutagen |
 
@@ -254,7 +253,7 @@ Set `WEBI_SINGLE=true` when using the conventional **idealist** skeleton
 explicitly assign all six variables yourself (as in **prestige** through **pseudos**),
 `WEBI_SINGLE` is not strictly required but can still be set for clarity.
 
-**legion** (SDKs) and **el mono** (.NET bundles) do NOT use `WEBI_SINGLE` —
+**legion** (SDKs) and **heretic** (.NET bundles) do NOT use `WEBI_SINGLE` —
 they define `pkg_link()` manually because the whole directory tree must
 be linked, not just a single binary.
 
