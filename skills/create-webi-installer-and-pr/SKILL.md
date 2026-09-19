@@ -153,7 +153,7 @@ one binary, so there may be no archive listing to inspect.
 | **caravan** | Binary + shared libraries (bundled) | ollama (Linux), psql, sass, syncthing |
 | **completionist** | FHS-like layout (`bin/`, `share/man/`) | gh, pandoc |
 | **chameleon** | Renamed binary needing install-time rename | pathman, yq |
-| **leviathan** | Full SDK/toolchain (many files) | go, node, zig, flutter, julia |
+| **legion** | Full SDK/toolchain (many files) | go, node, zig, flutter, julia |
 | **el mono** | .NET runtime bundle | pwsh |
 | **pantheon** | Multi-binary distribution | dashcore, mutagen |
 
@@ -254,7 +254,7 @@ Set `WEBI_SINGLE=true` when using the conventional **idealist** skeleton
 explicitly assign all six variables yourself (as in **prestige** through **chameleon**),
 `WEBI_SINGLE` is not strictly required but can still be set for clarity.
 
-**leviathan** (SDKs) and **el mono** (.NET bundles) do NOT use `WEBI_SINGLE` —
+**legion** (SDKs) and **el mono** (.NET bundles) do NOT use `WEBI_SINGLE` —
 they define `pkg_link()` manually because the whole directory tree must
 be linked, not just a single binary.
 
@@ -383,7 +383,7 @@ pkg_install() {
 }
 ```
 
-**leviathan** — full SDK (do NOT set `WEBI_SINGLE`):
+**legion** — full SDK (do NOT set `WEBI_SINGLE`):
 ```sh
 # pkg_src = directory, not a binary
 pkg_src="$pkg_src_dir"
