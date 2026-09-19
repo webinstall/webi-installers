@@ -25,6 +25,22 @@ __init_watchexec() {
 
         # mv ./watchexec-*/watchexec ~/.local/opt/watchexec-v0.99.9/bin/watchexec
         mv ./watchexec-*/watchexec "$pkg_src_cmd"
+
+        # install completions if present (completions/{bash,fish,zsh})
+        if test -d ./watchexec-*/completions; then
+            mkdir -p "$pkg_src_dir/share/bash-completion/completions"
+            mkdir -p "$pkg_src_dir/share/fish/vendor_completions.d"
+            mkdir -p "$pkg_src_dir/share/zsh/site-functions"
+            mv ./watchexec-*/completions/bash "$pkg_src_dir/share/bash-completion/completions/watchexec" 2>/dev/null || true
+            mv ./watchexec-*/completions/fish "$pkg_src_dir/share/fish/vendor_completions.d/watchexec.fish" 2>/dev/null || true
+            mv ./watchexec-*/completions/zsh "$pkg_src_dir/share/zsh/site-functions/_watchexec" 2>/dev/null || true
+        fi
+
+        # install man page if present
+        if test -f ./watchexec-*/watchexec.1; then
+            mkdir -p "$pkg_src_dir/share/man/man1"
+            mv ./watchexec-*/watchexec.1 "$pkg_src_dir/share/man/man1/watchexec.1"
+        fi
     }
 
     # pkg_get_current_version is recommended, but (soon) not required
