@@ -149,13 +149,13 @@ one binary, so there may be no archive listing to inspect.
 | **waif** | Single bare or compressed binary — no archive of files | jq, shfmt |
 | **idealist** | Single binary (or binary+docs) at archive root | caddy, fzf, k9s, terraform |
 | **prestige** | Binary inside a version/triplet-named subdirectory | bun, delta, shellcheck, trip, xsv |
-| **heretic** | Gang's all there, but in a bespoke, convention-defying layout | bat, fd, rg, sd, watchexec, zoxide |
+| **pseudos** | Renamed binary needing install-time rename | pathman, yq |
+| **el mono** | .NET runtime bundle | pwsh |
 | **caravan** | Binary + shared libraries (bundled) | ollama (Linux), psql, sass, syncthing |
 | **completionist** | FHS-like layout (`bin/`, `share/man/`) | gh, pandoc |
-| **pseudos** | Renamed binary needing install-time rename | pathman, yq |
-| **legion** | Full SDK/toolchain (many files) | go, node, zig, flutter, julia |
-| **el mono** | .NET runtime bundle | pwsh |
+| **heretic** | Gang's all there, but in a bespoke, convention-defying layout | bat, fd, rg, sd, watchexec, zoxide |
 | **pantheon** | Multi-binary distribution | dashcore, mutagen |
+| **legion** | Full SDK/toolchain (many files) | go, node, zig, flutter, julia |
 
 ### Classification quick reference
 

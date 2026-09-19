@@ -8,13 +8,13 @@ the most common. Check `tar -tz $ARCHIVE` before writing any code.
 | waif | Single bare or compressed binary |
 | idealist | Single binary at archive root |
 | prestige | One wrapper directory, one binary |
-| heretic | Gang's all there, but in a bespoke, convention-defying layout |
+| pseudos | Binary needs renaming |
+| el mono | Flat .NET DLL bundle |
 | caravan | Binary with shared libraries |
 | completionist | FHS layout with files in place |
-| pseudos | Binary needs renaming |
-| legion | Full SDK or monolith |
-| el mono | Flat .NET DLL bundle |
+| heretic | Gang's all there, but in a bespoke, convention-defying layout |
 | pantheon | Multi-binary distribution |
+| legion | Full SDK or monolith |
 
 ## waif — Single binary, optionally compressed
 
