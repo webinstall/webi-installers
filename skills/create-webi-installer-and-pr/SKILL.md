@@ -38,6 +38,58 @@ Full reference: [`references/PATTERNS.md`](references/PATTERNS.md)
 Archive layout details: [`references/PATTERNS.md`](references/PATTERNS.md)
 Classification guide: [`references/CLASSIFICATION.md`](references/CLASSIFICATION.md)
 
+## README purpose and Files section
+
+The Webi README is a daily-driver guide, not a copy of the project's README.
+Highlight:
+
+- options an average user would want or expect as defaults;
+- footguns and nuances that matter in the common use case;
+- practical usage details that help an AI use the tool correctly without
+  obvious reminders such as `--version` or `--help`.
+
+Do not cover esoteric options, write a complete reference, or duplicate the
+upstream README. Keep the cheat sheet short and practical.
+
+Use progressive disclosure for the README flow:
+
+1. Orient the reader with the tagline and a one-line purpose.
+2. Show `### Files` and the paths users need to know.
+3. Give one happy-path example that can be copied and run.
+4. Add a ToC before the longer task recipes when there are several sections.
+5. Organize recipes by user task, from common setup to advanced integration.
+6. Put footguns beside the task they affect; link to upstream reference docs for
+   exhaustive details.
+
+Do not repeat the Files list in the ToC or prose. Do not add a ToC just to list
+flags. The README should get a user from "what is this?" to a useful daily
+driver setup with as little rediscovery as possible.
+
+Use these complex README examples as models:
+
+| README | Good model for |
+| --- | --- |
+| `serviceman/README.md` | Cross-platform services, platform nuances, and unit examples. |
+| `postgres/README.md` | Server setup, service registration, config, and secure remote access. |
+| `mariadb/README.md` | Service setup, config, auth, remote access, and backups. |
+| `psql/README.md` | Client config, authentication, TLS, and common workflows. |
+| `goreleaser/README.md` | Practical build and release workflows with config examples. |
+
+When the package README has a `### Files` section, enumerate the files and
+paths the installer creates or uses. Include at least the default directories
+where the tool stores configuration or data, even if the installer does not
+create them immediately. Also list the installed binary, versioned install
+path, PATH configuration, and any other default runtime paths when known.
+
+Example:
+
+```text
+~/.config/envman/PATH.env
+~/.config/tool/config.toml
+~/.local/share/tool/
+~/.cache/tool/
+~/.local/bin/tool
+```
 
 ## 1. Discover the archive layout
 
@@ -450,7 +502,12 @@ for how to write a variant tagger.
 
 ### Formats to drop
 
-These are automatically filtered from the legacy export — no action needed:
+Use `exclude` only for extensions or filename patterns that are likely to be
+misclassified or are not relevant to an installer. Do not use it just to remove
+supported duplicate archive formats or CPU variants; the legacy cacher handles
+those cases and can choose the right asset as its compatibility logic improves.
+
+Common non-installer assets filtered automatically from the legacy export:
 - `.deb`, `.rpm`, `.snap`, `.AppImage`
 - Checksums (`*.sha256`, `*.sha512`, `*.asc`, `*.sig`)
 - Source archives (`*-src.tar.gz`, `*.tar.gz` with no OS in name)
