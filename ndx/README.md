@@ -14,7 +14,7 @@ These are the files that are created and/or modified with this installer:
 ```text
 ~/.config/envman/PATH.env
 ~/.local/bin/ndx
-~/.local/opt/ndx-VERSION/bin/ndx
+~/.local/opt/ndx-vVERSION/bin/ndx
 ```
 
 ## Cheat Sheet
