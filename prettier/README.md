@@ -47,6 +47,7 @@ necessary!
 {
   "trailingComma": "none",
   "tabWidth": 2,
+  "useTabs": false,
   "singleQuote": true,
   "proseWrap": "always"
 }
