@@ -66,6 +66,7 @@ __rmrf_local() {
                 prettier \
                 powershell \
                 pwsh \
+                qcm \
                 rclone \
                 reactorcide \
                 rg \
@@ -168,6 +169,7 @@ __rmrf_local() {
                 prettier \
                 powershell \
                 pwsh \
+                qcm \
                 rclone \
                 reactorcide \
                 rg \
@@ -275,6 +277,7 @@ __test() {
         powershell \
         prettier \
         pwsh \
+        qcm \
         rclone \
         reactorcide \
         rg \
