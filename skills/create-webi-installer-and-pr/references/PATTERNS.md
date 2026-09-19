@@ -8,7 +8,7 @@ the most common. Check `tar -tz $ARCHIVE` before writing any code.
 | waif | Single bare or compressed binary |
 | idealist | Single binary at archive root |
 | prestige | One wrapper directory, one binary |
-| heretic | Binary plus extra assets in a bespoke layout |
+| heretic | Gang's all there, but in a bespoke, convention-defying layout |
 | caravan | Binary with shared libraries |
 | completionist | FHS layout with files in place |
 | chameleon | Binary needs renaming |
@@ -120,7 +120,7 @@ Move-Item -Path ".\delta-*\delta.exe" -Destination "$pkg_src_bin"
 ```
 
 
-## heretic — Binary plus extra assets in a bespoke layout
+## heretic — Gang's all there, but in a bespoke, convention-defying layout
 
 Same as prestige but the archive also contains shell completions and/or man pages
 worth installing. A new installer should preserve these extra files when they
