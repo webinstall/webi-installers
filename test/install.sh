@@ -84,6 +84,7 @@ __rmrf_local() {
                 ssh-utils \
                 syncthing \
                 terraform \
+                tlsrouter \
                 vim-ale \
                 vim-essentials \
                 vim-lastplace \
@@ -186,6 +187,7 @@ __rmrf_local() {
                 ssh-utils \
                 syncthing \
                 terraform \
+                tlsrouter \
                 vim-ale \
                 vim-essentials \
                 vim-go \
@@ -293,6 +295,7 @@ __test() {
         ssh-utils \
         syncthing \
         terraform \
+        tlsrouter \
         vim-ale \
         vim-essentials \
         vim-lastplace \
