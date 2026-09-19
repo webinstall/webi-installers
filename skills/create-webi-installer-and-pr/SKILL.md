@@ -126,7 +126,7 @@ curl -fsSL "$DOWNLOAD_URL" -o /tmp/pkg.zip && unzip -l /tmp/pkg.zip
 
 # bare binary, optionally compressed (e.g. jq-linux-amd64 or tool.xz)
 # The download contains one binary, not an archive of files. This is the
-# nudist pattern: set WEBI_SINGLE=true and rely on framework defaults.
+# waif pattern: set WEBI_SINGLE=true and rely on framework defaults.
 ```
 
 Look for:
@@ -138,7 +138,7 @@ Look for:
 - Is the binary name different from the package command name?
 
 See [`references/PATTERNS.md`](references/PATTERNS.md) for
-what each pattern looks like, with real examples. Nudist downloads contain
+what each pattern looks like, with real examples. Waif downloads contain
 one binary, so there may be no archive listing to inspect.
 
 
@@ -146,15 +146,15 @@ one binary, so there may be no archive listing to inspect.
 
 | Pattern | Description | Examples |
 |---------|-------------|----------|
-| **nudist** | Single bare or compressed binary — no archive of files | jq, shfmt |
+| **waif** | Single bare or compressed binary — no archive of files | jq, shfmt |
 | **idealist** | Single binary (or binary+docs) at archive root | caddy, fzf, k9s, terraform |
 | **prestige** | Binary inside a version/triplet-named subdirectory | bun, delta, shellcheck, trip, xsv |
-| **hydra** | Like prestige, plus shell completions and/or man pages | bat, fd, rg, sd, watchexec, zoxide |
+| **pseudos** | Renamed binary needing install-time rename | pathman, yq |
+| **el mono** | .NET runtime bundle | pwsh |
 | **caravan** | Binary + shared libraries (bundled) | ollama (Linux), psql, sass, syncthing |
 | **completionist** | FHS-like layout (`bin/`, `share/man/`) | gh, pandoc |
-| **chameleon** | Renamed binary needing install-time rename | pathman, yq |
-| **leviathan** | Full SDK/toolchain (many files) | go, node, zig, flutter, julia |
-| **el mono** | .NET runtime bundle | pwsh |
+| **heretic** | Gang's all there, but in a bespoke, convention-defying layout | bat, fd, rg, sd, watchexec, zoxide |
+| **legion** | Full SDK/toolchain (many files) | go, node, zig, flutter, julia |
 | **pantheon** | Multi-binary distribution | dashcore, mutagen |
 
 ### Classification quick reference
@@ -251,10 +251,10 @@ __init_toolname
 
 Set `WEBI_SINGLE=true` when using the conventional **idealist** skeleton
 (where `pkg_src` and `pkg_dst` are not set to custom values). When you
-explicitly assign all six variables yourself (as in **prestige** through **chameleon**),
+explicitly assign all six variables yourself (as in **prestige** through **pseudos**),
 `WEBI_SINGLE` is not strictly required but can still be set for clarity.
 
-**leviathan** (SDKs) and **el mono** (.NET bundles) do NOT use `WEBI_SINGLE` —
+**legion** (SDKs) and **el mono** (.NET bundles) do NOT use `WEBI_SINGLE` —
 they define `pkg_link()` manually because the whole directory tree must
 be linked, not just a single binary.
 
@@ -286,7 +286,7 @@ pkg_get_current_version() {
 
 ### Skeletons by pattern
 
-**nudist** — single bare binary, optionally compressed (`WEBI_SINGLE=true`):
+**waif** — single bare binary, optionally compressed (`WEBI_SINGLE=true`):
 The download contains one binary, not an archive of files. For an uncompressed
 binary, the framework detects `WEBI_EXT=exe` and moves it into the temp dir.
 For a supported single-file compression format, it inflates the file first.
@@ -323,7 +323,7 @@ pkg_install() {
 }
 ```
 
-**hydra** — like prestige, plus completions and man pages.
+**heretic** — gang's all there, but in a bespoke, convention-defying layout.
 The completion directory and filename vary per package — always check
 `tar -tz` output first. Common variants: `completions/`, `autocomplete/`,
 `complete/`. See [`references/PATTERNS.md`](references/PATTERNS.md) for
@@ -371,7 +371,7 @@ pkg_install() {
 }
 ```
 
-**chameleon** — binary needs rename (archive name ≠ command name).
+**pseudos** — binary needs rename (archive name ≠ command name).
 Use when the binary in the archive cannot be matched by `$pkg_cmd_name*`
 — e.g., `yq_linux_amd64` for a command named `yq`:
 ```sh
@@ -383,7 +383,7 @@ pkg_install() {
 }
 ```
 
-**leviathan** — full SDK (do NOT set `WEBI_SINGLE`):
+**legion** — full SDK (do NOT set `WEBI_SINGLE`):
 ```sh
 # pkg_src = directory, not a binary
 pkg_src="$pkg_src_dir"
