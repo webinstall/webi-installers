@@ -5,7 +5,7 @@ the most common. Check `tar -tz $ARCHIVE` before writing any code.
 
 | Class | Description |
 | --- | --- |
-| nudist | Single bare or compressed binary |
+| waif | Single bare or compressed binary |
 | idealist | Single binary at archive root |
 | prestige | One wrapper directory, one binary |
 | hydra | Wrapper directory, binary, completions, and man pages |
@@ -16,7 +16,7 @@ the most common. Check `tar -tz $ARCHIVE` before writing any code.
 | el mono | Flat .NET DLL bundle |
 | pantheon | Multi-binary distribution |
 
-## nudist — Single binary, optionally compressed
+## waif — Single binary, optionally compressed
 
 There is no archive containing multiple files. The download is one bare binary,
 or one binary wrapped in a supported single-file compression format. The
@@ -390,7 +390,7 @@ pkg_install() {
 
 ```
 Download contains one binary, bare or in supported single-file compression?
-  → nudist  (set WEBI_SINGLE=true)
+  → waif  (set WEBI_SINGLE=true)
 
 Archive root contains a single binary (or binary + docs)?
   → idealist  (set WEBI_SINGLE=true)
@@ -421,7 +421,7 @@ Multiple binaries for a single distributed system?
 Actual `tar -t` / `unzip -l` output for representative packages.
 Use these to calibrate your eye for what each pattern looks like.
 
-## nudist examples
+## waif examples
 
 There is no `tar -t` listing for the bare form. Check the release filename and
 format metadata instead. For example, shfmt publishes names such as
@@ -715,7 +715,7 @@ curl -fsSL "$URL" -o /tmp/pkg.tar.zst && zstd -dc /tmp/pkg.tar.zst | tar -tz | h
 ```
 
 **What to look for**:
-1. Is this one bare or compressed binary with no archive of files? (nudist)
+1. Is this one bare or compressed binary with no archive of files? (waif)
 2. Is there a top-level directory? (prestige/hydra/caravan/completionist/leviathan) or no directory? (idealist/chameleon/el mono)
 3. What is the directory named? Does it contain version? triplet?
 4. Are there `completions/`, `autocomplete/`, `complete/` subdirs? (hydra)
