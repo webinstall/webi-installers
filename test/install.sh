@@ -57,6 +57,7 @@ __rmrf_local() {
                 lsd \
                 mutagen \
                 myip \
+                ndx \
                 nerd-font \
                 nerdfont \
                 node \
@@ -159,6 +160,7 @@ __rmrf_local() {
                 lsd \
                 mutagen \
                 myip \
+                ndx \
                 nerd-font \
                 nerdfont \
                 node \
@@ -264,6 +266,7 @@ __test() {
         lsd \
         mutagen \
         myip \
+        ndx \
         nerd-font \
         nerdfont \
         node \
