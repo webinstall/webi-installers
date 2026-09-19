@@ -29,6 +29,7 @@ __rmrf_local() {
                 foundry \
                 fzf \
                 gh \
+                gha-doctor \
                 git-config-gpg \
                 git-gpg-init \
                 gitdeploy \
@@ -131,6 +132,7 @@ __rmrf_local() {
                 foundry \
                 fzf \
                 gh \
+                gha-doctor \
                 git-config-gpg \
                 git-gpg-init \
                 gitdeploy \
@@ -236,6 +238,7 @@ __test() {
         foundry \
         fzf \
         gh \
+        gha-doctor \
         git-config-gpg \
         git-gpg-init \
         gitdeploy \
