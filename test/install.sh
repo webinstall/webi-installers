@@ -60,6 +60,7 @@ __rmrf_local() {
                 nerd-font \
                 nerdfont \
                 node \
+                nushell \
                 ots \
                 pandoc \
                 pathman \
@@ -162,6 +163,7 @@ __rmrf_local() {
                 myip \
                 nerd-font \
                 nerdfont \
+                nushell \
                 node \
                 ots \
                 pandoc \
@@ -269,6 +271,7 @@ __test() {
         nerd-font \
         nerdfont \
         node \
+        nushell \
         ots \
         pandoc \
         pathman \
