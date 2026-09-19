@@ -60,6 +60,7 @@ __rmrf_local() {
                 nerd-font \
                 nerdfont \
                 node \
+                opencode \
                 ots \
                 pandoc \
                 pathman \
@@ -163,6 +164,7 @@ __rmrf_local() {
                 nerd-font \
                 nerdfont \
                 node \
+                opencode \
                 ots \
                 pandoc \
                 pathman \
