@@ -1,0 +1,100 @@
+#!/bin/sh
+set -e
+set -u
+
+# Deploy the Node.js webinstall (installer server) to a target host.
+# Usage: _scripts/deploy-webinstall <host>
+#   e.g. _scripts/deploy-webinstall beta.webi.sh
+#        _scripts/deploy-webinstall next.webi.sh
+
+fn_main() {
+    g_host="${1:-}"
+    if test -z "${g_host}"; then
+        printf 'Usage: %s <host>\n' "$0" >&2
+        printf '  e.g. %s beta.webi.sh\n' "$0" >&2
+        exit 1
+    fi
+
+    # beta.webi.sh → ~/srv/beta.webinstall.dev/installers/
+    # next.webi.sh → ~/srv/next.webinstall.dev/installers/
+    b_subdomain="${g_host%%.*}"
+    g_dest="~/srv/${b_subdomain}.webinstall.dev/installers/"
+
+    # Verify the build-classifier submodule is populated. rsync will
+    # happily push an empty submodule directory, after which Node
+    # crashes at startup with `Cannot find module './build-classifier/
+    # host-targets.js'`. New worktrees from `git worktree add` don't
+    # init submodules by default.
+    if ! test -f ./_webi/build-classifier/host-targets.js; then
+        printf 'fatal: _webi/build-classifier submodule not initialized\n' >&2
+        printf '  run: git submodule update --init _webi/build-classifier\n' >&2
+        exit 1
+    fi
+
+    printf '%s\n' "Deploying to ${g_host}:${g_dest} ..."
+
+    rsync -avz --delete \
+        --exclude='.git' \
+        --exclude='node_modules' \
+        --exclude='_cache' \
+        --exclude='LIVE_cache' \
+        --exclude='webicached' \
+        --exclude='classify' \
+        --exclude='fetchraw' \
+        --exclude='inspect' \
+        --exclude='e2etest' \
+        --exclude='zigtest' \
+        --exclude='distributables.csv' \
+        --exclude='agents/' \
+        ./ "${g_host}:${g_dest}"
+
+    printf '%s\n' "Restarting webinstall ..."
+
+    # shellcheck disable=SC2029
+    ssh "${g_host}" "
+        . ~/.config/envman/PATH.env 2>/dev/null
+        rm -rf ${g_dest}_cache 2>/dev/null
+        serviceman restart webinstall
+    "
+
+    printf '%s\n' "Waiting for restart ..."
+    sleep 3
+
+    fn_smoke_test
+}
+
+fn_smoke_test() {
+    printf '%s\n' "Smoke testing https://${g_host}/ ..."
+
+    b_headers="$(curl -sI --max-time 5 "https://${g_host}/api/releases/go.json?limit=1")"
+
+    if printf '%s' "${b_headers}" | grep -qi 'X-Robots-Tag: noindex'; then
+        printf '%s\n' "  [ok] X-Robots-Tag: noindex"
+    else
+        printf '%s\n' "  [FAIL] Missing X-Robots-Tag header"
+    fi
+
+    if printf '%s' "${b_headers}" | grep -qi 'rel="canonical"'; then
+        printf '%s\n' "  [ok] Link: canonical"
+    else
+        printf '%s\n' "  [FAIL] Missing canonical Link header"
+    fi
+
+    b_version="$(curl -sS --max-time 5 "https://${g_host}/api/releases/go.json?limit=1" | jq -r '.[0].version')"
+    if test "${b_version}" != "0.0.0" && test -n "${b_version}"; then
+        printf '%s\n' "  [ok] API returns go ${b_version}"
+    else
+        printf '%s\n' "  [FAIL] API returned error or empty for go"
+    fi
+
+    b_shebang="$(curl -sS --max-time 5 "https://${g_host}/node" | head -1)"
+    if test "${b_shebang}" = "#!/bin/sh"; then
+        printf '%s\n' "  [ok] Installer path serves shell script"
+    else
+        printf '%s\n' "  [FAIL] Installer path unexpected: ${b_shebang}"
+    fi
+
+    printf '%s\n' "Done."
+}
+
+fn_main "$@"

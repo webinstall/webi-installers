@@ -1,1 +1,2 @@
-DELETEMEnode_modules/**/*
+node_modules/**/*
+_webi/test-*.js
