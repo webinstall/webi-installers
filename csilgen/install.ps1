@@ -49,7 +49,7 @@ if (!(Test-Path -Path "$pkg_src_cmd")) {
 
     # Settle unpacked archive into place
     # The archive holds a bare binary plus a LICENSE and README.md at its
-    # root (csilgen-0.2.6-windows-x86_64.tar.gz -> .\csilgen.exe,
+    # root (csilgen-0.2.8-x86_64-pc-windows-gnu.tar.gz -> .\csilgen.exe,
     # .\LICENSE, .\README.md), but fall back to a subdirectory layout just
     # in case. Only the binary is moved into place.
     Write-Output "Install Location: $pkg_src_cmd"

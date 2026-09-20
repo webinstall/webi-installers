@@ -45,7 +45,7 @@ __init_csilctl() {
         mkdir -p "$(dirname "$pkg_src_cmd")"
 
         # the archive contains a bare binary plus a README.md at its root:
-        #     csilctl-0.2.1-linux-x86_64.tar.gz -> ./csilctl, ./README.md
+        #     csilctl-0.2.4-x86_64-unknown-linux-gnu.tar.gz -> ./csilctl, ./README.md
         # only the binary is moved into place.
         if test -f ./csilctl; then
             # mv ./csilctl ~/.local/opt/csilctl-v0.2.1/bin/csilctl

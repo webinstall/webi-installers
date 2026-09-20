@@ -46,7 +46,7 @@ __init_csilgen() {
 
         # the archive contains a bare binary plus a LICENSE and README.md at
         # its root:
-        #     csilgen-0.2.6-linux-x86_64.tar.gz -> ./csilgen, ./LICENSE, ./README.md
+        #     csilgen-0.2.8-x86_64-unknown-linux-gnu.tar.gz -> ./csilgen, ./LICENSE, ./README.md
         # only the binary is moved into place.
         if test -f ./csilgen; then
             # mv ./csilgen ~/.local/opt/csilgen-v0.2.6/bin/csilgen
