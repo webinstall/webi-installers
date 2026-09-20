@@ -49,7 +49,7 @@ if (!(Test-Path -Path "$pkg_src_cmd")) {
 
     # Settle unpacked archive into place
     # The archive holds a bare binary plus a README.md at its root
-    # (csilctl-0.2.1-windows-x86_64.tar.gz -> .\csilctl.exe, .\README.md),
+    # (csilctl-0.2.4-x86_64-pc-windows-gnu.tar.gz -> .\csilctl.exe, .\README.md),
     # but fall back to a subdirectory layout just in case. Only the binary
     # is moved into place.
     Write-Output "Install Location: $pkg_src_cmd"
