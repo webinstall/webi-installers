@@ -39,7 +39,9 @@ function getOs(ua) {
     // See also http://www.mslinux.org/
     // 'linux' must be tested before 'Microsoft' because WSL
     return 'linux';
-  } else if (/^ms$|Microsoft|Windows|win32|win|PowerShell|CYGWIN|MINGW/i.test(ua)) {
+  } else if (
+    /^ms$|Microsoft|Windows|win32|win|PowerShell|CYGWIN|MINGW/i.test(ua)
+  ) {
     // 'win' must be tested after 'darwin'
     return 'windows';
   } else if (/Linux|curl|wget/i.test(ua)) {

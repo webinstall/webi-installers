@@ -1,18 +1,18 @@
 ---
 title: qcm
-homepage: https://youg-otricked.github.io/QuantumC
+homepage: https://youg-otricked.github.io/QuarticC
 tagline: |
   QuantumC - An explicit programming language for systems developers.
 description: |
   QCM is the official QuantumC toolchain. It installs, updates, and manages QuantumC compilers, packages, and projects.
 ---
 
-QCM is the official command-line tool for QuantumC.
+QCM is the official command-line tool for QuarticC.
 
-Like `go` for Go, QCM installs and manages the QuantumC toolchain, packages, and
+Like `go` for Go, QCM installs and manages the QuarticC toolchain, packages, and
 projects.
 
-- installing QuantumC versions
+- installing QuarticC versions
 - switching compiler versions
 - managing packages
 - creating and building projects
@@ -38,11 +38,11 @@ qcm upgrade
 
 QCM has two groups of commands:
 
-- **Project commands** manage the current QuantumC project and its packages.
-- **Tooling commands** manage installed QuantumC compiler versions and the local
+- **Project commands** manage the current QuarticC project and its packages.
+- **Tooling commands** manage installed QuarticC compiler versions and the local
   toolchain.
 
-Install the latest QuantumC compiler:
+Install the latest QuarticC compiler:
 
 ```sh
 qcm tooling install latest
@@ -60,7 +60,7 @@ Switch compiler versions:
 qcm tooling use x0.18.0
 ```
 
-Create a new QuantumC project:
+Create a new QuarticC project:
 
 ```sh
 mkdir hello
@@ -76,21 +76,21 @@ qcm run build
 
 ### Core Ideals
 
-QuantumC has 4 core ideals;
+QuarticC has 4 core ideals;
 
-1. Your Memory, Your Problem - QuantumC lets you do anything (yes, anything),
+1. Your Memory, Your Problem - QuarticC lets you do anything (yes, anything),
    but also will let you segfault your segfault.
-2. Forced Cleanliness - QuantumC syntax is designed to be explicit and clean.
+2. Forced Cleanliness - QuarticC syntax is designed to be explicit and clean.
    This sometimes trades away terseness, but makes a better DX.
-3. No Hiding - QuantumC does not hide away features or pretend they are the
+3. No Hiding - QuarticC does not hide away features or pretend they are the
    standard library when they are intrinsic.
-4. No Excessive Syntax - QuantumC does not have any repetitive ridiculous
+4. No Excessive Syntax - QuarticC does not have any repetitive ridiculous
    syntax - no capture lists on lambdas, no
    `fn longest<'a>(x: &'a str, y: &'a str) -> &'a str { ... }`
 
 ### Hello World
 
-1. Install the latest version of the QuantumC compiler
+1. Install the latest version of the QuarticC compiler
    ```sh
    qcm tooling install latest
    ```
@@ -125,6 +125,6 @@ QuantumC has 4 core ideals;
 
 ## Learn More
 
-QuantumC documentation:
+QuarticC documentation:
 
-https://youg-otricked.github.io/QuantumC
+https://youg-otricked.github.io/QuarticC

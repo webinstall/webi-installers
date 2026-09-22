@@ -96,9 +96,7 @@ async function filterReleases(
       // freebsd, etc., but NOT windows).
       let isPosix = rel.os === 'posix' || rel.os.startsWith('posix_20');
       let osMatches =
-        rel.os === '*' ||
-        rel.os === os ||
-        (isPosix && os !== 'windows');
+        rel.os === '*' || rel.os === os || (isPosix && os !== 'windows');
       if (!osMatches) {
         return false;
       }
@@ -321,19 +319,17 @@ Releases.getReleases = function ({
 };
 
 if (require.main === module) {
-  return Releases
-    .getReleases({
-      pkg: 'node',
-      ver: '',
-      os: 'macos',
-      arch: 'amd64',
-      lts: true,
-      libc: 'libc',
-      channel: 'stable',
-      formats: ['tar', 'exe', 'zip', 'xz', 'dmg', 'pkg'],
-      limit: 10,
-    })
-    .then(function (all) {
-      console.info(JSON.stringify(all));
-    });
+  return Releases.getReleases({
+    pkg: 'node',
+    ver: '',
+    os: 'macos',
+    arch: 'amd64',
+    lts: true,
+    libc: 'libc',
+    channel: 'stable',
+    formats: ['tar', 'exe', 'zip', 'xz', 'dmg', 'pkg'],
+    limit: 10,
+  }).then(function (all) {
+    console.info(JSON.stringify(all));
+  });
 }

@@ -5,8 +5,8 @@ tagline: |
   basecamp: CLI for Basecamp 3 — manage projects, todos, messages, cards, and more from the terminal.
 ---
 
-To update or switch versions, run `webi basecamp@stable` (or `@v0.7`,
-`@beta`, etc).
+To update or switch versions, run `webi basecamp@stable` (or `@v0.7`, `@beta`,
+etc).
 
 ### Files
 

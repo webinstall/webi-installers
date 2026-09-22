@@ -98,7 +98,7 @@ tar tf ./example.tar
 ⚠️ **Warnings**:
 
 - DO NOT deflate in-place with non-standard formats: \
-   Although `gunzip` will work correctly on files compressed with `mgzip` or
+  Although `gunzip` will work correctly on files compressed with `mgzip` or
   `bgzf`, some combinations (ex: decompressing from `mgzip` with `bgzf`) could
   result in corruption!
 - `tar xvf` and `gzip -l` may report incorrect information, even though `gunzip`

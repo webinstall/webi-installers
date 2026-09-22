@@ -1,6 +1,9 @@
 ---
 name: deploy-webicached
-description: Deploy webicached binary to beta.webi.sh. Use when building, uploading, or restarting the cache daemon. Covers cross-compile, conf sync, service management.
+description:
+  Deploy webicached binary to beta.webi.sh. Use when building, uploading, or
+  restarting the cache daemon. Covers cross-compile, conf sync, service
+  management.
 ---
 
 ## One-step deploy
@@ -9,7 +12,8 @@ description: Deploy webicached binary to beta.webi.sh. Use when building, upload
 ./scripts/deploy-webicached.sh beta.webi.sh
 ```
 
-Builds with version ldflags, stops service, uploads, syncs conf, starts, verifies.
+Builds with version ldflags, stops service, uploads, syncs conf, starts,
+verifies.
 
 ## Manual steps (if needed)
 
@@ -24,7 +28,8 @@ GOOS=linux GOARCH=amd64 GOAMD64=v2 go build \
   -o agents/tmp/webicached ./cmd/webicached
 ```
 
-MUST: Build from the `ref-webi-go` worktree (or branch containing `cmd/webicached`).
+MUST: Build from the `ref-webi-go` worktree (or branch containing
+`cmd/webicached`).
 
 ### Deploy
 
@@ -42,7 +47,8 @@ rsync -av --include='*/' --include='releases.conf' --exclude='*' \
   ./ beta.webi.sh:~/srv/beta.webinstall.dev/installers/
 ```
 
-MUST: Run from the worktree root. The server has no checkout of this branch — conf files must be synced explicitly.
+MUST: Run from the worktree root. The server has no checkout of this branch —
+conf files must be synced explicitly.
 
 ### Start
 
@@ -77,29 +83,29 @@ serviceman logs webicached
 
 ## Server layout
 
-| Path | Purpose |
-|------|---------|
-| `~/bin/webicached` | Binary |
-| `~/srv/beta.webinstall.dev/installers/` | Conf dir (releases.conf files) |
-| `~/.cache/webi/legacy/` | Cache output (fsstore, legacy JSON format) |
-| `~/.cache/webi/raw/` | Raw upstream API responses |
-| `~/srv/beta.webinstall.dev/.env.secret` | GITHUB_TOKEN |
-| `/etc/systemd/system/webicached.service` | Service unit (created by serviceman) |
+| Path                                     | Purpose                                    |
+| ---------------------------------------- | ------------------------------------------ |
+| `~/bin/webicached`                       | Binary                                     |
+| `~/srv/beta.webinstall.dev/installers/`  | Conf dir (releases.conf files)             |
+| `~/.cache/webi/legacy/`                  | Cache output (fsstore, legacy JSON format) |
+| `~/.cache/webi/raw/`                     | Raw upstream API responses                 |
+| `~/srv/beta.webinstall.dev/.env.secret`  | GITHUB_TOKEN                               |
+| `/etc/systemd/system/webicached.service` | Service unit (created by serviceman)       |
 
 ## Flags reference
 
-| Flag | Default | Purpose |
-|------|---------|---------|
-| `--conf` | `.` | Dir with `{pkg}/releases.conf` files |
-| `--legacy` | `~/.cache/webi/legacy` | Legacy cache output directory |
-| `--raw` | `~/.cache/webi/raw` | Raw upstream response cache |
-| `--token` | `$GITHUB_TOKEN` | GitHub API token |
-| `--interval` | `9s` | Delay between package fetches in a batch |
-| `--once` | false | Run once then exit |
-| `--eager` | false | Fetch all on startup (not staleness-based) |
-| `--shallow` | false | Only first page of releases |
-| `--no-fetch` | false | Classify from rawcache only |
-| `--page-delay` | `2s` | Delay between paginated API pages |
+| Flag           | Default                | Purpose                                    |
+| -------------- | ---------------------- | ------------------------------------------ |
+| `--conf`       | `.`                    | Dir with `{pkg}/releases.conf` files       |
+| `--legacy`     | `~/.cache/webi/legacy` | Legacy cache output directory              |
+| `--raw`        | `~/.cache/webi/raw`    | Raw upstream response cache                |
+| `--token`      | `$GITHUB_TOKEN`        | GitHub API token                           |
+| `--interval`   | `9s`                   | Delay between package fetches in a batch   |
+| `--once`       | false                  | Run once then exit                         |
+| `--eager`      | false                  | Fetch all on startup (not staleness-based) |
+| `--shallow`    | false                  | Only first page of releases                |
+| `--no-fetch`   | false                  | Classify from rawcache only                |
+| `--page-delay` | `2s`                   | Delay between paginated API pages          |
 
 ## One-shot refresh (specific packages)
 

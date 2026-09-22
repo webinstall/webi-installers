@@ -623,8 +623,7 @@ BuildsCacher.create = function ({ ALL_TERMS, installers }) {
     arches = arches.concat(['ANYARCH']);
     // termsToTarget omits libc for plain UAs; 'libc' → waterfall ['none','libc',...]
     let libc = hostTarget.libc || 'libc';
-    let libcs = waterfall[libc] ||
-      HostTargets.WATERFALL.ANYOS[libc] || [libc];
+    let libcs = waterfall[libc] || HostTargets.WATERFALL.ANYOS[libc] || [libc];
 
     // Extend the glibc-host waterfall: the table only lists [none, libc]
     // but Rust projects (bat, rg) and node ship libc='gnu' builds, and
@@ -664,8 +663,7 @@ BuildsCacher._classify = function (bc, projInfo, build) {
   // Cache entries arrive pre-classified (os/arch/libc/ext set). Skip
   // maybeInstallable for those — it false-rejects names ending in a
   // version tag (`serviceman-v1.0.1`, `v1.0.1.zip`).
-  let cacheClassified =
-    build.os && build.arch && build.libc && build.ext;
+  let cacheClassified = build.os && build.arch && build.libc && build.ext;
   if (!cacheClassified) {
     let maybeInstallable = Triplet.maybeInstallable(projInfo, build);
     if (!maybeInstallable) {

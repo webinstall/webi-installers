@@ -377,7 +377,8 @@ Commit messages: `feat(<pkg>): add installer`, `fix(<pkg>): update install.sh`,
 
 The Go pipeline (`cmd/webicached`) replaces the Node.js release-fetching code.
 It reads `releases.conf` files, fetches upstream release metadata, classifies
-build assets, and writes to `~/.cache/webi/legacy/` in the format the Node.js server expects.
+build assets, and writes to `~/.cache/webi/legacy/` in the format the Node.js
+server expects.
 
 ### Canonical Vocabulary
 
@@ -387,12 +388,14 @@ The classifier MUST use exactly these strings. They match the production API.
 `netbsd`, `dragonfly`, `aix`, `illumos`, `plan9`, `solaris`, `posix_2017`
 
 **Arch** — exact equivalences:
+
 - `amd64` (NOT `x86_64`), `x86` (NOT `i386`/`i686`/`386`)
 - `arm64` (NOT `aarch64`)
 - `armv7l` (NOT `armv7`), `armv6l` (NOT `armv6`)
 - `mipsle` (NOT `mipsel`), `mips64le` (NOT `mips64el`)
 
 **Arch** — compatibility downcasts:
+
 - `armhf` → `armv7l`, `armv7a` → `armv7l`, `armel` → `arm`
 
 **Arch** — other: `arm`, `ppc64le`, `ppc64`, `loong64`, `riscv64`, `s390x`,
@@ -400,14 +403,14 @@ The classifier MUST use exactly these strings. They match the production API.
 
 **Libc**: `none` (never empty), `gnu`, `musl`, `msvc`
 
-**Ext**: `tar.gz`, `tar.xz`, `zip`, `exe`, `7z`, `pkg`, `msi`
-(no leading dot; `exe` for bare binaries)
+**Ext**: `tar.gz`, `tar.xz`, `zip`, `exe`, `7z`, `pkg`, `msi` (no leading dot;
+`exe` for bare binaries)
 
 ### releases.conf
 
-Each package directory contains a `releases.conf` that tells the daemon where
-to fetch releases. Format is `key = value`, one per line. `#` comments and
-blank lines are ignored.
+Each package directory contains a `releases.conf` that tells the daemon where to
+fetch releases. Format is `key = value`, one per line. `#` comments and blank
+lines are ignored.
 
 #### Source types (mutually exclusive — pick one)
 
@@ -459,8 +462,8 @@ alias_of = rg                        # mirrors another package's releases
 
 ### Testing
 
-Test tools: `cmd/e2etest` (pipeline comparison), `cmd/comparecache` (cache diff),
-`cmd/inspect` (single-package debug). Run each with `--help` for usage.
+Test tools: `cmd/e2etest` (pipeline comparison), `cmd/comparecache` (cache
+diff), `cmd/inspect` (single-package debug). Run each with `--help` for usage.
 
 ### Classifier vs Per-Package Tagger
 
@@ -470,8 +473,8 @@ many projects. It MUST NOT contain one-off logic for a single package.
 Per-package taggers (`internal/releases/{pkg}/variants.go`) handle
 project-specific knowledge. Read the existing taggers for conventions.
 
-MUST: Derive arch/OS from concrete evidence — not blanket defaults.
-MUST: New general classifier patterns must apply to 2-3+ packages.
+MUST: Derive arch/OS from concrete evidence — not blanket defaults. MUST: New
+general classifier patterns must apply to 2-3+ packages.
 
 ### Deploying
 

@@ -25,12 +25,12 @@ Parallel.run = async function (limit, arr, fn) {
   }
 
   // start tasks in parallel, up to limit
-  for (; actives.length < limit; ) {
+  for (; actives.length < limit;) {
     launch();
   }
 
   // keep the task queue full
-  for (; index < arr.length; ) {
+  for (; index < arr.length;) {
     // wait for one task to complete
     await Promise.race(actives);
     // add one task again

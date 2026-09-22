@@ -28,9 +28,9 @@ install:
 
 ![](https://static.linuxblog.io/wp-content/uploads/2021/11/btop.png)
 
-> btop gives you a gorgeous, interactive view of what your system is doing —
-> CPU cores, RAM, swap, disk I/O, network throughput, and a filterable process
-> list — all in one terminal window.
+> btop gives you a gorgeous, interactive view of what your system is doing — CPU
+> cores, RAM, swap, disk I/O, network throughput, and a filterable process list
+> — all in one terminal window.
 
 ### Launch btop
 
@@ -40,17 +40,17 @@ btop
 
 ### Navigation
 
-| Key            | Action                              |
-| -------------- | ----------------------------------- |
-| `Arrow keys`   | Move selection in process list      |
-| `Enter`        | Show detailed stats for process     |
-| `F`            | Filter / search processes           |
-| `K`            | Send signal (kill, SIGTERM, etc.)   |
-| `R`            | Renice (change process priority)    |
-| `T`            | Toggle tree / flat process view     |
-| `M`            | Change sort field                   |
-| `ESC`          | Open settings menu                  |
-| `Q`            | Quit                                |
+| Key          | Action                            |
+| ------------ | --------------------------------- |
+| `Arrow keys` | Move selection in process list    |
+| `Enter`      | Show detailed stats for process   |
+| `F`          | Filter / search processes         |
+| `K`          | Send signal (kill, SIGTERM, etc.) |
+| `R`          | Renice (change process priority)  |
+| `T`          | Toggle tree / flat process view   |
+| `M`          | Change sort field                 |
+| `ESC`        | Open settings menu                |
+| `Q`          | Quit                              |
 
 Mouse support is fully enabled by default — scroll and click anywhere in the UI.
 

@@ -724,7 +724,7 @@ localhost {
 ```
 
 You can do slightly more complex expressions on the variety of variables
-(_placeholders_), but you'd have to look up the [CEL docs]().
+(_placeholders_), but you'd have to look up the [CEL docs](<>).
 
 However, you can only do these expressions in things that have a _matcher_.
 

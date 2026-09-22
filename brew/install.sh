@@ -4,143 +4,143 @@ set -e
 set -u
 
 _install_brew() {
-	# Straight from https://brew.sh
-	#/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    # Straight from https://brew.sh
+    #/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-	if test "Darwin" = "$(uname -s)"; then
-		needs_xcode="$(/usr/bin/xcode-select -p > /dev/null 2> /dev/null || echo "true")"
-		if test -n "${needs_xcode}"; then
-			echo ""
-			echo ""
-			echo "ERROR: Run this command to install XCode Command Line Tools first:"
-			echo ""
-			echo "    xcode-select --install"
-			echo ""
-			echo "After the install, close this terminal, open a new one, and try again."
-			echo ""
-		fi
-	else
-		if ! command -v gcc > /dev/null; then
-			echo >&2 "Warning: to install 'gcc' et al on Linux use the built-in package manager."
-			echo >&2 "       For example, try: sudo apt install -y build-essential"
-		fi
-		if ! command -v git > /dev/null; then
-			echo >&2 "Error: to install 'git' on Linux use the built-in package manager."
-			echo >&2 "       For example, try: sudo apt install -y git"
-			exit 1
-		fi
-	fi
+    if test "Darwin" = "$(uname -s)"; then
+        needs_xcode="$(/usr/bin/xcode-select -p > /dev/null 2> /dev/null || echo "true")"
+        if test -n "${needs_xcode}"; then
+            echo ""
+            echo ""
+            echo "ERROR: Run this command to install XCode Command Line Tools first:"
+            echo ""
+            echo "    xcode-select --install"
+            echo ""
+            echo "After the install, close this terminal, open a new one, and try again."
+            echo ""
+        fi
+    else
+        if ! command -v gcc > /dev/null; then
+            echo >&2 "Warning: to install 'gcc' et al on Linux use the built-in package manager."
+            echo >&2 "       For example, try: sudo apt install -y build-essential"
+        fi
+        if ! command -v git > /dev/null; then
+            echo >&2 "Error: to install 'git' on Linux use the built-in package manager."
+            echo >&2 "       For example, try: sudo apt install -y git"
+            exit 1
+        fi
+    fi
 
-	# From Straight from https://brew.sh
-	if ! test -d "$HOME/.local/opt/brew"; then
-		echo "Installing to '$HOME/.local/opt/brew'"
-		echo ""
-		echo "If you prefer to have brew installed to '/usr/local' cancel now and do the following:"
-		echo "        rm -rf '$HOME/.local/opt/brew'"
-		# shellcheck disable=2016
-		echo '        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
-		echo ""
-		sleep 3
-		#mkdir -p "$HOME/.local/opt/brew"
-		#curl -fsSL https://github.com/Homebrew/brew/tarball/main |
-		#	tar xz --strip-components 1 -C "$HOME/.local/opt/brew"
-		git clone --depth 3 https://github.com/Homebrew/brew "$HOME/.local/opt/brew"
-	fi
+    # From Straight from https://brew.sh
+    if ! test -d "$HOME/.local/opt/brew"; then
+        echo "Installing to '$HOME/.local/opt/brew'"
+        echo ""
+        echo "If you prefer to have brew installed to '/usr/local' cancel now and do the following:"
+        echo "        rm -rf '$HOME/.local/opt/brew'"
+        # shellcheck disable=2016
+        echo '        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+        echo ""
+        sleep 3
+        #mkdir -p "$HOME/.local/opt/brew"
+        #curl -fsSL https://github.com/Homebrew/brew/tarball/main |
+        #	tar xz --strip-components 1 -C "$HOME/.local/opt/brew"
+        git clone --depth 3 https://github.com/Homebrew/brew "$HOME/.local/opt/brew"
+    fi
 
-	my_shellenv="$("$HOME/.local/opt/brew/bin/brew" shellenv)"
-	eval "${my_shellenv}"
-	chmod -R go-w "$(brew --prefix)/share/zsh" 2> /dev/null || true
+    my_shellenv="$("$HOME/.local/opt/brew/bin/brew" shellenv)"
+    eval "${my_shellenv}"
+    chmod -R go-w "$(brew --prefix)/share/zsh" 2> /dev/null || true
 
-	rm -rf "$HOME/.local/bin/brew-update-service-install"
-	webi_download \
-		"$WEBI_HOST/packages/brew/brew-update-service-install" \
-		"$HOME/.local/bin/brew-update-service-install" \
-		brew-update-service-install
-	chmod a+x "$HOME/.local/bin/brew-update-service-install"
+    rm -rf "$HOME/.local/bin/brew-update-service-install"
+    webi_download \
+        "$WEBI_HOST/packages/brew/brew-update-service-install" \
+        "$HOME/.local/bin/brew-update-service-install" \
+        brew-update-service-install
+    chmod a+x "$HOME/.local/bin/brew-update-service-install"
 
-	webi_path_add "$HOME/.local/opt/brew/bin"
-	webi_path_add "$HOME/.local/opt/brew/sbin"
+    webi_path_add "$HOME/.local/opt/brew/bin"
+    webi_path_add "$HOME/.local/opt/brew/sbin"
 
-	fn_brew_shell_integrate_bash
-	fn_brew_shell_integrate_zsh
-	fn_brew_shell_integrate_fish
+    fn_brew_shell_integrate_bash
+    fn_brew_shell_integrate_zsh
+    fn_brew_shell_integrate_fish
 
-	echo "Installed 'brew' to '$HOME/.local/opt/brew'"
-	echo ""
-	echo "If you prefer to have brew installed to '/usr/local' do the following:"
-	echo "        mv '$HOME/.local/opt/brew' '$HOME/.local/opt/brew.$(date '+%F_%H-%M-%S').bak'"
-	# shellcheck disable=2016
-	echo '        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
-	echo ""
+    echo "Installed 'brew' to '$HOME/.local/opt/brew'"
+    echo ""
+    echo "If you prefer to have brew installed to '/usr/local' do the following:"
+    echo "        mv '$HOME/.local/opt/brew' '$HOME/.local/opt/brew.$(date '+%F_%H-%M-%S').bak'"
+    # shellcheck disable=2016
+    echo '        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+    echo ""
 
-	echo "To register 'brew update' as a hourly system service:"
-	echo "        brew-update-service-install"
-	echo ""
+    echo "To register 'brew update' as a hourly system service:"
+    echo "        brew-update-service-install"
+    echo ""
 }
 
 fn_brew_shell_integrate_bash() {
-	if ! command -v bash > /dev/null; then
-		return 0
-	fi
-	if ! test -e ~/.bashrc && ! test -e ~/.bash_history; then
-		return 0
-	fi
+    if ! command -v bash > /dev/null; then
+        return 0
+    fi
+    if ! test -e ~/.bashrc && ! test -e ~/.bash_history; then
+        return 0
+    fi
 
-	touch -a ~/.bashrc
-	if grep -q 'brew shellenv' ~/.bashrc; then
-		return 0
-	fi
+    touch -a ~/.bashrc
+    if grep -q 'brew shellenv' ~/.bashrc; then
+        return 0
+    fi
 
-	echo >&2 "    Edit ~/.bashrc to init brew"
-	# shellcheck disable=SC2016
-	{
-		echo ''
-		echo '# Generated by Webi. Do not edit.'
-		echo 'eval "$('"$HOME/.local/opt/brew/bin/brew"' shellenv)"'
-	} >> ~/.bashrc
+    echo >&2 "    Edit ~/.bashrc to init brew"
+    # shellcheck disable=SC2016
+    {
+        echo ''
+        echo '# Generated by Webi. Do not edit.'
+        echo 'eval "$('"$HOME/.local/opt/brew/bin/brew"' shellenv)"'
+    } >> ~/.bashrc
 }
 
 fn_brew_shell_integrate_zsh() {
-	if ! command -v zsh > /dev/null; then
-		return 0
-	fi
-	if ! test -e ~/.zshrc &&
-		! test -e ~/.zsh_sessions &&
-		! test -e ~/.zsh_history; then
-		return 0
-	fi
+    if ! command -v zsh > /dev/null; then
+        return 0
+    fi
+    if ! test -e ~/.zshrc &&
+        ! test -e ~/.zsh_sessions &&
+        ! test -e ~/.zsh_history; then
+        return 0
+    fi
 
-	touch -a ~/.zshrc
-	if grep -q 'brew shellenv' ~/.zshrc; then
-		return 0
-	fi
+    touch -a ~/.zshrc
+    if grep -q 'brew shellenv' ~/.zshrc; then
+        return 0
+    fi
 
-	echo >&2 "    Edit ~/.zshrc to init brew"
-	# shellcheck disable=SC2016
-	{
-		echo ''
-		echo '# Generated by Webi. Do not edit.'
-		echo 'eval "$('"$HOME/.local/opt/brew/bin/brew"' shellenv)"'
-	} >> ~/.zshrc
+    echo >&2 "    Edit ~/.zshrc to init brew"
+    # shellcheck disable=SC2016
+    {
+        echo ''
+        echo '# Generated by Webi. Do not edit.'
+        echo 'eval "$('"$HOME/.local/opt/brew/bin/brew"' shellenv)"'
+    } >> ~/.zshrc
 }
 
 fn_brew_shell_integrate_fish() {
-	if ! command -v fish > /dev/null; then
-		return 0
-	fi
+    if ! command -v fish > /dev/null; then
+        return 0
+    fi
 
-	mkdir -p ~/.config/fish
-	touch -a ~/.config/fish/config.fish
-	if grep -q 'brew shellenv' ~/.config/fish/config.fish; then
-		return 0
-	fi
+    mkdir -p ~/.config/fish
+    touch -a ~/.config/fish/config.fish
+    if grep -q 'brew shellenv' ~/.config/fish/config.fish; then
+        return 0
+    fi
 
-	echo >&2 "    Edit ~/.config/fish/config.fish to init brew"
-	{
-		echo ''
-		echo '# Generated by Webi. Do not edit.'
-		echo "$HOME/.local/opt/brew/bin/brew shellenv | source"
-	} >> ~/.config/fish/config.fish
+    echo >&2 "    Edit ~/.config/fish/config.fish to init brew"
+    {
+        echo ''
+        echo '# Generated by Webi. Do not edit.'
+        echo "$HOME/.local/opt/brew/bin/brew shellenv | source"
+    } >> ~/.config/fish/config.fish
 }
 
 _install_brew
