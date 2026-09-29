@@ -28,8 +28,8 @@ type Release struct {
 	Draft       bool    `json:"draft"`
 	PublishedAt string  `json:"published_at"` // "2025-10-22T13:00:26Z"
 	Assets      []Asset `json:"assets"`
-	TarballURL  string  `json:"tarball_url"`  // auto-generated source tarball
-	ZipballURL  string  `json:"zipball_url"`  // auto-generated source zipball
+	TarballURL  string  `json:"tarball_url"` // auto-generated source tarball
+	ZipballURL  string  `json:"zipball_url"` // auto-generated source zipball
 }
 
 // Asset is one downloadable file attached to a release.

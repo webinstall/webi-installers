@@ -164,7 +164,7 @@ func TestFetchEarlyBreak(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requests++
 		w.Header().Set("X-Total-Pages", "10")
-		w.Write([]byte(fmt.Sprintf(`[{"tag_name":"v%d.0.0","name":"","released_at":"2025-01-01T00:00:00Z","assets":{"sources":[],"links":[]}}]`, requests)))
+		w.Write(fmt.Appendf(nil, `[{"tag_name":"v%d.0.0","name":"","released_at":"2025-01-01T00:00:00Z","assets":{"sources":[],"links":[]}}]`, requests))
 	}))
 	defer srv.Close()
 

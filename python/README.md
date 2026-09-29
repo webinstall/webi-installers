@@ -14,6 +14,7 @@ install:
 
 ```sh
 ~/.config/envman/PATH.env
+~/.local/opt/xz/
 ~/.pyenv/bin/
 ~/.pyenv/shims/
 

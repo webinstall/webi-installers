@@ -34,7 +34,7 @@ func New() *http.Client {
 			TLSClientConfig: &tls.Config{
 				MinVersion: tls.VersionTLS12,
 			},
-			TLSHandshakeTimeout:  10 * time.Second,
+			TLSHandshakeTimeout:   10 * time.Second,
 			ResponseHeaderTimeout: 30 * time.Second,
 			MaxIdleConns:          100,
 			MaxIdleConnsPerHost:   10,
@@ -143,10 +143,7 @@ func backoff(attempt int, resp *http.Response) time.Duration {
 	}
 
 	// 1s, 2s, 4s base delays
-	base := time.Second << (attempt - 1)
-	if base > 30*time.Second {
-		base = 30 * time.Second
-	}
+	base := min(time.Second<<(attempt-1), 30*time.Second)
 
 	// Add jitter: 75% to 125% of base
 	jitter := float64(base) * (0.75 + 0.5*rand.Float64())

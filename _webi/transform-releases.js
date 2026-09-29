@@ -5,9 +5,145 @@ var Releases = module.exports;
 var Fs = require('node:fs/promises');
 var Os = require('node:os');
 var path = require('path');
-var cache = {};
 
 var LEGACY_CACHE_DIR = path.join(Os.homedir(), '.cache/webi/legacy');
+
+// Cache entries: { data: ..., loadedAt: Date, updating: Promise|null }
+var cache = {};
+
+// How long a cache entry stays fresh (1 minute)
+var FRESHNESS_MS = 60 * 1000;
+
+/**
+ * Check if a cache entry is fresh.
+ */
+function isFresh(name) {
+  var entry = cache[name];
+  if (!entry) {
+    return false;
+  }
+  return Date.now() - entry.loadedAt < FRESHNESS_MS;
+}
+
+/**
+ * Empty metadata shape — callers read all.oses, all.arches, etc.
+ * Never leave these undefined.
+ */
+function emptyData() {
+  return {
+    download: '',
+    releases: [],
+    oses: [],
+    arches: [],
+    libcs: [],
+    formats: [],
+  };
+}
+
+/**
+ * Check whether parsed data qualifies as "good" (non-empty releases).
+ * Used to decide whether to overwrite an existing cache entry.
+ */
+function isGoodData(data) {
+  return data && Array.isArray(data.releases) && data.releases.length > 0;
+}
+
+/**
+ * Handle a failed refresh: keep old data (if any), reset freshness,
+ * and return a safe shape so callers never crash on .oses etc.
+ */
+function onRefreshFail(pkg) {
+  var keep = cache[pkg] ? cache[pkg].data : null;
+  var data = keep || emptyData();
+  cache[pkg] = { data: data, loadedAt: Date.now() };
+  return data;
+}
+
+/**
+ * Read a package's cache file from disk. Throws on read/parse errors.
+ */
+function readCacheFile(pkg) {
+  var dataFile = LEGACY_CACHE_DIR + '/' + pkg + '.json';
+  return Fs.readFile(dataFile, 'utf8')
+    .then(function (json) {
+      return JSON.parse(json);
+    })
+    .catch(function (err) {
+      if (err.code === 'ENOENT') {
+        console.warn('cache miss: ' + dataFile);
+        return null;
+      }
+      console.error('cache read error: ' + dataFile + ':\n\t' + err.message);
+      throw err;
+    });
+}
+
+/**
+ * Refresh a package's cache from disk.
+ *
+ * - Good data (non-empty releases): replaces the entry.
+ * - Bad/empty data: keeps old entry, resets freshness, returns old/empty.
+ * - Read/parse error: keeps old entry, resets freshness, returns old/empty.
+ * Never throws to the caller.
+ */
+function refreshCache(pkg) {
+  return readCacheFile(pkg)
+    .then(function (data) {
+      if (!data) {
+        // File missing or empty — keep old data, reset freshness.
+        return onRefreshFail(pkg);
+      }
+      if (isGoodData(data)) {
+        // Good data — replace the entry.
+        cache[pkg] = { data: data, loadedAt: Date.now() };
+        return data;
+      }
+      // Parsed but empty/invalid releases — treat as failure.
+      return onRefreshFail(pkg);
+    })
+    .catch(function (err) {
+      // Read/parse error — keep old data, reset freshness.
+      return onRefreshFail(pkg);
+    });
+}
+
+/**
+ * Get or refresh a package's cache, respecting freshness policy:
+ * - fresh: return immediately
+ * - stale or expired: await a refresh (file read is cheap)
+ * - concurrent calls coalesce onto one in-flight refresh
+ */
+function getCachedReleases(pkg) {
+  var entry = cache[pkg];
+
+  // Coalesce onto any in-flight update (checked FIRST).
+  if (entry && entry.updating) {
+    return entry.updating;
+  }
+
+  // Fresh — return immediately.
+  if (isFresh(pkg)) {
+    return Promise.resolve(entry.data);
+  }
+
+  // Stale or expired — await a refresh.
+  var updatePromise = refreshCache(pkg);
+
+  cache[pkg] = {
+    data: entry ? entry.data : emptyData(),
+    loadedAt: Date.now(),
+    updating: updatePromise,
+  };
+
+  // Clear the updating flag when done.
+  updatePromise.finally(function () {
+    if (cache[pkg]) {
+      cache[pkg].updating = null;
+    }
+  });
+
+  return updatePromise;
+}
 
 // Sort releases by ext preference and libc within the same version.
 // The cache is already sorted by version (stable before beta, newest first),
@@ -41,42 +177,6 @@ function createFormatsSorter(formats) {
   };
 }
 
-async function getCachedReleases(pkg) {
-  // returns { download: '', releases: [{ version, date, os, arch, lts, channel, download}] }
-
-  if (cache[pkg]) {
-    return cache[pkg];
-  }
-
-  let dataFile = `${LEGACY_CACHE_DIR}/${pkg}.json`;
-
-  let json = await Fs.readFile(dataFile, 'utf8').catch(function (err) {
-    if (err.code === 'ENOENT') {
-      return null;
-    }
-    throw err;
-  });
-
-  if (!json) {
-    let empty = { download: '', releases: [] };
-    cache[pkg] = empty;
-    return empty;
-  }
-
-  let all;
-  try {
-    all = JSON.parse(json);
-  } catch (e) {
-    console.error(`error: ${dataFile}:\n\t${e.message}`);
-    let empty = { download: '', releases: [] };
-    cache[pkg] = empty;
-    return empty;
-  }
-
-  cache[pkg] = all;
-  return all;
-}
-
 async function filterReleases(
   all,
   { ver, os, arch, libc, lts, channel, formats, limit },
@@ -96,9 +196,7 @@ async function filterReleases(
       // freebsd, etc., but NOT windows).
       let isPosix = rel.os === 'posix' || rel.os.startsWith('posix_20');
       let osMatches =
-        rel.os === '*' ||
-        rel.os === os ||
-        (isPosix && os !== 'windows');
+        rel.os === '*' || rel.os === os || (isPosix && os !== 'windows');
       if (!osMatches) {
         return false;
       }
@@ -321,19 +419,17 @@ Releases.getReleases = function ({
 };
 
 if (require.main === module) {
-  return Releases
-    .getReleases({
-      pkg: 'node',
-      ver: '',
-      os: 'macos',
-      arch: 'amd64',
-      lts: true,
-      libc: 'libc',
-      channel: 'stable',
-      formats: ['tar', 'exe', 'zip', 'xz', 'dmg', 'pkg'],
-      limit: 10,
-    })
-    .then(function (all) {
-      console.info(JSON.stringify(all));
-    });
+  return Releases.getReleases({
+    pkg: 'node',
+    ver: '',
+    os: 'macos',
+    arch: 'amd64',
+    lts: true,
+    libc: 'libc',
+    channel: 'stable',
+    formats: ['tar', 'exe', 'zip', 'xz', 'dmg', 'pkg'],
+    limit: 10,
+  }).then(function (all) {
+    console.info(JSON.stringify(all));
+  });
 }

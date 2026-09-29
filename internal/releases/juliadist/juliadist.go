@@ -26,11 +26,11 @@ type Release struct {
 
 // File is one downloadable artifact.
 type File struct {
-	URL       string `json:"url"`       // full download URL
-	Triplet   string `json:"triplet"`   // "aarch64-apple-darwin14"
-	Kind      string `json:"kind"`      // "archive" or "installer"
-	Arch      string `json:"arch"`      // "aarch64", "x86_64", "i686"
-	OS        string `json:"os"`        // "mac", "linux", "winnt"
+	URL       string `json:"url"`     // full download URL
+	Triplet   string `json:"triplet"` // "aarch64-apple-darwin14"
+	Kind      string `json:"kind"`    // "archive" or "installer"
+	Arch      string `json:"arch"`    // "aarch64", "x86_64", "i686"
+	OS        string `json:"os"`      // "mac", "linux", "winnt"
 	SHA256    string `json:"sha256"`
 	Size      int64  `json:"size"`
 	Version   string `json:"version"`   // same as release version

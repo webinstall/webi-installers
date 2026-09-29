@@ -18,12 +18,12 @@ import (
 func NormalizeVersions(assets []storage.Asset) {
 	for i := range assets {
 		v := assets[i].Version
-		idx := strings.Index(v, ".windows.")
-		if idx < 0 {
+		before, after, ok := strings.Cut(v, ".windows.")
+		if !ok {
 			continue
 		}
-		suffix := v[idx+len(".windows."):]
-		base := v[:idx]
+		suffix := after
+		base := before
 		if suffix == "1" {
 			assets[i].Version = base
 		} else {

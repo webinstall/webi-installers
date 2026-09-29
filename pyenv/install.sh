@@ -4,6 +4,10 @@ __init_pyenv() {
     set -e
     set -u
 
+    if ! test -f "${HOME}/.local/opt/xz/include/lzma.h"; then
+        "${HOME}/.local/bin/webi" xz
+    fi
+
     b_os="$(uname -s)"
     if test "${b_os}" = 'Darwin'; then
         if ! test -x /Library/Developer/CommandLineTools/usr/bin/git; then

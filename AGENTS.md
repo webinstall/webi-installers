@@ -483,10 +483,14 @@ MUST: New general classifier patterns must apply to 2-3+ packages.
 First-time setup on a new host uses `serviceman`:
 
 ```sh
+. ~/.config/envman/PATH.env
 serviceman add --name webicached \
   --workdir ~/srv/webid/installers/ -- \
-  ~/bin/webicached \
-    --envfile ~/srv/webid/.env.secret \
+  webicached \
+    --env-file ~/srv/webid/.env.secret \
     --conf ~/srv/webid/installers/ \
     --raw ~/.cache/webi/raw
 ```
+
+Load the webi-managed `PATH` before registering the service; `serviceman`
+resolves the command and writes the resolved path into the service definition.

@@ -50,7 +50,7 @@ import (
 	"github.com/webinstall/webi-installers/internal/releases/iterm2dist"
 	"github.com/webinstall/webi-installers/internal/releases/juliadist"
 	"github.com/webinstall/webi-installers/internal/releases/mariadbdist"
-	"github.com/webinstall/webi-installers/internal/releases/nodedist"
+	"github.com/webinstall/webi-installers/internal/releases/nodeindex"
 	"github.com/webinstall/webi-installers/internal/releases/servicemandist"
 	"github.com/webinstall/webi-installers/internal/releases/zigdist"
 	"github.com/webinstall/webi-installers/internal/storage"
@@ -74,8 +74,22 @@ func printVersion(w io.Writer) {
 	_, _ = fmt.Fprintf(w, "Licensed under %s\n", licenseType)
 }
 
+// peekOption scans raw args for a flag and returns its value (or def).
+// names is a list of accepted flag forms, e.g. ["-env-file", "--env-file"].
+func peekOption(args []string, names []string, def string) (string, bool) {
+	for i := range len(args) {
+		for _, name := range names {
+			if args[i] == name {
+				if i+1 < len(args) {
+					return args[i+1], true
+				}
+			}
+		}
+	}
+	return def, false
+}
+
 type MainConfig struct {
-	envFile   string
 	confDir   string
 	cacheDir  string
 	rawDir    string
@@ -134,6 +148,16 @@ func main() {
 		}
 	}
 
+	// 1. Peek for --env-file / --envfile and load it early so env vars can
+	//    override defaults before flag parsing.
+	envFileFlag, hasEnvFlag := peekOption(os.Args[1:], []string{"-env-file", "--env-file", "-envfile", "--envfile"}, "")
+	if err := godotenv.Load(envFileFlag); err != nil {
+		if hasEnvFlag {
+			log.Printf("could not load env file %q: %v", envFileFlag, err)
+			os.Exit(2)
+		}
+	}
+
 	cfg := MainConfig{}
 	fs := flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
 	registerFlags(fs, &cfg)
@@ -141,17 +165,12 @@ func main() {
 		if errors.Is(err, flag.ErrHelp) {
 			os.Exit(0)
 		}
-		os.Exit(1)
+		os.Exit(2)
 	}
 
 	cfg.cacheDir = expandHome(cfg.cacheDir)
 	cfg.rawDir = expandHome(cfg.rawDir)
 
-	if cfg.envFile != "" {
-		if err := godotenv.Load(cfg.envFile); err != nil {
-			log.Fatalf("envfile: %v", err)
-		}
-	}
 	if cfg.token == "" {
 		cfg.token = os.Getenv("GITHUB_TOKEN")
 	}
@@ -295,7 +314,9 @@ func main() {
 }
 
 func registerFlags(fs *flag.FlagSet, cfg *MainConfig) {
-	fs.StringVar(&cfg.envFile, "envfile", "", "path to .env file to load before running")
+	envFileUsage := "path to .env file to load before running"
+	_ = fs.String("env-file", "", envFileUsage)
+	_ = fs.String("envfile", "", "alias for --env-file")
 	fs.StringVar(&cfg.confDir, "conf", ".", "root directory containing {pkg}/releases.conf files")
 	fs.StringVar(&cfg.cacheDir, "legacy", "~/.cache/webi/legacy", "legacy cache directory (fsstore root)")
 	fs.StringVar(&cfg.rawDir, "raw", "~/.cache/webi/raw", "raw cache directory for upstream responses")
@@ -660,7 +681,7 @@ func (wc *WebiCache) fetchNodeDist(ctx context.Context, pkgName string, conf *in
 
 	// Fetch from primary URL. Tag with "official/" prefix so unofficial
 	// entries for the same version don't overwrite.
-	for batch, err := range nodedist.Fetch(ctx, wc.Client, baseURL) {
+	for batch, err := range nodeindex.Fetch(ctx, wc.Client, baseURL) {
 		if err != nil {
 			return err
 		}
@@ -673,7 +694,7 @@ func (wc *WebiCache) fetchNodeDist(ctx context.Context, pkgName string, conf *in
 	// Fetch from unofficial URL if configured (e.g. Node.js unofficial builds
 	// which add musl, riscv64, loong64 targets).
 	if unofficialURL := conf.Extra["unofficial_url"]; unofficialURL != "" {
-		for batch, err := range nodedist.Fetch(ctx, wc.Client, unofficialURL) {
+		for batch, err := range nodeindex.Fetch(ctx, wc.Client, unofficialURL) {
 			if err != nil {
 				log.Printf("warning: %s unofficial fetch: %v", pkgName, err)
 				break

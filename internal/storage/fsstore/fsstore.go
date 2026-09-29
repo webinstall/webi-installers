@@ -57,8 +57,8 @@ func (s *Store) ListPackages(_ context.Context) ([]string, error) {
 	}
 	var pkgs []string
 	for _, e := range entries {
-		if strings.HasSuffix(e.Name(), ".json") {
-			pkgs = append(pkgs, strings.TrimSuffix(e.Name(), ".json"))
+		if before, ok := strings.CutSuffix(e.Name(), ".json"); ok {
+			pkgs = append(pkgs, before)
 		}
 	}
 	return pkgs, nil
@@ -176,7 +176,6 @@ func atomicWrite(path string, data []byte) error {
 	}
 	return nil
 }
-
 
 // channelRank returns a sort key for release channels so stable sorts first.
 // Lower rank = sorted earlier (stable/lts before beta/rc/alpha).

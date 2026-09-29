@@ -16,6 +16,8 @@ install:
 ~/.config/envman/PATH.env
 ~/.local/bin/unxz
 ~/.local/bin/xz
+~/.local/opt/xz-VERSION/include/
+~/.local/opt/xz-VERSION/lib/
 ```
 
 ## Cheat Sheet

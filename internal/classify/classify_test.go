@@ -25,6 +25,13 @@ func TestFilename(t *testing.T) {
 			format: buildmeta.FormatTarGz,
 		},
 		{
+			name:   "android linux-named amd64 zip",
+			input:  "bun-linux-x64-android-baseline.zip",
+			wantOS: buildmeta.OSAndroid,
+			arch:   buildmeta.ArchAMD64,
+			format: buildmeta.FormatZip,
+		},
+		{
 			name:   "goreleaser darwin arm64 tar.gz",
 			input:  "hugo_0.145.0_darwin-arm64.tar.gz",
 			wantOS: buildmeta.OSDarwin,
@@ -224,17 +231,17 @@ func TestFilename(t *testing.T) {
 
 		// amd64 micro-architecture levels
 		{
-			name: "amd64v2",
+			name:  "amd64v2",
 			input: "tool-linux-amd64v2.tar.gz",
 			arch:  buildmeta.ArchAMD64v2,
 		},
 		{
-			name: "amd64v3",
+			name:  "amd64v3",
 			input: "tool-linux-x86_64_v3.tar.gz",
 			arch:  buildmeta.ArchAMD64v3,
 		},
 		{
-			name: "amd64v4",
+			name:  "amd64v4",
 			input: "tool-linux-amd64v4.tar.gz",
 			arch:  buildmeta.ArchAMD64v4,
 		},
@@ -248,36 +255,36 @@ func TestFilename(t *testing.T) {
 
 		// ARM variants: arm64 must not match armv7/armv6
 		{
-			name: "aarch64 not armv7",
+			name:  "aarch64 not armv7",
 			input: "tool-aarch64-linux.tar.gz",
 			arch:  buildmeta.ArchARM64,
 		},
 		{
-			name: "armv7",
+			name:  "armv7",
 			input: "tool-armv7l-linux.tar.gz",
 			arch:  buildmeta.ArchARMv7,
 		},
 		{
-			name: "armv6",
+			name:  "armv6",
 			input: "tool-armv6l-linux.tar.gz",
 			arch:  buildmeta.ArchARMv6,
 		},
 
 		// ppc64le before ppc64
 		{
-			name: "ppc64le",
+			name:  "ppc64le",
 			input: "tool-linux-ppc64le.tar.gz",
 			arch:  buildmeta.ArchPPC64LE,
 		},
 		{
-			name: "ppc64",
+			name:  "ppc64",
 			input: "tool-linux-ppc64.tar.gz",
 			arch:  buildmeta.ArchPPC64,
 		},
 
 		// Static linking
 		{
-			name: "static binary",
+			name:  "static binary",
 			input: "tool-linux-amd64-static.tar.gz",
 			libc:  buildmeta.LibcNone,
 		},
@@ -315,12 +322,12 @@ func TestFilename(t *testing.T) {
 
 		// s390x, mips
 		{
-			name: "s390x",
+			name:  "s390x",
 			input: "tool-linux-s390x.tar.gz",
 			arch:  buildmeta.ArchS390X,
 		},
 		{
-			name: "mips64",
+			name:  "mips64",
 			input: "tool-linux-mips64.tar.gz",
 			arch:  buildmeta.ArchMIPS64,
 		},

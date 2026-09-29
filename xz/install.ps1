@@ -38,10 +38,15 @@ if (!(Test-Path -Path "$pkg_src_cmd")) {
     # Settle unpacked archive into place
     Write-Output "Install Location: $pkg_src_cmd"
     New-Item "$pkg_src_bin" -ItemType Directory -Force | Out-Null
-    Move-Item -Path ".\bin_x86-64\xz.exe" -Destination "$pkg_src_bin"
-    Move-Item -Path ".\bin_x86-64\xzdec.exe" -Destination "$pkg_src_bin"
+    $b_bin_dir = ".\bin"
+    if (!(Test-Path -Path $b_bin_dir)) {
+        # Backward compatibility with the old upstream archive layout.
+        $b_bin_dir = ".\bin_x86-64"
+    }
+    Move-Item -Path "$b_bin_dir\xz.exe" -Destination "$pkg_src_bin"
+    Move-Item -Path "$b_bin_dir\xzdec.exe" -Destination "$pkg_src_bin"
     Copy-Item -Path "$pkg_src_bin\xzdec.exe" -Destination "$pkg_src_bin\unxz.exe"
-    Move-Item -Path ".\bin_x86-64\lzmadec.exe" -Destination "$pkg_src_bin"
+    Move-Item -Path "$b_bin_dir\lzmadec.exe" -Destination "$pkg_src_bin"
     Copy-Item -Path "$pkg_src_bin\lzmadec.exe" -Destination "$pkg_src_bin\unlzma.exe"
 
     # Exit tmp

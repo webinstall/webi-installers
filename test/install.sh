@@ -17,6 +17,8 @@ __rmrf_local() {
                 chromedriver \
                 cmake \
                 comrak \
+                csilctl \
+                csilgen \
                 curlie \
                 delta \
                 deno \
@@ -24,6 +26,7 @@ __rmrf_local() {
                 dotenv-linter \
                 fd \
                 ffmpeg \
+                foundry \
                 fzf \
                 gh \
                 git-config-gpg \
@@ -64,12 +67,14 @@ __rmrf_local() {
                 powershell \
                 pwsh \
                 rclone \
+                reactorcide \
                 rg \
                 ripgrep \
                 rust.vim \
                 sass \
                 sclient \
                 sd \
+                semver-tags \
                 serviceman \
                 setcap-netbind \
                 shellcheck \
@@ -79,6 +84,7 @@ __rmrf_local() {
                 ssh-utils \
                 syncthing \
                 terraform \
+                tlsrouter \
                 vim-ale \
                 vim-essentials \
                 vim-lastplace \
@@ -114,6 +120,8 @@ __rmrf_local() {
                 chromedriver \
                 cmake \
                 comrak \
+                csilctl \
+                csilgen \
                 curlie \
                 delta \
                 deno \
@@ -121,6 +129,7 @@ __rmrf_local() {
                 dotenv-linter \
                 fd \
                 ffmpeg \
+                foundry \
                 fzf \
                 gh \
                 git-config-gpg \
@@ -161,12 +170,14 @@ __rmrf_local() {
                 powershell \
                 pwsh \
                 rclone \
+                reactorcide \
                 rg \
                 ripgrep \
                 rust.vim \
                 sass \
                 sclient \
                 sd \
+                semver-tags \
                 serviceman \
                 setcap-netbind \
                 shellcheck \
@@ -176,6 +187,7 @@ __rmrf_local() {
                 ssh-utils \
                 syncthing \
                 terraform \
+                tlsrouter \
                 vim-ale \
                 vim-essentials \
                 vim-go \
@@ -214,6 +226,8 @@ __test() {
         chromedriver \
         cmake \
         comrak \
+        csilctl \
+        csilgen \
         curlie \
         delta \
         deno \
@@ -221,6 +235,7 @@ __test() {
         dotenv-linter \
         fd \
         ffmpeg \
+        foundry \
         fzf \
         gh \
         git-config-gpg \
@@ -263,12 +278,14 @@ __test() {
         prettier \
         pwsh \
         rclone \
+        reactorcide \
         rg \
         ripgrep \
         rust.vim \
         sass \
         sclient \
         sd \
+        semver-tags \
         serviceman \
         setcap-netbind \
         shellcheck \
@@ -278,6 +295,7 @@ __test() {
         ssh-utils \
         syncthing \
         terraform \
+        tlsrouter \
         vim-ale \
         vim-essentials \
         vim-lastplace \

@@ -24,8 +24,8 @@ type Index struct {
 
 // Version is one Chrome for Testing version with its downloads.
 type Version struct {
-	Version   string               `json:"version"`  // "121.0.6120.0"
-	Revision  string               `json:"revision"` // "1222902"
+	Version   string                `json:"version"`   // "121.0.6120.0"
+	Revision  string                `json:"revision"`  // "1222902"
 	Downloads map[string][]Download `json:"downloads"` // "chromedriver" → []Download
 }
 

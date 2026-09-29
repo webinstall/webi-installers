@@ -23,13 +23,13 @@ type Index struct {
 
 // Version is one release version with its builds.
 type Version struct {
-	Name            string  `json:"name"`              // "terraform"
-	Version         string  `json:"version"`           // "1.12.0"
-	SHASUMS         string  `json:"shasums,omitempty"`  // URL to SHA256SUMS file
-	SHASUMSSig      string  `json:"shasums_signature"` // URL to signature
-	Builds          []Build `json:"builds"`
-	TimestampCreated string `json:"timestamp_created,omitempty"`
-	TimestampUpdated string `json:"timestamp_updated,omitempty"`
+	Name             string  `json:"name"`              // "terraform"
+	Version          string  `json:"version"`           // "1.12.0"
+	SHASUMS          string  `json:"shasums,omitempty"` // URL to SHA256SUMS file
+	SHASUMSSig       string  `json:"shasums_signature"` // URL to signature
+	Builds           []Build `json:"builds"`
+	TimestampCreated string  `json:"timestamp_created,omitempty"`
+	TimestampUpdated string  `json:"timestamp_updated,omitempty"`
 }
 
 // Build is one downloadable artifact.

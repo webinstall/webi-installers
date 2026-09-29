@@ -159,7 +159,7 @@ func splitAtPrerelease(s string) (string, string) {
 // Handles any number of dot-separated segments.
 func splitNums(s string) []int {
 	var nums []int
-	for _, seg := range strings.Split(s, ".") {
+	for seg := range strings.SplitSeq(s, ".") {
 		n, err := strconv.Atoi(seg)
 		if err != nil {
 			break

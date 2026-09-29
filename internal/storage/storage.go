@@ -19,20 +19,20 @@ import (
 // No JSON tags — serialization goes through [LegacyAsset] for Node.js
 // compat, or through a future v2 format.
 type Asset struct {
-	Filename string
-	Version  string
-	LTS      bool
-	Channel  string
-	Date     string
-	OS       string
-	Arch     string
-	Libc     string
-	Format   string
-	Download string
-	Extra        string   // extra version info for sorting (e.g. build metadata)
-	GitTag       string   // original git tag (e.g. "v1.2", "master") — only for format="git"
-	GitCommitHash string  // short commit hash (e.g. "54c216e") — only for format="git"
-	Variants     []string // build qualifiers: "installer", "rocm", "jetpack5", "fxdependent", etc.
+	Filename      string
+	Version       string
+	LTS           bool
+	Channel       string
+	Date          string
+	OS            string
+	Arch          string
+	Libc          string
+	Format        string
+	Download      string
+	Extra         string   // extra version info for sorting (e.g. build metadata)
+	GitTag        string   // original git tag (e.g. "v1.2", "master") — only for format="git"
+	GitCommitHash string   // short commit hash (e.g. "54c216e") — only for format="git"
+	Variants      []string // build qualifiers: "installer", "rocm", "jetpack5", "fxdependent", etc.
 }
 
 // PackageData is the full set of assets for a package, plus metadata.

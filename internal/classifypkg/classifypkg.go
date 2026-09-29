@@ -20,31 +20,33 @@ import (
 	"github.com/webinstall/webi-installers/internal/classify"
 	"github.com/webinstall/webi-installers/internal/installerconf"
 	"github.com/webinstall/webi-installers/internal/rawcache"
-	"github.com/webinstall/webi-installers/internal/releases/atomicparsley"
-	"github.com/webinstall/webi-installers/internal/releases/bun"
+	"github.com/webinstall/webi-installers/internal/releases/atomicparsleydist"
+	"github.com/webinstall/webi-installers/internal/releases/bundist"
 	"github.com/webinstall/webi-installers/internal/releases/chromedist"
-	"github.com/webinstall/webi-installers/internal/releases/cmake"
-	"github.com/webinstall/webi-installers/internal/releases/fish"
+	"github.com/webinstall/webi-installers/internal/releases/cmakedist"
+	"github.com/webinstall/webi-installers/internal/releases/csilctldist"
+	"github.com/webinstall/webi-installers/internal/releases/csilgendist"
+	"github.com/webinstall/webi-installers/internal/releases/fishdist"
 	"github.com/webinstall/webi-installers/internal/releases/flutterdist"
-	"github.com/webinstall/webi-installers/internal/releases/git"
+	"github.com/webinstall/webi-installers/internal/releases/gitdist"
 	"github.com/webinstall/webi-installers/internal/releases/golang"
 	"github.com/webinstall/webi-installers/internal/releases/gpgdist"
 	"github.com/webinstall/webi-installers/internal/releases/hashicorp"
 	"github.com/webinstall/webi-installers/internal/releases/iterm2dist"
 	"github.com/webinstall/webi-installers/internal/releases/juliadist"
-	"github.com/webinstall/webi-installers/internal/releases/lsd"
+	"github.com/webinstall/webi-installers/internal/releases/lsddist"
 	"github.com/webinstall/webi-installers/internal/releases/mariadbdist"
-	"github.com/webinstall/webi-installers/internal/releases/node"
-	"github.com/webinstall/webi-installers/internal/releases/ollama"
-	"github.com/webinstall/webi-installers/internal/releases/pwsh"
+	"github.com/webinstall/webi-installers/internal/releases/nodedist"
+	"github.com/webinstall/webi-installers/internal/releases/ollamadist"
 	"github.com/webinstall/webi-installers/internal/releases/postgres"
-	"github.com/webinstall/webi-installers/internal/releases/sass"
+	"github.com/webinstall/webi-installers/internal/releases/pwshdist"
+	"github.com/webinstall/webi-installers/internal/releases/sassdist"
 	"github.com/webinstall/webi-installers/internal/releases/servicemandist"
-	sttrdist "github.com/webinstall/webi-installers/internal/releases/sttr"
-	"github.com/webinstall/webi-installers/internal/releases/uuidv7"
-	"github.com/webinstall/webi-installers/internal/releases/watchexec"
-	"github.com/webinstall/webi-installers/internal/releases/xcaddy"
-	"github.com/webinstall/webi-installers/internal/releases/xz"
+	"github.com/webinstall/webi-installers/internal/releases/sttrdist"
+	"github.com/webinstall/webi-installers/internal/releases/uuidv7dist"
+	"github.com/webinstall/webi-installers/internal/releases/watchexecdist"
+	"github.com/webinstall/webi-installers/internal/releases/xcaddydist"
+	"github.com/webinstall/webi-installers/internal/releases/xzdist"
 	"github.com/webinstall/webi-installers/internal/releases/zigdist"
 	"github.com/webinstall/webi-installers/internal/storage"
 )
@@ -211,6 +213,10 @@ func TagVariants(pkg string, confVariants []string, assets []storage.Asset) {
 		atomicparsleydist.TagVariants(assets)
 	case "cmake":
 		cmakedist.TagVariants(assets)
+	case "csilctl":
+		csilctldist.TagVariants(assets)
+	case "csilgen":
+		csilgendist.TagVariants(assets)
 	case "bun":
 		bundist.TagVariants(assets)
 	case "fish":
@@ -330,8 +336,8 @@ func ApplyConfig(assets []storage.Asset, conf *installerconf.Conf) []storage.Ass
 
 		// Version prefix stripping.
 		for _, p := range prefixes {
-			if strings.HasPrefix(a.Version, p) {
-				a.Version = strings.TrimPrefix(a.Version, p)
+			if after, ok := strings.CutPrefix(a.Version, p); ok {
+				a.Version = after
 				break
 			}
 		}

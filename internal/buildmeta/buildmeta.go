@@ -10,10 +10,10 @@ package buildmeta
 type OS string
 
 const (
-	OSAny     OS = "ANYOS"
-	OSDarwin  OS = "darwin"
-	OSLinux   OS = "linux"
-	OSWindows OS = "windows"
+	OSAny       OS = "ANYOS"
+	OSDarwin    OS = "darwin"
+	OSLinux     OS = "linux"
+	OSWindows   OS = "windows"
 	OSFreeBSD   OS = "freebsd"
 	OSOpenBSD   OS = "openbsd"
 	OSNetBSD    OS = "netbsd"
@@ -35,22 +35,22 @@ const (
 type Arch string
 
 const (
-	ArchAny     Arch = "ANYARCH"
-	ArchAMD64   Arch = "x86_64"    // baseline (v1)
-	ArchAMD64v2 Arch = "x86_64_v2" // +SSE4, +POPCNT, etc.
-	ArchAMD64v3 Arch = "x86_64_v3" // +AVX2, +BMI, etc.
-	ArchAMD64v4 Arch = "x86_64_v4" // +AVX-512
-	ArchARM64   Arch = "aarch64"
-	ArchARMv7   Arch = "armv7"
-	ArchARMv6   Arch = "armv6"
-	ArchARMv5   Arch = "armv5"
-	ArchX86     Arch = "x86"
-	ArchPPC64LE Arch = "ppc64le"
-	ArchPPC64   Arch = "ppc64"
-	ArchPPC     Arch = "powerpc" // 32-bit PowerPC (unsupported by webi, used to prevent gnueabihf over-matching)
-	ArchRISCV64 Arch = "riscv64"
-	ArchS390X   Arch = "s390x"
-	ArchLoong64 Arch = "loong64"
+	ArchAny        Arch = "ANYARCH"
+	ArchAMD64      Arch = "x86_64"    // baseline (v1)
+	ArchAMD64v2    Arch = "x86_64_v2" // +SSE4, +POPCNT, etc.
+	ArchAMD64v3    Arch = "x86_64_v3" // +AVX2, +BMI, etc.
+	ArchAMD64v4    Arch = "x86_64_v4" // +AVX-512
+	ArchARM64      Arch = "aarch64"
+	ArchARMv7      Arch = "armv7"
+	ArchARMv6      Arch = "armv6"
+	ArchARMv5      Arch = "armv5"
+	ArchX86        Arch = "x86"
+	ArchPPC64LE    Arch = "ppc64le"
+	ArchPPC64      Arch = "ppc64"
+	ArchPPC        Arch = "powerpc" // 32-bit PowerPC (unsupported by webi, used to prevent gnueabihf over-matching)
+	ArchRISCV64    Arch = "riscv64"
+	ArchS390X      Arch = "s390x"
+	ArchLoong64    Arch = "loong64"
 	ArchMIPS64LE   Arch = "mips64le"
 	ArchMIPS64     Arch = "mips64"
 	ArchMIPS64R6EL Arch = "mips64r6el"
@@ -77,29 +77,29 @@ const (
 type Format string
 
 const (
-	FormatTarGz  Format = ".tar.gz"
-	FormatTarXz  Format = ".tar.xz"
-	FormatTarZst Format = ".tar.zst"
-	FormatTarBz2 Format = ".tar.bz2"
-	FormatZip    Format = ".zip"
-	FormatGz     Format = ".gz"
-	FormatXz     Format = ".xz"
-	FormatZst    Format = ".zst"
-	FormatExe    Format = ".exe"
-	FormatExeXz  Format = ".exe.xz"
-	FormatMSI    Format = ".msi"
-	FormatDMG    Format = ".dmg"
-	FormatPkg    Format = ".pkg"
-	FormatAppZip Format = ".app.zip"
-	Format7z     Format = ".7z"
-	FormatDeb    Format = ".deb"
-	FormatRPM    Format = ".rpm"
+	FormatTarGz    Format = ".tar.gz"
+	FormatTarXz    Format = ".tar.xz"
+	FormatTarZst   Format = ".tar.zst"
+	FormatTarBz2   Format = ".tar.bz2"
+	FormatZip      Format = ".zip"
+	FormatGz       Format = ".gz"
+	FormatXz       Format = ".xz"
+	FormatZst      Format = ".zst"
+	FormatExe      Format = ".exe"
+	FormatExeXz    Format = ".exe.xz"
+	FormatMSI      Format = ".msi"
+	FormatDMG      Format = ".dmg"
+	FormatPkg      Format = ".pkg"
+	FormatAppZip   Format = ".app.zip"
+	Format7z       Format = ".7z"
+	FormatDeb      Format = ".deb"
+	FormatRPM      Format = ".rpm"
 	FormatSnap     Format = ".snap"
 	FormatAppx     Format = ".appx"
 	FormatAPK      Format = ".apk"
 	FormatAppImage Format = ".AppImage"
-	FormatSh     Format = ".sh"
-	FormatGit    Format = ".git"
+	FormatSh       Format = ".sh"
+	FormatGit      Format = ".git"
 )
 
 // Channel represents a release stability channel.
@@ -165,4 +165,3 @@ func CompatArches(os OS, arch Arch) []Arch {
 
 	return []Arch{arch}
 }
-

@@ -73,6 +73,7 @@ var osPatterns = []struct {
 }{
 	// macos[\d.]* matches versioned names like "macos10.10", "macos11", "macos12.0" (cmake naming).
 	{buildmeta.OSDarwin, regexp.MustCompile(`(?i)(?:` + b + `(?:darwin|macos[\d.]*|macosx[\d.]*|osx[\d.]*|os-x|apple)` + bEnd + `|` + b + `mac` + bEnd + `)`)},
+	{buildmeta.OSAndroid, regexp.MustCompile(`(?i)` + b + `android` + bEnd)},
 	// linux[\d.]* matches versioned names like "linux64", "linux32" (chromedriver/dashcore naming).
 	{buildmeta.OSLinux, regexp.MustCompile(`(?i)` + b + `linux[\d.]*` + bEnd)},
 	{buildmeta.OSWindows, regexp.MustCompile(`(?i)` + b + `(?:windows|win(?:32|64|x64|dows)?)` + bEnd + `|\.exe(?:\.xz)?$|\.msi$`)},
@@ -87,7 +88,6 @@ var osPatterns = []struct {
 	{buildmeta.OSIllumos, regexp.MustCompile(`(?i)` + b + `illumos` + bEnd)},
 	{buildmeta.OSSunOS, regexp.MustCompile(`(?i)` + b + `sunos` + bEnd)},
 	{buildmeta.OSAIX, regexp.MustCompile(`(?i)` + b + `aix` + bEnd)},
-	{buildmeta.OSAndroid, regexp.MustCompile(`(?i)` + b + `android` + bEnd)},
 	{buildmeta.OSPlan9, regexp.MustCompile(`(?i)` + b + `plan9` + bEnd)},
 }
 
