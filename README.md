@@ -109,6 +109,36 @@ mkdir -p ./new-package/
 node _webi/test.js ./new-package/
 ```
 
+### Testing an installer locally
+
+`_webi/test.js` renders the installer for the current machine, using release
+data from `~/.cache/webi/legacy/`. That cache is written by `webicached` (Go),
+so fetch it first:
+
+```sh
+go run ./cmd/webicached --once --shallow pwsh
+node _webi/test.js ./pwsh/
+```
+
+This writes `./install-pwsh.sh` and `./install-pwsh.ps1` (gitignored). To test
+on a clean system without touching your own `~/.local`, run the script in a bare
+container:
+
+```sh
+curl -fsSL -o /tmp/curl \
+    https://github.com/moparisthebest/static-curl/releases/download/v8.5.0/curl-amd64
+chmod a+rx /tmp/curl
+docker run --rm \
+    -v /tmp/curl:/usr/bin/curl:ro \
+    -v /etc/ssl/certs:/etc/ssl/certs:ro \
+    -v "$PWD/install-pwsh.sh:/tmp/install-pwsh.sh:ro" \
+    debian:stable-slim sh /tmp/install-pwsh.sh
+```
+
+The script targets the host's OS and libc, so use a glibc image (`debian`) on a
+glibc host and `alpine` on a musl host. pwsh also needs libicu, which the bare
+image lacks; add `-e DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1` to skip it.
+
 ### 1. Create Description
 
 Just copy the format from any of the existing packages. It's like this:
