@@ -11,6 +11,7 @@
     "lint": "npm run shellcheck && npm run jshint && npm run pwsh-lint",
     "prepare": "npm run tooling-init && npm run git-hooks-init",
     "test": "node _webi/test.js ./node/",
+    "test-bootstrap": "node _webi/curl-pipe-bootstrap-test.js",
     "----": "------------------------------------",
     "git-hooks-init": "node ./_scripts/git-hooks-init.js",
     "jshint": "npx -p jshint@2.x -- jshint -c ./.jshintrc --exclude 'node_modules/**/*' */*.js */*/*.js",
