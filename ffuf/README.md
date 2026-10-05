@@ -25,6 +25,47 @@ install:
 
 [![ffuf mascot](https://github.com/ffuf/ffuf/blob/v2.1.0/_img/ffuf_run_logo_600.png?raw=true)](https://github.com/ffuf/ffuf)
 
+### What is Fuzzing?
+
+Fuzzing is an automated testing technique that involves providing invalid, unexpected, or random data as inputs to a software application. The goal is to discover vulnerabilities like crashes, memory leaks, or even security vulnerabilities in the application. Fuzzing can be applied to various input points like URLs, parameters, headers, etc., to understand how the application handles unexpected or malicious input.
+
+### Types of Fuzzing in Web Security
+
+1. **Directory/Path Discovery**: Identify hidden directories or paths in a web application.
+2. **Parameter Fuzzing**: Find out how the application reacts when unexpected parameters are sent.
+3. **Domain Fuzzing (Subdomain discovery)**: Discover potential subdomains that might be hidden.
+4. **VHost Discovery**: Find out virtual hosts configured on the server.
+5. **File Extension Fuzzing**: Find out if the server is improperly configured to serve files with different extensions.
+
+### Wordlist Format
+
+A wordlist for fuzzing is typically a plain text file with one "word" per line. These "words" act as the payloads that will replace the fuzzing point in the request. For example, a simple wordlist for directory discovery might look like:
+
+```
+admin
+login
+images
+css
+js
+```
+
+### Popular GitHub Wordlists Repositories
+
+1. **SecLists**: One of the most popular collections of multiple types of wordlists, from directory listings to parameter names.  
+   - [SecLists GitHub Repository](https://github.com/danielmiessler/SecLists)
+
+2. **Dirbuster / dirb Wordlists**: Comes pre-installed with some penetration testing OS setups.  
+   - [Dirbuster/drib Wordlists](https://github.com/daviddias/node-dirbuster/tree/master/lists)
+
+3. **FUZZDB**: A dictionary of attack patterns and primitives.  
+   - [FUZZDB GitHub Repository](https://github.com/fuzzdb-project/fuzzdb)
+
+4. **OneListForAll**: Another comprehensive wordlist that covers multiple scenarios.  
+   - [OneListForAll GitHub Repository](https://github.com/six2dez/OneListForAll)
+
+5. **Awesome Fuzzing**: Though not a wordlist, this repository contains a list of fuzzing resources, including where to find good wordlists.  
+   - [Awesome Fuzzing GitHub Repository](https://github.com/secfigo/Awesome-Fuzzing)
+
 Rotate through wordlists to discover and report exposed URLs, domains, etc.
 
 ```sh
