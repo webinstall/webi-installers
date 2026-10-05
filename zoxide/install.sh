@@ -25,6 +25,22 @@ __init_zoxide() {
 
         # mv ./zoxide "~/.local/opt/zoxide-v0.99.9/bin/zoxide"
         mv ./zoxide "$pkg_src_cmd"
+
+        # install completions if present
+        if test -d ./completions; then
+            mkdir -p "$pkg_src_dir/share/bash-completion/completions"
+            mkdir -p "$pkg_src_dir/share/fish/vendor_completions.d"
+            mkdir -p "$pkg_src_dir/share/zsh/site-functions"
+            mv ./completions/zoxide.bash "$pkg_src_dir/share/bash-completion/completions/zoxide" 2>/dev/null || true
+            mv ./completions/zoxide.fish "$pkg_src_dir/share/fish/vendor_completions.d/zoxide.fish" 2>/dev/null || true
+            mv ./completions/_zoxide "$pkg_src_dir/share/zsh/site-functions/_zoxide" 2>/dev/null || true
+        fi
+
+        # install man pages if present
+        if test -d ./man; then
+            mkdir -p "$pkg_src_dir/share"
+            mv ./man "$pkg_src_dir/share/man"
+        fi
     }
 
     # pkg_get_current_version is recommended, but (soon) not required

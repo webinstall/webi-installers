@@ -25,6 +25,12 @@ __init_pandoc() {
 
         # mv ./pandoc-*/pandoc ~/.local/opt/pandoc-v2.10.1/bin/pandoc
         mv ./pandoc-*/bin/pandoc "$pkg_src_cmd"
+
+        # install man pages if present (share/man/man1/pandoc*.1.gz)
+        if test -d ./pandoc-*/share/man; then
+            mkdir -p "$pkg_src_dir/share"
+            mv ./pandoc-*/share/man "$pkg_src_dir/share/man"
+        fi
     }
 
     # pkg_get_current_version is recommended, but (soon) not required
