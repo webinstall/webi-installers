@@ -315,6 +315,11 @@ main() { (
     set -e
     set -u
 
+    if test -z "${HOME:-}"; then
+        echo >&2 "Error: HOME is unset or empty, so this POSIX bootstrap cannot determine your home directory. Set HOME in a supported POSIX shell; on Windows, use the PowerShell installer instead of running this bootstrap under MinGW."
+        return 1
+    fi
+
     WEBI_TTY="${WEBI_TTY:-}"
     if test -z "${WEBI_TTY}"; then
         if fn_detect_tty; then
