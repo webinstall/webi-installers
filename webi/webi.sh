@@ -4,13 +4,11 @@ set -e
 set -u
 #set -x
 
-__webi_main() {
+WEBI_HOST="${WEBI_HOST:-https://webinstall.dev}"
+WEBI_TIMESTAMP="${WEBI_TIMESTAMP:-$(date +%F_%H-%M-%S)}"
+WEBI_TMPDIR="${TMPDIR:-/tmp}"
 
-    my_date="$(date +%F_%H-%M-%S)"
-    export WEBI_TIMESTAMP="${my_date}"
-    export _webi_tmp="${_webi_tmp:-$(
-        mktemp -d -t "webi-$WEBI_TIMESTAMP.XXXXXXXX"
-    )}"
+__webi_main() {
 
     if [ -n "${_WEBI_PARENT:-}" ]; then
         export _WEBI_CHILD=true
@@ -19,8 +17,12 @@ __webi_main() {
     fi
     export _WEBI_PARENT=true
 
-    my_os="$(uname -s)"
-    my_arch="$(uname -m)"
+    WEBI_HOST="${WEBI_HOST%/}"
+    export WEBI_HOST
+
+    WEBI_TMPDIR="${WEBI_TMPDIR%/}"
+
+    export WEBI_TIMESTAMP
 
     ##
     ## Detect acceptable package formats
@@ -66,6 +68,13 @@ __webi_main() {
     export WEBI_URL
     set -e
 
+    # ex: Darwin or Linux
+    my_os="$(uname -s)"
+    # ex: 22.6.0
+    my_rev="$(uname -r)"
+    # ex: arm64
+    my_arch="$(uname -m)"
+
     my_uname_o="$(uname -o 2> /dev/null || echo '')"
     my_libc=''
     if ldd /bin/ls 2> /dev/null | grep -q 'musl' 2> /dev/null; then
@@ -76,16 +85,7 @@ __webi_main() {
         my_libc='libc'
     fi
 
-    export WEBI_HOST="${WEBI_HOST:-https://webinstall.dev}"
-
-    # ex: Darwin or Linux
-    my_sys="$(uname -s)"
-    # ex: 22.6.0
-    my_rev="$(uname -r)"
-    # ex: arm64
-    my_machine="$(uname -m)"
-
-    export WEBI_UA="${my_sys}/${my_rev} ${my_machine}/unknown ${my_libc}"
+    export WEBI_UA="${my_os}/${my_rev} ${my_arch}/unknown ${my_libc}"
 
     webinstall() {
 
@@ -96,49 +96,47 @@ __webi_main() {
             exit 1
         fi
 
-        b_install_tmpdir="$(
-            mktemp -d -t "${b_package}-install.${WEBI_TIMESTAMP}.XXXXXXXX"
-        )"
+        webi_create_tmpdir
 
-        my_installer_url="$WEBI_HOST/api/installers/${b_package}.sh?formats=${my_ext}"
-        if [ -n "$WEBI_CURL" ]; then
-            if ! curl -fsSL "$my_installer_url" -H "User-Agent: curl $WEBI_UA" \
+        b_install_tmpdir="${_webi_tmp}/${b_package}-install"
+        mkdir -p "${b_install_tmpdir}"
+
+        my_installer_url="${WEBI_HOST}/api/installers/${b_package}.sh?formats=${my_ext}"
+        if [ -n "${WEBI_CURL}" ]; then
+            if ! curl -fsSL "${my_installer_url}" -H "User-Agent: curl ${WEBI_UA}" \
                 -o "${b_install_tmpdir}/${b_package}-install.sh"; then
-                echo >&2 "error fetching '$my_installer_url'"
+                echo >&2 "error fetching '${my_installer_url}'"
                 exit 1
             fi
         else
-            if ! wget -q "$my_installer_url" --user-agent="wget $WEBI_UA" \
+            if ! wget -q "${my_installer_url}" --user-agent="wget ${WEBI_UA}" \
                 -O "${b_install_tmpdir}/${b_package}-install.sh"; then
-                echo >&2 "error fetching '$my_installer_url'"
+                echo >&2 "error fetching '${my_installer_url}'"
                 exit 1
             fi
         fi
-
         (
             cd "${b_install_tmpdir}"
             sh "${b_package}-install.sh"
         )
-
-        rm -rf "${b_install_tmpdir}"
-
     }
 
     show_path_updates() {
 
         if test -z "${_WEBI_CHILD}"; then
-            if test -f "$_webi_tmp/.PATH.env"; then
-                my_paths=$(sort -u < "$_webi_tmp/.PATH.env")
-                if test -n "$my_paths"; then
+            webi_create_tmpdir
+            if test -f "${_webi_tmp}/.PATH.env"; then
+                my_paths=$(sort -u < "${_webi_tmp}/.PATH.env")
+                if test -n "${my_paths}"; then
                     printf 'PATH.env updated with:\n'
-                    printf "%s\n" "$my_paths"
+                    printf "%s\n" "${my_paths}"
                     printf '\n'
                     printf "\e[1m\e[35mTO FINISH\e[0m: copy, paste & run the following command:\n"
                     printf "\n"
                     printf "        \e[1m\e[32msource ~/.config/envman/PATH.env\e[0m\n"
                     printf "        (newly opened terminal windows will update automatically)\n"
                 fi
-                rm -f "$_webi_tmp/.PATH.env"
+                rm -f "${_webi_tmp}/.PATH.env"
             fi
         fi
 
@@ -248,12 +246,29 @@ __webi_main() {
     fi
 
     for pkgname in "$@"; do
-        webinstall "$pkgname"
+        webinstall "${pkgname}"
         export WEBI_WELCOME='shown'
     done
 
     show_path_updates
 
+}
+
+webi_create_tmpdir() {
+    # If the directory already exists and is writable, use it
+    [ -d "${_webi_tmp:-}" ] && [ -w "${_webi_tmp}" ] && return 0
+
+    # Create a job-specific temp directory
+    _webi_tmp="$(mktemp -d "${WEBI_TMPDIR}/webi-${WEBI_TIMESTAMP}.XXXXXXXX")" || return 1
+    export _webi_tmp
+
+    # and traps to clean it up on exit.
+    if [ -n "${WEBI_KEEP_TMP:-}" ]; then
+        trap 'echo "Not removing ${_webi_tmp}" >&2' EXIT
+    else
+        trap 'rm -rf "$_webi_tmp"' EXIT
+    fi
+    trap 'exit 1' HUP INT TERM
 }
 
 webi_shell_init() { (
@@ -444,10 +459,8 @@ webi_list() { (
 ); }
 
 fn_list_uncached() { (
-    # because we don't have sitemap.xml for dev sites yet
-    my_host="https://webinstall.dev"
 
-    my_len="${#my_host}"
+    my_len="${#WEBI_HOST}"
     # 6 because the field will looks like "loc>WEBI_HOST/PKG_NAME"
     # and the count is 1-indexed
     my_count="$((my_len + 6))"
@@ -455,7 +468,8 @@ fn_list_uncached() { (
     my_now="$(date -u '+%s')"
     echo "${my_now}" > ~/.local/share/webi/var/last_update
 
-    my_tmp="$(mktemp)"
+    webi_create_tmpdir
+    my_tmp="$(mktemp "${_webi_tmp}/list.txt.XXXXXXXX")"
     {
         echo "help"
         echo "--help"
@@ -466,8 +480,8 @@ fn_list_uncached() { (
         echo "--list"
         echo "--info" # <package>
     } > "${my_tmp}"
-    curl -fsS "${my_host}/sitemap.xml" |
-        grep -F "${my_host}" |
+    curl -fsS "${WEBI_HOST}/sitemap.xml" |
+        grep -F "${WEBI_HOST}" |
         cut -d'<' -f2 |
         cut -c "${my_count}"- >> "${my_tmp}"
     mv "${my_tmp}" ~/.local/share/webi/var/list.txt
@@ -477,13 +491,16 @@ fn_list_uncached() { (
 ); }
 
 webi_info() { (
-    if test -z "${2}"; then
+    if [ $# -lt 2 ]; then
         echo >&2 "Usage: webi --info <package>"
         exit 1
     fi
 
     echo >&2 "[warn] the output of --info is completely half-baked and will change"
     my_pkg="${2}"
+
+    webi_load_sysinfo     # load $my_os, $my_arch
+
     # TODO need a way to check that it exists at all (readme, win, lin)
     echo ""
     echo "    Cheat Sheet: ${WEBI_HOST}/${my_pkg}"
