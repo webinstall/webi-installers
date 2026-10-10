@@ -4,13 +4,14 @@ set -e
 set -u
 #set -x
 
-__webi_main() {
+WEBI_HOST="${WEBI_HOST:-https://webinstall.dev}"
+WEBI_TIMESTAMP="${WEBI_TIMESTAMP:-$(date +%F_%H-%M-%S)}"
+WEBI_TMPDIR="${TMPDIR:-/tmp}"
 
-    my_date="$(date +%F_%H-%M-%S)"
-    export WEBI_TIMESTAMP="${my_date}"
-    export _webi_tmp="${_webi_tmp:-$(
-        mktemp -d -t "webi-$WEBI_TIMESTAMP.XXXXXXXX"
-    )}"
+: "${WEBI_STALE_TIME:=600}"  # seconds after which cache should be refreshed in background
+: "${WEBI_EXPIRY_TIME:=900}" # seconds after which cache must be refreshed before use
+
+__webi_main() {
 
     if [ -n "${_WEBI_PARENT:-}" ]; then
         export _WEBI_CHILD=true
@@ -19,8 +20,12 @@ __webi_main() {
     fi
     export _WEBI_PARENT=true
 
-    my_os="$(uname -s)"
-    my_arch="$(uname -m)"
+    WEBI_HOST="${WEBI_HOST%/}"
+    export WEBI_HOST
+
+    WEBI_TMPDIR="${WEBI_TMPDIR%/}"
+
+    export WEBI_TIMESTAMP
 
     ##
     ## Detect acceptable package formats
@@ -57,91 +62,48 @@ __webi_main() {
     my_ext="$(echo "$my_ext" | sed 's/,$//')" # nix trailing comma
     set -e
 
-    ##
-    ## Detect http client
-    ##
-
-    set +e
-    WEBI_CURL="$(command -v curl)"
-    export WEBI_URL
-    set -e
-
-    my_uname_o="$(uname -o 2> /dev/null || echo '')"
-    my_libc=''
-    if ldd /bin/ls 2> /dev/null | grep -q 'musl' 2> /dev/null; then
-        my_libc='musl'
-    elif echo "${my_uname_o}" | grep -q 'GNU' || uname -s | grep -q 'Linux'; then
-        my_libc='gnu'
-    else
-        my_libc='libc'
-    fi
-
-    export WEBI_HOST="${WEBI_HOST:-https://webinstall.dev}"
-
-    # ex: Darwin or Linux
-    my_sys="$(uname -s)"
-    # ex: 22.6.0
-    my_rev="$(uname -r)"
-    # ex: arm64
-    my_machine="$(uname -m)"
-
-    export WEBI_UA="${my_sys}/${my_rev} ${my_machine}/unknown ${my_libc}"
-
     webinstall() {
 
         b_package="${1:-}"
         if test -z "${b_package}"; then
-            echo >&2 "Usage: webi <package>@<version> ..."
-            echo >&2 "Example: webi node@lts rg"
+            log "" "Usage: webi <package>@<version> ..."
+            log "" "Example: webi node@lts rg"
             exit 1
         fi
 
-        b_install_tmpdir="$(
-            mktemp -d -t "${b_package}-install.${WEBI_TIMESTAMP}.XXXXXXXX"
-        )"
+        webi_create_tmpdir
 
-        my_installer_url="$WEBI_HOST/api/installers/${b_package}.sh?formats=${my_ext}"
-        if [ -n "$WEBI_CURL" ]; then
-            if ! curl -fsSL "$my_installer_url" -H "User-Agent: curl $WEBI_UA" \
-                -o "${b_install_tmpdir}/${b_package}-install.sh"; then
-                echo >&2 "error fetching '$my_installer_url'"
-                exit 1
-            fi
-        else
-            if ! wget -q "$my_installer_url" --user-agent="wget $WEBI_UA" \
-                -O "${b_install_tmpdir}/${b_package}-install.sh"; then
-                echo >&2 "error fetching '$my_installer_url'"
-                exit 1
-            fi
+        b_install_tmpdir="${_webi_tmp}/${b_package}-install"
+        mkdir -p "${b_install_tmpdir}"
+
+        my_installer_url="${WEBI_HOST}/api/installers/${b_package}.sh?formats=${my_ext}"
+        if ! webi_download "${my_installer_url}" "${b_install_tmpdir}/${b_package}-install.sh"; then
+            fatal ERROR "Error fetching '${my_installer_url}'"
         fi
-
         (
             cd "${b_install_tmpdir}"
             sh "${b_package}-install.sh"
         )
-
-        rm -rf "${b_install_tmpdir}"
-
     }
 
     show_path_updates() {
 
         if test -z "${_WEBI_CHILD}"; then
-            if test -f "$_webi_tmp/.PATH.env"; then
-                my_paths=$(sort -u < "$_webi_tmp/.PATH.env")
-                if test -n "$my_paths"; then
+            webi_create_tmpdir
+            if test -f "${_webi_tmp}/.PATH.env"; then
+                my_paths=$(sort -u < "${_webi_tmp}/.PATH.env")
+                if test -n "${my_paths}"; then
                     printf 'PATH.env updated with:\n'
-                    printf "%s\n" "$my_paths"
+                    printf "%s\n" "${my_paths}"
                     printf '\n'
                     printf "\e[1m\e[35mTO FINISH\e[0m: copy, paste & run the following command:\n"
                     printf "\n"
                     printf "        \e[1m\e[32msource ~/.config/envman/PATH.env\e[0m\n"
                     printf "        (newly opened terminal windows will update automatically)\n"
                 fi
-                rm -f "$_webi_tmp/.PATH.env"
+                rm -f "${_webi_tmp}/.PATH.env"
             fi
         fi
-
     }
 
     fn_checksum() {
@@ -162,7 +124,7 @@ __webi_main() {
             return 0
         fi
 
-        echo >&2 "    warn: no sha1 sum program"
+        log WARNING "no sha1 sum program found"
         date '+%F %H:%M'
     }
 
@@ -248,12 +210,137 @@ __webi_main() {
     fi
 
     for pkgname in "$@"; do
-        webinstall "$pkgname"
+        webinstall "${pkgname}"
         export WEBI_WELCOME='shown'
     done
 
     show_path_updates
 
+}
+
+print_color() {
+    # Usage:
+    #   print_color '1;31'              'this is bold red'
+    #   print_color '5;38;2;255;192;64' 'blinking orange'
+    #   print_color '35'                'this is magenta on stdout'   1
+    _pc_color="${1}" _pc_text="${2}" _pc_fd=${3:-2}
+    if  [ -z "${_pc_color:-}" ]            || # no color requested, or
+        [ -n "${NO_COLOR:-}${NOCOLOR:-}" ] || # color explicitly disabled, or
+        [ "${TERM:-dumb}" = "dumb" ]       || # dumb terminal, or
+        [ ! -t "${_pc_fd}" ]                  # not a tty => no color
+    then printf "%s" "${_pc_text}"                               >&"${_pc_fd}"
+    else printf "\033[%sm%s\033[0m" "${_pc_color}" "${_pc_text}" >&"${_pc_fd}"
+    fi
+}
+
+log() {
+    # Usage:
+    #   log ERROR 'Something broke!'
+    #   log INFO 'The 1 means "stdout" rather than "stderr":' 1
+    #   log EXEC "Command that's running or would be (DRYRUN=1)"
+    _loglevel="${1}" _logmsg="${2}" _logfd=${3:-}
+    case "${_loglevel}" in
+        CRITICAL)   _logcolor='35' _logprefix='[CRITICAL] '     ;;
+        NOTICE)     _logcolor='39' _logprefix='[NOTICE]   '     ;;
+        ERROR)      _logcolor='31' _logprefix='[ERROR]    '     ;;
+        WARNING)    _logcolor='33' _logprefix='[WARNING]  '     ;;
+        INFO)       _logcolor='36' _logprefix='[INFO]     '     ;;
+        DEBUG)      _logcolor='2'  _logprefix='[DEBUG]    '     ;;
+        EXEC)       if [ -n "${DRYRUN:-}" ];
+                    then _logcolor='32' _logprefix='[EXEC]     '
+                    else _logcolor='34' _logprefix='[DRYRUN]   '
+                    fi ;;
+        '')         _logcolor='' _logprefix='' ;;
+        *)          fatal ERROR "bad log level: ${_loglevel}"
+    esac
+    case "${_loglevel}" in
+        DEBUG)      [ -z "${DEBUG:-}" ]             && return 0 ;;
+        INFO|EXEC)  [ -z "${VERBOSE:-}${DEBUG:-}" ] && return 0 ;;
+        CRITICAL)   ;; # CRITICAL is always shown, regardless of $SILENT
+        *)          [ -n "${SILENT:-}" ]            && return 0 ;;
+    esac
+    print_color "1;${_logcolor}" "${_logprefix}" "${_logfd:-2}"
+    print_color "${_logcolor}"   "${_logmsg}"    "${_logfd:-2}"
+    printf '\n' >&"${_logfd:-2}"
+}
+
+fatal() {
+    log "$@"
+    exit 1
+}
+
+webi_create_tmpdir() {
+    # If the directory already exists and is writable, use it
+    [ -d "${_webi_tmp:-}" ] && [ -w "${_webi_tmp}" ] && return 0
+
+    # Create a job-specific temp directory
+    _webi_tmp="$(mktemp -d "${WEBI_TMPDIR}/webi-${WEBI_TIMESTAMP}.XXXXXXXX")" || return 1
+    export _webi_tmp
+
+    # and traps to clean it up on exit.
+    if [ -n "${WEBI_KEEP_TMP:-}" ]; then
+        trap 'echo "Not removing ${_webi_tmp}" >&2' EXIT
+    else
+        trap 'rm -rf "$_webi_tmp"' EXIT
+    fi
+    trap 'exit 1' HUP INT TERM
+}
+
+webi_load_sysinfo() {
+    # ex: Darwin or Linux
+    my_os="$(uname -s)"
+    # ex: 22.6.0
+    my_rev="$(uname -r)"
+    # ex: arm64
+    my_arch="$(uname -m)"
+
+    if [ -z "${WEBI_UA:-}" ]; then
+        my_uname_o="$(uname -o 2> /dev/null || echo '')"
+        my_libc=''
+        if ldd /bin/ls 2> /dev/null | grep -q 'musl' 2> /dev/null; then
+            my_libc='musl'
+        elif echo "${my_uname_o}" | grep -q 'GNU' || uname -s | grep -q 'Linux'; then
+            my_libc='gnu'
+        else
+            my_libc='libc'
+        fi
+
+        export WEBI_UA="${my_os}/${my_rev} ${my_arch}/unknown ${my_libc}"
+    fi
+}
+
+# Download $1 to file $2 ('-' for stdout) with curl or wget, returning its rc.
+# Uses WEBI_CURL (preferred) or WEBI_WGET if set; otherwise detects curl, then
+# wget. Not a subshell, so detection persists (unless called within $(...)).
+webi_download() {
+    _dl_url="${1:-}"
+    [ -z "${_dl_url}" ] && fatal ERROR "no URL specified"
+
+    _dl_file="${2:-}"
+    [ -z "${_dl_file}" ] && fatal ERROR "no file specified; use '-' for stdout"
+
+    # get WEBI_UA
+    webi_load_sysinfo
+
+    # Detect curl, or failing that, wget
+    if [ -z "${WEBI_CURL:-}" ] && [ -z "${WEBI_WGET:-}" ]; then
+        if b_cmd="$(command -v curl)" && "$b_cmd" --version > /dev/null 2>&1; then
+            WEBI_CURL="$b_cmd"
+        elif b_cmd="$(command -v wget)"; then
+            # no --version check: busybox wget doesn't support it
+            WEBI_WGET="$b_cmd"
+        fi
+    fi
+
+    if [ -n "${WEBI_CURL:-}" ]; then
+        "${WEBI_CURL}" -fsSL "$_dl_url" -H "User-Agent: curl ${WEBI_UA}" -o "$_dl_file"
+        return $?
+    elif [ -n "${WEBI_WGET:-}" ]; then
+        "${WEBI_WGET}" -q "$_dl_url" --user-agent="wget ${WEBI_UA}" -O "$_dl_file"
+        return $?
+    fi
+
+    fatal ERROR "'curl' or 'wget' required for downloads"
 }
 
 webi_shell_init() { (
@@ -284,11 +371,10 @@ webi_shell_init() { (
             fn_shell_init_fish
             ;;
         *)
-            echo >&2 "Unsupported shell: $2"
-            exit 1
+            fatal ERROR "Unsupported shell: ${2}"
             ;;
     esac
-) }
+); }
 
 fn_shell_integrate_bash() { (
     a_force="${1}"
@@ -307,7 +393,7 @@ fn_shell_integrate_bash() { (
         return 0
     fi
 
-    echo >&2 "    Edit ~/.bashrc to add 'eval \"\$(webi --init bash)\"'"
+    # log "" "    Edit ~/.bashrc to add 'eval \"\$(webi --init bash)\"'"
     # shellcheck disable=SC2016
     {
         echo ''
@@ -349,7 +435,7 @@ fn_shell_integrate_zsh() { (
         return 0
     fi
 
-    echo >&2 "    Edit ~/.zshrc to add 'eval \"\$(webi --init zsh)\"'"
+    # log "" "    Edit ~/.zshrc to add 'eval \"\$(webi --init zsh)\"'"
     # shellcheck disable=SC2016
     {
         echo ''
@@ -385,7 +471,7 @@ fn_shell_integrate_fish() { (
         return 0
     fi
 
-    echo >&2 "    Edit ~/.config/fish/config.fish to add 'webi --init fish | source'"
+    # log "" "    Edit ~/.config/fish/config.fish to add 'webi --init fish | source'"
     # shellcheck disable=SC2016
     {
         echo ''
@@ -409,81 +495,124 @@ fn_shell_init_fish() { (
 ); }
 
 webi_list() { (
-    # make sure there's always a cache dir and timestamp file
-    mkdir -p ~/.local/share/webi/var/
+    # To avoid ownership collision with other users when using sudo,
+    # save the list per-user
+    my_uid="$(id -u)"
+    my_tmpbase="webi.uid-${my_uid}.list"
 
-    if ! test -r ~/.local/share/webi/var/list.txt; then
-        echo '0' > ~/.local/share/webi/var/last_update
-    elif ! test -r ~/.local/share/webi/var/last_update; then
-        echo '0' > ~/.local/share/webi/var/last_update
-    fi
+    # Get all cached list files with my uid that I own, most recent first (-t)
+    my_lists="$(
+        find "${WEBI_TMPDIR}/." \
+            ! -name . -prune \
+            -type f \
+            -user "${my_uid}" \
+            -name "${my_tmpbase}.*" \
+            -exec ls -t {} + 2> /dev/null
+    )"
 
-    # compare the timestamp in the timestamp file to now
-    # (in seconds since unix epoch)
-    my_stale_age=600
-    my_expire_age=900
-    my_now="$(date -u '+%s')"
-    my_then="$(cat ~/.local/share/webi/var/last_update)"
-    my_diff=$((my_now - my_then))
+    my_list=
+    my_list_age=0
+    # If we have any existing lists...
+    if [ -n "${my_lists}" ]; then
+        # Take the most recent (first) valid file and delete any others
+        while IFS= read -r my_file; do
+            if [ -z "${my_list}" ] && [ -s "${my_file}" ]; then
+                my_list="${my_file}"
+            else
+                rm -f "${my_file}" || true
+            fi
+        done << EOF
+${my_lists}
+EOF
 
-    # show when the cache will update
-    my_stales_in=$((my_stale_age - my_diff))
-    my_expires_in=$((my_expire_age - my_diff))
-
-    # update if it's been longer than the staletime
-    if test "${my_stales_in}" -lt "0"; then
-        if test "${my_expires_in}" -lt "0"; then
-            fn_list_uncached
-        else
-            fn_list_uncached &
+        # Get age of file if it exists and is not empty
+        my_list_age="$((WEBI_EXPIRY_TIME + 1))"
+        if [ -n "${my_list}" ]; then
+            my_now="$(date -u '+%s')"
+            my_list_date="$(date -u -r "${my_list}" '+%s' 2> /dev/null || echo '0')"
+            if [ "${my_list_date}" -gt 0 ]; then
+                my_list_age="$((my_now - my_list_date))"
+            else
+                # 'date -r FILE' probably fails on OpenBSD, NetBSD, Solaris, AIX, etc.
+                # but should work on GNU, macOS, FreeBSD.
+                log WARNING "can't get mtime of '${my_list}'"
+                my_list_date=0
+            fi
         fi
     fi
 
-    # give back the list
-    cat ~/.local/share/webi/var/list.txt
+    if [ -z "${my_list}" ] || [ "${my_list_age}" -gt "${WEBI_EXPIRY_TIME}" ]; then
+        # Download fresh list; can lose a race condition here, but no matter
+        # as the file will be the same for all competitors
+        my_new_list="$(fn_list_uncached "${my_tmpbase}")" &&
+            my_list="${my_new_list}"
+
+    elif [ "${my_list_age}" -gt "${WEBI_STALE_TIME}" ]; then
+        # freshen the file to avoid race conditions
+        touch "${my_list}" 2> /dev/null || true
+        # refresh in background
+        fn_list_uncached "${my_tmpbase}" > /dev/null &
+    fi
+
+    # Output the list
+    if [ -s "${my_list}" ]; then
+        cat "${my_list}"
+        return 0
+    fi
+); }
+
+fn_list_options() { (
+    echo "help"
+    echo "--help"
+    echo "version"
+    echo "-V"
+    echo "--version"
+    echo "--init" # <shell>
+    echo "--list"
+    echo "--info" # <package>
 ); }
 
 fn_list_uncached() { (
-    # because we don't have sitemap.xml for dev sites yet
-    my_host="https://webinstall.dev"
+    my_tmpbase="$1"
 
-    my_len="${#my_host}"
-    # 6 because the field will looks like "loc>WEBI_HOST/PKG_NAME"
-    # and the count is 1-indexed
-    my_count="$((my_len + 6))"
+    # Download sitemap, and fail this function on error.
+    my_sitemap="$(webi_download "${WEBI_HOST}/sitemap.xml" -)" || return 1
 
-    my_now="$(date -u '+%s')"
-    echo "${my_now}" > ~/.local/share/webi/var/last_update
+    # Construct intermediate file in per-job temp directory to avoid race
+    # conditions with other processes. The list will be saved to a more
+    # persistent location within $[WEBI_]TMPDIR later
+    webi_create_tmpdir
 
-    my_tmp="$(mktemp)"
-    {
-        echo "help"
-        echo "--help"
-        echo "version"
-        echo "-V"
-        echo "--version"
-        echo "--init" # <shell>
-        echo "--list"
-        echo "--info" # <package>
-    } > "${my_tmp}"
-    curl -fsS "${my_host}/sitemap.xml" |
-        grep -F "${my_host}" |
-        cut -d'<' -f2 |
-        cut -c "${my_count}"- >> "${my_tmp}"
-    mv "${my_tmp}" ~/.local/share/webi/var/list.txt
+    my_intermediate="$(mktemp "${_webi_tmp}/download-${my_tmpbase}.XXXXXXXX")" || return 1
+    fn_list_options > "${my_intermediate}"
 
-    my_now="$(date -u '+%s')"
-    echo "${my_now}" > ~/.local/share/webi/var/last_update
+    # Strip just the path from <loc>$my_host/path</loc>
+    printf '%s\n' "${my_sitemap}" |
+        awk -F'[<>]' \
+            -v h="${WEBI_HOST}/" \
+            'BEGIN {l=length(h)+1} index($3,h)==1 {print substr($3,l)}' \
+            >> "${my_intermediate}"
+
+    # Save to the cache file that will persist after this job (and cleaned up
+    # by either the OS or a later run of webi, if expired)
+    my_list_file="$(mktemp "${WEBI_TMPDIR}/${my_tmpbase}.XXXXXXXX")" || return 1
+    cat "${my_intermediate}" > "${my_list_file}"
+    rm -f "${my_intermediate}"
+
+    # Return the file path
+    echo "${my_list_file}"
 ); }
 
 webi_info() { (
-    if test -z "${2}"; then
-        echo >&2 "Usage: webi --info <package>"
-        exit 1
+    if [ $# -lt 2 ]; then
+        fatal "" "Usage: webi --info <package>"
     fi
 
-    echo >&2 "[warn] the output of --info is completely half-baked and will change"
+    log WARNING "the output of --info is completely half-baked and will change"
     my_pkg="${2}"
+
+    webi_load_sysinfo     # load $my_os, $my_arch
+
     # TODO need a way to check that it exists at all (readme, win, lin)
     echo ""
     echo "    Cheat Sheet: ${WEBI_HOST}/${my_pkg}"
@@ -499,22 +628,23 @@ webi_info() { (
 
     # TODO os=linux,macos,windows (limit to tagged releases)
     my_releases="$(
-        curl -fsS "${WEBI_HOST}/api/releases/${my_pkg}.json?channel=stable&limit=1&pretty=true"
+        webi_download "${WEBI_HOST}/api/releases/${my_pkg}.json?channel=stable&limit=1&pretty=true" -
     )"
 
     if printf '%s\n' "${my_releases}" | grep -q "error"; then
         my_releases_beta="$(
-            curl -fsS "${WEBI_HOST}/api/releases/${my_pkg}.json?&limit=1&pretty=true"
+            webi_download "${WEBI_HOST}/api/releases/${my_pkg}.json?&limit=1&pretty=true" -
         )"
         if printf '%s\n' "${my_releases_beta}" | grep -q "error"; then
-            echo >&2 "'${my_pkg}' is a special case that does not have releases"
+            # TODO This occurs even if a non-existent package is requested
+            log WARNING "'${my_pkg}' is a special case that does not have releases"
         else
-            echo >&2 "ERROR no stable releases for '${my_pkg}'!"
+            log WARNING "no stable releases for '${my_pkg}'!"
         fi
         exit 0
     fi
 
-    echo >&2 "Stable '${my_pkg}' releases:"
+    echo "Stable '${my_pkg}' releases:"
     if command -v jq > /dev/null; then
         printf '%s\n' "${my_releases}" |
             jq
