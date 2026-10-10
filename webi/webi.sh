@@ -59,34 +59,6 @@ __webi_main() {
     my_ext="$(echo "$my_ext" | sed 's/,$//')" # nix trailing comma
     set -e
 
-    ##
-    ## Detect http client
-    ##
-
-    set +e
-    WEBI_CURL="$(command -v curl)"
-    export WEBI_URL
-    set -e
-
-    # ex: Darwin or Linux
-    my_os="$(uname -s)"
-    # ex: 22.6.0
-    my_rev="$(uname -r)"
-    # ex: arm64
-    my_arch="$(uname -m)"
-
-    my_uname_o="$(uname -o 2> /dev/null || echo '')"
-    my_libc=''
-    if ldd /bin/ls 2> /dev/null | grep -q 'musl' 2> /dev/null; then
-        my_libc='musl'
-    elif echo "${my_uname_o}" | grep -q 'GNU' || uname -s | grep -q 'Linux'; then
-        my_libc='gnu'
-    else
-        my_libc='libc'
-    fi
-
-    export WEBI_UA="${my_os}/${my_rev} ${my_arch}/unknown ${my_libc}"
-
     webinstall() {
 
         b_package="${1:-}"
@@ -102,16 +74,8 @@ __webi_main() {
         mkdir -p "${b_install_tmpdir}"
 
         my_installer_url="${WEBI_HOST}/api/installers/${b_package}.sh?formats=${my_ext}"
-        if [ -n "${WEBI_CURL}" ]; then
-            if ! curl -fsSL "${my_installer_url}" -H "User-Agent: curl ${WEBI_UA}" \
-                -o "${b_install_tmpdir}/${b_package}-install.sh"; then
-                fatal ERROR "Error fetching '${my_installer_url}'"
-            fi
-        else
-            if ! wget -q "${my_installer_url}" --user-agent="wget ${WEBI_UA}" \
-                -O "${b_install_tmpdir}/${b_package}-install.sh"; then
-                fatal ERROR "Error fetching '${my_installer_url}'"
-            fi
+        if ! webi_download "${my_installer_url}" "${b_install_tmpdir}/${b_package}-install.sh"; then
+            fatal ERROR "Error fetching '${my_installer_url}'"
         fi
         (
             cd "${b_install_tmpdir}"
@@ -319,6 +283,63 @@ webi_create_tmpdir() {
     trap 'exit 1' HUP INT TERM
 }
 
+webi_load_sysinfo() {
+    # ex: Darwin or Linux
+    my_os="$(uname -s)"
+    # ex: 22.6.0
+    my_rev="$(uname -r)"
+    # ex: arm64
+    my_arch="$(uname -m)"
+
+    if [ -z "${WEBI_UA:-}" ]; then
+        my_uname_o="$(uname -o 2> /dev/null || echo '')"
+        my_libc=''
+        if ldd /bin/ls 2> /dev/null | grep -q 'musl' 2> /dev/null; then
+            my_libc='musl'
+        elif echo "${my_uname_o}" | grep -q 'GNU' || uname -s | grep -q 'Linux'; then
+            my_libc='gnu'
+        else
+            my_libc='libc'
+        fi
+
+        export WEBI_UA="${my_os}/${my_rev} ${my_arch}/unknown ${my_libc}"
+    fi
+}
+
+# Download $1 to file $2 ('-' for stdout) with curl or wget, returning its rc.
+# Uses WEBI_CURL (preferred) or WEBI_WGET if set; otherwise detects curl, then
+# wget. Not a subshell, so detection persists (unless called within $(...)).
+webi_download() {
+    _dl_url="${1:-}"
+    [ -z "${_dl_url}" ] && fatal ERROR "no URL specified"
+
+    _dl_file="${2:-}"
+    [ -z "${_dl_file}" ] && fatal ERROR "no file specified; use '-' for stdout"
+
+    # get WEBI_UA
+    webi_load_sysinfo
+
+    # Detect curl, or failing that, wget
+    if [ -z "${WEBI_CURL:-}" ] && [ -z "${WEBI_WGET:-}" ]; then
+        if b_cmd="$(command -v curl)" && "$b_cmd" --version > /dev/null 2>&1; then
+            WEBI_CURL="$b_cmd"
+        elif b_cmd="$(command -v wget)"; then
+            # no --version check: busybox wget doesn't support it
+            WEBI_WGET="$b_cmd"
+        fi
+    fi
+
+    if [ -n "${WEBI_CURL:-}" ]; then
+        "${WEBI_CURL}" -fsSL "$_dl_url" -H "User-Agent: curl ${WEBI_UA}" -o "$_dl_file"
+        return $?
+    elif [ -n "${WEBI_WGET:-}" ]; then
+        "${WEBI_WGET}" -q "$_dl_url" --user-agent="wget ${WEBI_UA}" -O "$_dl_file"
+        return $?
+    fi
+
+    fatal ERROR "'curl' or 'wget' required for downloads"
+}
+
 webi_shell_init() { (
     a_shell="${2:-}"
 
@@ -350,7 +371,7 @@ webi_shell_init() { (
             fatal ERROR "Unsupported shell: ${2}"
             ;;
     esac
-) }
+); }
 
 fn_shell_integrate_bash() { (
     a_force="${1}"
@@ -527,7 +548,7 @@ fn_list_uncached() { (
         echo "--list"
         echo "--info" # <package>
     } > "${my_tmp}"
-    curl -fsS "${WEBI_HOST}/sitemap.xml" |
+    webi_download "${WEBI_HOST}/sitemap.xml" - |
         grep -F "${WEBI_HOST}" |
         cut -d'<' -f2 |
         cut -c "${my_count}"- >> "${my_tmp}"
@@ -562,12 +583,12 @@ webi_info() { (
 
     # TODO os=linux,macos,windows (limit to tagged releases)
     my_releases="$(
-        curl -fsS "${WEBI_HOST}/api/releases/${my_pkg}.json?channel=stable&limit=1&pretty=true"
+        webi_download "${WEBI_HOST}/api/releases/${my_pkg}.json?channel=stable&limit=1&pretty=true" -
     )"
 
     if printf '%s\n' "${my_releases}" | grep -q "error"; then
         my_releases_beta="$(
-            curl -fsS "${WEBI_HOST}/api/releases/${my_pkg}.json?&limit=1&pretty=true"
+            webi_download "${WEBI_HOST}/api/releases/${my_pkg}.json?&limit=1&pretty=true" -
         )"
         if printf '%s\n' "${my_releases_beta}" | grep -q "error"; then
             # TODO This occurs even if a non-existent package is requested
