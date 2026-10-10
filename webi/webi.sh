@@ -91,8 +91,8 @@ __webi_main() {
 
         b_package="${1:-}"
         if test -z "${b_package}"; then
-            echo >&2 "Usage: webi <package>@<version> ..."
-            echo >&2 "Example: webi node@lts rg"
+            log "" "Usage: webi <package>@<version> ..."
+            log "" "Example: webi node@lts rg"
             exit 1
         fi
 
@@ -105,14 +105,12 @@ __webi_main() {
         if [ -n "${WEBI_CURL}" ]; then
             if ! curl -fsSL "${my_installer_url}" -H "User-Agent: curl ${WEBI_UA}" \
                 -o "${b_install_tmpdir}/${b_package}-install.sh"; then
-                echo >&2 "error fetching '${my_installer_url}'"
-                exit 1
+                fatal ERROR "Error fetching '${my_installer_url}'"
             fi
         else
             if ! wget -q "${my_installer_url}" --user-agent="wget ${WEBI_UA}" \
                 -O "${b_install_tmpdir}/${b_package}-install.sh"; then
-                echo >&2 "error fetching '${my_installer_url}'"
-                exit 1
+                fatal ERROR "Error fetching '${my_installer_url}'"
             fi
         fi
         (
@@ -139,7 +137,6 @@ __webi_main() {
                 rm -f "${_webi_tmp}/.PATH.env"
             fi
         fi
-
     }
 
     fn_checksum() {
@@ -160,7 +157,7 @@ __webi_main() {
             return 0
         fi
 
-        echo >&2 "    warn: no sha1 sum program"
+        log WARNING "no sha1 sum program found"
         date '+%F %H:%M'
     }
 
@@ -254,6 +251,57 @@ __webi_main() {
 
 }
 
+print_color() {
+    # Usage:
+    #   print_color '1;31'              'this is bold red'
+    #   print_color '5;38;2;255;192;64' 'blinking orange'
+    #   print_color '35'                'this is magenta on stdout'   1
+    _pc_color="${1}" _pc_text="${2}" _pc_fd=${3:-2}
+    if  [ -z "${_pc_color:-}" ]            || # no color requested, or
+        [ -n "${NO_COLOR:-}${NOCOLOR:-}" ] || # color explicitly disabled, or
+        [ "${TERM:-dumb}" = "dumb" ]       || # dumb terminal, or
+        [ ! -t "${_pc_fd}" ]                  # not a tty => no color
+    then printf "%s" "${_pc_text}"                               >&"${_pc_fd}"
+    else printf "\033[%sm%s\033[0m" "${_pc_color}" "${_pc_text}" >&"${_pc_fd}"
+    fi
+}
+
+log() {
+    # Usage:
+    #   log ERROR 'Something broke!'
+    #   log INFO 'The 1 means "stdout" rather than "stderr":' 1
+    #   log EXEC "Command that's running or would be (DRYRUN=1)"
+    _loglevel="${1}" _logmsg="${2}" _logfd=${3:-}
+    case "${_loglevel}" in
+        CRITICAL)   _logcolor='35' _logprefix='[CRITICAL] '     ;;
+        NOTICE)     _logcolor='39' _logprefix='[NOTICE]   '     ;;
+        ERROR)      _logcolor='31' _logprefix='[ERROR]    '     ;;
+        WARNING)    _logcolor='33' _logprefix='[WARNING]  '     ;;
+        INFO)       _logcolor='36' _logprefix='[INFO]     '     ;;
+        DEBUG)      _logcolor='2'  _logprefix='[DEBUG]    '     ;;
+        EXEC)       if [ -n "${DRYRUN:-}" ];
+                    then _logcolor='32' _logprefix='[EXEC]     '
+                    else _logcolor='34' _logprefix='[DRYRUN]   '
+                    fi ;;
+        '')         _logcolor='' _logprefix='' ;;
+        *)          fatal ERROR "bad log level: ${_loglevel}"
+    esac
+    case "${_loglevel}" in
+        DEBUG)      [ -z "${DEBUG:-}" ]             && return 0 ;;
+        INFO|EXEC)  [ -z "${VERBOSE:-}${DEBUG:-}" ] && return 0 ;;
+        CRITICAL)   ;; # CRITICAL is always shown, regardless of $SILENT
+        *)          [ -n "${SILENT:-}" ]            && return 0 ;;
+    esac
+    print_color "1;${_logcolor}" "${_logprefix}" "${_logfd:-2}"
+    print_color "${_logcolor}"   "${_logmsg}"    "${_logfd:-2}"
+    printf '\n' >&${_logfd:-2}
+}
+
+fatal() {
+    log "$@"
+    exit 1
+}
+
 webi_create_tmpdir() {
     # If the directory already exists and is writable, use it
     [ -d "${_webi_tmp:-}" ] && [ -w "${_webi_tmp}" ] && return 0
@@ -299,8 +347,7 @@ webi_shell_init() { (
             fn_shell_init_fish
             ;;
         *)
-            echo >&2 "Unsupported shell: $2"
-            exit 1
+            fatal ERROR "Unsupported shell: ${2}"
             ;;
     esac
 ) }
@@ -322,7 +369,7 @@ fn_shell_integrate_bash() { (
         return 0
     fi
 
-    echo >&2 "    Edit ~/.bashrc to add 'eval \"\$(webi --init bash)\"'"
+    # log "" "    Edit ~/.bashrc to add 'eval \"\$(webi --init bash)\"'"
     # shellcheck disable=SC2016
     {
         echo ''
@@ -364,7 +411,7 @@ fn_shell_integrate_zsh() { (
         return 0
     fi
 
-    echo >&2 "    Edit ~/.zshrc to add 'eval \"\$(webi --init zsh)\"'"
+    # log "" "    Edit ~/.zshrc to add 'eval \"\$(webi --init zsh)\"'"
     # shellcheck disable=SC2016
     {
         echo ''
@@ -400,7 +447,7 @@ fn_shell_integrate_fish() { (
         return 0
     fi
 
-    echo >&2 "    Edit ~/.config/fish/config.fish to add 'webi --init fish | source'"
+    # log "" "    Edit ~/.config/fish/config.fish to add 'webi --init fish | source'"
     # shellcheck disable=SC2016
     {
         echo ''
@@ -492,11 +539,10 @@ fn_list_uncached() { (
 
 webi_info() { (
     if [ $# -lt 2 ]; then
-        echo >&2 "Usage: webi --info <package>"
-        exit 1
+        fatal "" "Usage: webi --info <package>"
     fi
 
-    echo >&2 "[warn] the output of --info is completely half-baked and will change"
+    log WARNING "the output of --info is completely half-baked and will change"
     my_pkg="${2}"
 
     webi_load_sysinfo     # load $my_os, $my_arch
@@ -524,14 +570,15 @@ webi_info() { (
             curl -fsS "${WEBI_HOST}/api/releases/${my_pkg}.json?&limit=1&pretty=true"
         )"
         if printf '%s\n' "${my_releases_beta}" | grep -q "error"; then
-            echo >&2 "'${my_pkg}' is a special case that does not have releases"
+            # TODO This occurs even if a non-existent package is requested
+            log WARNING "'${my_pkg}' is a special case that does not have releases"
         else
-            echo >&2 "ERROR no stable releases for '${my_pkg}'!"
+            log WARNING "no stable releases for '${my_pkg}'!"
         fi
         exit 0
     fi
 
-    echo >&2 "Stable '${my_pkg}' releases:"
+    echo "Stable '${my_pkg}' releases:"
     if command -v jq > /dev/null; then
         printf '%s\n' "${my_releases}" |
             jq
