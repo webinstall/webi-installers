@@ -8,6 +8,9 @@ WEBI_HOST="${WEBI_HOST:-https://webinstall.dev}"
 WEBI_TIMESTAMP="${WEBI_TIMESTAMP:-$(date +%F_%H-%M-%S)}"
 WEBI_TMPDIR="${TMPDIR:-/tmp}"
 
+: "${WEBI_STALE_TIME:=600}"  # seconds after which cache should be refreshed in background
+: "${WEBI_EXPIRY_TIME:=900}" # seconds after which cache must be refreshed before use
+
 __webi_main() {
 
     if [ -n "${_WEBI_PARENT:-}" ]; then
@@ -258,7 +261,7 @@ log() {
     esac
     print_color "1;${_logcolor}" "${_logprefix}" "${_logfd:-2}"
     print_color "${_logcolor}"   "${_logmsg}"    "${_logfd:-2}"
-    printf '\n' >&${_logfd:-2}
+    printf '\n' >&"${_logfd:-2}"
 }
 
 fatal() {
@@ -492,70 +495,112 @@ fn_shell_init_fish() { (
 ); }
 
 webi_list() { (
-    # make sure there's always a cache dir and timestamp file
-    mkdir -p ~/.local/share/webi/var/
+    # To avoid ownership collision with other users when using sudo,
+    # save the list per-user
+    my_uid="$(id -u)"
+    my_tmpbase="webi.uid-${my_uid}.list"
 
-    if ! test -r ~/.local/share/webi/var/list.txt; then
-        echo '0' > ~/.local/share/webi/var/last_update
-    elif ! test -r ~/.local/share/webi/var/last_update; then
-        echo '0' > ~/.local/share/webi/var/last_update
-    fi
+    # Get all cached list files with my uid that I own, most recent first (-t)
+    my_lists="$(
+        find "${WEBI_TMPDIR}/." \
+            ! -name . -prune \
+            -type f \
+            -user "${my_uid}" \
+            -name "${my_tmpbase}.*" \
+            -exec ls -t {} + 2> /dev/null
+    )"
 
-    # compare the timestamp in the timestamp file to now
-    # (in seconds since unix epoch)
-    my_stale_age=600
-    my_expire_age=900
-    my_now="$(date -u '+%s')"
-    my_then="$(cat ~/.local/share/webi/var/last_update)"
-    my_diff=$((my_now - my_then))
+    my_list=
+    my_list_age=0
+    # If we have any existing lists...
+    if [ -n "${my_lists}" ]; then
+        # Take the most recent (first) valid file and delete any others
+        while IFS= read -r my_file; do
+            if [ -z "${my_list}" ] && [ -s "${my_file}" ]; then
+                my_list="${my_file}"
+            else
+                rm -f "${my_file}" || true
+            fi
+        done << EOF
+${my_lists}
+EOF
 
-    # show when the cache will update
-    my_stales_in=$((my_stale_age - my_diff))
-    my_expires_in=$((my_expire_age - my_diff))
-
-    # update if it's been longer than the staletime
-    if test "${my_stales_in}" -lt "0"; then
-        if test "${my_expires_in}" -lt "0"; then
-            fn_list_uncached
-        else
-            fn_list_uncached &
+        # Get age of file if it exists and is not empty
+        my_list_age="$((WEBI_EXPIRY_TIME + 1))"
+        if [ -n "${my_list}" ]; then
+            my_now="$(date -u '+%s')"
+            my_list_date="$(date -u -r "${my_list}" '+%s' 2> /dev/null || echo '0')"
+            if [ "${my_list_date}" -gt 0 ]; then
+                my_list_age="$((my_now - my_list_date))"
+            else
+                # 'date -r FILE' probably fails on OpenBSD, NetBSD, Solaris, AIX, etc.
+                # but should work on GNU, macOS, FreeBSD.
+                log WARNING "can't get mtime of '${my_list}'"
+                my_list_date=0
+            fi
         fi
     fi
 
-    # give back the list
-    cat ~/.local/share/webi/var/list.txt
+    if [ -z "${my_list}" ] || [ "${my_list_age}" -gt "${WEBI_EXPIRY_TIME}" ]; then
+        # Download fresh list; can lose a race condition here, but no matter
+        # as the file will be the same for all competitors
+        my_new_list="$(fn_list_uncached "${my_tmpbase}")" &&
+            my_list="${my_new_list}"
+
+    elif [ "${my_list_age}" -gt "${WEBI_STALE_TIME}" ]; then
+        # freshen the file to avoid race conditions
+        touch "${my_list}" 2> /dev/null || true
+        # refresh in background
+        fn_list_uncached "${my_tmpbase}" > /dev/null &
+    fi
+
+    # Output the list
+    if [ -s "${my_list}" ]; then
+        cat "${my_list}"
+        return 0
+    fi
+); }
+
+fn_list_options() { (
+    echo "help"
+    echo "--help"
+    echo "version"
+    echo "-V"
+    echo "--version"
+    echo "--init" # <shell>
+    echo "--list"
+    echo "--info" # <package>
 ); }
 
 fn_list_uncached() { (
+    my_tmpbase="$1"
 
-    my_len="${#WEBI_HOST}"
-    # 6 because the field will looks like "loc>WEBI_HOST/PKG_NAME"
-    # and the count is 1-indexed
-    my_count="$((my_len + 6))"
+    # Download sitemap, and fail this function on error.
+    my_sitemap="$(webi_download "${WEBI_HOST}/sitemap.xml" -)" || return 1
 
-    my_now="$(date -u '+%s')"
-    echo "${my_now}" > ~/.local/share/webi/var/last_update
-
+    # Construct intermediate file in per-job temp directory to avoid race
+    # conditions with other processes. The list will be saved to a more
+    # persistent location within $[WEBI_]TMPDIR later
     webi_create_tmpdir
-    my_tmp="$(mktemp "${_webi_tmp}/list.txt.XXXXXXXX")"
-    {
-        echo "help"
-        echo "--help"
-        echo "version"
-        echo "-V"
-        echo "--version"
-        echo "--init" # <shell>
-        echo "--list"
-        echo "--info" # <package>
-    } > "${my_tmp}"
-    webi_download "${WEBI_HOST}/sitemap.xml" - |
-        grep -F "${WEBI_HOST}" |
-        cut -d'<' -f2 |
-        cut -c "${my_count}"- >> "${my_tmp}"
-    mv "${my_tmp}" ~/.local/share/webi/var/list.txt
 
-    my_now="$(date -u '+%s')"
-    echo "${my_now}" > ~/.local/share/webi/var/last_update
+    my_intermediate="$(mktemp "${_webi_tmp}/download-${my_tmpbase}.XXXXXXXX")" || return 1
+    fn_list_options > "${my_intermediate}"
+
+    # Strip just the path from <loc>$my_host/path</loc>
+    printf '%s\n' "${my_sitemap}" |
+        awk -F'[<>]' \
+            -v h="${WEBI_HOST}/" \
+            'BEGIN {l=length(h)+1} index($3,h)==1 {print substr($3,l)}' \
+            >> "${my_intermediate}"
+
+    # Save to the cache file that will persist after this job (and cleaned up
+    # by either the OS or a later run of webi, if expired)
+    my_list_file="$(mktemp "${WEBI_TMPDIR}/${my_tmpbase}.XXXXXXXX")" || return 1
+    cat "${my_intermediate}" > "${my_list_file}"
+    rm -f "${my_intermediate}"
+
+    # Return the file path
+    echo "${my_list_file}"
 ); }
 
 webi_info() { (
