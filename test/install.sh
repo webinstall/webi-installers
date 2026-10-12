@@ -61,6 +61,7 @@ __rmrf_local() {
                 nerdfont \
                 node \
                 ots \
+                outagedeck \
                 pandoc \
                 pathman \
                 prettier \
@@ -164,6 +165,7 @@ __rmrf_local() {
                 nerdfont \
                 node \
                 ots \
+                outagedeck \
                 pandoc \
                 pathman \
                 prettier \
@@ -270,6 +272,7 @@ __test() {
         nerdfont \
         node \
         ots \
+        outagedeck \
         pandoc \
         pathman \
         postgres \
