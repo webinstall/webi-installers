@@ -28,6 +28,22 @@ __init_bat() {
         # chmod a+x ~/.local/opt/bat-v0.15.4/bin/bat
         chmod a+x "$pkg_src_cmd"
 
+        # install completions if present (autocomplete/)
+        if test -d ./bat-*/autocomplete; then
+            mkdir -p "$pkg_src_dir/share/bash-completion/completions"
+            mkdir -p "$pkg_src_dir/share/fish/vendor_completions.d"
+            mkdir -p "$pkg_src_dir/share/zsh/site-functions"
+            mv ./bat-*/autocomplete/bat.bash "$pkg_src_dir/share/bash-completion/completions/bat" 2>/dev/null || true
+            mv ./bat-*/autocomplete/bat.fish "$pkg_src_dir/share/fish/vendor_completions.d/bat.fish" 2>/dev/null || true
+            mv ./bat-*/autocomplete/bat.zsh "$pkg_src_dir/share/zsh/site-functions/_bat" 2>/dev/null || true
+        fi
+
+        # install man page if present
+        if test -f ./bat-*/bat.1; then
+            mkdir -p "$pkg_src_dir/share/man/man1"
+            mv ./bat-*/bat.1 "$pkg_src_dir/share/man/man1/bat.1"
+        fi
+
         if ! [ -e ~/.config/bat/config ]; then
             mkdir -p ~/.config/bat/
             touch ~/.config/bat/config
