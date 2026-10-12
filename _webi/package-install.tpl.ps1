@@ -17,6 +17,7 @@ $Env:WEBI_HOST = 'https://webinstall.dev'
 #$Env:PKG_NAME = node
 #$Env:WEBI_VERSION = v12.16.2
 #$Env:WEBI_GIT_TAG = 12.16.2
+#$Env:WEBI_GIT_COMMIT_HASH =
 #$Env:WEBI_PKG_URL = "https://.../node-....zip"
 #$Env:WEBI_PKG_FILE = "node-v12.16.2-win-x64.zip"
 #$Env:WEBI_PKG_PATHNAME = "node-v12.16.2-win-x64.zip"

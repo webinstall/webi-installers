@@ -67,6 +67,12 @@ func (la LegacyAsset) ToAsset() Asset {
 		arch = "x86_64"
 	case "arm64":
 		arch = "aarch64"
+	case "armv7l":
+		arch = "armv7"
+	case "armv6l":
+		arch = "armv6"
+	case "arm":
+		arch = "armv5"
 	case "*":
 		arch = ""
 	}
