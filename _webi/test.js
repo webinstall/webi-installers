@@ -97,7 +97,7 @@ Builds.getPackage({ name: projName }).then(async function (/*projInfo*/) {
     formats: formats,
     libc: nodeLibc,
   });
-  Object.assign(
+  opts = Object.assign(
     {
       ver: '',
       lts: null,
