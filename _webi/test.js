@@ -66,13 +66,31 @@ console.info('Has the necessary files?');
 
 console.info('');
 let projName = pkgdir.split('/').filter(Boolean).pop();
+
+// releases are read from the cache that webicached writes
+var cacheFile = path.join(
+  os.homedir(),
+  '.cache/webi/legacy',
+  `${projName}.json`,
+);
+if (nodesMap['releases.conf'] && !fs.existsSync(cacheFile)) {
+  console.error(
+    `Error: ❌ no cached releases for '${projName}' (${cacheFile})`,
+  );
+  console.error('');
+  console.error('Fetch them first (needs Go):');
+  console.error(`\tgo run ./cmd/webicached --once --shallow ${projName}`);
+  console.error('');
+  process.exit(1);
+}
+
 Builds.getPackage({ name: projName }).then(async function (/*projInfo*/) {
   var pkgname = path.basename(pkgdir.replace(/\/$/, ''));
   var nodeOs = os.platform();
   var nodeOsRelease = os.release();
   var nodeArch = os.arch();
-  
-   // To make arch names compatible across all helpers
+
+  // To make arch names compatible across all helpers
   if (nodeArch === 'x64') {
     nodeArch = 'amd64';
   } else if (nodeArch === 'arm64') {
@@ -112,7 +130,7 @@ Builds.getPackage({ name: projName }).then(async function (/*projInfo*/) {
     },
   );
 
-  if (!rel) {
+  if (!rel || rel.channel === 'error') {
     console.error(
       `Error: ❌ no release found for @${pkgtag}?os=${nodeOs}&arch=${nodeArch}&libc=${nodeLibc}&formats=${formats}`,
     );
@@ -142,6 +160,7 @@ Builds.getPackage({ name: projName }).then(async function (/*projInfo*/) {
       );
     }
     console.info('Do the scripts actually work?');
+    console.info('(written to %s, gitignored)', process.cwd());
     if (bashFile && bashTxt) {
       fs.writeFileSync(bashFile, bashTxt, 'utf-8');
       console.info('\tNEEDS MANUAL TEST: sh %s', bashFile);

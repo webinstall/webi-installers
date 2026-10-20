@@ -31,6 +31,9 @@ jobs:
       - run: npm run fmt
       - run: npm ci
       - run: npm run lint
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
       - env:
           GITHUB_TOKEN: ${{ github.token }}
         run: npm run test
