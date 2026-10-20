@@ -22,6 +22,45 @@ your job is to unpack or inflate it and place the files.
 > from. That config must already exist (or be written separately) before these
 > install scripts are useful.
 
+## `releases.conf` quick reference
+
+`releases.conf` selects the upstream release source and filters its assets. Use
+one source type per package:
+
+```ini
+# GitHub release assets
+github_releases = owner/repo
+# GitHub source archives, optionally with a git fallback
+github_sources = owner/repo
+git_url = https://github.com/owner/repo.git
+# Git tags, using git_url as the source
+git_url = https://github.com/owner/repo.git
+# Gitea, GitLab, or HashiCorp releases
+gitea_releases = https://git.example.com/owner/repo
+gitlab_releases = owner/repo
+hashicorp_product = product-name
+# Custom distribution source
+source = nodedist
+url = https://example.com/releases
+```
+
+Common filters and transforms:
+
+```ini
+asset_filter = tool-       # filename must contain this text
+exclude = ci src docs      # skip assets containing these texts
+tag_prefix = tool-         # strip this tag prefix from the version
+version_prefixes = tool-   # strip these version prefixes
+os = posix_2017            # blanket OS tag for POSIX-only packages
+alias_of = other-package   # mirror another package's releases
+```
+
+`asset_filter` is useful when old or alternate asset names would not work with
+the installer. `exclude` removes unwanted assets, not release tags. Do not use
+`os` for version-dependent assets; use a package-specific variant tagger instead.
+Use `github_sources` when the project publishes source archives, and add
+`git_url` when a git fallback is needed. Full GitHub/Gitea URLs are accepted.
+
 ## Quick overview
 
 1. [Discover the archive layout](#1-discover-the-archive-layout) — inspect
