@@ -39,6 +39,7 @@ __rmrf_local() {
                 gpg-pubkey \
                 gprox \
                 hexyl \
+                hol-guard-v* \
                 hugo \
                 iterm-color-schemes \
                 iterm-themes \
@@ -142,6 +143,7 @@ __rmrf_local() {
                 gpg-pubkey \
                 gprox \
                 hexyl \
+                hol-guard \
                 hugo \
                 iterm-color-schemes \
                 iterm-themes \
@@ -216,6 +218,21 @@ __rmrf_local() {
 }
 
 __test() {
+    # HOL Guard v3.54.0 needs glibc 2.35+; skip its smoke test on older hosts.
+    if [ "$(uname -s)" = "Linux" ] && [ "$(uname -m)" = "x86_64" ] &&
+        getconf GNU_LIBC_VERSION 2> /dev/null | awk '
+            $1 == "glibc" {
+                split($2, v, ".")
+                if (v[1] > 2 || (v[1] == 2 && v[2] >= 35)) supported = 1
+            }
+            END { exit !supported }
+        '; then
+        webi hol-guard
+        # Check the binary actually starts; executable bits alone miss loader/ABI failures.
+        test -x "$HOME/.local/bin/hol-guard"
+        "$HOME/.local/bin/hol-guard" --version > /dev/null
+    fi
+
     webi \
         arc \
         archiver \
